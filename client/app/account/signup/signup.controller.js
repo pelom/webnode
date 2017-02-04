@@ -13,8 +13,6 @@ export default class SignupController {
   };
   errors = {};
   conta = false;
-
-
   /*@ngInject*/
   constructor(Auth, $state, /*$scope*/) {
     this.Auth = Auth;
@@ -25,29 +23,28 @@ export default class SignupController {
   }
 
   register(form) {
-    if (form.$valid) {
+    if(form.$valid) {
       console.log(this.user);
-
       return this.Auth.createUser({
-          nome: this.user.nome,
-          sobrenome: this.user.sobrenome,
-          email: this.user.email,
-          password: this.user.password
-        })
-        .then(() => {
-          this.conta = true;
-          // Account created, redirect to home
-          //this.$state.go('main');
-        })
-        .catch(err => {
-          err = err.data;
-          this.errors = {};
-          // Update validity of form fields that match the mongoose errors
-          angular.forEach(err.errors, (error, field) => {
-            form[field].$setValidity('mongoose', false);
-            this.errors[field] = error.message;
-          });
+        nome: this.user.nome,
+        sobrenome: this.user.sobrenome,
+        email: this.user.email,
+        password: this.user.password
+      })
+      .then(() => {
+        this.conta = true;
+        // Account created, redirect to home
+        //this.$state.go('main');
+      })
+      .catch(err => {
+        err = err.data;
+        this.errors = {};
+        // Update validity of form fields that match the mongoose errors
+        angular.forEach(err.errors, (error, field) => {
+          form[field].$setValidity('mongoose', false);
+          this.errors[field] = error.message;
         });
+      });
     }
   }
 }

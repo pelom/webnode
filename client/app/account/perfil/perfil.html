@@ -1,13 +1,17 @@
 <div class="container">
+
 <h1 class="page-header">
-  <i class="fa fa-user-circle" aria-hidden="true"></i></i>
+  <i class="fa fa-user-circle" aria-hidden="true"></i>
   Perfil</h1>
+
   <div class="row">
 
     <div class="col-lg-4">
       <div class="panel panel-primary">
         <div class="panel-heading">
-          <h3 class="panel-title"><strong>Informações Pessoais</strong></h3></div>
+          <h3 class="panel-title">
+            <i class="fa fa-address-book" aria-hidden="true"></i>
+            <strong>Dados Pessoais</strong></h3></div>
         <div class="list-group">
           <a href="#" class="list-group-item">
             <p><h6>Nome</h5>
@@ -32,7 +36,9 @@
     <div class="col-lg-4">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><strong>Informação do endereço</strong></h3>
+          <h3 class="panel-title">
+            <i class="fa fa-map-marker" aria-hidden="true"></i>
+            <strong>Endereço</strong></h3>
         </div>
         <!--div class="panel-body">Panel content</div-->
         <div class="list-group">
@@ -45,12 +51,12 @@
             <h5><strong>{{ vm.user.endereco.rua }}</strong></h4></p>
           </a>
           <a href="#" class="list-group-item">
-            <p><h6>Número</h5>
-            <h5><strong>{{ vm.user.endereco.numero }}</strong></h4></p>
-          </a>
-          <a href="#" class="list-group-item">
             <p><h6>Bairro</h5>
             <h5><strong>{{ vm.user.endereco.bairro }}</strong></h4></p>
+          </a>
+          <a href="#" class="list-group-item">
+            <p><h6>Número</h5>
+            <h5><strong>{{ vm.user.endereco.numero }}</strong></h4></p>
           </a>
           <a href="#" class="list-group-item">
             <p><h6>Cidade</h5>
@@ -78,3 +84,4 @@
 
   </div>
 </div>
+<hr>

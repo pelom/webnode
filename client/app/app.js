@@ -29,8 +29,11 @@ import socket from '../components/socket/socket.service';
 import nomeproprioDirec from './directive/nomeproprio/nomeproprio.directive';
 import './app.css';
 
+import checkStrength from '../components/check-strength/checkStrength.directive';
+import '../components/check-strength/check.css';
+
 angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize,
-  ngValidationMatch, 'btford.socket-io', nomeproprioDirec,
+  ngValidationMatch, 'btford.socket-io', nomeproprioDirec, checkStrength,
   uiRouter, uiBootstrap, _Auth, account, admin, navbar, footer, main, constants, socket, util
 ])
   .config(routeConfig)
