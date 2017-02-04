@@ -1,0 +1,50 @@
+<div class="navbar navbar-default navbar-static-top">
+  <div class="container">
+
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" ng-click="$ctrl.isCollapsed = !$ctrl.isCollapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">oauth-application</a>
+    </div>
+
+    <div uib-collapse="$ctrl.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav">
+        <li ng-repeat="item in $ctrl.menu" ui-sref-active="active">
+          <a ui-sref="{{item.state}}">{{item.title}}</a>
+        </li>
+        <li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin">Admin</a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-hide="$ctrl.isLoggedIn()" ui-sref-active="active">
+          <a ui-sref="signup"><i class="fa fa-edit fa-fw" aria-hidden="true"></i></span>
+            Cadastra-se</a></li>
+        <li ng-hide="$ctrl.isLoggedIn()" ui-sref-active="active">
+          <a ui-sref="login">
+            <i class="fa fa-sign-in" aria-hidden="true"></i></span> Entrar</a>
+        </li>
+
+        <li ng-show="$ctrl.isLoggedIn()">
+          <p class="navbar-text"><i class="fa fa-user-circle" aria-hidden="true"></i>
+             {{ $ctrl.getCurrentUser().nome }}</p>
+        </li>
+        <li ng-show="$ctrl.isLoggedIn()" class="dropdown" uib-dropdown>
+          <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-gear fa-fw"></i></i></a>
+          <ul class="dropdown-menu" uib-dropdown-menu>
+            <li><a ui-sref="perfil"><i class="fa fa-user fa-fw"></i> Pefil</a></li>
+            <li><a ui-sref="settings" ui-sref-active="active">
+              <i class="fa fa-gear fa-fw" aria-hidden="true"></i> Configuração</a></li>
+            <li class="divider"></li>
+            <li><a ui-sref="logout" aria-hidden="true">
+              <i class="fa fa-sign-out fa-fw"></i> Sair</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
