@@ -8,7 +8,7 @@
 
     <div class="col-md-8">
 
-      <div class="alert alert-success">
+      <div class="alert alert-success" ng-show="vm.conta">
        <h4 class="alert-heading"><span class="glyphicon glyphicon-ok"></span>
          &nbsp; <strong>Olá {{vm.user.nome }},</strong> sua conta foi criada com sucesso</h4>
         <hr class="message-inner-separator">
@@ -130,7 +130,7 @@
           </ul>
           <br/>
           <div class="list-group-item no-border">
-            <button type="submit" class="btn btn-default btn-lg" ng-disabled="form.$invalid">
+            <button type="submit" class="btn btn-primary btn-lg" ng-disabled="form.$invalid">
                Criar conta</button>
             <!--a ui-sref="login">Entrar</a-->
           </div>

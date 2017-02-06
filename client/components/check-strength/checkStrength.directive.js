@@ -70,6 +70,9 @@ export default angular.module('oauthApplicationApp.checkStrength', [])
             }
             scope.form['password'].$setValidity('checkStrength', score.idx > 1);
           }
+          /*if(!scope.form['password'].$error.checkStrength) {
+            elem.css({"display":"none"});
+          }*/
         });
       },
       template: require('./strength.html')

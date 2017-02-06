@@ -32,8 +32,10 @@ import './app.css';
 import checkStrength from '../components/check-strength/checkStrength.directive';
 import '../components/check-strength/check.css';
 
+import PermissaoResource from './admin/permissao/permissao.module';
+
 angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize,
-  ngValidationMatch, 'btford.socket-io', nomeproprioDirec, checkStrength,
+  ngValidationMatch, 'btford.socket-io', nomeproprioDirec, checkStrength, PermissaoResource,
   uiRouter, uiBootstrap, _Auth, account, admin, navbar, footer, main, constants, socket, util
 ])
   .config(routeConfig)

@@ -1,19 +1,29 @@
-.trash { color:rgb(209, 91, 71); }
+.hero-widget {
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
 
-.user-list li {
-	display: flex;
-	border: none;
-	border-bottom: 1px lightgray solid;
-	margin-bottom: 0;
+.hero-widget .icon {
+  display: block;
+  font-size: 6vw;
+  line-height: 96px;
+  margin-bottom: 10px;
+  text-align: center;
 }
-.user-list li:last-child {
-	border-bottom: none;
+
+.hero-widget var {
+  display: block;
+  height: 64px;
+  font-size: 4vw;
+  line-height: 64px;
+  font-style: normal;
 }
-.user-list li .user-info {
-	flex-grow: 1;
+
+.hero-widget label {
+  font-size: 3vw;
 }
-.user-list li .trash {
-	display: flex;
-	align-items: center;
-	text-decoration: none;
+
+.hero-widget .options {
+  margin-top: 10px;
 }
