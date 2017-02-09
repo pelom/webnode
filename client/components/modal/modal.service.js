@@ -2,7 +2,8 @@
 
 import angular from 'angular';
 
-export function Modal($rootScope, $uibModal) {
+export function Modal($rootScope, $uibModal, $log) {
+  'ngInject';
   /**
    * Opens a modal
    * @param  {Object} scope      - an object to be merged with modal's scope
@@ -62,13 +63,18 @@ export function Modal($rootScope, $uibModal) {
                 }
               }]
             }
-          }, 'modal-danger');
+          }, 'modal-primary');
 
-          deleteModal.result.then(function(event) {
-            del.apply(event, args);
-          });
+          deleteModal.result.then(
+            function(event) {
+              del.apply(event, args);
+            },
+            function() {
+              $log.info('Modal dismissed at: ' + new Date());
+            });
         };
       }
+
     }
   };
 }

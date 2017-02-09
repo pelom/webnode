@@ -12,10 +12,11 @@ import uiBootstrap from 'angular-ui-bootstrap';
 // import ngMessages from 'angular-messages';
 import ngValidationMatch from 'angular-validation-match';
 
-
 import {routeConfig} from './app.config';
 
 import _Auth from '../components/auth/auth.module';
+import PermissaoService from '../components/api/permissao/permissao.module';
+
 import account from './account';
 import admin from './admin';
 import navbar from '../components/navbar/navbar.component';
@@ -24,6 +25,8 @@ import main from './main/main.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
+import Modal from '../components/modal/modal.service';
+
 //import nomeProprio from '../components/filter/nomeProprio';
 //import nomeProprio from './filter/nomeProprio/nomeProprio.filter';
 import nomeproprioDirec from './directive/nomeproprio/nomeproprio.directive';
@@ -32,11 +35,10 @@ import './app.css';
 import checkStrength from '../components/check-strength/checkStrength.directive';
 import '../components/check-strength/check.css';
 
-import PermissaoResource from './admin/permissao/permissao.module';
-
 angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize,
-  ngValidationMatch, 'btford.socket-io', nomeproprioDirec, checkStrength, PermissaoResource,
-  uiRouter, uiBootstrap, _Auth, account, admin, navbar, footer, main, constants, socket, util
+  ngValidationMatch, 'btford.socket-io', nomeproprioDirec, checkStrength,
+  uiRouter, uiBootstrap, PermissaoService,
+  _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {

@@ -4,6 +4,7 @@ const EventEmitter = require('events');
 
 // CONSTANTS
 let APP_ROLE_SEPARATOR = '.';
+let name = '';
 let applications = {};
 let profiles = {};
 let users = {};
@@ -237,6 +238,9 @@ let Profile = class Profile extends EventEmitter {
   }
 };
 
+let addName = function(nam) {
+  name = nam;
+};
 let addApplication = function(name, roles) {
   var app = getApplication(name);
 
@@ -283,32 +287,47 @@ let getProfile = function(name) {
 };
 
 let exportRoles = function() {
-  var a = {};
-  var p = {};
+  let modulos = [];
+  let perfis = [];
+
   for(var app in applications) {
     if(applications.hasOwnProperty(app)) {
-      a[app] = [];
+      let modulo = {
+        nome: app,
+        funcao: []
+      };
+      //a[app] = [];
       for(var i = 0; i < applications[app].roles.length; i++) {
-        a[app].push(applications[app].roles[i]);
+        modulo.funcao.push(applications[app].roles[i]);
+        //a[app].push(applications[app].roles[i]);
       }
+      modulos.push(modulo);
     }
   }
   for(var prof in profiles) {
     if(profiles.hasOwnProperty(prof)) {
-      p[prof] = [];
+      let perfil = {
+        nome: prof,
+        acesso: []
+      };
+      //p[prof] = [];
       for(var i = 0; i < profiles[prof].roles.length; i++) {
-        p[prof].push(profiles[prof].roles[i]);
+        perfil.acesso.push(profiles[prof].roles[i]);
+        //p[prof].push(profiles[prof].roles[i]);
       }
+      perfis.push(perfil);
     }
   }
   return {
-    applications: a,
-    profiles: p
+    applications: modulos,
+    profiles: perfis,
+    name: name
   };
-}
+};
 let monitor = new Monitor();
 
 module.exports = {
+  addName: addName,
   getApplication: getApplication,
   addApplication: addApplication,
   getProfile: getProfile,

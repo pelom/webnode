@@ -1,41 +1,48 @@
 'use strict';
-import angular from 'angular';
 export default class PermissaoController {
   /*@ngInject*/
-  constructor(PermissaoResource) {
+  constructor(PermissaoService, PermissaoResource, Modal) {
+    this.PermissaoService = PermissaoService;
     this.appList = [];
-    // Use the User $resource to fetch all users
-    this.appList = PermissaoResource.query();
-    console.log(this.appList);
-    angular.forEach(this.appList, function(item) {
-      console.log(item);
-    });
 
-    this.sortType = 'name'; // set the default sort type
+    //var prom = PermissaoResource.query();
+    //prom.$promise.then(data => {
+    //  data.forEach(function(item) {
+    //    console.log(item);
+        /*item.applications.forEach(i=> {
+          let keysList = Object.keys(i);
+          keysList.forEach(k => {
+            //console.log(k + '' + i[k]);
+          });
+        })*/
+    //  });
+      //console.log(Object.keys(data))
+    //});
+    this.appList = PermissaoResource.query();
+    this.Modal = Modal;
+    this.sortType = 'nome'; // set the default sort type
     this.sortReverse = false; // set the default sort order
     this.searchFish = ''; // set the default search/filter term
+  }
 
-    // create the list of sushi rolls
-    this.sushi = [{
-        name: 'Cali Roll',
-        fish: 'Crab',
-        tastiness: 2
-      },
-      {
-        name: 'Philly',
-        fish: 'Tuna',
-        tastiness: 4
-      },
-      {
-        name: 'Tiger',
-        fish: 'Eel',
-        tastiness: 7
-      },
-      {
-        name: 'Rainbow',
-        fish: 'Variety',
-        tastiness: 6
-      }
-    ];
+  openMod(id, nome) {
+    console.log(id, nome);
+    var del = this.Modal.confirm.delete(function() {
+      console.log('DELETE');
+    });
+    del(nome);
+  }
+
+  createApp() {
+    console.log(this.PermissaoService);
+    return this.PermissaoService.createApp({
+      nome: 'Application'
+    })
+    .then(() => {
+      console.log('OK');
+    })
+    .catch(err => {
+      console.log('Ex:', err);
+    });
   }
 }
