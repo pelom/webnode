@@ -9,6 +9,13 @@ const selectCriador = {
   select: 'nome sobrenome _id',
   //options: { limit: 5}
 };
+const selectModificador = {
+  path: 'modificador',
+  //match: { age: { $gte: 21 }},
+  select: 'nome sobrenome _id',
+  //options: { limit: 5}
+};
+
 const select = '-__v';
 
 function validationError(res, statusCode) {
@@ -62,7 +69,9 @@ export function index(req, res) {
       sort: {
         createdAt: -1 //Sort by Date Added DESC
       }
-    }).populate(selectCriador).exec()
+    })
+    .populate(selectCriador)
+    .populate(selectModificador).exec()
     .then(appl => {
       res.status(200).json(appl);
     })
@@ -73,11 +82,13 @@ export function create(req, res, next) {
   console.log('create');
   var newApp = new Application(req.body);
   newApp.criador = req.user._id;
+  newApp.modificador = req.user._id;
   newApp.save()
     .then(function(app) {
       Application.findById(app._id)
       .select(select)
-      .populate(selectCriador).exec()
+      .populate(selectCriador)
+      .populate(selectModificador).exec()
       .then(ap => {
         console.log(ap);
         if(!ap) {
@@ -92,24 +103,20 @@ export function create(req, res, next) {
   return newApp;
 }
 
-export function updateModulo(req, res) {
+export function update(req, res) {
   let appId = req.params.id;
   console.log('update', appId);
-  console.log(req.body);
-
-  var nome = String(req.body.nome);
-  var descricao = String(req.body.descricao);
-  var modulos = req.body.modulos;
-
-  //var userId = req.user._id;
-  //var oldPass = String(req.body.oldPassword);
-  //var newPass = String(req.body.newPassword);
-
+  console.log('body', req.body);
+  let nome = String(req.body.nome);
+  let descricao = String(req.body.descricao);
+  let isAtivo = req.body.isAtivo;
+  let userId = req.user._id;
   return Application.findById(appId).exec()
     .then(app => {
       app.nome = nome;
       app.descricao = descricao;
-      app.modulos = modulos;
+      app.modificador = userId;
+      app.isAtivo = isAtivo;
       return app.save()
         .then(() => {
           res.status(204).end();
@@ -117,5 +124,23 @@ export function updateModulo(req, res) {
         .catch(validationError(res));
 
       //res.status(204).end();
+    });
+}
+
+export function updateModulo(req, res) {
+  let appId = req.params.id;
+  console.log('updateModulo', appId);
+  console.log('body', req.body);
+  var modulos = req.body.modulos;
+  let userId = req.user._id;
+  return Application.findById(appId).exec()
+    .then(app => {
+      app.modulos = modulos;
+      app.modificador = userId;
+      return app.save()
+        .then(() => {
+          res.status(204).end();
+        })
+        .catch(validationError(res));
     });
 }

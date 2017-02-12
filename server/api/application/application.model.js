@@ -19,7 +19,8 @@ var ApplicationSchema = new Schema({
     required: true,
     default: true
   },
-  criador:{ type: Schema.Types.ObjectId, ref: 'User'}
+  criador: { type: Schema.Types.ObjectId, ref: 'User' },
+  modificador: { type: Schema.Types.ObjectId, ref: 'User'}
 }, {
   timestamps: true
 });

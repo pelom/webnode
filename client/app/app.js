@@ -27,16 +27,15 @@ import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
 import Modal from '../components/modal/modal.service';
 
-//import nomeProprio from '../components/filter/nomeProprio';
-//import nomeProprio from './filter/nomeProprio/nomeProprio.filter';
-import nomeproprioDirec from './directive/nomeproprio/nomeproprio.directive';
+import loadingDirec from '../components/directive/loading/loading.directive';
+import nomeValidoDirec from '../components/directive/nome-valido/nomevalido.directive';
 import './app.css';
 
 import checkStrength from '../components/check-strength/checkStrength.directive';
 import '../components/check-strength/check.css';
 
 angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize,
-  ngValidationMatch, 'btford.socket-io', nomeproprioDirec, checkStrength,
+  ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength,
   uiRouter, uiBootstrap, PermissaoService,
   _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal
 ])

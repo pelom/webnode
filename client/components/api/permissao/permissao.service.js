@@ -52,19 +52,23 @@ export function PermissaoService(Util, PermissaoResource) {
     },
 
     /**
-     *
+     * Criar novo Aplicativo
      */
-    createApp(callback) {
-      return PermissaoResource.save(app, function(data) {
-        console.log('PermissaoService.createApp.save', app, data);
-        appList[0] = data;
-        app = data;
+    createApp(newApp, callback) {
+      let oldApp = JSON.parse(JSON.stringify(newApp));
+      return PermissaoResource.save(oldApp, function(data) {
+        console.log('PermissaoService.createApp.save');
+        console.log('newApp', oldApp);
+        console.log('createApp', data);
+        appList[0] = data;//adicionar no Aplicativo no inicio da lista
+        app = data;//atualizar das do Aplicativo referencia
         return safeCb(callback)(data);
       }, function(err) {
         console.log('Ex:', err);
         return safeCb(callback)(err);
       }).$promise;
     },
+
     createModulo(callback) {
       return PermissaoResource.modulo(app, function(data) {
         console.log('PermissaoService.createModulo.modulo', app, data);

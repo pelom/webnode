@@ -40,7 +40,7 @@
                   <!--label>Nome</label-->
                   <input type="text" name="nome" class="form-control" placeholder="Nome"
                    ng-model="vm.user.nome" ng-required="true" ng-minlength="3"
-                    ng-maxlength="20" nomeproprio="false" />
+                    ng-maxlength="20" nomevalido="false" />
 
                   <p class="help-block" ng-show="form.nome.$error.required && form.nome.$dirty">
                     O nome é necessário</p>
@@ -57,7 +57,7 @@
                   <!--label>Sobrenome</label-->
                   <input type="text" name="sobrenome" class="form-control" placeholder="Sobrenome"
                    ng-model="vm.user.sobrenome" ng-required="true" ng-minlength="3"
-                    ng-maxlength="40" nomeproprio="true" />
+                    ng-maxlength="40" nomevalido="true" />
 
                   <p class="help-block" ng-show="form.sobrenome.$error.required && form.sobrenome.$dirty">
                     O sobrenome é necessário</p>
