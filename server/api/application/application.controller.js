@@ -3,6 +3,21 @@
 import Application from './application.model';
 import applicationService from './application.service';
 
+const selectCriador = {
+  path: 'criador',
+  //match: { age: { $gte: 21 }},
+  select: 'nome sobrenome _id',
+  //options: { limit: 5}
+};
+const select = '-__v';
+
+function validationError(res, statusCode) {
+  statusCode = statusCode || 422;
+  return function(err) {
+    return res.status(statusCode).json(err);
+  };
+}
+
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
@@ -41,25 +56,66 @@ export function index(req, res) {
 
   console.log('Export', applicationService.export());
 */
-  return Application.find({}, '-__v',
-  {
-    skip: 0, // Starting Row
-    limit: 10, // Ending Row
-    sort: {
-      createdAt: -1 //Sort by Date Added DESC
-    }
-  },).exec()
+  return Application.find({}, select, {
+      skip: 0, // Starting Row
+      limit: 10, // Ending Row
+      sort: {
+        createdAt: -1 //Sort by Date Added DESC
+      }
+    }).populate(selectCriador).exec()
     .then(appl => {
       res.status(200).json(appl);
     })
     .catch(handleError(res));
 }
 
-export function create(req, res) {
+export function create(req, res, next) {
   console.log('create');
-
   var newApp = new Application(req.body);
-  console.log(newApp);
-  res.status(200).json(newApp);
+  newApp.criador = req.user._id;
+  newApp.save()
+    .then(function(app) {
+      Application.findById(app._id)
+      .select(select)
+      .populate(selectCriador).exec()
+      .then(ap => {
+        console.log(ap);
+        if(!ap) {
+          return res.status(404).end();
+        }
+        res.status(200).json(ap);
+        return app;
+      })
+      .catch(validationError(res));
+    })
+    .catch(validationError(res));
   return newApp;
+}
+
+export function updateModulo(req, res) {
+  let appId = req.params.id;
+  console.log('update', appId);
+  console.log(req.body);
+
+  var nome = String(req.body.nome);
+  var descricao = String(req.body.descricao);
+  var modulos = req.body.modulos;
+
+  //var userId = req.user._id;
+  //var oldPass = String(req.body.oldPassword);
+  //var newPass = String(req.body.newPassword);
+
+  return Application.findById(appId).exec()
+    .then(app => {
+      app.nome = nome;
+      app.descricao = descricao;
+      app.modulos = modulos;
+      return app.save()
+        .then(() => {
+          res.status(204).end();
+        })
+        .catch(validationError(res));
+
+      //res.status(204).end();
+    });
 }

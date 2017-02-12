@@ -1,0 +1,170 @@
+<div class="modal-header">
+  <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
+
+  <h4><i class="fa fa-rocket" aria-hidden="true"></i>
+    <strong><span ng-bind="modal.title" class="modal-title"></span></strong></h4>
+</div>
+
+<div class="modal-body">
+  <p ng-if="modal.text" ng-bind="modal.text"></p>
+  <div ng-if="modal.html" ngHtml="modal.html"></div>
+
+  <uib-tabset active="ctl.abaAtiva" justified="true">
+      <uib-tab index="0">
+
+        <uib-tab-heading>
+          <i class="fa fa-info-circle" aria-hidden="true"></i> Informações
+        </uib-tab-heading>
+
+        <h5 class="page-header"><i class="fa fa-arrow-right" aria-hidden="true"></i>
+          Informe o <strong>Nome</strong> e a <strong>Descrição</strong> para o seu aplicativo.</h5>
+
+        <form class="form" name="form1" novalidate ng-submit="ctl.createApp(form1)">
+          <div class="form-group" ng-class="{'has-success': form1.nome.$valid && form1.nome.$dirty,
+                  'has-error': form1.nome.$invalid && form1.nome.$dirty}">
+
+            <input type="text" name="nome" class="form-control" placeholder="Nome"
+             ng-model="ctl.app().nome" ng-required="true" ng-minlength="3" ng-maxlength="40"
+              nomeproprio="false" />
+
+            <p class="help-block" ng-show="form1.nome.$error.required && form1.nome.$dirty">
+              O sobrenome é necessário</p>
+            <p class="help-block" ng-show="form1.nome.$error.pattern">
+              Somente letras são permitidas</p>
+            <p class="help-block" ng-show="form1.nome.$error.minlength">
+              São necessários no minimo 3 letras</p>
+            <p class="help-block" ng-show="form1.nome.$error.maxlength">
+              São permitidos no máximo 40 letras</p>
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" rows="3" placeholder="Descrição"
+              ng-model="ctl.app().descricao"></textarea>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <dl>
+                <dt><small>Criado</small></dt>
+                <dd><small>{{ ctl.app().createdAt | date:'dd/MM/yyyy HH:mm' }} por
+                  <strong>{{ctl.app().criador.nome}} {{ctl.app().criador.sobrenome}}</strong></small></dd>
+              </dl>
+            </div>
+            <div class="col-xs-6">
+              <dl>
+                <dt><small>Modificado</small></dt>
+                <dd><small>{{ ctl.app().updatedAt | date:'dd/MM/yyyy HH:mm' }}</small></dd>
+              </dl>
+            </div>
+          </div>
+          <br/>
+
+          <button class="btn btn-primary" type="submit"
+            ng-disabled="form1.$invalid">
+            <i class="fa fa-spinner fa-spinner-animate" aria-hidden="true"></i> Criar</button>
+        </form>
+
+      </uib-tab>
+      <!--uib-tab index="$index + 1" ng-repeat="tab in tabs" heading="{{tab.title}}" disable="tab.disabled">
+        {{tab.content}}
+      </uib-tab-->
+      <uib-tab index="1" disable="ctl.app()._id == null">
+        <uib-tab-heading>
+          <i class="fa fa-th-large" aria-hidden="true"></i> Modulos
+        </uib-tab-heading>
+
+        <h5 class="page-header"><i class="fa fa-arrow-right" aria-hidden="true"></i>
+          Criar novo módulo
+          <small>Adicione o nome do módulo e as suas funções</small></h5>
+
+        <form class="form" novalidate name="form" ng-submit="ctl.createModulo(form)">
+          <div class="well" ng-class="{'has-success': form.nomeMod.$valid && form.nomeMod.$dirty,
+                  'has-error': form.nomeMod.$invalid && form.nomeMod.$dirty}">
+
+            <p class="input-group">
+              <input type="text" class="form-control" placeholder="Nome do modulo"
+               name="nomeMod" ng-model="ctl.modulo.nome"
+                ng-required="true" ng-minlength="3" ng-maxlength="40" />
+
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary"
+                ng-disabled="form.$invalid || ctl.modulo.funcoes.length < 1">Adicionar</button>
+              </span>
+
+              <p class="help-block" ng-show="form.nomeMod.$error.required && form.nomeMod.$dirty">
+                O sobrenome é necessário</p>
+              <p class="help-block" ng-show="form.nomeMod.$error.pattern">
+                Somente letras são permitidas</p>
+              <p class="help-block" ng-show="form.nomeMod.$error.minlength">
+                São necessários no minimo 3 letras</p>
+              <p class="help-block" ng-show="form.nomeMod.$error.maxlength">
+                São permitidos no máximo 40 letras</p>
+            </p>
+
+            <p class="input-group">
+              <label>Funções: </label>
+              <span class="input-group-btn">
+
+                <label class="btn btn-default" ng-model="ctl.checkModel.ler"
+                  uib-btn-checkbox uib-tooltip="Função Ver">
+                  <i class="fa fa-eye" aria-hidden="true"></i></label>
+
+                <label class="btn btn-default" ng-model="ctl.checkModel.criar"
+                  uib-btn-checkbox uib-tooltip="Função Criar">
+                  <i class="fa fa-plus-circle" aria-hidden="true"></i></label>
+
+                <label class="btn btn-default" ng-model="ctl.checkModel.modificar"
+                  uib-btn-checkbox uib-tooltip="Função Modificar">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+
+                <label class="btn btn-default" ng-model="ctl.checkModel.excluir"
+                  uib-btn-checkbox uib-tooltip="Função Excluir">
+                  <i class="fa fa-minus-circle" aria-hidden="true"></i></label>
+                </span>
+            </p>
+
+            <ul class="list-inline">
+              <p ng-if="ctl.modulo.funcoes.length < 1" class="text-danger">Nenhum função selecionada</p>
+
+              <li ng-repeat="fun in ctl.modulo.funcoes">
+                <span class="label label-primary">{{fun}}</span>
+              </li>
+            </ul>
+
+          </div>
+      </form>
+        <div class="well" ng-if="ctl.app().modulos.length > 0">
+          <table class="table">
+
+            <thead>
+              <tr>
+                <th></th>
+                <th><strong>Nome<strong></th>
+                <th><strong>Funções</strong></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr ng-repeat="md in ctl.app().modulos">
+                <td><button type="button" class="btn btn-xs btn-default">
+        	        <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                </td>
+                <td>{{ md.nome }}</td>
+                <td>
+                  <ul class="list-inline">
+                    <li ng-repeat="f in md.funcoes" >
+                      <span class="label label-default" >{{ f }}</span>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
+      </uib-tab>
+  </uib-tabset>
+</div>
+<!--div class="modal-footer">
+  <button ng-repeat="button in modal.buttons" ng-class="button.classes"
+   ng-click="button.click($event)" ng-bind="button.text" class="btn"></button>
+</div-->

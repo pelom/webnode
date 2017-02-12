@@ -3,5 +3,11 @@ export function PermissaoResource($resource) {
   return $resource('/api/application/:id/:controller', {
     id: '@_id'
   }, {
+    modulo: {
+      method: 'PUT',
+      params: {
+        controller: 'modulo'
+      }
+    }
   });
 }

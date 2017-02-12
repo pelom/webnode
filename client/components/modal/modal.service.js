@@ -16,14 +16,39 @@ export function Modal($rootScope, $uibModal, $log) {
     angular.extend(modalScope, scope);
 
     return $uibModal.open({
-      template: require('./modal.html'),
+      template: scope.modal.html,
       windowClass: modalClass,
-      scope: modalScope
+      scope: modalScope,
+      controller: scope.modal.controller,
+      controllerAs: scope.modal.controllerAs
     });
   }
 
   // Public API here
   return {
+
+    show: {
+      open(del = angular.noop) {
+        return function() {
+          var args = Array.prototype.slice.call(arguments);
+          var modal = args.shift();
+
+          var showModal;
+
+          showModal = openModal({
+            modal: modal
+          }, 'modal-primary');
+
+          showModal.result.then(
+            function(event) {
+              del.apply(event, args);
+            },
+            function() {
+              $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
+      }
+    },
 
     /* Confirmation modals */
     confirm: {
@@ -80,5 +105,4 @@ export function Modal($rootScope, $uibModal, $log) {
 }
 
 export default angular.module('oauthApplicationApp.Modal', [])
-  .factory('Modal', Modal)
-  .name;
+  .factory('Modal', Modal).name;
