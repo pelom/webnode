@@ -38,6 +38,10 @@ function handleError(res, statusCode) {
  */
 export function index(req, res) {
   console.log('index()');
+  console.log('req.headers[user-agent]', req.headers['user-agent']);
+  console.log('req.headers[origin]', req.headers['origin']);
+  console.log('req.originalUrl', req.originalUrl);
+  console.log('req.ip', req.ip);
   /*applicationService.addName('webnode');
   let moduloUser = applicationService.addApplication('oportunidade', ['view', 'create', 'update', 'remove', 'list']);
   let moduloCarro = applicationService.addApplication('lead', ['view', 'create', 'remove']);
@@ -74,6 +78,7 @@ export function index(req, res) {
     .populate(selectModificador).exec()
     .then(appl => {
       res.status(200).json(appl);
+      return appl;
     })
     .catch(handleError(res));
 }
@@ -95,7 +100,7 @@ export function create(req, res, next) {
           return res.status(404).end();
         }
         res.status(200).json(ap);
-        return app;
+        return ap;
       })
       .catch(validationError(res));
     })
@@ -105,7 +110,7 @@ export function create(req, res, next) {
 
 export function update(req, res) {
   let appId = req.params.id;
-  console.log('update', appId);
+  console.log('update()', appId);
   console.log('body', req.body);
   let nome = String(req.body.nome);
   let descricao = String(req.body.descricao);
@@ -118,12 +123,11 @@ export function update(req, res) {
       app.modificador = userId;
       app.isAtivo = isAtivo;
       return app.save()
-        .then(() => {
+        .then(newApp => {
           res.status(204).end();
+          return newApp;
         })
         .catch(validationError(res));
-
-      //res.status(204).end();
     });
 }
 
@@ -138,8 +142,9 @@ export function updateModulo(req, res) {
       app.modulos = modulos;
       app.modificador = userId;
       return app.save()
-        .then(() => {
+        .then(newApp => {
           res.status(204).end();
+          return newApp;
         })
         .catch(validationError(res));
     });

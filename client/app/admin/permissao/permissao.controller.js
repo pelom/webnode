@@ -11,11 +11,13 @@ export default class PermissaoController {
     this.filtrarResult = '';
     //servico de modal
     this.Modal = Modal;
-    this.wait = true;
-    $timeout(function() {
+    this.wait = false;
+    /*$timeout(function() {
       console.log($scope.ctl.wait);
        $scope.ctl.wait = false;
      }, 2000);
+    */
+    PermissaoService.loadAppList();
   }
   /**
    * Obter referencia a lista de Aplicativos

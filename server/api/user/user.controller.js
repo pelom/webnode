@@ -3,7 +3,7 @@
 import User from './user.model';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
-import * as userNew from '../../mailer/userNew.service';
+import * as mailerUserNew from '../../mailer/userNew.service';
 
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
@@ -35,12 +35,7 @@ export function index(req, res) {
  * Creates a new user
  */
 export function create(req, res) {
-  console.log('req.headers[user-agent]', req.headers['user-agent']);
-  console.log('req.headers[origin]', req.headers['origin']);
-  console.log('req.originalUrl', req.originalUrl);
-
   var newUser = new User(req.body);
-  console.log(userNew);
   newUser.provider = 'local';
   newUser.role = 'user';
   newUser.save()
@@ -53,7 +48,7 @@ export function create(req, res) {
         .then(() => {
           //res.status(204).end();
           res.json({ true });
-          userNew.send(req, user);
+          mailerUserNew.send(req, user);
           return user;
         })
         .catch(validationError(res));

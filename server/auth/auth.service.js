@@ -29,6 +29,7 @@ export function isAuthenticated() {
     })
     // Attach user to request
     .use(function(req, res, next) {
+      console.log('Resquest', req);
       User.findById(req.user._id).exec()
         .then(user => {
           if(!user) {
@@ -61,12 +62,22 @@ export function hasRole(roleRequired) {
     });
 }
 
+export function signTokenUser(user) {
+  return jwt.sign({
+    _id: user.id, role: user.role, nome: user.nome
+  }, config.secrets.session, {
+    //expiresIn: 60 * 60 * 5
+    expiresIn: '30m'
+  });
+}
+
 /**
  * Returns a jwt token signed by the app secret
  */
 export function signToken(id, role) {
   return jwt.sign({ _id: id, role }, config.secrets.session, {
-    expiresIn: 60 * 60 * 5
+    //expiresIn: 60 * 60 * 5
+    expiresIn: '30m'
   });
 }
 

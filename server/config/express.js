@@ -17,7 +17,7 @@ import lusca from 'lusca';
 import config from './environment';
 import passport from 'passport';
 import session from 'express-session';
-import connectMongo from 'connect-mongo';
+import connectMongo from 'connect-mongo/es5';
 import mongoose from 'mongoose';
 var MongoStore = connectMongo(session);
 
@@ -46,18 +46,25 @@ export default function(app) {
   app.use(cookieParser());
   app.use(passport.initialize());
 
-
+  const mStore = new MongoStore({
+    mongooseConnection: mongoose.connection,
+    db: 'oauthapplication-dev',
+    ttl: 30 * 60 // = 14 days. Default
+  });
+  mStore.on('create', function(event) {
+    console.log('Session create',event);
+  });
+  mStore.on('touch', function(event) {
+      console.log('Session touch',event);
+  });
   // Persist sessions with MongoStore / sequelizeStore
   // We need to enable sessions for passport-twitter because it's an
   // oauth 1.0 strategy, and Lusca depends on sessions
   app.use(session({
     secret: config.secrets.session,
     saveUninitialized: true,
-    resave: false,
-    store: new MongoStore({
-      mongooseConnection: mongoose.connection,
-      db: 'oauthapplication-dev'
-    })
+    resave: true,
+    store: mStore
   }));
 
   /**
