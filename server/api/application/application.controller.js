@@ -124,8 +124,18 @@ export function update(req, res) {
       app.isAtivo = isAtivo;
       return app.save()
         .then(newApp => {
-          res.status(204).end();
-          return newApp;
+          Application.findById(newApp._id)
+          .select(select)
+          .populate(selectCriador)
+          .populate(selectModificador).exec()
+          .then(ap => {
+            if(!ap) {
+              return res.status(404).end();
+            }
+            res.status(200).json(ap);
+            return ap;
+          })
+          .catch(validationError(res));
         })
         .catch(validationError(res));
     });

@@ -15,7 +15,8 @@ import ngValidationMatch from 'angular-validation-match';
 import {routeConfig} from './app.config';
 
 import _Auth from '../components/auth/auth.module';
-import PermissaoService from '../components/api/permissao/permissao.module';
+//import PermissaoService from '../components/api/permissao/permissao.module';
+import AplicacaoService from '../components/api/aplicacao/aplicacao.module';
 
 import account from './account';
 import admin from './admin';
@@ -36,7 +37,7 @@ import '../components/check-strength/check.css';
 
 angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize,
   ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength,
-  uiRouter, uiBootstrap, PermissaoService,
+  uiRouter, uiBootstrap, AplicacaoService,
   _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal
 ])
   .config(routeConfig)

@@ -26,9 +26,18 @@ export default class LoginController {
         email: this.user.email,
         password: this.user.password
       })
-        .then(() => {
-          // Logged in, redirect to home
-          this.$state.go('perfil');
+        .then(user => {
+          console.log('User:', user);
+          this.Auth.isAdmin(result => {
+            console.log('isAdmin()', result);
+            if(result) {
+              // Logged in, redirect to home
+              this.$state.go('admin');
+              return result;
+            }
+            // Logged in, redirect to home
+            this.$state.go('perfil');
+          });
         })
         .catch(err => {
           this.errors.login = err.message;

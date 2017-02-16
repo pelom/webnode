@@ -18,10 +18,10 @@ export default function routes($stateProvider) {
     controllerAs: 'ctl',
     authenticate: 'admin'
   })
-  .state('permissao', {
-    url: '/permissao',
-    template: require('./permissao/permissao.html'),
-    controller: 'PermissaoController',
+  .state('aplicacoes', {
+    url: '/aplicacoes',
+    template: require('./aplicacao/aplicacao.html'),
+    controller: 'AplicacaoController',
     controllerAs: 'ctl',
     authenticate: 'admin'
   });

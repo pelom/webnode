@@ -46,7 +46,7 @@ User.find({}).remove()
       nome: 'Test',
       sobrenome: 'User',
       email: 'test@example.com',
-      password: 'test',
+      password: 'asdasd',
       isAtivo: true
     }, {
       provider: 'local',
