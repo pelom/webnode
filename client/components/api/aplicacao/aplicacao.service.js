@@ -54,7 +54,7 @@ export function AplicacaoService(Util, AplicacaoResource) {
           console.log('AplicacaoResource.createApp.save');
           console.log('newApp', oldApp);
           console.log('createApp', data);
-          appList[0] = data;//adicionar no Aplicativo no inicio da lista
+          appList.splice(0, 0, data);//adicionar no Aplicativo no inicio da lista
           app = data;//atualizar das do Aplicativo referencia
           return safeCb(callback)(data);
         }, function(err) {
@@ -72,9 +72,15 @@ export function AplicacaoService(Util, AplicacaoResource) {
         return safeCb(callback)(err);
       }).$promise;
     },
-    createModulo(callback) {
+    /**
+     * Criar novo modulo para o aplicativo
+     */
+    createModulo(modulo, callback) {
+      app.modulos.push(modulo);
       return AplicacaoResource.modulo(app, function(data) {
         console.log('AplicacaoResource.createModulo.modulo', app, data);
+        appList[app.index] = data;
+        app = data;
         return safeCb(callback)(data);
       }, function(err) {
         console.log('Ex:', err);

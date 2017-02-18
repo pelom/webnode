@@ -3,36 +3,34 @@
 export function PermissaoService(Util, PermissaoResource) {
   'ngInject';
   let safeCb = Util.safeCb;
-  let appList = [];
-  let app = {
+  let profileList = [];
+  let profile = {
     nome: '',
-    descricao: '',
-    modulos: []
+    descricao: ''
   };
   let permissaoService = {
-    getApp() {
-      return app;
+    getProfile() {
+      return profile;
     },
-    getAppList() {
-      return appList;
+    getProfileList() {
+      return profileList;
     },
     selectApp(appIndex) {
       if(appIndex > -1) {
-        app = appList[appIndex];
+        profile = profileList[appIndex];
       } else {
-        app = {
+        profile = {
           nome: '',
-          descricao: '',
-          modulos: []
+          descricao: ''
         };
       }
-      return app;
+      return profile;
     },
     setApp(index) {
       if(index > -1) {
-        app = appList[index];
+        profile = profileList[index];
       } else {
-        app = {
+        profile = {
           nome: '',
           descricao: '',
           modulos: []
@@ -40,39 +38,11 @@ export function PermissaoService(Util, PermissaoResource) {
       }
     },
 
-    loadAppList(callback) {
+    loadProfileList(callback) {
       return PermissaoResource.query(function(data) {
-        console.log('PermissaoService.loadAppList', data);
-        appList = data;
+        console.log('PermissaoService.loadProfileList', data);
+        profileList = data;
         return safeCb(callback)(null, data);
-      }, function(err) {
-        console.log('Ex:', err);
-        return safeCb(callback)(err);
-      }).$promise;
-    },
-
-    /**
-     * Criar novo Aplicativo
-     */
-    createApp(newApp, callback) {
-      let oldApp = JSON.parse(JSON.stringify(newApp));
-      return PermissaoResource.save(oldApp, function(data) {
-        console.log('PermissaoService.createApp.save');
-        console.log('newApp', oldApp);
-        console.log('createApp', data);
-        appList[0] = data;//adicionar no Aplicativo no inicio da lista
-        app = data;//atualizar das do Aplicativo referencia
-        return safeCb(callback)(data);
-      }, function(err) {
-        console.log('Ex:', err);
-        return safeCb(callback)(err);
-      }).$promise;
-    },
-
-    createModulo(callback) {
-      return PermissaoResource.modulo(app, function(data) {
-        console.log('PermissaoService.createModulo.modulo', app, data);
-        return safeCb(callback)(data);
       }, function(err) {
         console.log('Ex:', err);
         return safeCb(callback)(err);

@@ -5,6 +5,13 @@ import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
 import * as mailerUserNew from '../../mailer/userNew.service';
 
+const selectProfileRoles = {
+  path: 'profileId',
+  //match: { age: { $gte: 21 }},
+  select: 'role -_id',
+  //options: { limit: 5}
+};
+
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
   return function(err) {
@@ -37,7 +44,7 @@ export function index(req, res) {
 export function create(req, res) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
-  newUser.role = 'user';
+  //newUser.role = 'user';
   newUser.save()
     .then(function(user) {
       var token = jwt.sign({ _id: user._id }, config.secrets.session, {
@@ -114,10 +121,12 @@ export function changePassword(req, res) {
  */
 export function me(req, res, next) {
   var userId = req.user._id;
-  let select = 'nome sobrenome email role';
+  let select = 'nome sobrenome email role profileId';
   return User.findOne({ _id: userId },
     //'-salt -password -activeToken'
-    select).exec()
+    select)
+    .populate(selectProfileRoles)
+    .exec()
     .then(user => { // don't ever give out the password or salt
       if(!user) {
         return res.status(401).end();

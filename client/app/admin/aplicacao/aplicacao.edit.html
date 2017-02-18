@@ -25,7 +25,7 @@
           Informe o <strong>Nome</strong> e a <strong>Descrição</strong> para o seu aplicativo.</h5>
         <br ng-if="ctl.app()._id != null"/>
 
-        <form class="form" name="form1" novalidate ng-submit="ctl.createApp(form1)">
+        <form class="form " name="form1" novalidate ng-submit="ctl.createApp(form1)">
 
           <div class="form-group" ng-class="{'has-error': form1.nome.$invalid && form1.nome.$dirty}">
 
@@ -55,6 +55,7 @@
                 <dd>
                   <select class="form-control" ng-model="ctl.app().isAtivo"
                    ng-options="item.value as item.name for item in ctl.situacao"></select>
+                 </dd>
               </dl>
             </div>
             <div class="col-xs-6">
@@ -97,23 +98,22 @@
         <uib-tab-heading>
           <i class="fa fa-th-large" aria-hidden="true"></i> Modulos
         </uib-tab-heading>
-        <br ng-if="!ctl.isAddModulo"/>
-        <form class="form" novalidate name="form" ng-submit="ctl.createModulo(form)"
-          ng-if="ctl.isAddModulo" >
+        <br/>
+        <form class="well form animate-show-hide" novalidate name="form" ng-submit="ctl.createModulo(form)"
+          ng-hide="!ctl.isAddModulo" >
           <h5 class="page-header"><i class="fa fa-arrow-right" aria-hidden="true"></i>
             Adicione um <strong>Nome</strong> para o módulo e configure suas funções</h5>
 
-          <div class="well" ng-class="{'has-success': form.nomeMod.$valid && form.nomeMod.$dirty,
+          <div class="" ng-class="{'has-success': form.nomeMod.$valid && form.nomeMod.$dirty,
                   'has-error': form.nomeMod.$invalid && form.nomeMod.$dirty}">
-
             <p class="input-group">
               <input type="text" class="form-control" placeholder="Nome do modulo"
                name="nomeMod" ng-model="ctl.modulo.nome"
                 ng-required="true" ng-minlength="3" ng-maxlength="40" />
 
               <span class="input-group-btn">
-                <button type="submit" class="btn btn-default"
-                ng-disabled="form.$invalid || ctl.modulo.funcoes.length < 1">Adicionar</button>
+                <button type="submit" class="btn btn-primary"
+                ng-disabled="form.$invalid || ctl.modulo.funcoes.length < 1">Criar módulo</button>
               </span>
 
               <p class="help-block" ng-show="form.nomeMod.$error.required && form.nomeMod.$dirty">
@@ -125,11 +125,8 @@
               <p class="help-block" ng-show="form.nomeMod.$error.maxlength">
                 São permitidos no máximo 40 letras</p>
             </p>
-
             <p class="input-group">
-              <label>Funções: </label>
               <span class="input-group-btn">
-
                 <label class="btn btn-default" ng-model="ctl.checkModel.ler"
                   uib-btn-checkbox uib-tooltip="Função Ver">
                   <i class="fa fa-eye" aria-hidden="true"></i></label>
@@ -145,7 +142,8 @@
                 <label class="btn btn-default" ng-model="ctl.checkModel.excluir"
                   uib-btn-checkbox uib-tooltip="Função Excluir">
                   <i class="fa fa-minus-circle" aria-hidden="true"></i></label>
-                </span>
+              </span>
+
             </p>
 
             <ul class="list-inline">
@@ -155,11 +153,13 @@
                 <span class="label label-primary">{{fun}}</span>
               </li>
             </ul>
-
+            <hr/>
+            <button class="btn btn-link"
+              ng-click="ctl.isAddModulo = false">Voltar</button>
           </div>
       </form>
 
-      <div class="panel panel-default">
+      <div class="panel panel-default" ng-if="!ctl.isAddModulo">
       <!--/div>
       <div class="well" ng-if="ctl.app().modulos.length > 0"-->
 
@@ -188,6 +188,7 @@
                 <th></th>
                 <th><strong>Nome<strong></th>
                 <th><strong>Funções</strong></th>
+                <th><strong>Criado</strong></th>
               </tr>
             </thead>
 
@@ -196,7 +197,7 @@
                 <td>
                   <button type="button" class="btn btn-xs btn-default" uib-tooltip="Excluir função"
                     ng-click="ctl.deleteModulo(md)">
-        	          <i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></button>
+        	          <i class="fa fa-minus-circle" aria-hidden="true"></i></button>
                 </td>
                 <td>{{ md.nome }}</td>
                 <td>
@@ -205,6 +206,9 @@
                       <span class="label label-default" >{{ f }}</span>
                     </li>
                   </ul>
+                </td>
+                <td>
+                  <small>{{ md.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>
                 </td>
               </tr>
             </tbody>

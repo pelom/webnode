@@ -17,30 +17,19 @@ export default class PermissaoController {
        $scope.ctl.wait = false;
      }, 2000);
     */
-    PermissaoService.loadAppList();
+    PermissaoService.loadProfileList();
+
+    this.profileMaster = '';
+    this.profileNome = '';
   }
+  changeProfileMaster(profile) {
+    console.log('changeProfileMaster', profile);
+  }
+
   /**
    * Obter referencia a lista de Aplicativos
    */
   appList() {
-    return this.PermissaoService.getAppList();
-  }
-
-  openAppModal(index) {
-    let app = this.PermissaoService.selectApp(index);
-    let stgTitulo = (app.nome != '') ? app.nome : 'Novo Aplicativo';
-
-    var modal = {
-      controller: 'PermissaoAppController',
-      controllerAs: 'ctl',
-      dismissable: true,
-      title: stgTitulo,
-      html: require('./permissao.app.html'),
-      //buttons: [button]
-    };
-    var neww = this.Modal.show.open(function() {
-      console.log('New');
-    });
-    neww(modal);
+    return this.PermissaoService.getProfileList();
   }
 }

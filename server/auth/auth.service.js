@@ -29,8 +29,10 @@ export function isAuthenticated() {
     })
     // Attach user to request
     .use(function(req, res, next) {
-      console.log('Resquest', req);
-      User.findById(req.user._id).exec()
+      //console.log('Resquest', req);
+      User.findById(req.user._id)
+        .populate('profileId')
+        .exec()
         .then(user => {
           if(!user) {
             return res.status(401).end();
@@ -54,7 +56,7 @@ export function hasRole(roleRequired) {
   return compose()
     .use(isAuthenticated())
     .use(function meetsRequirements(req, res, next) {
-      if(config.userRoles.indexOf(req.user.role) >= config.userRoles.indexOf(roleRequired)) {
+      if(config.userRoles.indexOf(req.user.profileId.role) >= config.userRoles.indexOf(roleRequired)) {
         return next();
       } else {
         return res.status(403).send('Forbidden');
@@ -64,7 +66,7 @@ export function hasRole(roleRequired) {
 
 export function signTokenUser(user) {
   return jwt.sign({
-    _id: user.id, role: user.role, nome: user.nome
+    _id: user.id, role: user.profileId.role, nome: user.nome
   }, config.secrets.session, {
     //expiresIn: 60 * 60 * 5
     expiresIn: '30m'
@@ -88,7 +90,7 @@ export function setTokenCookie(req, res) {
   if(!req.user) {
     return res.status(404).send('It looks like you aren\'t logged in, please try again.');
   }
-  var token = signToken(req.user._id, req.user.role);
+  var token = signToken(req.user._id, req.user.profileId.role);
   res.cookie('token', token);
   res.redirect('/');
 }

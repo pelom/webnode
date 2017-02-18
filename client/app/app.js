@@ -1,7 +1,7 @@
 'use strict';
 
 import angular from 'angular';
-// import ngAnimate from 'angular-animate';
+import ngAnimate from 'angular-animate';
 import ngCookies from 'angular-cookies';
 import ngResource from 'angular-resource';
 import ngSanitize from 'angular-sanitize';
@@ -15,7 +15,7 @@ import ngValidationMatch from 'angular-validation-match';
 import {routeConfig} from './app.config';
 
 import _Auth from '../components/auth/auth.module';
-//import PermissaoService from '../components/api/permissao/permissao.module';
+import PermissaoService from '../components/api/permissao/permissao.module';
 import AplicacaoService from '../components/api/aplicacao/aplicacao.module';
 
 import account from './account';
@@ -35,9 +35,9 @@ import './app.css';
 import checkStrength from '../components/check-strength/checkStrength.directive';
 import '../components/check-strength/check.css';
 
-angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize,
+angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize, ngAnimate,
   ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength,
-  uiRouter, uiBootstrap, AplicacaoService,
+  uiRouter, uiBootstrap, AplicacaoService, PermissaoService,
   _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal
 ])
   .config(routeConfig)

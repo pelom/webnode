@@ -1,13 +1,13 @@
 export function PermissaoResource($resource) {
   'ngInject';
-  return $resource('/api/application/:id/:controller', {
+  return $resource('/api/profile/:id/:controller', {
     id: '@_id'
   }, {
-    modulo: {
+    /*modulo: {
       method: 'PUT',
       params: {
         controller: 'modulo'
       }
-    }
+    }*/
   });
 }

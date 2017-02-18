@@ -4,7 +4,7 @@ class _User {
   _id = '';
   name = '';
   email = '';
-  role = '';
+  profileId = {role: ''};
   $promise = undefined;
 }
 
@@ -157,7 +157,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
     isLoggedIn(callback) {
       return Auth.getCurrentUser(undefined)
         .then(user => {
-          let is = _.get(user, 'role');
+          let is = _.get(user, 'profileId.role');
 
           safeCb(callback)(is);
           return is;
@@ -170,7 +170,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
      * @return {Bool}
      */
     isLoggedInSync() {
-      return !!_.get(currentUser, 'role');
+      return !!_.get(currentUser, 'profileId.role');
     },
 
     /**
@@ -183,7 +183,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
     hasRole(role, callback) {
       return Auth.getCurrentUser(undefined)
         .then(user => {
-          let has = hasRole(_.get(user, 'role'), role);
+          let has = hasRole(_.get(user, 'profileId.role'), role);
 
           safeCb(callback)(has);
           return has;
@@ -197,7 +197,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
      * @return {Bool}
      */
     hasRoleSync(role) {
-      return hasRole(_.get(currentUser, 'role'), role);
+      return hasRole(_.get(currentUser, 'profileId.role'), role);
     },
 
     /**

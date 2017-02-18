@@ -20,14 +20,15 @@ var UserSchema = new Schema({
     required: true,
     default: false
   },
-  role: {
-    type: String,
-    default: 'user'
-  },
+  //role: {
+  //  type: String,
+  //  default: 'user'
+  //},
   password: {
     type: String,
     required: true
   },
+  profileId: { type: Schema.Types.ObjectId, ref: 'Profile' },
   provider: String,
   salt: String,
   activeToken: String,

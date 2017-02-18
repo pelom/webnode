@@ -12,9 +12,9 @@ export default class AplicacaoEditController {
     //controle das funcoes do componente radio
     this.checkModel = {
       ler: true,
-      criar: true,
-      modificar: true,
-      excluir: true
+      criar: false,
+      modificar: false,
+      excluir: false
     };
     this.situacao = [
       { name: 'Ativo', value: 'true' },
@@ -80,20 +80,26 @@ export default class AplicacaoEditController {
   createModulo(form) {
     console.log(this.modulo);
     if(form.$valid && this.modulo.funcoes.length > 0) {
-      console.log('Valid');
-
       let arr = this.checkModel;
       //this.AplicacaoService.createModulo(this.modulo);
-      this.app().modulos.push({
+      /*this.app().modulos.push({
         nome: this.modulo.nome,
         funcoes: this.modulo.funcoes
       });
-      this.AplicacaoService.createModulo();
+      */
+      let newModulo = {
+        nome: this.modulo.nome,
+        funcoes: this.modulo.funcoes
+      };
+      this.AplicacaoService.createModulo(newModulo, function(data) {
+        console.log('createModulo', data);
+      });
       this.modulo.nome = '';
       this.modulo.funcoes = [];
       angular.forEach(this.checkModel, function(value, key) {
         arr[key] = false;
       });
+      this.isAddModulo = false;
       form.$setPristine();
       this.addMesagem(this.sucesso);
     }

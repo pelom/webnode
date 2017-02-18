@@ -12,6 +12,11 @@ function localAuthenticate(User, email, password, done) {
           message: 'Este e-mail não está registrado.'
         });
       }
+      if(!user.profileId) {
+        return done(null, false, {
+          message: 'Profile not found'
+        });
+      }
       user.authenticate(password, function(authError, authenticated) {
         if(authError) {
           return done(authError);

@@ -52,10 +52,10 @@ export default function(app) {
     ttl: 30 * 60 // = 14 days. Default
   });
   mStore.on('create', function(event) {
-    console.log('Session create',event);
+    console.log('Session create');
   });
   mStore.on('touch', function(event) {
-      console.log('Session touch',event);
+      console.log('Session touch');
   });
   // Persist sessions with MongoStore / sequelizeStore
   // We need to enable sessions for passport-twitter because it's an
