@@ -40,7 +40,9 @@
                   <dd>
                     <select class="form-control" ng-model="ctl.profileMaster"
                        ng-options="item._id as item.nome for item in ctl.appList()"
-                      ng-change="ctl.changeProfileMaster(ctl.profileMaster)"></select>
+                      ng-change="ctl.changeProfileMaster(ctl.profileMaster)">
+                        <option ng-if="!ctl.profileMaster" value="">-- Nenhum --</option>
+                      </select>
                 </dl>
               </div>
             </div>

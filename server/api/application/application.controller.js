@@ -1,5 +1,6 @@
 'use strict';
 
+import ApplicationModulo from './application.modulo.model';
 import Application from './application.model';
 import applicationService from './application.service';
 
@@ -38,10 +39,6 @@ function handleError(res, statusCode) {
  */
 export function index(req, res) {
   console.log('index()');
-  console.log('req.headers[user-agent]', req.headers['user-agent']);
-  console.log('req.headers[origin]', req.headers['origin']);
-  console.log('req.originalUrl', req.originalUrl);
-  console.log('req.ip', req.ip);
   /*applicationService.addName('webnode');
   let moduloUser = applicationService.addApplication('oportunidade', ['view', 'create', 'update', 'remove', 'list']);
   let moduloCarro = applicationService.addApplication('lead', ['view', 'create', 'remove']);
@@ -74,6 +71,7 @@ export function index(req, res) {
         createdAt: -1 //Sort by Date Added DESC
       }
     })
+    .populate('modulos')
     .populate(selectCriador)
     .populate(selectModificador).exec()
     .then(appl => {

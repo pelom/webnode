@@ -3,18 +3,23 @@
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
 
-var ApplicationSchema = new Schema({
+var ApplicationModuloSchema = new Schema({
   nome: String,
-  descricao: String,
-  modulos: [{ type: Schema.Types.ObjectId, ref: 'ApplicationModulo' }],
-  isAtivo: {
+  /*status: {
     type: String,
+    enum: ['Ativo', 'Desativo'],
+    required: true,
+    default: 'Ativo'
+  },*/
+  isAtivo: {
+    type: Boolean,
     required: true,
     default: true
   },
+  funcoes: [String],
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
   modificador: { type: Schema.Types.ObjectId, ref: 'User'}
 }, {
   timestamps: true
 });
-export default mongoose.model('Application', ApplicationSchema);
+export default mongoose.model('ApplicationModulo', ApplicationModuloSchema);

@@ -31,8 +31,10 @@ export function isAuthenticated() {
     .use(function(req, res, next) {
       //console.log('Resquest', req);
       User.findById(req.user._id)
-        .populate('profileId')
-        .exec()
+        .populate({
+          path: 'profileId',
+          select: 'role'
+        }).exec()
         .then(user => {
           if(!user) {
             return res.status(401).end();

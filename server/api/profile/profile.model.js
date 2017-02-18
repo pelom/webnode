@@ -2,10 +2,17 @@
 /*eslint no-invalid-this:0*/
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
+var PermissaoSchema = new Schema({
+  application: {type: Schema.Types.ObjectId, ref: 'Application', required: true },
+  modulo: {type: Schema.Types.ObjectId, ref: 'ApplicationModulo', required: true },
+  funcoes: [{type: String, required: true }]
+}, {
+  timestamps: true
+});
 var ProfileSchema = new Schema({
   nome: String,
   descricao: String,
-  applications: [{ type: Schema.Types.ObjectId, ref: 'Application' }],
+  permissoes: [PermissaoSchema],
   role: {
     type: String,
     default: 'user'

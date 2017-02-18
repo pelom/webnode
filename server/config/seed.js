@@ -5,6 +5,7 @@
 
 'use strict';
 import Thing from '../api/thing/thing.model';
+import ApplicationModulo from '../api/application/application.modulo.model';
 import Application from '../api/application/application.model';
 import Profile from '../api/profile/profile.model';
 import User from '../api/user/user.model';
@@ -41,58 +42,86 @@ Thing.find({}).remove()
     });
   });
 
-Profile.find({}).remove()
-  .then(() => {
-    Application.create([{
-      nome: 'profileAdmin',
-      descricao: 'Perfil administrador'
-    }, {
-      nome: 'profileSeller',
-      descricao: 'Perfil vendedor'
-    }]).then((app)=> {
-      console.log('finished populating Application', app);
+let createProfile = function(app) {
+  Profile.find({}).remove()
+    .then(() => {
       let permissionList = [];
-      app.forEach(function(ap) {
-        permissionList.push(ap._id);
-      });
-      Profile.create({
-          nome: 'Profile Admin',
-          descricao: 'Perfil do administrador',
-          isAtivo: true,
-          applications: permissionList
-        })
-        .then(() => {
-          console.log('finished populating Profile');
-
-          User.find({}).remove()
-            .then(() => {
-              Profile.findOne({'nome':'Profile Admin'})
-              .then(prof => {
-                console.log('Find Profile: ', prof);
-                User.create([{
-                    provider: 'local',
-                    nome: 'Test',
-                    sobrenome: 'User',
-                    email: 'test@example.com',
-                    password: 'asdasd',
-                    isAtivo: true
-                  }, {
-                    provider: 'local',
-                    role: 'admin',
-                    nome: 'Admin',
-                    sobrenome: 'Sistemas',
-                    email: 'admin@example.com',
-                    password: 'admin',
-                    isAtivo: true,
-                    profileId: prof._id
-                  }])
-                  .then(users => {
-                    console.log('finished populating users', users);
-                  });
-              });
-
-            });
-
+      app.modulos.forEach(function(m) {
+        permissionList.push({
+          application: app._id,
+          modulo: m._id,
+          funcoes: m.funcoes
         });
+      });
+      Profile.create([{
+        nome: 'Profile Admin',
+        descricao: 'Perfil do administrador',
+        isAtivo: true,
+        role: 'admin',
+        permissoes: permissionList
+      }, {
+        nome: 'Profile User',
+        descricao: 'Perfil do usuario',
+        isAtivo: true,
+      }])
+      .then(profiles => {
+        console.log('finished populating Profile', profiles);
+        createUser(profiles);
+      });
+    });
+};
+let createUser = function(profiles) {
+  User.find({ }).remove()
+    .then(() => {
+      User.create([{
+        provider: 'local',
+        role: 'admin',
+        nome: 'Admin',
+        sobrenome: 'Sistemas',
+        email: 'admin@example.com',
+        password: 'admin',
+        isAtivo: true,
+        profileId: profiles[0]._id
+      }])
+      .then(user => {
+        console.log('finished populating user', user);
+      });
+      User.create([{
+        provider: 'local',
+        nome: 'Test',
+        sobrenome: 'User',
+        email: 'test@example.com',
+        password: 'asdasd',
+        isAtivo: true,
+        profileId: profiles[1]._id
+      }])
+      .then(user => {
+        console.log('finished populating user', user);
+      });
+    });
+};
+
+let createAppModulo = function() {
+  ApplicationModulo.find({}).remove().then(() => {
+    ApplicationModulo.create([
+      { nome: 'User', funcoes: ['Ler', 'Criar']},
+      { nome: 'Application', funcoes: ['Ler', 'Criar']}
+    ]).then(modulos => {
+      console.log('finished populating Application Modulo', modulos);
+      createApp(modulos);
     });
   });
+};
+let createApp = function(modulos) {
+  Application.find({}).remove().then(() => {
+    Application.create({
+      nome: 'profileAdmin',
+      descricao: 'Perfil administrador',
+      modulos: modulos
+    }).then(app => {
+      console.log('finished populating Application', app);
+      createProfile(app);
+    });
+  });
+};
+createAppModulo();
