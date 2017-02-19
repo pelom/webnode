@@ -54,15 +54,16 @@ let createProfile = function(app) {
         });
       });
       Profile.create([{
-        nome: 'Profile Admin',
-        descricao: 'Perfil do administrador',
+        nome: 'Administrador sistemas',
+        descricao: 'Perfil padrão responsável por fornecer as permissões para os administradores de sistemas',
         isAtivo: true,
         role: 'admin',
         permissoes: permissionList
       }, {
-        nome: 'Profile User',
-        descricao: 'Perfil do usuario',
+        nome: 'Usuário padrão',
+        descricao: 'Perfil padrão responsável por fornecer as permissões para os usuários',
         isAtivo: true,
+        role: 'user',
       }])
       .then(profiles => {
         console.log('finished populating Profile', profiles);
@@ -75,7 +76,6 @@ let createUser = function(profiles) {
     .then(() => {
       User.create([{
         provider: 'local',
-        role: 'admin',
         nome: 'Admin',
         sobrenome: 'Sistemas',
         email: 'admin@example.com',
@@ -91,7 +91,7 @@ let createUser = function(profiles) {
         nome: 'Test',
         sobrenome: 'User',
         email: 'test@example.com',
-        password: 'asdasd',
+        password: '123456',
         isAtivo: true,
         profileId: profiles[1]._id
       }])
@@ -102,26 +102,32 @@ let createUser = function(profiles) {
 };
 
 let createAppModulo = function() {
-  ApplicationModulo.find({}).remove().then(() => {
-    ApplicationModulo.create([
-      { nome: 'User', funcoes: ['Ler', 'Criar']},
-      { nome: 'Application', funcoes: ['Ler', 'Criar']}
-    ]).then(modulos => {
-      console.log('finished populating Application Modulo', modulos);
-      createApp(modulos);
+  ApplicationModulo.find({}).remove()
+    .then(() => {
+      let fnList = ['Ler', 'Criar', 'Modificar', 'Excluir'];
+      ApplicationModulo.create([
+        { nome: 'Usuario', funcoes: fnList },
+        { nome: 'Usuario Perfil', funcoes: fnList },
+        { nome: 'Aplicacao', funcoes: fnList },
+        { nome: 'Aplicacao Modulo', funcoes: fnList }
+      ])
+      .then(modulos => {
+        console.log('finished populating Application Modulo', modulos);
+        createApp(modulos);
+      });
     });
-  });
 };
 let createApp = function(modulos) {
-  Application.find({}).remove().then(() => {
-    Application.create({
-      nome: 'profileAdmin',
-      descricao: 'Perfil administrador',
-      modulos: modulos
-    }).then(app => {
-      console.log('finished populating Application', app);
-      createProfile(app);
+  Application.find({}).remove()
+    .then(() => {
+      Application.create({
+        nome: 'Standard',
+        descricao: 'Aplicação padrão resposável por fornecer os módulos utéis',
+        modulos: modulos
+      }).then(app => {
+        console.log('finished populating Application', app);
+        createProfile(app);
+      });
     });
-  });
 };
 createAppModulo();

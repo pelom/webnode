@@ -34,7 +34,8 @@ export function isAuthenticated() {
         .populate({
           path: 'profileId',
           select: 'role'
-        }).exec()
+        })
+        .exec()
         .then(user => {
           if(!user) {
             return res.status(401).end();
