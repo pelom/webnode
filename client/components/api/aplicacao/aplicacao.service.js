@@ -45,13 +45,13 @@ export function AplicacaoService(Util, AplicacaoResource) {
     },
 
     /**
-     * Criar novo Aplicativo
+     * Salvar Aplicativo
      */
-    createApp(newApp, callback) {
+    saveAplicavo(newApp, callback) {
       let oldApp = JSON.parse(JSON.stringify(newApp));
-      if(oldApp._id == null) {
+      if(oldApp._id === null) {
         return AplicacaoResource.save(oldApp, function(data) {
-          console.log('AplicacaoResource.createApp.save');
+          console.log('AplicacaoResource.saveAplicavo.save');
           console.log('newApp', oldApp);
           console.log('createApp', data);
           appList.splice(0, 0, data);//adicionar no Aplicativo no inicio da lista
@@ -63,7 +63,7 @@ export function AplicacaoService(Util, AplicacaoResource) {
         }).$promise;
       }
       return AplicacaoResource.update(app, function(data) {
-        console.log('AplicacaoResource.createApp.update', app, data);
+        console.log('AplicacaoResource.saveAplicavo.update', app, data);
         appList[app.index] = data;
         app = data;
         return safeCb(callback)(data);
@@ -72,20 +72,32 @@ export function AplicacaoService(Util, AplicacaoResource) {
         return safeCb(callback)(err);
       }).$promise;
     },
-    /**
-     * Criar novo modulo para o aplicativo
-     */
-    createModulo(modulo, callback) {
-      app.modulos.push(modulo);
-      return AplicacaoResource.modulo(app, function(data) {
-        console.log('AplicacaoResource.createModulo.modulo', app, data);
-        appList[app.index] = data;
-        app = data;
-        return safeCb(callback)(data);
-      }, function(err) {
-        console.log('Ex:', err);
-        return safeCb(callback)(err);
-      }).$promise;
+    saveModulo(modulo, callback) {
+      if(modulo._id === null) {
+        modulo._id = app._id;
+        return AplicacaoResource.createModulo(modulo, function(data) {
+          console.log('AplicacaoResource.createModulo.modulo', modulo, data);
+          app.modulos.push(data);
+          //appList[app.index] = data;
+          //app = data;
+          return safeCb(callback)(data);
+        }, function(err) {
+          console.log('Ex:', err);
+          return safeCb(callback)(err);
+        }).$promise;
+      } else {
+        return AplicacaoResource.updateModulo(modulo, function(data) {
+          console.log('AplicacaoResource.updateModulo.modulo', modulo, data);
+          let index = app.modulos.indexOf(modulo);
+          app.modulos.splice(index, 1, data);
+          //appList[app.index] = data;
+          //app = data;
+          return safeCb(callback)(data);
+        }, function(err) {
+          console.log('Ex:', err);
+          return safeCb(callback)(err);
+        }).$promise;
+      }
     }
   };
   return aplicacaoService;

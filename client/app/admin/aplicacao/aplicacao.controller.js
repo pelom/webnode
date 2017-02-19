@@ -12,11 +12,6 @@ export default class AplicacaoController {
     //servico de modal
     this.Modal = Modal;
     this.wait = false;
-    /*$timeout(function() {
-      console.log($scope.ctl.wait);
-       $scope.ctl.wait = false;
-     }, 2000);
-    */
     AplicacaoService.loadAppList();
   }
   /**

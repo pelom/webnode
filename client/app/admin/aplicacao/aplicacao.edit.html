@@ -8,87 +8,85 @@
 <div class="modal-body">
 
   <div uib-alert ng-repeat="alert in ctl.alerts"
-  ng-class="'alert-' + (alert.type || 'warning')">{{alert.msg}}</div>
+    ng-class="'alert-' + (alert.type || 'warning')">{{alert.msg}}</div>
 
   <p ng-if="modal.text" ng-bind="modal.text"></p>
   <!--div ng-if="modal.html" ngHtml="modal.html"></div-->
 
   <uib-tabset active="ctl.abaAtiva" justified="true">
-      <uib-tab index="0">
+    <uib-tab index="0">
 
-        <uib-tab-heading>
-          <i class="fa fa-info-circle" aria-hidden="true"></i> Informações
-        </uib-tab-heading>
+      <uib-tab-heading>
+        <i class="fa fa-info-circle" aria-hidden="true"></i> Informações
+      </uib-tab-heading>
 
-        <h5 class="page-header" ng-if="ctl.app()._id == null">
-          <i class="fa fa-arrow-right" aria-hidden="true"></i>
-          Informe o <strong>Nome</strong> e a <strong>Descrição</strong> para o seu aplicativo.</h5>
-        <br ng-if="ctl.app()._id != null"/>
+      <h5 class="page-header" ng-if="ctl.app()._id == null">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        Informe o <strong>Nome</strong> e a <strong>Descrição</strong> para o seu aplicativo.</h5>
+      <br ng-if="ctl.app()._id != null"/>
 
-        <form class="form " name="form1" novalidate ng-submit="ctl.createApp(form1)">
+      <form class="form " name="form1" novalidate ng-submit="ctl.saveApp(form1)">
 
-          <div class="form-group" ng-class="{'has-error': form1.nome.$invalid && form1.nome.$dirty}">
+        <div class="form-group" ng-class="{'has-error': form1.nome.$invalid && form1.nome.$dirty}">
 
-            <input type="text" name="nome" class="form-control" placeholder="Nome"
-             ng-model="ctl.app().nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
-              nomevalido="false" />
+          <input type="text" name="nome" class="form-control" placeholder="Nome"
+           ng-model="ctl.app().nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
+            nomevalido="false" />
 
-            <p class="help-block" ng-show="form1.nome.$error.required && form1.nome.$dirty">
-              O sobrenome é necessário</p>
-            <p class="help-block" ng-show="form1.nome.$error.pattern">
-              Somente letras são permitidas</p>
-            <p class="help-block" ng-show="form1.nome.$error.minlength">
-              São necessários no minimo 3 letras</p>
-            <p class="help-block" ng-show="form1.nome.$error.maxlength">
-              São permitidos no máximo 30 letras</p>
+          <p class="help-block" ng-show="form1.nome.$error.required && form1.nome.$dirty">
+            O sobrenome é necessário</p>
+          <p class="help-block" ng-show="form1.nome.$error.minlength">
+            São necessários no minimo 3 letras</p>
+          <p class="help-block" ng-show="form1.nome.$error.maxlength">
+            São permitidos no máximo 30 letras</p>
+        </div>
+
+        <div class="form-group">
+          <textarea class="form-control" rows="3" placeholder="Descrição"
+            ng-model="ctl.app().descricao"></textarea>
+        </div>
+
+        <div class="row" ng-if="ctl.app()._id != null">
+          <div class="col-xs-6">
+            <dl>
+              <dt><small>Situação</small></dt>
+              <dd>
+                <select class="form-control" ng-model="ctl.app().isAtivo"
+                 ng-options="item.value as item.name for item in ctl.situacao"></select>
+               </dd>
+            </dl>
           </div>
-
-          <div class="form-group">
-            <textarea class="form-control" rows="3" placeholder="Descrição"
-              ng-model="ctl.app().descricao"></textarea>
+          <div class="col-xs-6">
+            <!--dl>
+              <dt><small>Modificado</small></dt>
+              <dd><small>{{ ctl.app().updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                <strong>{{ctl.app().criador.nome}} {{ctl.app().criador.sobrenome}}</strong></small></dd>
+            </dl-->
           </div>
-
-          <div class="row" ng-if="ctl.app()._id != null">
-            <div class="col-xs-6">
-              <dl>
-                <dt><small>Situação</small></dt>
-                <dd>
-                  <select class="form-control" ng-model="ctl.app().isAtivo"
-                   ng-options="item.value as item.name for item in ctl.situacao"></select>
-                 </dd>
-              </dl>
-            </div>
-            <div class="col-xs-6">
-              <!--dl>
-                <dt><small>Modificado</small></dt>
-                <dd><small>{{ ctl.app().updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <strong>{{ctl.app().criador.nome}} {{ctl.app().criador.sobrenome}}</strong></small></dd>
-              </dl-->
-            </div>
+        </div>
+        <div class="row" ng-if="ctl.app()._id != null">
+          <div class="col-xs-6">
+            <dl>
+              <dt><small>Criado</small></dt>
+              <dd><small>{{ ctl.app().createdAt | date:'dd/MM/yyyy HH:mm' }} por
+                <strong>{{ctl.app().criador.nome}} {{ctl.app().criador.sobrenome}}</strong></small></dd>
+            </dl>
           </div>
-          <div class="row" ng-if="ctl.app()._id != null">
-            <div class="col-xs-6">
-              <dl>
-                <dt><small>Criado</small></dt>
-                <dd><small>{{ ctl.app().createdAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <strong>{{ctl.app().criador.nome}} {{ctl.app().criador.sobrenome}}</strong></small></dd>
-              </dl>
-            </div>
-            <div class="col-xs-6">
-              <dl>
-                <dt><small>Modificado</small></dt>
-                <dd><small>{{ ctl.app().updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <strong>{{ctl.app().modificador.nome}} {{ctl.app().modificador.sobrenome}}</strong></small></dd>
-              </dl>
-            </div>
+          <div class="col-xs-6">
+            <dl>
+              <dt><small>Modificado</small></dt>
+              <dd><small>{{ ctl.app().updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                <strong>{{ctl.app().modificador.nome}} {{ctl.app().modificador.sobrenome}}</strong></small></dd>
+            </dl>
           </div>
-          <hr>
-          <button class="btn btn-primary" type="submit"
-            ng-disabled="form1.$invalid || ctl.wait">
-              <loading showhidden="ctl.wait"></loading> Salvar</button>
-        </form>
+        </div>
+        <hr>
+        <button class="btn btn-primary" type="submit"
+          ng-disabled="form1.$invalid || ctl.wait">
+            <loading showhidden="ctl.wait"></loading> Salvar</button>
+      </form>
 
-      </uib-tab>
+    </uib-tab>
 
       <!--uib-tab index="$index + 1" ng-repeat="tab in tabs" heading="{{tab.title}}" disable="tab.disabled">
         {{tab.content}}
@@ -98,91 +96,116 @@
         <uib-tab-heading>
           <i class="fa fa-th-large" aria-hidden="true"></i> Modulos
         </uib-tab-heading>
+
         <br/>
-        <form class="well form animate-show-hide" novalidate name="form" ng-submit="ctl.createModulo(form)"
-          ng-hide="!ctl.isAddModulo" >
-          <h5 class="page-header"><i class="fa fa-arrow-right" aria-hidden="true"></i>
-            Adicione um <strong>Nome</strong> para o módulo e configure suas funções</h5>
+        <div class="panel panel-default" ng-hide="!ctl.isAddModulo" >
+          <!--div class="panel-heading">
+            <h5><i class="fa fa-plus" aria-hidden="true"></i>
+              Adicione um <strong>Nome</strong> para o módulo e configure suas funções</h5>
+          </div-->
 
-          <div class="" ng-class="{'has-success': form.nomeMod.$valid && form.nomeMod.$dirty,
-                  'has-error': form.nomeMod.$invalid && form.nomeMod.$dirty}">
-            <p class="input-group">
-              <input type="text" class="form-control" placeholder="Nome do modulo"
-               name="nomeMod" ng-model="ctl.modulo.nome"
-                ng-required="true" ng-minlength="3" ng-maxlength="40" />
+          <form class="form" novalidate name="form" ng-submit="ctl.saveModulo(form)">
+            <div class="panel-body" ng-class="{'has-error': form.nomeMod.$invalid && form.nomeMod.$dirty}">
 
-              <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary"
-                ng-disabled="form.$invalid || ctl.modulo.funcoes.length < 1">Criar módulo</button>
-              </span>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Nome do modulo"
+                 name="nomeMod" ng-model="ctl.modulo.nome"
+                  ng-required="true" ng-minlength="3" ng-maxlength="40" />
 
-              <p class="help-block" ng-show="form.nomeMod.$error.required && form.nomeMod.$dirty">
-                O sobrenome é necessário</p>
-              <p class="help-block" ng-show="form.nomeMod.$error.pattern">
-                Somente letras são permitidas</p>
-              <p class="help-block" ng-show="form.nomeMod.$error.minlength">
-                São necessários no minimo 3 letras</p>
-              <p class="help-block" ng-show="form.nomeMod.$error.maxlength">
-                São permitidos no máximo 40 letras</p>
-            </p>
-            <p class="input-group">
-              <span class="input-group-btn">
-                <label class="btn btn-default" ng-model="ctl.checkModel.ler"
-                  uib-btn-checkbox uib-tooltip="Função Ver">
-                  <i class="fa fa-eye" aria-hidden="true"></i></label>
+                <p class="help-block" ng-show="form.nomeMod.$error.required && form.nomeMod.$dirty">
+                  O sobrenome é necessário</p>
+                <p class="help-block" ng-show="form.nomeMod.$error.pattern">
+                  Somente letras são permitidas</p>
+                <p class="help-block" ng-show="form.nomeMod.$error.minlength">
+                  São necessários no minimo 3 letras</p>
+                <p class="help-block" ng-show="form.nomeMod.$error.maxlength">
+                  São permitidos no máximo 40 letras</p>
+              </div>
+              <div class="row" ng-if="ctl.modulo._id != null">
+                <div class="col-xs-6">
+                  <dl>
+                    <dt><small>Criado</small></dt>
+                    <dd><small>{{ ctl.modulo.createdAt | date:'dd/MM/yyyy HH:mm' }} por
+                      <strong>{{ctl.modulo.criador.nome}} {{ctl.modulo.criador.sobrenome}}</strong></small></dd>
+                  </dl>
+                </div>
+                <div class="col-xs-6">
+                  <dl>
+                    <dt><small>Modificado</small></dt>
+                    <dd><small>{{ ctl.modulo.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                      <strong>{{ctl.modulo.modificador.nome}} {{ctl.modulo.modificador.sobrenome}}</strong></small></dd>
+                  </dl>
+                </div>
+              </div>
+              <hr/>
+              <p class="input-group">
+                <span class="input-group-btn">
+                  <label class="btn btn-default" ng-model="ctl.checkModel.ler"
+                    uib-btn-checkbox uib-tooltip="Função Ler">
+                    <i class="fa fa-eye" aria-hidden="true"></i> Ler</label>
 
-                <label class="btn btn-default" ng-model="ctl.checkModel.criar"
-                  uib-btn-checkbox uib-tooltip="Função Criar">
-                  <i class="fa fa-plus-circle" aria-hidden="true"></i></label>
+                  <label class="btn btn-default" ng-model="ctl.checkModel.criar"
+                    uib-btn-checkbox uib-tooltip="Função Criar">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Criar</label>
 
-                <label class="btn btn-default" ng-model="ctl.checkModel.modificar"
-                  uib-btn-checkbox uib-tooltip="Função Modificar">
-                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                  <label class="btn btn-default" ng-model="ctl.checkModel.modificar"
+                    uib-btn-checkbox uib-tooltip="Função Modificar">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modificar</label>
 
-                <label class="btn btn-default" ng-model="ctl.checkModel.excluir"
-                  uib-btn-checkbox uib-tooltip="Função Excluir">
-                  <i class="fa fa-minus-circle" aria-hidden="true"></i></label>
-              </span>
-
-            </p>
-
-            <ul class="list-inline">
+                  <label class="btn btn-default" ng-model="ctl.checkModel.excluir"
+                    uib-btn-checkbox uib-tooltip="Função Excluir">
+                    <i class="fa fa-minus-circle" aria-hidden="true"></i> Excluir</label>
+                </span>
+              </p>
               <p ng-if="ctl.modulo.funcoes.length < 1" class="text-danger">Nenhum função selecionada</p>
+              <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6"
+                 ng-repeat="fun in ctl.modulo.funcoes">
+                <li><a href="#">{{fun}}
+                  <button type="button" class="close" uib-tooltip="Excluir função"
+                    ng-click="ctl.removeFuncao(fun)">&times;</button></a></li>
+              </ul>
 
-              <li ng-repeat="fun in ctl.modulo.funcoes">
-                <span class="label label-primary">{{fun}}</span>
-              </li>
-            </ul>
-            <hr/>
-            <button type="button" class="btn btn-link"
-              ng-click="ctl.isAddModulo = false">Voltar</button>
-          </div>
-      </form>
+              <!--ul class="list-inline">
+                <p ng-if="ctl.modulo.funcoes.length < 1" class="text-danger">Nenhum função selecionada</p>
 
-      <div class="panel panel-default" ng-if="!ctl.isAddModulo">
-      <!--/div>
-      <div class="well" ng-if="ctl.app().modulos.length > 0"-->
+                <li ng-repeat="fun in ctl.modulo.funcoes">
+                  <span class="label label-primary">{{fun}}</span>
+                </li>
 
-      <div class="panel-heading">
-        <div class="row">
-          <div class="col-xs-6">
-            <div class="btn-group" ng-if="!ctl.isAddModulo">
-              <a class="btn btn-default" ng-click="ctl.isAddModulo = true">
-                <i class="fa fa-plus" aria-hidden="true"></i> Novo</a>
+              </ul-->
+
             </div>
-          </div>
-          <div class="col-xs-6 pull-right form-group">
-            <div class="input-group">
-              <div class="input-group-addon"><i class="fa fa-search"></i></div>
-              <input type="text" class="form-control" placeholder="Filtrar resultados"
-               ng-model="filtrarResult">
+            <div class="panel-body">
+              <button type="submit" class="btn btn-primary"
+                ng-disabled="form.$invalid || ctl.modulo.funcoes.length < 1">Salvar</button>
+              <button type="button" class="btn btn-link"
+                ng-click="ctl.isAddModulo = false">Voltar</button>
+            </div>
+        </form>
+      </div>
+
+      <div class="panel panel-default" ng-hide="ctl.isAddModulo">
+
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="btn-group" ng-if="!ctl.isAddModulo">
+                <a class="btn btn-default" ng-click="ctl.newModulo()">
+                  <i class="fa fa-plus" aria-hidden="true"></i> Novo</a>
+              </div>
+            </div>
+            <div class="col-xs-6 pull-right form-group">
+              <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                <input type="text" class="form-control" placeholder="Filtrar resultados"
+                 ng-model="filtrarResult">
+              </div>
             </div>
           </div>
         </div>
-      </div>
+
         <div class="table-responsive">
           <table class="table table-hover">
-
             <thead>
               <tr>
                 <th></th>
@@ -193,13 +216,17 @@
             </thead>
 
             <tbody>
-              <tr ng-repeat="md in ctl.app().modulos | filter:filtrarResult">
+              <tr ng-repeat="md in ctl.app().modulos | filter:filtrarResult"
+                ng-click="ctl.selectModulo(md)">
                 <td>
-                  <button type="button" class="btn btn-xs btn-default" uib-tooltip="Excluir função"
+                  <!--button type="button" class="btn btn-xs btn-default" uib-tooltip="Excluir função"
                     ng-click="ctl.deleteModulo(md)">
-        	          <i class="fa fa-minus-circle" aria-hidden="true"></i></button>
+        	          <i class="fa fa-minus-circle" aria-hidden="true"></i></button-->
+                  <button type="button" class="btn btn-xs btn-default"
+                    uib-tooltip="Editar" ng-click="ctl.selectModulo(md)">
+        	          <i class="fa fa fa-pencil-square-o" aria-hidden="true"></i></button>
                 </td>
-                <td>{{ md.nome }}</td>
+                <td><a href="#">{{ md.nome }}</a></td>
                 <td>
                   <ul class="list-inline">
                     <li ng-repeat="f in md.funcoes" >
@@ -217,10 +244,6 @@
         </div>
       </div>
 
-      </uib-tab>
+    </uib-tab>
   </uib-tabset>
 </div>
-<!--div class="modal-footer">
-  <button ng-repeat="button in modal.buttons" ng-class="button.classes"
-   ng-click="button.click($event)" ng-bind="button.text" class="btn"></button>
-</div-->

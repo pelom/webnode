@@ -17,5 +17,6 @@ router.get('/', auth.hasRole('admin'),
   application2.isPermission(permissao('Ler')), controller.index);
 router.post('/', auth.hasRole('admin'), controller.create);
 router.put('/:id', auth.hasRole('admin'), controller.update);
+router.post('/:id/modulo', auth.hasRole('admin'), controller.createModulo);
 router.put('/:id/modulo', auth.hasRole('admin'), controller.updateModulo);
 module.exports = router;

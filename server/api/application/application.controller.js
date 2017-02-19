@@ -2,7 +2,7 @@
 
 import ApplicationModulo from './application.modulo.model';
 import Application from './application.model';
-import applicationService from './application.service';
+//import applicationService from './application.service';
 
 const selectCriador = {
   path: 'criador',
@@ -65,23 +65,27 @@ export function index(req, res) {
   console.log('Export', applicationService.export());
 */
   return Application.find({}, select, {
-      skip: 0, // Starting Row
-      limit: 10, // Ending Row
-      sort: {
-        createdAt: -1 //Sort by Date Added DESC
-      }
-    })
-    .populate('modulos')
-    .populate(selectCriador)
-    .populate(selectModificador).exec()
-    .then(appl => {
-      res.status(200).json(appl);
-      return appl;
-    })
-    .catch(handleError(res));
+    skip: 0, // Starting Row
+    limit: 10, // Ending Row
+    sort: {
+      createdAt: -1 //Sort by Date Added DESC
+    }
+  })
+  .populate({
+    path: 'modulos',
+    populate: [selectCriador, selectModificador]
+  })
+  .populate(selectCriador)
+  .populate(selectModificador)
+  .exec()
+  .then(appl => {
+    res.status(200).json(appl);
+    return appl;
+  })
+  .catch(handleError(res));
 }
 
-export function create(req, res, next) {
+export function create(req, res) {
   console.log('create');
   var newApp = new Application(req.body);
   newApp.criador = req.user._id;
@@ -91,7 +95,8 @@ export function create(req, res, next) {
       Application.findById(app._id)
       .select(select)
       .populate(selectCriador)
-      .populate(selectModificador).exec()
+      .populate(selectModificador)
+      .exec()
       .then(ap => {
         console.log(ap);
         if(!ap) {
@@ -125,7 +130,8 @@ export function update(req, res) {
           Application.findById(newApp._id)
           .select(select)
           .populate(selectCriador)
-          .populate(selectModificador).exec()
+          .populate(selectModificador)
+          .exec()
           .then(ap => {
             if(!ap) {
               return res.status(404).end();
@@ -139,30 +145,72 @@ export function update(req, res) {
     });
 }
 
+export function createModulo(req, res) {
+  let appId = req.params.id;
+  console.log('updateModulo', appId);
+  console.log('body', req.body);
+
+  let nome = String(req.body.nome);
+  let funcoes = req.body.funcoes;
+  var newMod = new ApplicationModulo();
+  newMod.nome = nome;
+  newMod.funcoes = funcoes;
+  newMod.criador = req.user._id;
+  newMod.modificador = req.user._id;
+  newMod.save()
+    .then(function(mod) {
+      Application.findById(appId)
+      .populate('modulos')
+      .exec()
+      .then(app => {
+        if(!app) {
+          return res.status(404).end();
+        }
+        app.modulos.push(mod);
+        app.save();
+        ApplicationModulo.findById(mod._id)
+        //.select(select)
+        .populate(selectCriador)
+        .populate(selectModificador)
+        .exec()
+        .then(md => {
+          if(!md) {
+            return res.status(404).end();
+          }
+          res.status(201).json(md);
+          return md;
+        })
+        .catch(validationError(res));
+      })
+      .catch(validationError(res));
+    })
+    .catch(validationError(res));
+  return newMod;
+}
+
 export function updateModulo(req, res) {
   let appId = req.params.id;
   console.log('updateModulo', appId);
   console.log('body', req.body);
-  var modulos = req.body.modulos;
-  let userId = req.user._id;
-  return Application.findById(appId).exec()
-    .then(app => {
-      app.modulos = modulos;
-      app.modificador = userId;
-      return app.save()
-        .then(newApp => {
-          Application.findById(newApp._id)
-          .select(select)
-          .populate(selectCriador)
-          .populate(selectModificador).exec()
-          .then(ap => {
-            if(!ap) {
-              return res.status(404).end();
-            }
-            res.status(201).json(ap);
-            return ap;
-          })
-          .catch(validationError(res));
+
+  let id = req.body._id;
+  let nome = String(req.body.nome);
+  let funcoes = req.body.funcoes;
+  let isAtivo = req.body.isAtivo;
+  return ApplicationModulo.findById(id)
+    .exec()
+    .then(modulo => {
+      if(!modulo) {
+        return res.status(404).end();
+      }
+      modulo.nome = nome;
+      modulo.funcoes = funcoes;
+      modulo.isAtivo = isAtivo;
+      modulo.modificador = req.user._id;
+      return modulo.save()
+        .then(newModulo => {
+          res.status(201).json(newModulo);
+          return newModulo;
         })
         .catch(validationError(res));
     });

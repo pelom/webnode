@@ -9,6 +9,11 @@ export default class AplicacaoEditController {
     this.filtrarResult = '';
     //index da aba ativa
     this.abaAtiva = 0;
+    this.mapFn = [];
+    this.mapFn.ler = 'Ler';
+    this.mapFn.criar = 'Criar';
+    this.mapFn.modificar = 'Modificar';
+    this.mapFn.excluir = 'Excluir';
     //controle das funcoes do componente radio
     this.checkModel = {
       ler: true,
@@ -26,17 +31,15 @@ export default class AplicacaoEditController {
      }, 2000);
      */
     //referencia para a criacao de um novo modulo
-    this.modulo = {
-      nome: '',
-      funcoes: []//funcoes que o modulo fornece
-    };
+    this.modulo = this.initModulo();
     this.isAddModulo = false;
     //monitor alteracoes no campo
     $scope.$watchCollection('ctl.checkModel', function() {
       $scope.ctl.modulo.funcoes = [];
       angular.forEach($scope.ctl.checkModel, function(value, key) {
         if(value) {//funcao selecionada
-          $scope.ctl.modulo.funcoes.push(key);//add no modulo
+          let action = $scope.ctl.mapFn[key];
+          $scope.ctl.modulo.funcoes.push(action);//add no modulo
         }
       });
     });
@@ -45,7 +48,7 @@ export default class AplicacaoEditController {
     this.sucesso = {
       type: 'info',
       msg: 'Informações salvas com sucesso'
-    }
+    };
   }
 
   /**
@@ -56,16 +59,15 @@ export default class AplicacaoEditController {
   }
 
   /**
-   * Criar no Aplicativo
+   * Salvar Aplicativo
    */
-  createApp(form) {
+  saveApp(form) {
     if(form.$invalid) {
       return;
     }
     let app = this.app();
-    return this.AplicacaoService.createApp(app)
+    return this.AplicacaoService.saveAplicavo(app)
     .then(newApp => {
-      console.log('createApp.then', newApp);
       this.abaAtiva = 1;
       this.addMesagem(this.sucesso);
     })
@@ -77,47 +79,68 @@ export default class AplicacaoEditController {
     });
   }
 
-  createModulo(form) {
+  saveModulo(form) {
     console.log(this.modulo);
+
     if(form.$valid && this.modulo.funcoes.length > 0) {
-      let arr = this.checkModel;
-      //this.AplicacaoService.createModulo(this.modulo);
-      /*this.app().modulos.push({
-        nome: this.modulo.nome,
-        funcoes: this.modulo.funcoes
+      let that = this;
+      this.AplicacaoService.saveModulo(this.modulo, function(data) {
+        console.log('saveModulo', data);
+        that.newModulo();
+        that.isAddModulo = false;
+        form.$setPristine();
+        that.addMesagem(that.sucesso);
       });
-      */
-      let newModulo = {
-        nome: this.modulo.nome,
-        funcoes: this.modulo.funcoes
-      };
-      this.AplicacaoService.createModulo(newModulo, function(data) {
-        console.log('createModulo', data);
-      });
-      this.modulo.nome = '';
-      this.modulo.funcoes = [];
-      angular.forEach(this.checkModel, function(value, key) {
-        arr[key] = false;
-      });
-      this.isAddModulo = false;
-      form.$setPristine();
-      this.addMesagem(this.sucesso);
     }
   }
 
-  deleteModulo(modulo) {
+  newModulo() {
+    this.modulo = this.initModulo();
+    this.isAddModulo = true;
+
+    let arr = this.checkModel;
+    angular.forEach(this.checkModel, function(value, key) {
+      arr[key] = false;
+    });
+  }
+
+  initModulo() {
+    return {
+      _id: null,
+      nome: '',
+      funcoes: []//funcoes que o modulo fornece
+    };
+  }
+
+  selectModulo(modulo) {
+    this.modulo = modulo;
+    this.isAddModulo = true;
+    let arr = this.checkModel;
+    var that = this;
+    angular.forEach(this.checkModel, function(value, key) {
+      let action = that.mapFn[key];
+      arr[key] = that.modulo.funcoes.indexOf(action) >= 0;
+    });
+  }
+  removeFuncao(fn) {
+    console.log(fn, this.modulo.funcoes.indexOf(fn));
+    this.checkModel[fn.toLowerCase()] = false;
+    var result = this.modulo.funcoes.splice(
+      this.modulo.funcoes.indexOf(fn), 1);
+    console.log(result);
+  }
+  /*deleteModulo(modulo) {
     let app = this.app();
     console.log(modulo, app);
     this.AplicacaoService.createModulo();
     app.modulos.splice(app.modulos.indexOf(modulo), 1);
     this.addMesagem(this.sucesso);
-  }
+  }*/
 
   addMesagem(msg) {
     this.alerts.push(msg);
     this.$timeout(() => {
       this.alerts.splice(0, 1);
-     },
-     2000);
+    }, 2000);
   }
 }
