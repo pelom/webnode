@@ -151,9 +151,11 @@ export function createModulo(req, res) {
   console.log('body', req.body);
 
   let nome = String(req.body.nome);
+  let descricao = String(req.body.descricao);
   let funcoes = req.body.funcoes;
   var newMod = new ApplicationModulo();
   newMod.nome = nome;
+  newMod.descricao = descricao;
   newMod.funcoes = funcoes;
   newMod.criador = req.user._id;
   newMod.modificador = req.user._id;
@@ -195,6 +197,7 @@ export function updateModulo(req, res) {
 
   let id = req.body._id;
   let nome = String(req.body.nome);
+  let descricao = String(req.body.descricao);
   let funcoes = req.body.funcoes;
   let isAtivo = req.body.isAtivo;
   return ApplicationModulo.findById(id)
@@ -204,6 +207,7 @@ export function updateModulo(req, res) {
         return res.status(404).end();
       }
       modulo.nome = nome;
+      modulo.descricao = descricao;
       modulo.funcoes = funcoes;
       modulo.isAtivo = isAtivo;
       modulo.modificador = req.user._id;

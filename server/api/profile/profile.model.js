@@ -10,8 +10,13 @@ var PermissaoSchema = new Schema({
   timestamps: true
 });
 var ProfileSchema = new Schema({
-  nome: String,
+  nome: { type: String, required: true },
   descricao: String,
+  tempoSessao: {
+    type: Number,
+    required: true,
+    default: 60 * 30
+  },
   permissoes: [PermissaoSchema],
   role: {
     type: String,

@@ -92,7 +92,7 @@
         {{tab.content}}
       </uib-tab-->
 
-      <uib-tab index="1" disable="ctl.app()._id == null">
+      <uib-tab index="1" disable="ctl.app()._id == null" select="ctl.selectTab();">
         <uib-tab-heading>
           <i class="fa fa-th-large" aria-hidden="true"></i> Modulos
         </uib-tab-heading>
@@ -105,9 +105,9 @@
           </div-->
 
           <form class="form" novalidate name="form" ng-submit="ctl.saveModulo(form)">
-            <div class="panel-body" ng-class="{'has-error': form.nomeMod.$invalid && form.nomeMod.$dirty}">
-
-              <div class="form-group">
+            <div class="panel-body">
+              <div class="form-group"
+                ng-class="{'has-error': form.nomeMod.$invalid && form.nomeMod.$dirty}">
                 <input type="text" class="form-control" placeholder="Nome do modulo"
                  name="nomeMod" ng-model="ctl.modulo.nome"
                   ng-required="true" ng-minlength="3" ng-maxlength="40" />
@@ -121,6 +121,31 @@
                 <p class="help-block" ng-show="form.nomeMod.$error.maxlength">
                   São permitidos no máximo 40 letras</p>
               </div>
+
+              <div class="form-group">
+                <textarea class="form-control" rows="3" placeholder="Descrição o módulo"
+                  ng-model="ctl.modulo.descricao"></textarea>
+              </div>
+
+              <div class="form-group">
+                <ui-select multiple remove-selected="false" theme="bootstrap"
+                  title="Selecione as funções" tagging="ctl.tagTransform"
+                  ng-model="ctl.modulo.select" close-on-select="false">
+                  <ui-select-match placeholder="Selecione as funções">
+                    <i ng-class="$item.class" aria-hidden="true"></i>
+                    <strong>{{$item.name}}</strong>
+                  </ui-select-match>
+                  <ui-select-choices repeat="item in (ctl.itemArray | filter: $select.search) track by item.name">
+                    <i ng-class="item.class" aria-hidden="true"></i>
+                    <!--span ng-bind-html="item.name | highlight: $select.search"></span-->
+                    <span ng-if="item.isTag" ng-bind-html="(item.name | highlight: $select.search) +' (novo)'"></span>
+                    <span ng-if="!item.isTag" ng-bind-html="item.name + item.isTag| highlight: $select.search"></span>
+                    <!--div ng-bind-html="item.name | highlight: $select.search"></div-->
+                  </ui-select-choices>
+                </ui-select>
+                <p ng-if="ctl.modulo.funcoes.length < 1" class="text-danger">Nenhum função selecionada</p>
+              </div>
+
               <div class="row" ng-if="ctl.modulo._id != null">
                 <div class="col-xs-6">
                   <dl>
@@ -137,8 +162,7 @@
                   </dl>
                 </div>
               </div>
-              <hr/>
-              <p class="input-group">
+              <!--p class="input-group">
                 <span class="input-group-btn">
                   <label class="btn btn-default" ng-model="ctl.checkModel.ler"
                     uib-btn-checkbox uib-tooltip="Função Ler">
@@ -156,14 +180,14 @@
                     uib-btn-checkbox uib-tooltip="Função Excluir">
                     <i class="fa fa-minus-circle" aria-hidden="true"></i> Excluir</label>
                 </span>
-              </p>
-              <p ng-if="ctl.modulo.funcoes.length < 1" class="text-danger">Nenhum função selecionada</p>
-              <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6"
+              </p-->
+
+              <!--ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6"
                  ng-repeat="fun in ctl.modulo.funcoes">
                 <li><a href="#">{{fun}}
                   <button type="button" class="close" uib-tooltip="Excluir função"
                     ng-click="ctl.removeFuncao(fun)">&times;</button></a></li>
-              </ul>
+              </ul-->
 
               <!--ul class="list-inline">
                 <p ng-if="ctl.modulo.funcoes.length < 1" class="text-danger">Nenhum função selecionada</p>

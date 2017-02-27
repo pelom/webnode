@@ -2,7 +2,6 @@
 
 import compose from 'composable-middleware';
 import Profile from '../profile/profile.model';
-//import User from '../user/user.model';
 
 /**
  * Verificar se a permissao tem acesso a Aplicacao e ao modulo
@@ -37,19 +36,19 @@ export function isPermission(reqPermission) {
       console.log('findProfile ...');
       console.log('req.user: ', req.user._id);
 
-      let populateApp = {
+      let pApp = {
         path: 'permissoes.application',
         match: { nome: reqPermission.aplicacao, isAtivo: true }
       };
-      let populateMod = {
+      let pMod = {
         path: 'permissoes.modulo',
         match: { nome: reqPermission.modulo, isAtivo: true }
       };
       let profileId = req.user.profileId;
 
       Profile.findOne({ _id: profileId })
-        .populate(populateApp)
-        .populate(populateMod)
+        .populate(pApp)
+        .populate(pMod)
         .exec()
         .then(profile => {
           console.log('profile encontrado: ', profile._id);

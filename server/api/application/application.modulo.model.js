@@ -5,6 +5,7 @@ import mongoose, {Schema} from 'mongoose';
 
 var ApplicationModuloSchema = new Schema({
   nome: String,
+  descricao: String,
   /*status: {
     type: String,
     enum: ['Ativo', 'Desativo'],

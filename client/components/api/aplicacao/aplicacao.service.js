@@ -1,5 +1,5 @@
 'use strict';
-
+import angular from 'angular';
 export function AplicacaoService(Util, AplicacaoResource) {
   'ngInject';
   let safeCb = Util.safeCb;
@@ -30,7 +30,7 @@ export function AplicacaoService(Util, AplicacaoResource) {
       return app;
     },
     setApp(index) {
-      this.selectApp(index)
+      this.selectApp(index);
     },
 
     loadAppList(callback) {
@@ -48,8 +48,9 @@ export function AplicacaoService(Util, AplicacaoResource) {
      * Salvar Aplicativo
      */
     saveAplicavo(newApp, callback) {
-      let oldApp = JSON.parse(JSON.stringify(newApp));
-      if(oldApp._id === null) {
+      let oldApp = angular.copy(newApp);
+      console.log(oldApp);
+      if(angular.isUndefined(oldApp._id)) {
         return AplicacaoResource.save(oldApp, function(data) {
           console.log('AplicacaoResource.saveAplicavo.save');
           console.log('newApp', oldApp);

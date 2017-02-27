@@ -1,5 +1,5 @@
 'use strict';
-
+import angular from 'angular';
 export default class AplicacaoEditController {
 
   /*@ngInject*/
@@ -7,20 +7,27 @@ export default class AplicacaoEditController {
     this.AplicacaoService = AplicacaoService;
     this.$timeout = $timeout;
     this.filtrarResult = '';
+    this.itemArray = [
+      { name: 'Ler', class: 'fa fa-eye'},
+      { name: 'Criar', class: 'fa fa-plus-circle' },
+      { name: 'Modificar', class: 'fa fa-pencil-square-o' },
+      { name: 'Excluir', class: 'fa fa-minus-circle' }
+    ];
     //index da aba ativa
     this.abaAtiva = 0;
-    this.mapFn = [];
+    /*this.mapFn = [];
     this.mapFn.ler = 'Ler';
     this.mapFn.criar = 'Criar';
     this.mapFn.modificar = 'Modificar';
     this.mapFn.excluir = 'Excluir';
+    */
     //controle das funcoes do componente radio
-    this.checkModel = {
+    /*this.checkModel = {
       ler: true,
       criar: false,
       modificar: false,
       excluir: false
-    };
+    };*/
     this.situacao = [
       { name: 'Ativo', value: 'true' },
       { name: 'Desativo', value: 'false' }
@@ -34,7 +41,13 @@ export default class AplicacaoEditController {
     this.modulo = this.initModulo();
     this.isAddModulo = false;
     //monitor alteracoes no campo
-    $scope.$watchCollection('ctl.checkModel', function() {
+    $scope.$watchCollection('ctl.modulo.select', function() {
+      $scope.ctl.modulo.funcoes = [];
+      angular.forEach($scope.ctl.modulo.select, function(value, key) {
+        $scope.ctl.modulo.funcoes.push(value.name);
+      });
+    });
+    /*$scope.$watchCollection('ctl.checkModel', function() {
       $scope.ctl.modulo.funcoes = [];
       angular.forEach($scope.ctl.checkModel, function(value, key) {
         if(value) {//funcao selecionada
@@ -42,7 +55,7 @@ export default class AplicacaoEditController {
           $scope.ctl.modulo.funcoes.push(action);//add no modulo
         }
       });
-    });
+    });*/
 
     this.alerts = [];
     this.sucesso = {
@@ -97,38 +110,54 @@ export default class AplicacaoEditController {
   newModulo() {
     this.modulo = this.initModulo();
     this.isAddModulo = true;
+  }
 
-    let arr = this.checkModel;
-    angular.forEach(this.checkModel, function(value, key) {
-      arr[key] = false;
+  selectAllFuncoes() {
+    this.modulo.select = [];
+    this.itemArray.forEach(item => {
+      this.modulo.select.push(item);
     });
   }
 
+  selectTab() {
+    this.isAddModulo = false;
+  }
   initModulo() {
     return {
       _id: null,
       nome: '',
-      funcoes: []//funcoes que o modulo fornece
+      descricao: '',
+      funcoes: [], //funcoes que o modulo fornece
+      select: []
     };
   }
 
   selectModulo(modulo) {
     this.modulo = modulo;
     this.isAddModulo = true;
-    let arr = this.checkModel;
+    let itens = [];
+    modulo.funcoes.forEach(item => {
+      console.log(item);
+      itens.push({
+        name: item.toString()
+      });
+    });
+    modulo.select = itens;
+    /*let arr = this.checkModel;
     var that = this;
     angular.forEach(this.checkModel, function(value, key) {
       let action = that.mapFn[key];
       arr[key] = that.modulo.funcoes.indexOf(action) >= 0;
     });
+    */
   }
-  removeFuncao(fn) {
+  /*removeFuncao(fn) {
     console.log(fn, this.modulo.funcoes.indexOf(fn));
     this.checkModel[fn.toLowerCase()] = false;
     var result = this.modulo.funcoes.splice(
       this.modulo.funcoes.indexOf(fn), 1);
     console.log(result);
-  }
+  }*/
   /*deleteModulo(modulo) {
     let app = this.app();
     console.log(modulo, app);
@@ -137,6 +166,11 @@ export default class AplicacaoEditController {
     this.addMesagem(this.sucesso);
   }*/
 
+  tagTransform(newTag) {
+    console.log(this.itemArray);
+    var item = { id: 0, name: newTag, class: 'fa fa-tag' };
+    return item;
+  }
   addMesagem(msg) {
     this.alerts.push(msg);
     this.$timeout(() => {

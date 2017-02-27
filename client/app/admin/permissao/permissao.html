@@ -1,194 +1,232 @@
 <div class="container">
-  <div class="row">
-    <h3 class="page-header">
-      <i class="fa fa-rocket" aria-hidden="true"></i>
-      Permissões - Perfis
-    </h3>
 
-    <div class="panel panel-default" ng-hide="vm.conta">
-      <div class="panel-heading">
-        <h3 class="panel-title">
-          Informe o Perfil matrix e o Nome para criar um novo perfil</h3>
-      </div>
+  <h3 class="page-header">
+    <i class="fa fa-cubes" aria-hidden="true"></i>
+    Permissões - Perfis
+  </h3>
 
-      <form class="form" name="formProfile" ng-submit="vm.register(formProfile)" novalidate>
-
-        <ul class="list-group no-margin-bottom">
-          <li class="list-group-item no-border">
-            <div class="row">
-              <div class="col-xs-6">
-                <dl>
-                  <dt><small>Nome do perfil</small></dt>
-                  <dd ng-class="{'has-error': profileNome.nome.$invalid && profileNome.nome.$dirty}">
-                    <input type="text" name="profileNome" class="form-control" placeholder="Nome perfil"
-                     ng-model="ctl.profileNome" ng-required="true" ng-minlength="3" ng-maxlength="30"
-                      nomevalido="false" />
-
-                    <p class="help-block"
-                      ng-show="formProfile.profileNome.$error.required && form1.nome.$dirty">
-                      O sobrenome é necessário</p>
-                    <p class="help-block" ng-show="formProfile.profileNome.$error.minlength">
-                      São necessários no minimo 3 letras</p>
-                    <p class="help-block" ng-show="formProfile.profileNome.$error.maxlength">
-                      São permitidos no máximo 30 letras</p>
-                  </dd>
-                </dl>
-              </div>
-              <div class="col-xs-6">
-                <dl>
-                  <dt><small>Perfil matrix</small></dt>
-                  <dd>
-                    <select class="form-control" ng-model="ctl.profileMaster"
-                       ng-options="item._id as item.nome for item in ctl.appList()"
-                      ng-change="ctl.changeProfileMaster(ctl.profileMaster)">
-                        <option ng-if="!ctl.profileMaster" value="">-- Nenhum --</option>
-                      </select>
-                </dl>
-              </div>
-            </div>
-          </li>
-        </ul>
-
-        <ul class="list-group no-margin-bottom">
-          <li class="list-group-item no-border">
-            <h5>Nome da aplicação</h5>
-          </li>
-        </ul>
-      </form>
+  <!-- Formulario de edição de perfil -->
+  <div class="panel panel-primary" ng-show="ctl.isNovo">
+    <div class="panel-heading">
+      <h3 class="panel-title">Informações do perfil</h3>
     </div>
+    <div class="panel-body">
+      <form class="form" name="formProfile" novalidate
+        ng-submit="ctl.saveProfile(formProfile)">
 
-  <div class="panel panel-default">
-
-      <div class="panel-heading">
         <div class="row">
           <div class="col-xs-6">
-            <div class="btn-group">
-              <a class="btn btn-default" ng-click="ctl.openAppModal(-1)">
-                <i class="fa fa-plus" aria-hidden="true"></i> Novo</a>
-              <!--a class="btn btn-default"><span> Edit</span></a>
-              <a class="btn btn-default"><span>Delete</span></a-->
-            </div>
+            <dl>
+              <dt><small>Nome do perfil</small></dt>
+              <dd ng-class="{'has-error': formProfile.profileNome.$invalid && formProfile.profileNome.$dirty}">
+                <input type="text" name="profileNome" class="form-control" placeholder="Nome perfil"
+                 ng-model="ctl.profile.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
+                  nomevalido="false" />
+
+                <p class="help-block"
+                  ng-show="formProfile.profileNome.$error.required && formProfile.profileNome.$dirty">
+                  O sobrenome é necessário</p>
+                <p class="help-block" ng-show="formProfile.profileNome.$error.minlength">
+                  São necessários no minimo 3 letras</p>
+                <p class="help-block" ng-show="formProfile.profileNome.$error.maxlength">
+                  São permitidos no máximo 30 letras</p>
+              </dd>
+            </dl>
           </div>
-          <div class="col-xs-6 pull-right form-group">
-            <div class="input-group">
-              <div class="input-group-addon"><i class="fa fa-search"></i></div>
-              <input type="text" class="form-control" placeholder="Filtrar resultados"
-               ng-model="filtrarResult">
-            </div>
+          <div class="col-xs-6">
+            <dl>
+              <dt><small>Papel do perfil</small></dt>
+              <dd>
+                <select class="form-control" ng-model="ctl.profile.role"
+                   ng-options="item.value as item.label for item in ctl.itemRole">
+                </select>
+            </dl>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <textarea class="form-control" rows="3" placeholder="Descrição"
+              ng-model="ctl.profile.descricao"></textarea>
+          </div>
+        </div>
+
+        <br/>
+        <h5><label>Configurações da sessão</label></h5>
+        <hr/>
+        <div class="row">
+          <div class="col-xs-6">
+            <dl>
+              <dt><small>Sessão expira após</small></dt>
+              <dd>
+                <select class="form-control" ng-model="ctl.profile.tempoSessao"
+                   ng-options="item.value as item.label for item in ctl.itemSessao">
+                </select>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-xs-6">
+          </div>
+        </div>
+
+        <br/>
+        <h5><label>Conjunto de permissões</label> <small></small></h5>
+        <hr/>
+        <div class="" ng-repeat="app in ctl.AplicacaoService.getAppList()">
+          <a href="" class="list-group-item"
+            ng-click="app.isCollapsed = !app.isCollapsed">
+            <h5>
+              <i class="fa fa-rocket" aria-hidden="true"></i>
+              <label>{{app.nome}}</label>
+              <small>{{app.descricao}}</small>
+            </h5>
+          </a>
+          <div class="table-responsive" uib-collapse="app.isCollapsed">
+            <table class="table table-hover table-bordered">
+              <tbody>
+                <tr class="active" ng-repeat="m in app.modulos">
+                  <td><small uib-tooltip="{{m.descricao}}">{{ m.nome}}</small></td>
+                  <td>
+                    <button type="button" ng-click="ctl.addAllFuncoes(m)"
+                      uib-tooltip="Adicionar todas as funções">
+                      <i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+                  </td>
+                  <td>
+                    <ui-select multiple remove-selected="false" theme="bootstrap"
+                      title="Selecione as funções"
+                      ng-model="m.select.funcoes" close-on-select="false">
+                      <ui-select-match placeholder="Selecione as funções">
+                        <strong>{{ $item }}</strong>
+                      </ui-select-match>
+                      <ui-select-choices repeat="item in (m.funcoes | filter: $select.search) track by item">
+                          <!--span ng-bind="item.name"></span-->
+                          <div ng-bind-html="item | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <hr>
+        <div class="list-group">
+          <button class="btn btn-primary" type="submit"
+            ng-disabled="formProfile.$invalid || ctl.wait">
+              <loading showhidden="ctl.wait"></loading> Salvar</button>
+          <button type="button" class="btn btn-link"
+            ng-click="ctl.isNovo = false">Voltar</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="panel panel-default" ng-show="!ctl.isNovo">
+
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="btn-group">
+            <a class="btn btn-default" ng-click="ctl.newProfile()">
+              <i class="fa fa-plus" aria-hidden="true"></i> Novo</a>
+            <!--a class="btn btn-default"><span> Edit</span></a>
+            <a class="btn btn-default"><span>Delete</span></a-->
+          </div>
+        </div>
+        <div class="col-xs-6 pull-right form-group">
+          <div class="input-group">
+            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+            <input type="text" class="form-control" placeholder="Filtrar resultados"
+             ng-model="filtrarResult">
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="table-responsive">
-        <table class="table table-hover">
+    <div class="table-responsive">
+      <table class="table table-hover">
 
-          <thead>
-            <tr class="active">
-              <!--th style="width:100px">Actions</th-->
-              <th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'nome'; sortReverse = !sortReverse">
-                  <strong>Nome<strong>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'nome' && !sortReverse" class="fa fa-caret-down"></span>
-                    <span ng-show="sortType == 'nome' && sortReverse" class="fa fa-caret-up"></span>
-                  </div>
-                </a>
-              </th>
-              <th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'descricao'; sortReverse = !sortReverse">
-                  <strong>Descrição<strong>
+        <thead>
+          <tr class="active">
+            <th>
+              <a href="#" ui-sref-active="active"
+                ng-click="sortType = 'nome'; sortReverse = !sortReverse">
+                <strong>Nome do perfil<strong>
+                <div class="pull-right">
+                  <span ng-show="sortType == 'nome' && !sortReverse" class="fa fa-caret-down"></span>
+                  <span ng-show="sortType == 'nome' && sortReverse" class="fa fa-caret-up"></span>
+                </div>
+              </a>
+            </th>
+            <!--th>
+              <a href="#" ui-sref-active="active"
+                ng-click="sortType = 'descricao'; sortReverse = !sortReverse">
+                <strong>Descrição<strong>
 
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'descricao' && !sortReverse" class="fa fa-caret-down"></span>
-                    <span ng-show="sortType == 'descricao' && sortReverse" class="fa fa-caret-up"></span>
-                  </div>
-                </a>
-              </th>
-              <th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'isAtivo'; sortReverse = !sortReverse">
-                  <strong>Situação</strong>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'isAtivo' && !sortReverse" class="fa fa-caret-down"></span>
-                    <span ng-show="sortType == 'isAtivo' && sortReverse" class="fa fa-caret-up"></span>
-                  </div>
-                </a>
-              </th>
-              <!--th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'createdAt'; sortReverse = !sortReverse">
-                  <strong>Criado</strong>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'createdAt' && !sortReverse" class="fa fa-caret-down"></span>
-                    <span ng-show="sortType == 'createdAt' && sortReverse" class="fa fa-caret-up"></span>
-                  </div>
-                </a>
-              </th-->
-              <th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'updatedAt'; sortReverse = !sortReverse">
-                  <strong>Modificador</strong>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'updatedAt' && !sortReverse" class="fa fa-caret-down"></span>
-                    <span ng-show="sortType == 'updatedAt' && sortReverse" class="fa fa-caret-up"></span>
-                  </div>
-                </a>
-              </th>
-            </tr>
-          </thead>
+                <div class="pull-right">
+                  <span ng-show="sortType == 'descricao' && !sortReverse" class="fa fa-caret-down"></span>
+                  <span ng-show="sortType == 'descricao' && sortReverse" class="fa fa-caret-up"></span>
+                </div>
+              </a>
+            </th-->
+            <th>
+              <a href="#" ui-sref-active="active"
+                ng-click="sortType = 'isAtivo'; sortReverse = !sortReverse">
+                <strong>Situação</strong>
+                <div class="pull-right">
+                  <span ng-show="sortType == 'isAtivo' && !sortReverse" class="fa fa-caret-down"></span>
+                  <span ng-show="sortType == 'isAtivo' && sortReverse" class="fa fa-caret-up"></span>
+                </div>
+              </a>
+            </th>
+            <th>
+              <a href="#" ui-sref-active="active"
+                ng-click="sortType = 'updatedAt'; sortReverse = !sortReverse">
+                <strong>Modificador</strong>
+                <div class="pull-right">
+                  <span ng-show="sortType == 'updatedAt' && !sortReverse" class="fa fa-sort-amount-asc"></span>
+                  <span ng-show="sortType == 'updatedAt' && sortReverse" class="fa fa-sort-amount-desc"></span>
+                </div>
+              </a>
+            </th>
+          </tr>
+        </thead>
 
-          <tbody>
-            <tr ng-repeat="ap in ctl.appList() | orderBy:sortType:sortReverse | filter:filtrarResult"
-              ng-click="ctl.openAppModal($index)" uib-tooltip="Clique para abrir">
-              <!--td>
-                <button type="button" class="btn btn-xs btn-default">
-                  <span class="glyphicon glyphicon-pencil"></span>
-                </button>
-                <button type="button" data-bind="click: $parent.remove" class="remove-news btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" data-original-title="Delete">
-                  <span class="glyphicon glyphicon-trash"></span>
-                </button>
-                <button type="button" class="enabledisable-news btn btn-xs btn-default">
-                  <span class="glyphicon glyphicon-ok"></span>
-                </button>
-              </td-->
-              <td><a class="btn btn-link" ui-sref-active="active">{{ ap.nome }}</a></td>
-              <td><small>{{ ap.descricao}}</small></td>
-              <td>
-                <small ng-if="ap.isAtivo === 'true'">
+        <tbody>
+          <tr ng-repeat="ap in ctl.profileList() | orderBy:sortType:sortReverse | filter:filtrarResult"
+            ng-click="ctl.editProfile(ap)" uib-tooltip="Clique para abrir">
+            <!--td>
+              <button type="button" class="btn btn-xs btn-default">
+                <span class="glyphicon glyphicon-pencil"></span>
+              </button>
+              <button type="button" data-bind="click: $parent.remove" class="remove-news btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" data-original-title="Delete">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+              <button type="button" class="enabledisable-news btn btn-xs btn-default">
+                <span class="glyphicon glyphicon-ok"></span>
+              </button>
+            </td-->
+            <td><a class="btn btn-link" ui-sref-active="active">{{ ap.nome }}</a></td>
+            <!--td><small>{{ ap.descricao}}</small></td-->
+            <td>
+              <small ng-if="ap.isAtivo === 'true'">
                 <span class="label label-success">Ativo</span></small>
               <small ng-if="ap.isAtivo === 'false'">
                 <span class="label label-danger">Desativo</span></small>
-              </td>
-              <!--td><small>{{ ap.createdAt | date:'dd/MM/yyyy HH:mm' }} por
-                <strong>{{ ap.criador.nome}} {{ap.criador.sobrenome}}</strong></small></td-->
-              <td>
-                <small>{{ ap.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <strong>{{ap.modificador.nome}} {{ap.modificador.sobrenome}}</strong></small>
-                <!--ul class="list-unstyled">
-                  <li ng-repeat="mod in ap.modulos" >
-                    <span class="label label-default">{{ mod.nome }}</span>
+            </td>
+            <!--td><small>{{ ap.createdAt | date:'dd/MM/yyyy HH:mm' }} por
+              <strong>{{ ap.criador.nome}} {{ap.criador.sobrenome}}</strong></small></td-->
+            <td>
+              <small>{{ ap.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                <strong>{{ap.modificador.nome}} {{ap.modificador.sobrenome}}</strong></small>
+            </td>
+          </tr>
+        </tbody>
 
-                  </li>
-                </ul-->
-                <!--strong ng-repeat="mod in ap.modulos">
-                c
-                <br/>
-              </strong-->
-                <!--span class="label label-primary">create</span>
-                <span class="label label-success">Success</span>
-                <span class="label label-info">Info</span>
-                <span class="label label-warning">Warning</span>
-                <span class="label label-danger">Danger</span-->
-              </td>
-            </tr>
-          </tbody>
+      </table>
 
-        </table>
-
-      </div>
     </div>
   </div>
 </div>
-<hr>

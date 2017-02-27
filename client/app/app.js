@@ -9,6 +9,7 @@ import 'angular-socket-io';
 
 import uiRouter from 'angular-ui-router';
 import uiBootstrap from 'angular-ui-bootstrap';
+import uiSelect from 'ui-select';
 // import ngMessages from 'angular-messages';
 import ngValidationMatch from 'angular-validation-match';
 
@@ -37,10 +38,17 @@ import '../components/check-strength/check.css';
 
 angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize, ngAnimate,
   ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength,
-  uiRouter, uiBootstrap, AplicacaoService, PermissaoService,
+  uiRouter, uiBootstrap, uiSelect, AplicacaoService, PermissaoService,
   _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal
 ])
   .config(routeConfig)
+  .config(function(uiSelectConfig) {
+    'ngInject';
+    console.log(uiSelectConfig);
+    uiSelectConfig.theme = 'bootstrap';
+    uiSelectConfig.resetSearchInput = true;
+    uiSelectConfig.appendToBody = true;
+  })
   .run(function($rootScope, $location, Auth) {
     'ngInject';
     // Redirect to login if route requires auth and you're not logged in

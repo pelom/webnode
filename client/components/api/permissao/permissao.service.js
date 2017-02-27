@@ -9,20 +9,23 @@ export function PermissaoService(Util, PermissaoResource) {
     descricao: ''
   };
   let permissaoService = {
+    _initProfile() {
+      return {
+        nome: '',
+        descricao: ''
+      };
+    },
     getProfile() {
       return profile;
     },
     getProfileList() {
       return profileList;
     },
-    selectApp(appIndex) {
-      if(appIndex > -1) {
-        profile = profileList[appIndex];
+    selectProfile(index) {
+      if(index < 0 || index > profileList.length) {
+        profile = this._initProfile();
       } else {
-        profile = {
-          nome: '',
-          descricao: ''
-        };
+        profile = profileList[index];
       }
       return profile;
     },
