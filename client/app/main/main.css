@@ -176,7 +176,7 @@ body {
   line-height: 1.428571429;
   border-radius: 15px;
 }
-
+.btn-circle:focus {outline:none;}
 .fa-spinner-animate {
     -animation: spin .7s infinite linear;
     -webkit-animation: spin2 .7s infinite linear;

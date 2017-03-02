@@ -4,18 +4,25 @@
 
 import app from '../..';
 import User from './user.model';
+import Profile from '../profile/profile.model';
 import request from 'supertest';
 
 describe('User API:', function() {
   var user;
+  var profile;
 
   // Clear users before testing
   before(function() {
     return User.remove().then(function() {
+      profile = new Profile({
+        nome: 'Profile User'
+      });
+      profile.save();
       user = new User({
         name: 'Fake User',
         email: 'test@example.com',
-        password: 'password'
+        password: 'password',
+        profileId: profile._id
       });
 
       return user.save();

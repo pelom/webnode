@@ -34,6 +34,10 @@ export default class PermissaoController {
       }
     });
     this.isNovo = false;
+    this.situacao = [
+      { name: 'Ativo', value: 'true' },
+      { name: 'Desativo', value: 'false' }
+    ];
     this.itemRole = [
       { label: 'Usuário', value: 'user'},
       { label: 'Administrador', value: 'admin'}
@@ -48,12 +52,6 @@ export default class PermissaoController {
       { label: '30 minutos após o login', value: 60 * 30 },
       { label: '15 minutos após o login', value: 60 * 15 }
     ];
-    this.profile = {
-      nome: '',
-      descricao: '',
-      role: '',
-      tempoSessao: 1800
-    };
   }
   newProfile() {
     this.isNovo = true;
@@ -68,8 +66,9 @@ export default class PermissaoController {
     });
   }
   editProfile(profile) {
+    let profileClone = angular.copy(profile);
     this.isNovo = true;
-    this.profile = profile;
+    this.profile = profileClone;
     this.appMap.forEach((value, key) => {
       value.select = { funcoes: []}
     });

@@ -6,7 +6,7 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/oauthapplication-test'
+    uri: 'mongodb://oauthapplication:oauthapplication@localhost:27017/oauthapplication-test'
   },
   sequelize: {
     uri: 'sqlite://',
