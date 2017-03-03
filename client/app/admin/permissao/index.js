@@ -2,8 +2,6 @@
 
 import angular from 'angular';
 import PermissaoController from './permissao.controller';
-import PermissaoAppController from './permissao.app.controller';
-
 export default angular.module('oauthApplicationApp.permissao', [])
   .run(function($rootScope) {
     'ngInject';
@@ -16,5 +14,4 @@ export default angular.module('oauthApplicationApp.permissao', [])
     });
     */
   })
-  .controller('PermissaoAppController', PermissaoAppController)
   .controller('PermissaoController', PermissaoController).name;

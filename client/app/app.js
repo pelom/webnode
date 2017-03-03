@@ -10,6 +10,7 @@ import 'angular-socket-io';
 import uiRouter from 'angular-ui-router';
 import uiBootstrap from 'angular-ui-bootstrap';
 import uiSelect from 'ui-select';
+import uiMask from 'angular-ui-mask';
 // import ngMessages from 'angular-messages';
 import ngValidationMatch from 'angular-validation-match';
 
@@ -31,14 +32,15 @@ import Modal from '../components/modal/modal.service';
 
 import loadingDirec from '../components/directive/loading/loading.directive';
 import nomeValidoDirec from '../components/directive/nome-valido/nomevalido.directive';
+import googlemaps from '../components/googlemaps/googlemaps.directive';
 import './app.css';
 
 import checkStrength from '../components/check-strength/checkStrength.directive';
 import '../components/check-strength/check.css';
 
 angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize, ngAnimate,
-  ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength,
-  uiRouter, uiBootstrap, uiSelect, AplicacaoService, PermissaoService,
+  ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength, googlemaps,
+  uiRouter, uiBootstrap, uiSelect, uiMask, AplicacaoService, PermissaoService,
   _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal
 ])
   .config(routeConfig)
