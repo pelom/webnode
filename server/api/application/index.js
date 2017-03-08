@@ -8,12 +8,18 @@ let router = new Router();
 let permissao = function(funcao) {
   return {
     aplicacao: 'Standard',
-    modulo: 'Aplicacao',
+    modulo: 'Aplicação',
     funcao: funcao
   };
 };
 router.get('/', auth.hasRole('admin'),
   profile.isPermission(permissao('Ler')), controller.index);
+
+router.get('/showlist', auth.hasRole('admin'),
+  profile.isPermission(permissao('Ler')), controller.showList);
+
+router.get('/:id', auth.hasRole('admin'),
+  profile.isPermission(permissao('Ler')), controller.show);
 
 router.post('/', auth.hasRole('admin'),
   profile.isPermission(permissao('Criar')), controller.create);

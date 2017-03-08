@@ -8,7 +8,7 @@ var ApplicationSchema = new Schema({
   descricao: String,
   modulos: [{ type: Schema.Types.ObjectId, ref: 'ApplicationModulo' }],
   isAtivo: {
-    type: String,
+    type: Boolean,
     required: true,
     default: true
   },

@@ -12,6 +12,11 @@ const selectProfileRoles = {
   //options: { limit: 5}
 };
 
+const selectDefault = '_id nome sobrenome username isAtivo profileId updatedAt createdAt';
+const populateProfile = {
+  path: 'profileId',
+  select: '_id nome'
+};
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
   return function(err) {
@@ -31,7 +36,9 @@ function handleError(res, statusCode) {
  * restriction: 'admin'
  */
 export function index(req, res) {
-  return User.find({}, '-salt -password').exec()
+  return User.find({}, selectDefault)
+    .populate(populateProfile)
+    .exec()
     .then(users => {
       res.status(200).json(users);
     })
@@ -69,13 +76,23 @@ export function create(req, res) {
  */
 export function show(req, res, next) {
   var userId = req.params.id;
+  const select = '_id nome sobrenome username isAtivo profileId updatedAt createdAt, endereco email celular telefone empresa login';
 
-  return User.findById(userId).exec()
+  return User.findById(userId)
+    .select(select)
+    .populate({
+      path: 'login',
+      select: 'data ip browser device os',
+      options: {
+        limit: 5
+      }
+    })
+    .exec()
     .then(user => {
       if(!user) {
         return res.status(404).end();
       }
-      res.json(user.profile);
+      res.json(user);
       return user;
     })
     .catch(err => next(err));

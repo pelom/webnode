@@ -7,7 +7,7 @@ import Profile from '../profile/profile.model';
  * Verificar se a permissao tem acesso a Aplicacao e ao modulo
  */
 let hasPermission = function(permission) {
-  //console.log('hasPermission', perm);
+  //console.log('hasPermission', permission);
   if(permission.application === null || permission.modulo === null) {
     return false;
   }
@@ -30,7 +30,7 @@ export function isPermission(reqPermission) {
   if(!reqPermission) {
     throw new Error('Required permission');
   }
-  console.log('isPermission: ', reqPermission);
+  //console.log('isPermission: ', reqPermission);
   return compose()
     .use(function(req, res, next) {
       console.log('findProfile ...');
@@ -68,8 +68,8 @@ export function isPermission(reqPermission) {
     })
     .use(function(req, res, next) {
       let perm = req.permissionList[0];
-      console.log('permissao encontrada: ', perm);
-      console.log('permissao requisitada: ', reqPermission);
+      //console.log('permissao encontrada: ', perm._id);
+      //console.log('permissao requisitada: ', reqPermission);
 
       //A funcao solicitada nao existe no modulo?
       if(perm.modulo.funcoes.indexOf(reqPermission.funcao) < 0) {

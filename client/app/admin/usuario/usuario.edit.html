@@ -1,0 +1,280 @@
+<div class="container">
+  <div>
+    <p><a ui-sref="usuario"><small>Voltar para usuários</small></a></p>
+    <h4><i class="fa fa-user" aria-hidden="true"></i> Usuário</h4>
+    <!--p>Um perfil é responsável por agrupar o conjunto de permissões do usuário</p-->
+    <hr/>
+
+    <!-- Formulario de edição de usuario -->
+    <div class="panel panel-default" >
+      <div class="panel-body">
+        <form class="form" name="formUser" novalidate
+          ng-submit="ctl.saveUser(formUser)">
+          <h4><label>Informações do usuário</label></h4>
+          <hr/>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Nome</small></dt>
+                <dd ng-class="{'has-error': formUser.userNome.$invalid && formUser.userNome.$dirty}">
+                  <input type="text" name="userNome" class="form-control" placeholder="Nome"
+                   ng-model="ctl.user.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
+                    nomevalido="false" />
+
+                  <p class="help-block"
+                    ng-show="formUser.userNome.$error.required && formUser.userNome.$dirty">
+                    O nome é necessário</p>
+                  <p class="help-block" ng-show="formUser.userNome.$error.minlength">
+                    São necessários no minimo 3 letras</p>
+                  <p class="help-block" ng-show="formUser.userNome.$error.maxlength">
+                    São permitidos no máximo 30 letras</p>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Sobrenome</small></dt>
+                <dd ng-class="{'has-error': formUser.userSobrenome.$invalid && formUser.userSobrenome.$dirty}">
+                  <input type="text" name="userSobrenome" class="form-control" placeholder="Sobrenome"
+                   ng-model="ctl.user.sobrenome" ng-required="true" ng-minlength="3" ng-maxlength="40"
+                    nomevalido="true" />
+
+                  <p class="help-block"
+                    ng-show="formUser.userSobrenome.$error.required && formUser.userSobrenome.$dirty">
+                    O sobrenome é necessário</p>
+                  <p class="help-block" ng-show="formUser.userSobrenome.$error.minlength">
+                    São necessários no minimo 3 letras</p>
+                  <p class="help-block" ng-show="formUser.userSobrenome.$error.maxlength">
+                    São permitidos no máximo 40 letras</p>
+                </dd>
+              </dl>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Email</small></dt>
+                <dd ng-class="{'has-error': formUser.userEmail.$invalid && formUser.userEmail.$dirty}">
+                  <input type="email" name="userEmail" class="form-control"
+                    placeholder="email@email.com"
+                    ng-pattern='/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i'
+                    ng-model="ctl.user.email" ng-required="true" mongoose-error/>
+
+                  <p class="help-block" ng-show="formUser.userEmail.$error.required && formUser.userEmail.$dirty">
+                    Qual é o seu e-mail?</p>
+                  <p class="help-block" ng-show="formUser.userEmail.$error.pattern">
+                    O e-mail não parece válido.</p>
+                  <p class="help-block" ng-show="formUser.userEmail.$error.mongoose">
+                    {{ vm.errors.userEmail }}</p>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Nome de usuário</small></dt>
+                <dd ng-class="{'has-error': formUser.userUserName.$invalid && formUser.userUserName.$dirty}">
+                  <input type="email" name="userUserName" class="form-control"
+                   placeholder="nome@email.com"
+                   ng-pattern='/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i'
+                    ng-model="ctl.user.username" ng-required="true" mongoose-error/>
+
+                  <p class="help-block" ng-show="form.userUserName.$error.required && form.userUserName.$dirty">
+                    O nome de usuário é necessário</p>
+                  <p class="help-block" ng-show="form.userUserName.$error.pattern">
+                    O nome de usuário não parece válido.</p>
+                  <p class="help-block" ng-show="form.userUserName.$error.mongoose">
+                    {{ vm.errors.userUserName }}</p>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Empresa</small></dt>
+                <dd>
+                  <input type="text" class="form-control"
+                    ng-model="ctl.user.empresa"/>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <dl>
+                <dt><small>Telefone</small></dt>
+                <dd>
+                  <input type="text" class="form-control"
+                    ng-model="ctl.user.telefone" ui-mask="(99) 9999-9999"/>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-xs-6">
+              <dt><small>Celular</small></dt>
+              <dd>
+                <input type="text" class="form-control"
+                  ng-model="ctl.user.celular" ui-mask="(99) 9? 9999-9999"/>
+              </dd>
+            </div>
+          </div>
+          <br/>
+          <h4><label>Perfil do usuário</label></h4>
+          <hr/>
+          <div class="row">
+            <div class="col-sm-6">
+              <dt><small>Perfil do usuário</small></dt>
+              <dd ng-class="{'has-error': formUser.userProfile.$invalid}">
+                <select class="form-control" name="userProfile" ng-model="ctl.user.profileId"
+                   ng-options="item._id as item.nome for item in ctl.selectOptionProfile()"
+                   ng-required="true">
+                </select>
+                <p class="help-block"
+                  ng-show="formUser.userProfile.$error.required">
+                  O perfil é necessário</p>
+              </dd>
+            </div>
+          </div>
+          <br/>
+          <h4><label>Endereço do usuário</label></h4>
+          <hr/>
+          <div class="row">
+            <div class="col-lg-12">
+              <googlemaps ng-model="ctl.user.endereco.nome"
+                zip="ctl.user.endereco.zipcode"
+                country="ctl.user.endereco.country"
+                state="ctl.user.endereco.state"
+                city="ctl.user.endereco.city"
+                suburb="ctl.user.endereco.suburb"
+                number="ctl.user.endereco.number"
+                address="ctl.user.endereco.address">
+              </googlemaps>
+            </div>
+            <br/>
+
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Endereço</small></dt>
+                <dd>
+                  <input class="form-control"
+                   placeholder="Rua, Avenida, Travessa etc"
+                   ng-model="ctl.user.endereco.address" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>CEP</small></dt>
+                <dd>
+                  <input class="form-control"
+                   ui-mask="99999-999"
+                   ng-model="ctl.user.endereco.zipcode" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Complemento</small></dt>
+                <dd>
+                  <input class="form-control"
+                   ng-model="ctl.user.endereco.complement" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Bairro</small></dt>
+                <dd>
+                  <input class="form-control"
+                   ng-model="ctl.user.endereco.suburb" />
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <dl>
+                <dt><small>Número</small></dt>
+                <dd>
+                  <input class="form-control"
+                   placeholder="Número"
+                   ng-model="ctl.user.endereco.number" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-3">
+              <dl>
+                <dt><small>Cidade</small></dt>
+                <dd>
+                  <input class="form-control"
+                   ng-model="ctl.user.endereco.city" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-3">
+              <dl>
+                <dt><small>Estado</small></dt>
+                <dd>
+                  <input class="form-control"
+                   ng-model="ctl.user.endereco.state" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-3">
+              <dl>
+                <dt><small>País</small></dt>
+                <dd>
+                  <input class="form-control"
+                   placeholder="País"
+                   ng-model="ctl.user.endereco.country" />
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <br/>
+          <h4><label>Login</label></h4>
+          <hr/>
+          <div class="panel panel-default">
+            <div class="table-responsive">
+              <table class="table table-striped table-condensed">
+                <thead>
+                  <tr>
+                    <th><small>Navegador</small></th>
+                    <th><small>Sistema</small></th>
+                    <th><small>Modelo</small></th>
+                    <th><small>Marcar</small></th>
+                    <th><small>Dispositivo</small></th>
+                    <th><small>IP</small></th>
+                    <th><small>Data</small></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="lg in ctl.user.login">
+                    <td>{{ lg.browser.name }}</td>
+                    <td>{{ lg.os.name }}</td>
+                    <td>{{ lg.device.model }}</td>
+                    <td>{{ lg.device.vendor }}</td>
+                    <td>{{ lg.device.type_ }}</td>
+                    <td>{{ lg.ip }}</td>
+                    <td>{{ lg.data | date:'dd/MM/yyyy HH:mm' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row"><hr/></div>
+          <div class="list-group">
+            <button class="btn btn-primary" type="submit">
+                <loading showhidden="ctl.wait"></loading> Salvar</button>
+            <button type="button" class="btn btn-link"
+              ng-click="ctl.isNovo = false">Voltar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

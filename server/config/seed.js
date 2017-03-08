@@ -76,9 +76,10 @@ let createUser = function(profiles) {
     .then(() => {
       User.create([{
         provider: 'local',
-        nome: 'Admin',
-        sobrenome: 'Sistemas',
-        email: 'admin@example.com',
+        nome: 'Administrador',
+        sobrenome: 'de Sistemas',
+        email: 'admin@webnode.com',
+        username: 'admin@webnode.com',
         password: 'admin',
         isAtivo: true,
         profileId: profiles[0]._id
@@ -88,32 +89,16 @@ let createUser = function(profiles) {
       });
       User.create([{
         provider: 'local',
-        nome: 'Test',
-        sobrenome: 'User',
-        email: 'test@example.com',
+        nome: 'Usuário',
+        sobrenome: 'Padrão',
+        email: 'usuario@webnode.com',
+        username: 'usuario@webnode.com',
         password: '123456',
         isAtivo: true,
         profileId: profiles[1]._id
       }])
       .then(user => {
         console.log('finished populating user', user);
-      });
-    });
-};
-
-let createAppModulo = function() {
-  ApplicationModulo.find({}).remove()
-    .then(() => {
-      let fnList = ['Ler', 'Criar', 'Modificar', 'Excluir'];
-      ApplicationModulo.create([
-        { nome: 'Usuario', funcoes: fnList },
-        { nome: 'Usuario Perfil', funcoes: fnList },
-        { nome: 'Aplicacao', funcoes: fnList },
-        { nome: 'Aplicacao Modulo', funcoes: fnList }
-      ])
-      .then(modulos => {
-        console.log('finished populating Application Modulo', modulos);
-        createApp(modulos);
       });
     });
 };
@@ -127,6 +112,22 @@ let createApp = function(modulos) {
       }).then(app => {
         console.log('finished populating Application', app);
         createProfile(app);
+      });
+    });
+};
+let createAppModulo = function() {
+  ApplicationModulo.find({}).remove()
+    .then(() => {
+      let fnList = ['Ler', 'Criar', 'Modificar', 'Excluir'];
+      ApplicationModulo.create([
+        { nome: 'Usuário', funcoes: fnList },
+        { nome: 'Perfil de usuário', funcoes: fnList },
+        { nome: 'Aplicação', funcoes: fnList },
+        { nome: 'Modulo de aplicação', funcoes: fnList }
+      ])
+      .then(modulos => {
+        console.log('finished populating Application Modulo', modulos);
+        createApp(modulos);
       });
     });
 };

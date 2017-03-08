@@ -4,16 +4,11 @@ export function AplicacaoResource($resource) {
     id: '@_id'
   }, {
     update: { method: 'PUT' },
-    updateModulo: {
-      method: 'PUT',
+    showList: {
+      method: 'GET',
+      isArray: true,
       params: {
-        controller: 'modulo'
-      }
-    },
-    createModulo: {
-      method: 'POST',
-      params: {
-        controller: 'modulo'
+        id: 'showlist'
       }
     }
   });

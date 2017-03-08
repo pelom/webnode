@@ -3,44 +3,53 @@
 import crypto from 'crypto';
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
-
+var UserLoginSchema = new Schema({
+  sessionid: String,
+  userAgent: String,
+  ip: String,
+  data: { type: Date, default: Date.now,
+		required: 'Must have data date - default value is the created date'
+	},
+  browser: { name: String, version: String },
+  os: { name: String, version: String },
+  device: { model: String, type_: String, vendor: String },
+});
+var EnderecoSchema = new Schema({
+  address: String,
+  zipcode: String,
+  suburb: String,
+  city: String,
+  state: String,
+  complement: String,
+  country: String,
+  number: String
+});
 var UserSchema = new Schema({
-  name: String,
-  nome: String,
-  sobrenome: String,
-  celular: String,
-  telefone: String,
+  nome: {
+    type: String, required: true, maxlength: 20 },
+  sobrenome: {
+    type: String, required: true, maxlength: 40 },
+  celular: {
+    type: String, required: false },
+  telefone: {
+    type: String, required: false },
+  empresa: {
+    type: String, required: false, maxlength: 40 },
   email: {
-    type: String,
-    lowercase: true,
-    required: true
-  },
+    type: String, required: true, maxlength: 60, lowercase: true },
   isAtivo: {
-    type: String,
-    required: true,
-    default: false
-  },
-  //role: {
-  //  type: String,
-  //  default: 'user'
-  //},
+    type: Boolean, required: true, default: false },
+  username: {
+    type: String, required: true, maxlength: 60, lowercase: true },
   password: {
-    type: String,
-    required: true
+    type: String, required: true
   },
   profileId: { type: Schema.Types.ObjectId, ref: 'Profile' },
   provider: String,
   salt: String,
   activeToken: String,
-  endereco: {
-    rua: String,
-    cep: String,
-    bairro: String,
-    cidade: String,
-    estado: String,
-    complemento: String,
-    numero: String
-  }
+  endereco: EnderecoSchema,
+  login: [UserLoginSchema]
 }, {
   timestamps: true
 });
@@ -69,34 +78,35 @@ UserSchema.virtual('token').get(function() {
  * Validations
  */
 
-// Validate empty email
-UserSchema.path('email').validate(function(email) {
-  return email.length;
-}, 'Email cannot be blank');
+// Validate empty username
+UserSchema.path('username').validate(function(username) {
+  return username.length;
+}, 'UserName cannot be blank');
 
 // Validate empty password
 UserSchema.path('password').validate(function(password) {
   return password.length;
 }, 'Password cannot be blank');
 
-// Validate email is not taken
-UserSchema.path('email').validate(function(value, respond) {
+// Validate username is not taken
+UserSchema.path('username').validate(function(value, respond) {
   return this.constructor.findOne({
-    email: value
-  }).exec()
-    .then(user => {
-      if(user) {
-        if(this.id === user.id) {
-          return respond(true);
-        }
-        return respond(false);
+    username: value
+  })
+  .exec()
+  .then(user => {
+    if(user) {
+      if(this.id === user.id) {
+        return respond(true);
       }
-      return respond(true);
-    })
-    .catch(function(err) {
-      throw err;
-    });
-}, 'The specified email address is already in use.');
+      return respond(false);
+    }
+    return respond(true);
+  })
+  .catch(function(err) {
+    throw err;
+  });
+}, 'The specified username is already in use.');
 
 var validatePresenceOf = function(value) {
   return value && value.length;

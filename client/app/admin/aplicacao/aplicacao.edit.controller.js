@@ -1,76 +1,86 @@
 'use strict';
 import angular from 'angular';
 export default class AplicacaoEditController {
-
   /*@ngInject*/
-  constructor($scope, $timeout, AplicacaoService) {
+  constructor($scope, $stateParams, $state, AplicacaoService, Modal) {
+    this.id = $stateParams.id;
     this.AplicacaoService = AplicacaoService;
-    this.$timeout = $timeout;
-    this.filtrarResult = '';
-    this.itemArray = [
-      { name: 'Ler', class: 'fa fa-eye'},
-      { name: 'Criar', class: 'fa fa-plus-circle' },
-      { name: 'Modificar', class: 'fa fa-pencil-square-o' },
-      { name: 'Excluir', class: 'fa fa-minus-circle' }
-    ];
-    //index da aba ativa
-    this.abaAtiva = 0;
-    /*this.mapFn = [];
-    this.mapFn.ler = 'Ler';
-    this.mapFn.criar = 'Criar';
-    this.mapFn.modificar = 'Modificar';
-    this.mapFn.excluir = 'Excluir';
-    */
-    //controle das funcoes do componente radio
-    /*this.checkModel = {
-      ler: true,
-      criar: false,
-      modificar: false,
-      excluir: false
-    };*/
-    this.situacao = [
-      { name: 'Ativo', value: 'true' },
-      { name: 'Desativo', value: 'false' }
-    ];
-    this.wait = false;
-    /*$timeout(function() {
-       $scope.ctl.wait = false;
-     }, 2000);
-     */
-    //referencia para a criacao de um novo modulo
-    this.modulo = this.initModulo();
-    this.isAddModulo = false;
-    //monitor alteracoes no campo
-    $scope.$watchCollection('ctl.modulo.select', function() {
-      $scope.ctl.modulo.funcoes = [];
-      angular.forEach($scope.ctl.modulo.select, function(value, key) {
-        $scope.ctl.modulo.funcoes.push(value.name);
-      });
-    });
-    /*$scope.$watchCollection('ctl.checkModel', function() {
-      $scope.ctl.modulo.funcoes = [];
-      angular.forEach($scope.ctl.checkModel, function(value, key) {
-        if(value) {//funcao selecionada
-          let action = $scope.ctl.mapFn[key];
-          $scope.ctl.modulo.funcoes.push(action);//add no modulo
+    this.$state = $state;
+    this.Modal = Modal;
+    this.modulo = {};
+    if(this.id) {
+      this._loadApp();
+    } else {
+      this.app = this._createApp();
+    }
+    this.itemArray = this.AplicacaoService.getItemFuncaoDefault();
+    this.situacao = this.AplicacaoService.getItemIsAtivoDefault();
+  }
+  _loadApp() {
+    this.AplicacaoService.loadApp({ id: this.id },
+      (err, app) => {
+        if(err) {
+          return;
         }
+        this.app = app;
+        this.app.modulos.forEach(m => {
+          m.select = [];
+          m.funcoes.forEach(f => {
+            m.select.push({ name: f });
+          });
+        });
       });
-    });*/
-
-    this.alerts = [];
-    this.sucesso = {
-      type: 'info',
-      msg: 'Informações salvas com sucesso'
+  }
+  _createApp() {
+    return {
+      nome: '',
+      descricao: '',
+      modulos: [],
+      isAtivo: true
     };
   }
-
-  /**
-   * Obter referencia ao objeto Aplicativo
-   */
-  app() {
-    return this.AplicacaoService.getApp();
+  _createModulo() {
+    return {
+      nome: '',
+      descricao: '',
+      funcoes: [],
+      select: [],
+      isAtivo: true,
+      isNew: true
+    };
   }
+  _createModalEditModulo(modalTitle) {
+    return {
+      controller: 'AplicacaoModuloEditController',
+      controllerAs: 'ctl',
+      dismissable: true,
+      title: modalTitle,
+      html: require('./aplicacao.modulo.edit.html'),
+      //buttons: [button]
+    };
+  }
+  editModulo(modulo) {
+    let modalTitle = 'Modulo de aplicação';
+    let modal = this._createModalEditModulo(modalTitle);
+    let showOpen = this.Modal.show.open();
+    let modalCtl = showOpen(modal);
 
+    //o modulo nao foi definido?
+    if(angular.isUndefined(modulo)) {
+      modulo = this._createModulo();
+      modalCtl.onModulo = modEdit => {
+        modEdit.isNew = false;
+        this.app.modulos.push(modEdit);
+      };
+    }
+    //configurar o modulo a ser editado
+    this.AplicacaoService.setModuloEdit(modulo);
+    this.AplicacaoService.setModalCtl(modalCtl);
+  }
+  tagTransform(newTag) {
+    var item = { id: 0, name: newTag, class: 'fa fa-tag' };
+    return item;
+  }
   /**
    * Salvar Aplicativo
    */
@@ -78,11 +88,13 @@ export default class AplicacaoEditController {
     if(form.$invalid) {
       return;
     }
-    let app = this.app();
-    return this.AplicacaoService.saveAplicavo(app)
+    let isNew = this.app._id;
+    return this.AplicacaoService.saveApp(this.app)
     .then(newApp => {
-      this.abaAtiva = 1;
-      this.addMesagem(this.sucesso);
+      this.app = newApp;
+      if(isNew) {
+        this.$state.go('aplicacoes');
+      }
     })
     .catch(err => {
       console.log('Ex:', err);
@@ -90,91 +102,5 @@ export default class AplicacaoEditController {
     .finally(() => {
       this.wait = false;
     });
-  }
-
-  saveModulo(form) {
-    console.log(this.modulo);
-
-    if(form.$valid && this.modulo.funcoes.length > 0) {
-      let that = this;
-      this.AplicacaoService.saveModulo(this.modulo, function(data) {
-        console.log('saveModulo', data);
-        that.newModulo();
-        that.isAddModulo = false;
-        form.$setPristine();
-        that.addMesagem(that.sucesso);
-      });
-    }
-  }
-
-  newModulo() {
-    this.modulo = this.initModulo();
-    this.isAddModulo = true;
-  }
-
-  selectAllFuncoes() {
-    this.modulo.select = [];
-    this.itemArray.forEach(item => {
-      this.modulo.select.push(item);
-    });
-  }
-
-  selectTab() {
-    this.isAddModulo = false;
-  }
-  initModulo() {
-    return {
-      _id: null,
-      nome: '',
-      descricao: '',
-      funcoes: [], //funcoes que o modulo fornece
-      select: []
-    };
-  }
-
-  selectModulo(modulo) {
-    this.modulo = modulo;
-    this.isAddModulo = true;
-    let itens = [];
-    modulo.funcoes.forEach(item => {
-      console.log(item);
-      itens.push({
-        name: item.toString()
-      });
-    });
-    modulo.select = itens;
-    /*let arr = this.checkModel;
-    var that = this;
-    angular.forEach(this.checkModel, function(value, key) {
-      let action = that.mapFn[key];
-      arr[key] = that.modulo.funcoes.indexOf(action) >= 0;
-    });
-    */
-  }
-  /*removeFuncao(fn) {
-    console.log(fn, this.modulo.funcoes.indexOf(fn));
-    this.checkModel[fn.toLowerCase()] = false;
-    var result = this.modulo.funcoes.splice(
-      this.modulo.funcoes.indexOf(fn), 1);
-    console.log(result);
-  }*/
-  /*deleteModulo(modulo) {
-    let app = this.app();
-    console.log(modulo, app);
-    this.AplicacaoService.createModulo();
-    app.modulos.splice(app.modulos.indexOf(modulo), 1);
-    this.addMesagem(this.sucesso);
-  }*/
-
-  tagTransform(newTag) {
-    console.log(this.itemArray);
-    var item = { id: 0, name: newTag, class: 'fa fa-tag' };
-    return item;
-  }
-  addMesagem(msg) {
-    this.alerts.push(msg);
-    this.$timeout(() => {
-      this.alerts.splice(0, 1);
-    }, 2000);
   }
 }

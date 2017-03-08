@@ -2,7 +2,7 @@
 
 import Profile from './profile.model';
 
-const select = '-__v';
+const select = '_id nome role isAtivo criador modificador createdAt updatedAt';
 const selectCriador = {
   path: 'criador',
   //match: { age: { $gte: 21 }},
@@ -46,14 +46,35 @@ export function index(req, res) {
         createdAt: -1 //Sort by Date Added DESC
       }
     })
-    .populate(populateApp)
-    .populate(populateMod)
+    //.populate(populateApp)
+    //.populate(populateMod)
     .populate(selectCriador)
     .populate(selectModificador)
     .exec()
     .then(profiles => {
       res.status(200).json(profiles);
       return profiles;
+    })
+    .catch(handleError(res));
+}
+
+export function show(req, res) {
+  var profileId = req.params.id;
+  console.log('show()', profileId);
+  const selectShow = '_id nome descricao tempoSessao role isAtivo criador modificador createdAt updatedAt permissoes';
+  return Profile.findById(profileId)
+    .select(selectShow)
+    .populate(populateApp)
+    .populate(populateMod)
+    .populate(selectCriador)
+    .populate(selectModificador)
+    .exec()
+    .then(profile => {
+      if(!profile) {
+        return res.status(404).end();
+      }
+      res.json(profile);
+      return profile;
     })
     .catch(handleError(res));
 }

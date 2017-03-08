@@ -1,15 +1,15 @@
 <div class="container">
-  <div class="row">
+  <div>
     <p><a ui-sref="admin"><small>Voltar para o início</small></a></p>
-    <h2><i class="fa fa-rocket" aria-hidden="true"></i> Aplicativos</h2>
-    <p>O aplicativo é responsável por agrupar o conjunto de módulos, disponibilizados para acesso aos usuários</p>
+    <h2><i class="fa fa-rocket" aria-hidden="true"></i> Aplicações</h2>
+    <p>A aplicação é responsável por agrupar o conjunto de módulos, disponibilizados para acesso aos usuários</p>
     <hr/>
     <div class="panel panel-default">
         <div class="panel-heading">
           <div class="row">
             <div class="col-xs-6">
               <div class="btn-group">
-                <a class="btn btn-default" ng-click="ctl.openAppModal(-1)">
+                <a class="btn btn-default" ui-sref="aplicacoesedit()">
                   <i class="fa fa-plus" aria-hidden="true"></i> Novo</a>
                 <!--a class="btn btn-default"><span> Edit</span></a>
                 <a class="btn btn-default"><span>Delete</span></a-->
@@ -87,7 +87,7 @@
 
             <tbody>
               <tr ng-repeat="ap in ctl.appList() | orderBy:sortType:sortReverse | filter:filtrarResult"
-                ng-click="ctl.openAppModal($index)">
+                  ui-sref="aplicacoesedit({id: ap._id})">
                 <td>
                   <a href="#" uib-tooltip="Editar">
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
@@ -95,9 +95,9 @@
                 <td><a href="#" ui-sref-active="active">{{ ap.nome }}</a></td>
                 <td><small>{{ ap.descricao}}</small></td>
                 <td>
-                  <small ng-if="ap.isAtivo === 'true'">
+                  <small ng-if="ap.isAtivo == true">
                   <span class="label label-success">Ativo</span></small>
-                <small ng-if="ap.isAtivo === 'false'">
+                <small ng-if="ap.isAtivo == false">
                   <span class="label label-danger">Desativo</span></small>
                 </td>
                 <!--td><small>{{ ap.createdAt | date:'dd/MM/yyyy HH:mm' }} por

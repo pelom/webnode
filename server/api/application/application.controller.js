@@ -2,7 +2,6 @@
 
 import ApplicationModulo from './application.modulo.model';
 import Application from './application.model';
-//import applicationService from './application.service';
 
 const selectCriador = {
   path: 'criador',
@@ -16,12 +15,10 @@ const selectModificador = {
   select: 'nome sobrenome _id',
   //options: { limit: 5}
 };
-
-const select = '-__v';
-
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
   return function(err) {
+    console.log('validationError', err);
     return res.status(statusCode).json(err);
   };
 }
@@ -39,41 +36,13 @@ function handleError(res, statusCode) {
  */
 export function index(req, res) {
   console.log('index()');
-  /*applicationService.addName('webnode');
-  let moduloUser = applicationService.addApplication('oportunidade', ['view', 'create', 'update', 'remove', 'list']);
-  let moduloCarro = applicationService.addApplication('lead', ['view', 'create', 'remove']);
-  let profileAdmin = applicationService.addProfile('admin', ['lead.*', 'oportunidade.*']);
-  let profileDealer = applicationService.addProfile('dealer', ['oportunidade.view', 'oportunidade.list', 'lead.*']);
-
-  console.log(profileAdmin.hasAnyRoles('carro.view', 'user.create'));
-  console.log(profileDealer.hasAnyRoles('carro.*', 'user.create'));
-
-  console.log('Modulo User', moduloUser);
-  console.log('Modulo Carro', moduloCarro);
-  console.log('Profile Admin', profileAdmin);
-  console.log('Profile Dealer', profileDealer);
-
-  let exp = applicationService.export();
-  let appDb = new Application();
-  appDb.nome = exp.name;
-  appDb.modulos = exp.applications;
-  appDb.perfis = exp.profiles;
-  //appDb.applications = applicationService.export().applications;
-  //appDb.profiles = applicationService.export().profiles;
-  appDb.save();
-
-  console.log('Export', applicationService.export());
-*/
+  const select = '_id nome descricao isAtivo criador modificador createdAt updatedAt';
   return Application.find({}, select, {
     skip: 0, // Starting Row
     limit: 10, // Ending Row
     sort: {
       createdAt: -1 //Sort by Date Added DESC
     }
-  })
-  .populate({
-    path: 'modulos',
-    populate: [selectCriador, selectModificador]
   })
   .populate(selectCriador)
   .populate(selectModificador)
@@ -85,122 +54,176 @@ export function index(req, res) {
   .catch(handleError(res));
 }
 
+export function show(req, res) {
+  var appId = req.params.id;
+  console.log('show()', appId);
+  const selectShow = '_id nome descricao isAtivo criador modificador createdAt updatedAt modulos';
+  return Application.findById(appId)
+    .select(selectShow)
+    .populate({
+      path: 'modulos',
+      populate: [selectCriador, selectModificador]
+    })
+    .populate(selectCriador)
+    .populate(selectModificador)
+    .exec()
+    .then(app => {
+      if(!app) {
+        return res.status(404).end();
+      }
+      res.json(app);
+      return app;
+    })
+    .catch(handleError(res));
+}
+
+export function showList(req, res) {
+  var appId = req.params.id;
+  console.log('showList()', appId);
+  const selectShow = '_id nome descricao isAtivo criador modificador createdAt updatedAt modulos';
+  return Application.find({}, selectShow)
+    .populate({
+      path: 'modulos',
+      populate: [selectCriador, selectModificador]
+    })
+    .populate(selectCriador)
+    .populate(selectModificador)
+    .exec()
+    .then(appList => {
+      res.status(200).json(appList);
+      return appList;
+    })
+    .catch(handleError(res));
+}
+
 export function create(req, res) {
   console.log('create');
-  var newApp = new Application(req.body);
-  newApp.criador = req.user._id;
-  newApp.modificador = req.user._id;
-  newApp.save()
+  var newApp = new Application({
+    nome: String(req.body.nome),
+    descricao: String(req.body.descricao),
+    isAtivo: req.body.isAtivo,
+    criador: req.user._id,
+    modificador: req.user._id
+  });
+  return newApp.save()
     .then(function(app) {
-      Application.findById(app._id)
-      .select(select)
-      .populate(selectCriador)
-      .populate(selectModificador)
-      .exec()
-      .then(ap => {
-        console.log(ap);
-        if(!ap) {
-          return res.status(404).end();
-        }
-        res.status(200).json(ap);
-        return ap;
-      })
-      .catch(validationError(res));
+      res.status(201).json(app);
+      return app;
     })
     .catch(validationError(res));
-  return newApp;
+
+  /*let moduloList = [];
+  req.body.modulos.forEach(mod => {
+    let modul = new ApplicationModulo(mod);
+    modul.criador = req.user._id;
+    modul.modificador = req.user._id;
+    moduloList.push(modul);
+  });
+  return ApplicationModulo.create(moduloList)
+    .then(modList => {
+      console.log('Modulos insert', modList);
+
+    })
+    .catch(validationError(res));
+  */
 }
 
 export function update(req, res) {
+  //var newApp = new Application(req.body);
   let appId = req.params.id;
-  console.log('update()', appId);
-  console.log('body', req.body);
   let nome = String(req.body.nome);
   let descricao = String(req.body.descricao);
   let isAtivo = req.body.isAtivo;
-  let userId = req.user._id;
-  return Application.findById(appId).exec()
-    .then(app => {
-      app.nome = nome;
-      app.descricao = descricao;
-      app.modificador = userId;
-      app.isAtivo = isAtivo;
-      return app.save()
-        .then(newApp => {
-          Application.findById(newApp._id)
-          .select(select)
-          .populate(selectCriador)
-          .populate(selectModificador)
-          .exec()
-          .then(ap => {
-            if(!ap) {
-              return res.status(404).end();
-            }
-            res.status(201).json(ap);
-            return ap;
-          })
-          .catch(validationError(res));
-        })
-        .catch(validationError(res));
-    });
+
+  Application.findByIdAndUpdate(
+    appId,
+    {
+      nome: nome,
+      descricao: descricao,
+      isAtivo: isAtivo,
+      modificador: req.user._id
+    },
+    { safe: true, upsert: true }, function(err, model) {
+      if(err) {
+        console.log(err);
+        return res.status(404).end();
+      }
+      res.status(201).json(model);
+      return model;
+    }
+  );
 }
 
 export function createModulo(req, res) {
   let appId = req.params.id;
-  console.log('updateModulo', appId);
-  console.log('body', req.body);
-
-  let nome = String(req.body.nome);
-  let descricao = String(req.body.descricao);
-  let funcoes = req.body.funcoes;
-  var newMod = new ApplicationModulo();
-  newMod.nome = nome;
-  newMod.descricao = descricao;
-  newMod.funcoes = funcoes;
-  newMod.criador = req.user._id;
-  newMod.modificador = req.user._id;
+  var newMod = new ApplicationModulo({
+    nome: String(req.body.nome),
+    descricao: String(req.body.descricao),
+    funcoes: req.body.funcoes,
+    criador: req.user._id,
+    modificador: req.user._id
+  });
   newMod.save()
     .then(function(mod) {
-      Application.findById(appId)
-      .populate('modulos')
-      .exec()
-      .then(app => {
-        if(!app) {
-          return res.status(404).end();
-        }
-        app.modulos.push(mod);
-        app.save();
-        ApplicationModulo.findById(mod._id)
-        //.select(select)
-        .populate(selectCriador)
-        .populate(selectModificador)
-        .exec()
-        .then(md => {
-          if(!md) {
-            return res.status(404).end();
+      Application.findByIdAndUpdate(
+        appId,
+        { $push: { modulos: mod._id } },
+        { new: true }, function(err, model) {
+          if(err) {
+            console.log(err);
+            return;
           }
-          res.status(201).json(md);
-          return md;
-        })
-        .catch(validationError(res));
-      })
-      .catch(validationError(res));
+          ApplicationModulo.findById(mod._id)
+          //.select(select)
+          .populate(selectCriador)
+          .populate(selectModificador)
+          .exec()
+          .then(md => {
+            if(!md) {
+              return res.status(404).end();
+            }
+            res.status(201).json(md);
+            return md;
+          })
+          .catch(validationError(res));
+        }
+      );
     })
     .catch(validationError(res));
+
   return newMod;
 }
 
 export function updateModulo(req, res) {
   let appId = req.params.id;
   console.log('updateModulo', appId);
-  console.log('body', req.body);
+  return ApplicationModulo.findByIdAndUpdate(
+    req.body._id, {
+      nome: String(req.body.nome),
+      descricao: String(req.body.descricao),
+      funcoes: req.body.funcoes,
+      isAtivo: req.body.isAtivo,
+      modificador: req.user._id
+    },
+    { safe: true, upsert: true }, function(err, modulo) {
+      if(err) {
+        console.log(err);
+        return res.status(404).end();
+      }
+      ApplicationModulo.findById(modulo._id)
+      //.select(select)
+      .populate(selectCriador)
+      .populate(selectModificador)
+      .exec()
+      .then(mod => {
+        res.status(200).json(mod);
+        return mod;
+      })
+      .catch(validationError(res));
+    }
+  );
 
-  let id = req.body._id;
-  let nome = String(req.body.nome);
-  let descricao = String(req.body.descricao);
-  let funcoes = req.body.funcoes;
-  let isAtivo = req.body.isAtivo;
-  return ApplicationModulo.findById(id)
+  /*return ApplicationModulo.findById(id)
     .exec()
     .then(modulo => {
       if(!modulo) {
@@ -218,4 +241,5 @@ export function updateModulo(req, res) {
         })
         .catch(validationError(res));
     });
+    */
 }
