@@ -92,9 +92,9 @@
               <td>{{ ap.role }}</td>
               <!--td><small>{{ ap.descricao}}</small></td-->
               <td>
-                <small ng-if="ap.isAtivo === 'true'">
+                <small ng-if="ap.isAtivo == true">
                   <span class="label label-success">Ativo</span></small>
-                <small ng-if="ap.isAtivo === 'false'">
+                <small ng-if="ap.isAtivo == false">
                   <span class="label label-danger">Desativo</span></small>
               </td>
               <!--td><small>{{ ap.createdAt | date:'dd/MM/yyyy HH:mm' }} por

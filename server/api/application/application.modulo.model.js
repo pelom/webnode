@@ -19,7 +19,8 @@ var ApplicationModuloSchema = new Schema({
   },
   funcoes: [String],
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
-  modificador: { type: Schema.Types.ObjectId, ref: 'User'}
+  modificador: { type: Schema.Types.ObjectId, ref: 'User' },
+  application: { type: Schema.Types.ObjectId, ref: 'Application' }
 }, {
   timestamps: true
 });

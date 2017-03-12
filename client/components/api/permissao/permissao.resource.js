@@ -3,6 +3,7 @@ export function PermissaoResource($resource) {
   return $resource('/api/profile/:id/:controller', {
     id: '@_id'
   }, {
+    update: { method: 'PUT' },
     /*modulo: {
       method: 'PUT',
       params: {

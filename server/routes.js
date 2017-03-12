@@ -8,6 +8,16 @@ import errors from './components/errors';
 import path from 'path';
 export default function(app) {
   // Insert routes below
+
+  /*app.use('/api/*', (req, res, next) => {
+    console.log('Time: %d', Date.now());
+    console.log(req.originalUrl); // '/admin/new'
+    console.log(req.baseUrl); // '/admin'
+    console.log(req.path); // '/new'
+    console.log(req.method); // '/new'
+    next();
+  });
+  */
   app.use('/api/things', require('./api/thing'));
   app.use('/api/users', require('./api/user'));
   app.use('/api/application', require('./api/application'));

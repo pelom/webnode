@@ -89,7 +89,7 @@ export default class AplicacaoEditController {
       return;
     }
     let isNew = this.app._id;
-    return this.AplicacaoService.saveApp(this.app)
+    this.AplicacaoService.saveApp(this.app)
     .then(newApp => {
       this.app = newApp;
       if(isNew) {

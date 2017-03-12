@@ -75,10 +75,6 @@ export function AplicacaoService(Util, AplicacaoResource, AplicacaoModuloResourc
         return safeCb(callback)(err);
       }).$promise;
     },
-
-    /**
-     * Salvar Aplicativo
-     */
     saveApp(newApp, callback) {
       let appSend = {
         _id: newApp._id,
@@ -98,7 +94,7 @@ export function AplicacaoService(Util, AplicacaoResource, AplicacaoModuloResourc
         }).$promise;
       }
       return AplicacaoResource.update(appSend, function(data) {
-        console.log('AplicacaoResource.update', app, data);
+        console.log('AplicacaoResource.update', data);
         app = data;
         return safeCb(callback)(data);
       }, function(err) {

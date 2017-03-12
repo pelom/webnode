@@ -75,8 +75,9 @@
               <dl>
                 <dt><small>Criado</small></dt>
                 <dd>
-                  {{ ctl.profile.createdAt | date:'dd/MM/yyyy HH:mm' }} por
+                  <small>{{ ctl.profile.createdAt | date:'dd/MM/yyyy HH:mm' }} por
                   <strong>{{ctl.profile.criador.nome}} {{ctl.profile.criador.sobrenome}}</strong>
+                  </small>
                 </dd>
               </dl>
             </div>
@@ -84,8 +85,9 @@
               <dl>
                 <dt><small>Modificado</small></dt>
                 <dd>
-                  {{ ctl.profile.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                  <small>{{ ctl.profile.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
                   <strong>{{ ctl.profile.modificador.nome}} {{ ctl.profile.modificador.sobrenome}}</strong>
+                  </small>
                 </dd>
               </dl>
             </div>

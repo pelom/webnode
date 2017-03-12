@@ -7,11 +7,7 @@ var ApplicationSchema = new Schema({
   nome: String,
   descricao: String,
   modulos: [{ type: Schema.Types.ObjectId, ref: 'ApplicationModulo' }],
-  isAtivo: {
-    type: Boolean,
-    required: true,
-    default: true
-  },
+  isAtivo: { type: Boolean, required: true, default: true },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
   modificador: { type: Schema.Types.ObjectId, ref: 'User'}
 }, {

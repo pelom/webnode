@@ -17,11 +17,11 @@ const selectModificador = {
 };
 const populateApp = {
   path: 'permissoes.application',
-  //match: { nome: reqPermission.aplicacao, isAtivo: true }
+  select: '_id nome descricao'
 };
 const populateMod = {
   path: 'permissoes.modulo',
-  //match: { nome: reqPermission.modulo, isAtivo: true }
+  select: '_id nome descricao funcoes'
 };
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
@@ -40,12 +40,12 @@ function handleError(res, statusCode) {
 export function index(req, res) {
   console.log('index()');
   return Profile.find({}, select, {
-      skip: 0, // Starting Row
-      limit: 10, // Ending Row
-      sort: {
-        createdAt: -1 //Sort by Date Added DESC
-      }
-    })
+    skip: 0, // Starting Row
+    limit: 10, // Ending Row
+    sort: {
+      createdAt: -1 //Sort by Date Added DESC
+    }
+  })
     //.populate(populateApp)
     //.populate(populateMod)
     .populate(selectCriador)
@@ -77,4 +77,44 @@ export function show(req, res) {
       return profile;
     })
     .catch(handleError(res));
+}
+export function create(req, res) {
+  console.log('create');
+  var newProfile = new Profile({
+    nome: String(req.body.nome),
+    descricao: String(req.body.descricao),
+    isAtivo: req.body.isAtivo,
+    criador: req.user._id,
+    modificador: req.user._id,
+    tempoSessao: Number(req.body.tempoSessao),
+    role: String(req.body.role),
+    permissoes: req.body.permissoes
+  });
+  return newProfile.save()
+    .then(function(profile) {
+      return res.status(201).json(profile);
+    })
+    .catch(validationError(res));
+}
+export function update(req, res) {
+  let profileId = req.params.id;
+  console.log('update', profileId);
+  Profile.findByIdAndUpdate(
+    profileId, {
+      nome: String(req.body.nome),
+      descricao: String(req.body.descricao),
+      isAtivo: req.body.isAtivo,
+      modificador: req.user._id,
+      tempoSessao: Number(req.body.tempoSessao),
+      permissoes: req.body.permissoes
+    },
+    { safe: true, upsert: true }, function(err, model) {
+      if(err) {
+        console.log(err);
+        return res.status(404).end();
+      }
+      res.status(200).json(model);
+      return model;
+    }
+  );
 }

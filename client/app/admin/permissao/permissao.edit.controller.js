@@ -8,69 +8,58 @@ export default class PermissaoEditController {
     this.PermissaoService = PermissaoService;
     this.AplicacaoService = AplicacaoService;
     this.$state = $state;
-    this.appMap = new Map();
     this.AplicacaoService.loadAppListFull((err, appList) => {
-      if(!err) {
-        appList.forEach(ap => {
-          let apId = ap._id;
-          ap.isCollapsed = true;
-          ap.modulos.forEach(md => {
-            md.select = { funcoes: [] };
-            let key = apId.concat(':').concat(md._id);
-            this.appMap.set(key, md);
-          });
-        });
-        if(this.id) {
-          this.PermissaoService.loadProfile({ id: $stateParams.id }, (err, profile) => {
-            if(err) {
-              console.log('Ex: PermissaoService.get ', err);
-              return;
-            }
-            profile.permissoes.forEach(perm => {
-              let apId = perm.application._id;
-              let mdId = perm.modulo._id;
-              let key = apId.concat(':').concat(mdId);
+      if(err) {
+        return;
+      }
+      this._initMapAppModulo(appList);
+      if(this.id) {
+        this.PermissaoService.loadProfile({ id: $stateParams.id }, (err, profile) => {
+          if(err) {
+            console.log('Ex: PermissaoService.get ', err);
+            return;
+          }
+          profile.permissoes.forEach(perm => {
+            let apId = perm.application._id;
+            let mdId = perm.modulo._id;
+            let key = apId.concat(':').concat(mdId);
+            if(this.appMap.has(key)) {
               let md = this.appMap.get(key);
               md.select = {funcoes: []};
               md.select.funcoes = perm.funcoes;
-            });
-            this.profile = profile;
+              md.select.id = perm._id;
+            }
           });
-        } else {
-          this.profile = {
-            nome: '',
-            descricao: '',
-            role: 'user',
-            tempoSessao: 1800
-          };
-        }
+          this.profile = profile;
+        });
+      } else {
+        this.profile = this._createProfile();
       }
     });
     this.wait = false;
-    //$timeout(bsLoadingOverlayService.stop, 5000);
-    /*$timeout(function() {
-      console.log($scope.ctl.wait);
-       $scope.ctl.wait = false;
-     }, 2000);
-    */
-    this.situacao = [
-      { name: 'Ativo', value: 'true' },
-      { name: 'Desativo', value: 'false' }
-    ];
-    this.itemRole = [
-      { label: 'Usuário', value: 'user'},
-      { label: 'Administrador', value: 'admin'}
-    ];
-    this.itemSessao = [
-      { label: '24 horas após o login', value: 60 * 60 * 24 },
-      { label: '12 horas após o login', value: 60 * 60 * 12 },
-      { label: '8 horas após o login', value: 60 * 60 * 8 },
-      { label: '4 horas após o login', value: 60 * 60 * 4 },
-      { label: '2 horas após o login', value: 60 * 60 * 2 },
-      { label: '1 horas após o login', value: 60 * 60 },
-      { label: '30 minutos após o login', value: 60 * 30 },
-      { label: '15 minutos após o login', value: 60 * 15 }
-    ];
+    this.situacao = this.PermissaoService.getItemIsAtivoDefault();
+    this.itemRole = this.PermissaoService.getItemRoleDefault();
+    this.itemSessao = this.PermissaoService.getItemSessaoDefault();
+  }
+  _initMapAppModulo(appList) {
+    this.appMap = new Map();
+    appList.forEach(ap => {
+      let apId = ap._id;
+      ap.isCollapsed = true;
+      ap.modulos.forEach(md => {
+        md.select = { funcoes: [] };
+        let key = apId.concat(':').concat(md._id);
+        this.appMap.set(key, md);
+      });
+    });
+  }
+  _createProfile() {
+    return {
+      nome: '',
+      descricao: '',
+      role: 'user',
+      tempoSessao: 1800
+    };
   }
   addAllFuncoes(mod) {
     console.log(mod);
@@ -87,14 +76,28 @@ export default class PermissaoEditController {
       app.modulos.forEach(mod => {
         let key = appId.concat(':').concat(mod._id);
         let md = this.appMap.get(key);
-        permList.push({
+        let perm = {
           application: appId,
           modulo: mod._id,
-          funcoes: md.select.funcoes
-        });
+          funcoes: md.select.funcoes,
+        };
+        if(md.select.id) {
+          perm._id = md.select.id;
+        }
+        permList.push(perm);
       });
     });
-    console.log(permList);
-    this.$state.go('permissoes');
+    this.profile.permissoes = permList;
+    this.PermissaoService.saveProfile(this.profile)
+    .then(newProfile => {
+      console.log('newProfile');
+      this.$state.go('permissoes');
+    })
+    .catch(err => {
+      console.log('Ex:', err);
+    })
+    .finally(() => {
+      this.wait = false;
+    });
   }
 }
