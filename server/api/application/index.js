@@ -9,23 +9,18 @@ let permissao = function(funcao) {
   return {
     aplicacao: 'Standard',
     modulo: 'Aplicação',
-    funcao: funcao
+    funcao: funcao,
+    role: 'admin'
   };
 };
-router.get('/', auth.hasRole('admin'),
-  profile.isPermission(permissao('Ler')), controller.index);
+router.get('/', profile.isPermission(permissao('Ler')), controller.index);
+router.get('/showlist', profile.isPermission(permissao('Ler')), controller.showList);
 
-router.get('/showlist', auth.hasRole('admin'),
-  profile.isPermission(permissao('Ler')), controller.showList);
+router.get('/:id', profile.isPermission(permissao('Ler')), controller.show);
 
-router.get('/:id', auth.hasRole('admin'),
-  profile.isPermission(permissao('Ler')), controller.show);
+router.post('/', profile.isPermission(permissao('Criar')), controller.create);
 
-router.post('/', auth.hasRole('admin'),
-  profile.isPermission(permissao('Criar')), controller.create);
-
-router.put('/:id', auth.hasRole('admin'),
-  profile.isPermission(permissao('Modificar')), controller.update);
+router.put('/:id', profile.isPermission(permissao('Modificar')), controller.update);
 
 router.post('/:id/modulo', auth.hasRole('admin'), controller.createModulo);
 router.put('/:id/modulo', auth.hasRole('admin'), controller.updateModulo);

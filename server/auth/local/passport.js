@@ -5,14 +5,21 @@ function localAuthenticate(User, username, password, done) {
   User.findOne({
     username: username.toLowerCase(),
     activeToken: null
-  }).exec()
+  }, '_id nome sobrenome email username password salt provider profileId')
+  .populate({
+    path: 'profileId',
+    select: '_id nome role tempoSessao',
+    match: { isAtivo: true }
+  })
+  .exec()
     .then(user => {
+      console.log(user);
       if(!user) {
         return done(null, false, {
           message: 'Este nome de usuário não está registrado.'
         });
       }
-      if(!user.profileId) {
+      if(!user.profileId._id) {
         return done(null, false, {
           message: 'Profile not found'
         });

@@ -41,6 +41,7 @@ export function index(req, res) {
     .exec()
     .then(users => {
       res.status(200).json(users);
+      return users;
     })
     .catch(handleError(res));
 }
@@ -61,7 +62,7 @@ export function create(req, res) {
       user.save()
         .then(() => {
           //res.status(204).end();
-          res.json({ true });
+          res.json(true);
           mailerUserNew.send(req, user);
           return user;
         })
@@ -154,7 +155,7 @@ export function me(req, res, next) {
     .catch(err => next(err));
 }
 
-export function signupvalid(req, res) {
+export function signupvalid(req, res, next) {
   var token = String(req.body.token);
   return User.findOne({ activeToken: token }, '-salt -password').exec()
     .then(user => { // don't ever give out the password or salt

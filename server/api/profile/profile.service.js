@@ -1,6 +1,7 @@
 'use strict';
 
 import compose from 'composable-middleware';
+import * as auth from '../../auth/auth.service';
 import Profile from '../profile/profile.model';
 
 /**
@@ -32,10 +33,8 @@ export function isPermission(reqPermission) {
   }
   //console.log('isPermission: ', reqPermission);
   return compose()
+    .use(auth.hasRole(reqPermission.role))
     .use(function(req, res, next) {
-      console.log('findProfile ...');
-      console.log('req.user: ', req.user._id);
-
       let pApp = {
         path: 'permissoes.application',
         match: { nome: reqPermission.aplicacao, isAtivo: true }
@@ -51,7 +50,6 @@ export function isPermission(reqPermission) {
         .populate(pMod)
         .exec()
         .then(profile => {
-          console.log('profile encontrado: ', profile._id);
           if(!profile) {
             return res.status(401).end();
           }
