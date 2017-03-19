@@ -22,7 +22,7 @@ router.post('/', function(req, res, next) {
     User.findByIdAndUpdate(
       user._id,
       { $push: { login: { $each: [userLogin], $sort: { data: -1 } } }},
-      { safe: true, upsert: true }, function(err, model) {
+      { safe: true, upsert: true }, function(err, /*model*/) {
         console.log(err);
       }
     );

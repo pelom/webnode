@@ -29,6 +29,7 @@ export default class SignupController {
         nome: this.user.nome,
         sobrenome: this.user.sobrenome,
         email: this.user.email,
+        username: this.user.email,
         password: this.user.password
       })
       .then(() => {
@@ -41,7 +42,7 @@ export default class SignupController {
         this.errors = {};
         // Update validity of form fields that match the mongoose errors
         angular.forEach(err.errors, (error, field) => {
-          form[field].$setValidity('mongoose', false);
+          //form[field].$setValidity('mongoose', false);
           this.errors[field] = error.message;
         });
       });

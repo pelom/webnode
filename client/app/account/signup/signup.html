@@ -35,8 +35,7 @@
           <ul class="list-group no-margin-bottom">
             <li class="list-group-item no-border">
               <div class="row">
-                <div class="col-xs-6" ng-class="{'has-success': form.nome.$valid && form.nome.$dirty,
-                        'has-error': form.nome.$invalid && form.nome.$dirty}">
+                <div class="col-xs-6" ng-class="{ 'has-error': form.nome.$invalid && form.nome.$dirty}">
                   <!--label>Nome</label-->
                   <input type="text" name="nome" class="form-control" placeholder="Nome"
                    ng-model="vm.user.nome" ng-required="true" ng-minlength="3"
@@ -52,8 +51,7 @@
                     São permitidos no máximo 20 letras</p>
                 </div>
 
-                <div class="col-xs-6" ng-class="{'has-success': form.sobrenome.$valid && form.sobrenome.$dirty,
-                          'has-error': form.sobrenome.$invalid && form.sobrenome.$dirty}">
+                <div class="col-xs-6" ng-class="{ 'has-error': form.sobrenome.$invalid && form.sobrenome.$dirty}">
                   <!--label>Sobrenome</label-->
                   <input type="text" name="sobrenome" class="form-control" placeholder="Sobrenome"
                    ng-model="vm.user.sobrenome" ng-required="true" ng-minlength="3"
@@ -73,9 +71,7 @@
           </ul>
 
           <ul class="list-group no-margin-bottom">
-            <li class="list-group-item no-border" ng-class="{ 'has-success': form.email.$valid && form.email.$dirty,
-                                                  'has-error': form.email.$invalid && form.email.$dirty}">
-              <!--label >Email</label-->
+            <li class="list-group-item no-border" ng-class="{ 'has-error': form.email.$invalid && form.email.$dirty}">
               <input type="email" name="email" class="form-control" placeholder="email@email.com"
                ng-pattern='/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i'
                 ng-model="vm.user.email" ng-required="true" mongoose-error/>
@@ -93,38 +89,40 @@
             <li class="list-group-item no-border">
               <div class="row">
 
-                <div class="col-xs-6" ng-class="{ 'has-success': form.password.$valid && form.password.$dirty,
-                                        'has-error': form.password.$invalid && form.password.$dirty }">
+                <div class="col-xs-6" ng-class="{ 'has-error': form.password.$invalid && form.password.$dirty }">
                   <!--label>Senha</label-->
                   <input type="password" name="password" class="form-control"
-                   placeholder="Digite uma senha" ng-minlength="6" ng-maxlength="20"
+                   placeholder="Digite uma senha" ng-maxlength="20"
                     ng-model="vm.user.password" ng-required="true" mongoose-error/>
 
                   <p><ul check-strength="vm.user.password"></ul></p>
 
-                  <p class="help-block" ng-show="form.password.$error.checkStrength && form.password.$dirty">
+                  <p class="help-block" ng-show="form.password.$error.checkStrength && !form.password.$error.required && form.password.$dirty">
                     Senha muito vunerável</p>
                   <p class="help-block" ng-show="form.password.$error.required && form.password.$dirty">
                     A senha é necessário</p>
-                  <p class="help-block" ng-show="(form.password.$error.minlength)">
-                    São necessários no minimo 6 caractéres</p>
+                  <!--p class="help-block" ng-show="(form.password.$error.minlength)">
+                    São necessários no minimo 6 caractéres</p-->
                   <p class="help-block" ng-show="form.password.$error.maxlength">
                     São permitidos no máximo 20 caractéres</p>
                   <p class="help-block" ng-show="form.password.$error.mongoose">
                     {{ vm.errors.password }}</p>
                 </div>
 
-                <div class="col-xs-6" ng-class="{ 'has-success': form.confirmPassword.$valid && form.password.$dirty,
-                                                  'has-error': form.confirmPassword.$invalid && form.password.$dirty }">
+                <div class="col-xs-6" ng-class="{ 'has-error': form.confirmPassword.$invalid && form.password.$dirty }">
                   <!--label>Confirma Senha</label-->
                   <input type="password" name="confirmPassword" class="form-control"
                     ng-model="vm.user.confirmPassword" placeholder="Confirme a senha"
-                    match="form.password" />
+                    match="form.password" ng-required="true"/>
 
-                  <p class="help-block" ng-show="form.confirmPassword.$error.match">
+                  <p class="help-block" ng-show="form.confirmPassword.$error.match && !form.confirmPassword.$error.required">
                     A senha confirmada não corresponde a senha informada</p>
                 </div>
 
+              </div>
+              <div ng-class="{ 'has-error': form.username.$invalid}">
+                <input type="hidden" name="username" ng-model="vm.user.username"/>
+                <p class="help-block">{{ vm.errors.username }}</p>
               </div>
             </li>
           </ul>

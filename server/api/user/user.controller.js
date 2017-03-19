@@ -1,10 +1,14 @@
 'use strict';
 
 import User from './user.model';
+import Profile from '../profile/profile.model';
 import config from '../../config/environment';
+import generatePassword from '../../components/generate-password';
+import {sendNewUserValidate} from '../../components/nodemailer';
 import jwt from 'jsonwebtoken';
 import * as mailerUserNew from '../../mailer/userNew.service';
 
+console.log('generatePassword: ', generatePassword);
 const selectProfileRoles = {
   path: 'profileId',
   //match: { age: { $gte: 21 }},
@@ -36,6 +40,9 @@ function handleError(res, statusCode) {
  * restriction: 'admin'
  */
 export function index(req, res) {
+  generatePassword.setup();
+  console.log('generatePassword()', generatePassword.generatePassword());
+  console.log('generatePass()', generatePassword.generatePass());
   return User.find({}, selectDefault)
     .populate(populateProfile)
     .exec()
@@ -55,18 +62,29 @@ export function create(req, res) {
   //newUser.role = 'user';
   newUser.save()
     .then(function(user) {
-      var token = jwt.sign({ _id: user._id }, config.secrets.session, {
-        expiresIn: 60 * 60 * 5
-      });
-      user.activeToken = token;
-      user.save()
-        .then(() => {
-          //res.status(204).end();
-          res.json(true);
-          mailerUserNew.send(req, user);
-          return user;
-        })
-        .catch(validationError(res));
+      Profile.findOne({ nome: 'Usuário padrão' }, '_id')
+      .exec()
+      .then(profile => {
+        console.log(profile);
+        if(!profile) {
+          return res.status(404).end();
+        }
+        var token = jwt.sign({ _id: user._id }, config.secrets.session, {
+          expiresIn: 60 * 60 * 5
+        });
+        user.activeToken = token;
+        user.profileId = profile._id;
+        user.save()
+          .then(() => {
+            res.status(201).json(true);
+            sendNewUserValidate(req, user);
+            //mailerUserNew.sendNewUserValidate(req, user);
+            return user;
+          })
+          .catch(validationError(res));
+        return user;
+      })
+      .catch(validationError(res));
       return user;
     })
     .catch(validationError(res));
@@ -94,6 +112,7 @@ export function show(req, res, next) {
         return res.status(404).end();
       }
       res.json(user);
+      sendNewUserValidate(req, user);
       return user;
     })
     .catch(err => next(err));
@@ -162,7 +181,7 @@ export function signupvalid(req, res, next) {
       if(!user) {
         return res.status(401).end();
       }
-      user.activeToken = null;
+      user.activeToken = undefined;
       user.isAtivo = true;
       user.save();
       //res.json(user);

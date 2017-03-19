@@ -3,9 +3,8 @@ import {Strategy as LocalStrategy} from 'passport-local';
 
 function localAuthenticate(User, username, password, done) {
   User.findOne({
-    username: username.toLowerCase(),
-    activeToken: null
-  }, '_id nome sobrenome email username password salt provider profileId')
+    username: username.toLowerCase()
+  }, '_id nome sobrenome email username password salt provider isAtivo profileId')
   .populate({
     path: 'profileId',
     select: '_id nome role tempoSessao',
@@ -17,6 +16,11 @@ function localAuthenticate(User, username, password, done) {
       if(!user) {
         return done(null, false, {
           message: 'Este nome de usuário não está registrado.'
+        });
+      }
+      if(!user.isAtivo) {
+        return done(null, false, {
+          message: 'O Usuário não está ativo, por favor entre em contato com o administrador.'
         });
       }
       if(!user.profileId._id) {

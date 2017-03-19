@@ -50,6 +50,7 @@ export function isPermission(reqPermission) {
         .populate(pMod)
         .exec()
         .then(profile => {
+          console.log(profile);
           if(!profile) {
             return res.status(401).end();
           }

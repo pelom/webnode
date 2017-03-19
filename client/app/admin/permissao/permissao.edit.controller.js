@@ -10,28 +10,12 @@ export default class PermissaoEditController {
     this.$state = $state;
     this.AplicacaoService.loadAppListFull((err, appList) => {
       if(err) {
+        console.log('Ex: loadAppListFull() ', err);
         return;
       }
       this._initMapAppModulo(appList);
       if(this.id) {
-        this.PermissaoService.loadProfile({ id: $stateParams.id }, (err, profile) => {
-          if(err) {
-            console.log('Ex: PermissaoService.get ', err);
-            return;
-          }
-          profile.permissoes.forEach(perm => {
-            let apId = perm.application._id;
-            let mdId = perm.modulo._id;
-            let key = apId.concat(':').concat(mdId);
-            if(this.appMap.has(key)) {
-              let md = this.appMap.get(key);
-              md.select = {funcoes: []};
-              md.select.funcoes = perm.funcoes;
-              md.select.id = perm._id;
-            }
-          });
-          this.profile = profile;
-        });
+        this._loadProfile();
       } else {
         this.profile = this._createProfile();
       }
@@ -40,6 +24,26 @@ export default class PermissaoEditController {
     this.situacao = this.PermissaoService.getItemIsAtivoDefault();
     this.itemRole = this.PermissaoService.getItemRoleDefault();
     this.itemSessao = this.PermissaoService.getItemSessaoDefault();
+  }
+  _loadProfile() {
+    this.PermissaoService.loadProfile({ id: this.id }, (err, profile) => {
+      if(err) {
+        console.log('Ex: loadProfile() ', err);
+        return;
+      }
+      profile.permissoes.forEach(perm => {
+        let apId = perm.application._id;
+        let mdId = perm.modulo._id;
+        let key = apId.concat(':').concat(mdId);
+        if(this.appMap.has(key)) {
+          let md = this.appMap.get(key);
+          md.select = {funcoes: []};
+          md.select.funcoes = perm.funcoes;
+          md.select.id = perm._id;
+        }
+      });
+      this.profile = profile;
+    });
   }
   _initMapAppModulo(appList) {
     this.appMap = new Map();
@@ -90,7 +94,7 @@ export default class PermissaoEditController {
     this.profile.permissoes = permList;
     this.PermissaoService.saveProfile(this.profile)
     .then(newProfile => {
-      console.log('newProfile');
+      console.log('newProfile', newProfile);
       this.$state.go('permissoes');
     })
     .catch(err => {

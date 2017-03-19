@@ -5,11 +5,11 @@ import * as controller from './application.controller';
 import * as auth from '../../auth/auth.service';
 import * as profile from '../profile/profile.service';
 let router = new Router();
-let permissao = function(funcao) {
+let permissao = function(fun) {
   return {
     aplicacao: 'Standard',
     modulo: 'Aplicação',
-    funcao: funcao,
+    funcao: fun,
     role: 'admin'
   };
 };

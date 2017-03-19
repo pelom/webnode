@@ -1,7 +1,5 @@
 'use strict';
-
 import angular from 'angular';
-
 export default angular.module('oauthApplicationApp.checkStrength', [])
   .directive('checkStrength', function() {
     return {
@@ -25,15 +23,14 @@ export default angular.module('oauthApplicationApp.checkStrength', [])
           mesureStrength: function(pass) {
             var _force = 0;
             var _passedMatches = this.passedMatches(pass);
-
-            _force += 2 * pass.length + ((pass.length >= 10) ? 1 : 0 );
+            _force += 2 * pass.length + (pass.length >= 10 ? 1 : 0);
             _force += _passedMatches * 10;
             //penalizar senha curta
-            _force = (pass.length <= 6) ? Math.min(_force, 10) : _force;
+            _force = pass.length <= 6 ? Math.min(_force, 10) : _force;
             //penalizar variedade de caracter pobre
-            _force = (_passedMatches == 1) ? Math.min(_force, 10) : _force;
-            _force = (_passedMatches == 2) ? Math.min(_force, 20) : _force;
-            _force = (_passedMatches == 3) ? Math.min(_force, 40) : _force;
+            _force = _passedMatches == 1 ? Math.min(_force, 10) : _force;
+            _force = _passedMatches == 2 ? Math.min(_force, 20) : _force;
+            _force = _passedMatches == 3 ? Math.min(_force, 40) : _force;
             return _force;
           },
           getColor: function(s) {
@@ -56,19 +53,18 @@ export default angular.module('oauthApplicationApp.checkStrength', [])
           }
         };
         scope.$watch(attr.checkStrength, function() {
-          if(angular.isUndefined(scope.vm.user.password)
-            || scope.vm.user.password === '') {
-            elem.css({"display":"none"});
+          if(angular.isUndefined(scope.vm.user.password) || scope.vm.user.password === '') {
+            elem.css({ display: 'none' });
           } else {
             var force = strength.mesureStrength(scope.vm.user.password);
             var score = strength.getColor(force);
-            elem.css({"display": "inline"});
-            elem.children('li').css({"background":"#DDD"})
+            elem.css({ display: 'inline' });
+            elem.children('li').css({ background: '#DDD' });
             for(var i = 0; i < score.idx; i++) {
               var item = elem.children('li')[i];
-              angular.element(item).css({"background":score.col});
+              angular.element(item).css({ background: score.col});
             }
-            scope.form['password'].$setValidity('checkStrength', score.idx > 1);
+            scope.form.password.$setValidity('checkStrength', score.idx > 1);
           }
           /*if(!scope.form['password'].$error.checkStrength) {
             elem.css({"display":"none"});
