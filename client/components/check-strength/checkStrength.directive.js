@@ -52,11 +52,12 @@ export default angular.module('oauthApplicationApp.checkStrength', [])
             };
           }
         };
-        scope.$watch(attr.checkStrength, function() {
-          if(angular.isUndefined(scope.vm.user.password) || scope.vm.user.password === '') {
+        scope.$watch(attr.checkStrength, function(newValue, oldValue) {
+          let formField = attr.formField || 'password';
+          if(angular.isUndefined(newValue) || newValue === '') {
             elem.css({ display: 'none' });
           } else {
-            var force = strength.mesureStrength(scope.vm.user.password);
+            var force = strength.mesureStrength(newValue);
             var score = strength.getColor(force);
             elem.css({ display: 'inline' });
             elem.children('li').css({ background: '#DDD' });
@@ -64,11 +65,11 @@ export default angular.module('oauthApplicationApp.checkStrength', [])
               var item = elem.children('li')[i];
               angular.element(item).css({ background: score.col});
             }
-            scope.form.password.$setValidity('checkStrength', score.idx > 1);
+            scope.form[formField].$setValidity('checkStrength', score.idx > 1);
           }
-          /*if(!scope.form['password'].$error.checkStrength) {
-            elem.css({"display":"none"});
-          }*/
+          if(!scope.form[formField].$error.checkStrength) {
+            elem.css({ display: 'none' });
+          }
         });
       },
       template: require('./strength.html')

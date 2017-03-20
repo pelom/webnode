@@ -4,7 +4,8 @@ class _User {
   _id = '';
   name = '';
   email = '';
-  profileId = {role: ''};
+  profileId = { role: '' };
+  isNewUser = false;
   $promise = undefined;
 }
 
@@ -35,13 +36,9 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
      * @param  {Function} callback - function(error, user)
      * @return {Promise}
      */
-    login({
-      username,
-      password
-    }, callback) {
+    login({ username, password }, callback) {
       return $http.post('/auth/local', {
-        username,
-        password
+        username, password
       })
         .then(res => {
           $cookies.put('token', res.data.token);
@@ -98,8 +95,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
       return User.changePassword({
         id: currentUser._id
       }, {
-        oldPassword,
-        newPassword
+        oldPassword, newPassword
       }, function() {
         return safeCb(callback)(null);
       }, function(err) {

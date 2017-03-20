@@ -54,6 +54,13 @@ export default function routes($stateProvider) {
     controllerAs: 'vm',
     authenticate: true
   })
+  .state('changepassword', {
+    url: '/changePassword',
+    template: require('./change-password/change.password.html'),
+    controller: 'ChangePasswordController',
+    controllerAs: 'vm',
+    authenticate: true
+  })
   .state('perfil', {
     url: '/perfil',
     template: require('./perfil/perfil.html'),

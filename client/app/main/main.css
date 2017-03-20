@@ -1,5 +1,12 @@
 body {
-  background: #F2F2F2;
+background: #F2F2F2;
+padding-top: 70px;
+}
+
+@media (min-width: 768px) {
+  body {
+  padding-top: 100px;
+  }
 }
 .thing-form {
   margin: 20px 0;
@@ -188,4 +195,33 @@ body {
 @-webkit-keyframes spin2 {
     from { -webkit-transform: rotate(0deg);}
     to { -webkit-transform: rotate(360deg);}
+}
+
+.navbar-custom {
+  /*background: #2C3E50;
+  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: uppercase;*/
+  font-weight: 700;
+  /*border: none;*/
+}
+
+@media (min-width: 768px) {
+  .navbar-custom {
+    padding: 15px 0;
+    -webkit-transition: padding 0.3s;
+    -moz-transition: padding 0.3s;
+    transition: padding 0.3s;
+  }
+  .navbar-custom .navbar-brand {
+    font-size: 2em;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+  }
+  .navbar-custom.affix {
+    padding: 10px 0;
+  }
+  .navbar-custom.affix .navbar-brand {
+    font-size: 1.5em;
+  }
 }

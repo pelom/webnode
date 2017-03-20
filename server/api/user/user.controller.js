@@ -6,7 +6,7 @@ import config from '../../config/environment';
 import generatePassword from '../../components/generate-password';
 import {sendNewUserValidate} from '../../components/nodemailer';
 import jwt from 'jsonwebtoken';
-import * as mailerUserNew from '../../mailer/userNew.service';
+//import * as mailerUserNew from '../../mailer/userNew.service';
 
 console.log('generatePassword: ', generatePassword);
 const selectProfileRoles = {

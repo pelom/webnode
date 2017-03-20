@@ -1,4 +1,4 @@
-<div class="navbar navbar-default navbar-static-top">
+<div class="navbar navbar-default navbar-fixed-top navbar-custom">
   <div class="container">
     <div class="navbar-header">
       <button class="navbar-toggle" type="button" ng-click="$ctrl.isCollapsed = !$ctrl.isCollapsed">
@@ -13,35 +13,53 @@
     <div uib-collapse="$ctrl.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
       <ul class="nav navbar-nav">
         <li ng-repeat="item in $ctrl.menu" ui-sref-active="active">
-          <a ui-sref="{{item.state}}">{{item.title}}</a>
+          <a ui-sref="{{item.state}}" ng-click="$ctrl.isCollapsed=true;">{{item.title}}</a>
         </li>
-        <li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin">Início</a></li>
+        <li ng-show="$ctrl.isAdmin()" ui-sref-active="active">
+          <a ui-sref="admin" ng-click="$ctrl.isCollapsed=true;">Início</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
         <li ng-hide="$ctrl.isLoggedIn()" ui-sref-active="active">
-          <a ui-sref="signup"><i class="fa fa-edit fa-fw" aria-hidden="true"></i></span>
-            Cadastra-se</a></li>
+          <a ui-sref="signup" ng-click="$ctrl.isCollapsed=true;">
+            <i class="fa fa-edit fa-fw" aria-hidden="true"></i></span>Cadastra-se</a>
+        </li>
         <li ng-hide="$ctrl.isLoggedIn()" ui-sref-active="active">
-          <a ui-sref="login">
+          <a ui-sref="login" ng-click="$ctrl.isCollapsed=true;">
             <i class="fa fa-sign-in" aria-hidden="true"></i></span> Entrar</a>
         </li>
-
         <li ng-show="$ctrl.isLoggedIn()">
-          <p class="navbar-text"><i class="fa fa-user-circle" aria-hidden="true"></i>
-             {{ $ctrl.getCurrentUser().nome }}</p>
+          <a ui-sref="perfil" ng-click="$ctrl.isCollapsed=true;">
+            <i class="fa fa-user-circle" aria-hidden="true"></i>
+             {{ $ctrl.getCurrentUser().nome }}</a>
         </li>
         <li ng-show="$ctrl.isLoggedIn()" class="dropdown" uib-dropdown>
-          <a href="#" class="dropdown-toggle" uib-dropdown-toggle
-           data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-          <i class="fa fa-gear fa-fw"></i></i></a>
+          <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown"
+            role="button" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-gear fa-fw"></i></i>
+          </a>
           <ul class="dropdown-menu" uib-dropdown-menu>
-            <li><a ui-sref="perfil"><i class="fa fa-user fa-fw"></i> Pefil</a></li>
-            <li><a ui-sref="settings" ui-sref-active="active">
-              <i class="fa fa-gear fa-fw" aria-hidden="true"></i> Configuração</a></li>
+            <li>
+              <a ui-sref="perfil" ui-sref-active="active">
+                <i class="fa fa-user fa-fw"></i> Pefil
+              </a>
+            </li>
+            <li>
+              <a ui-sref="changepassword" ui-sref-active="active">
+                <i class="fa fa-gear fa-fw" aria-hidden="true"></i> Trocar senha
+              </a>
+            </li>
+            <li>
+              <a ui-sref="settings" ui-sref-active="active">
+                <i class="fa fa-gear fa-fw" aria-hidden="true"></i> Configuração
+              </a>
+            </li>
             <li class="divider"></li>
-            <li><a ui-sref="logout" aria-hidden="true">
-              <i class="fa fa-sign-out fa-fw"></i> Sair</a></li>
+            <li>
+              <a ui-sref="logout" aria-hidden="true">
+                <i class="fa fa-sign-out fa-fw"></i> Sair
+              </a>
+            </li>
           </ul>
         </li>
       </ul>
