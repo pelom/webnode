@@ -4,167 +4,177 @@
     <h4><i class="fa fa-rocket" aria-hidden="true"></i> Aplicação</h4>
     <!--p>Um perfil é responsável por agrupar o conjunto de permissões do usuário</p-->
     <hr/>
+    <form class="form " name="form1" novalidate ng-submit="ctl.saveApp(form1)">
+      <div class="panel panel-default" >
+        <div class="panel-body">
+            <h4><label>Informações da aplicação</label></h4>
+            <hr/>
+            <div class="row">
+              <div class="col-sm-6">
+                <dl ng-class="{'has-error': form1.nome.$invalid && form1.nome.$dirty}">
+                  <dt><small>Nome da aplicação</small></dt>
+                  <dd>
+                    <input type="text" name="nome" class="form-control" placeholder="Digite um nome"
+                     ng-model="ctl.app.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
+                      nomevalido="false" />
 
-    <!-- Formulario de edição -->
-    <div class="panel panel-default" >
-      <div class="panel-body">
-        <form class="form " name="form1" novalidate ng-submit="ctl.saveApp(form1)">
+                    <p class="help-block" ng-show="form1.nome.$error.required && form1.nome.$dirty">
+                      O sobrenome é necessário</p>
+                    <p class="help-block" ng-show="form1.nome.$error.minlength">
+                      São necessários no minimo 3 letras</p>
+                    <p class="help-block" ng-show="form1.nome.$error.maxlength">
+                      São permitidos no máximo 30 letras</p>
+                  </dd>
 
-          <h4><label>Informações da aplicação</label></h4>
-          <hr/>
-          <div class="row">
-            <div class="col-sm-6">
-              <dl ng-class="{'has-error': form1.nome.$invalid && form1.nome.$dirty}">
-                <dt><small>Nome da aplicação</small></dt>
-                <dd>
-                  <input type="text" name="nome" class="form-control" placeholder="Digite um nome"
-                   ng-model="ctl.app.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
-                    nomevalido="false" />
-
-                  <p class="help-block" ng-show="form1.nome.$error.required && form1.nome.$dirty">
-                    O sobrenome é necessário</p>
-                  <p class="help-block" ng-show="form1.nome.$error.minlength">
-                    São necessários no minimo 3 letras</p>
-                  <p class="help-block" ng-show="form1.nome.$error.maxlength">
-                    São permitidos no máximo 30 letras</p>
-                </dd>
-
-              </dl>
+                </dl>
+              </div>
+              <div class="col-sm-6">
+                <dl>
+                  <dt><small>Situação</small></dt>
+                  <dd>
+                    <select class="form-control" ng-model="ctl.app.isAtivo"
+                     ng-options="item.value as item.name for item in ctl.situacao"></select>
+                   </dd>
+                </dl>
+              </div>
             </div>
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>Situação</small></dt>
-                <dd>
-                  <select class="form-control" ng-model="ctl.app.isAtivo"
-                   ng-options="item.value as item.name for item in ctl.situacao"></select>
-                 </dd>
-              </dl>
-            </div>
-          </div>
 
-          <div class="row">
-            <div class="col-lg-12">
-              <textarea class="form-control" rows="3" placeholder="Descrição"
-                ng-model="ctl.app.descricao"></textarea>
+            <div class="row">
+              <div class="col-lg-12">
+                <textarea class="form-control" rows="3" placeholder="Descrição"
+                  ng-model="ctl.app.descricao"></textarea>
+              </div>
             </div>
-          </div>
-          <div class="row" ng-if="ctl.app._id">
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>Criado</small></dt>
-                <dd><small>{{ ctl.app.createdAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <strong>{{ctl.app.criador.nome}} {{ctl.app.criador.sobrenome}}</strong>
-                </small></dd>
-              </dl>
+            <br/>
+            <div class="row" ng-if="ctl.app._id">
+              <div class="col-sm-6">
+                <dl>
+                  <dt><small>Criado</small></dt>
+                  <dd><small>{{ ctl.app.createdAt | date:'dd/MM/yyyy HH:mm' }} por
+                    <strong>{{ctl.app.criador.nome}} {{ctl.app.criador.sobrenome}}</strong>
+                  </small></dd>
+                </dl>
+              </div>
+              <div class="col-sm-6">
+                <dl>
+                  <dt><small>Modificado</small></dt>
+                  <dd><small>{{ ctl.app.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                    <strong>{{ctl.app.modificador.nome}} {{ctl.app.modificador.sobrenome}}</strong>
+                  </small></dd>
+                </dl>
+              </div>
             </div>
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>Modificado</small></dt>
-                <dd><small>{{ ctl.app.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <strong>{{ctl.app.modificador.nome}} {{ctl.app.modificador.sobrenome}}</strong>
-                </small></dd>
-              </dl>
-            </div>
-          </div>
 
-          <div class="row" ng-if="ctl.app.modulos.length > 3">
-            <div class="col-md-12">
-              <button class="btn btn-primary btn-sm" type="submit"
+            <div class="row"><hr/></div>
+            <div class="list-group">
+              <button class="btn btn-primary" type="submit"
                 ng-disabled="form1.$invalid || ctl.wait ">
                 <loading showhidden="ctl.wait"></loading> Salvar</button>
               <button type="button" class="btn btn-link"
-                  ui-sref="aplicacoes">Voltar</button>
+                ui-sref="aplicacoes">Voltar</button>
             </div>
-          </div>
-          <div ng-if="ctl.app._id">
-            <h4><label>Conjuntos de modulos</label>
-              <a href="#" class="btn btn-link" ng-click="ctl.editModulo()">
-                <i class="fa fa-plus" aria-hidden="true"></i> Novo</a>
-            </h4>
-            <hr/>
-            <div class="list-group" ng-if="!ctl.app.modulos.length">
-              <div class="alert">
-                <i class="fa fa-info-circle" aria-hidden="true"></i>
-                Nenhum módulo adicionado,
-                <a href="#" ng-click="ctl.editModulo()">
-                  Criar novo módulo</a>
+
+            <!--div class="row" ng-if="ctl.app.modulos.length > 3">
+              <div class="col-md-12">
+                <button class="btn btn-primary btn-sm" type="submit"
+                  ng-disabled="form1.$invalid || ctl.wait ">
+                  <loading showhidden="ctl.wait"></loading> Salvar</button>
+                <button type="button" class="btn btn-link"
+                    ui-sref="aplicacoes">Voltar</button>
               </div>
-            </div>
-            <div class="list-group">
-              <a href="#" title="Clique para editar o modulo"
-               class="list-group-item" ng-repeat="md in ctl.app.modulos"
-               ng-click="ctl.editModulo(md)">
-                <h5>
-                  <i class="fa fa-cube" aria-hidden="true"></i>
-                  {{ md.nome }}
-                  <small ng-if="md.descricao"> - {{md.descricao}}</small>
-                </h5>
-                <div class="form-group">
-                  <ui-select multiple remove-selected="false" theme="bootstrap"
-                    title="Selecione as funções" tagging="ctl.tagTransform" ng-disabled="true"
-                    ng-model="md.select" close-on-select="false">
-                    <ui-select-match placeholder="Selecione as funções">
-                      <i ng-class="$item.class" aria-hidden="true"></i>
-                      <strong>{{$item.name}}</strong>
-                    </ui-select-match>
-                    <ui-select-choices repeat="item in (ctl.itemArray | filter: $select.search) track by item.name">
-                      <i ng-class="item.class" aria-hidden="true"></i>
-                      <!--span ng-bind-html="item.name | highlight: $select.search"></span-->
-                      <span ng-if="item.isTag" ng-bind-html="(item.name | highlight: $select.search) +' (novo)'"></span>
-                      <span ng-if="!item.isTag" ng-bind-html="item.name + item.isTag| highlight: $select.search"></span>
-                      <!--div ng-bind-html="item.name | highlight: $select.search"></div-->
-                    </ui-select-choices>
-                  </ui-select>
-                  <p ng-if="ctl.md.funcoes.length < 1" class="text-danger">Nenhum função selecionada</p>
-                </div>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <dl>
-                      <dt><small>Situação</small></dt>
-                      <dd>
-                        <p>
-                          <small ng-if="md.isAtivo == true">
-                            <span class="label label-success">Ativo</span></small>
-                          <small ng-if="md.isAtivo == false">
-                            <span class="label label-danger">Desativo</span></small>
-                        </p>
-                      </dd>
-                    </dl>
-                  </div>
-                  <div class="col-sm-3" ng-if="md.createdAt">
-                    <dl>
-                      <dt><small>Criador</small></dt>
-                      <dd>
-                        <small>{{ md.createdAt | date:'dd/MM/yyyy HH:mm' }} por
-                          <strong>{{md.criador.nome}} {{md.criador.sobrenome}}</strong></small>
-                      </dd>
-                    </dl>
-                  </div>
-                  <div class="col-sm-3" ng-if="md.updatedAt">
-                    <dl>
-                      <dt><small>Modificador</small></dt>
-                      <dd>
-                        <small>{{ md.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-                          <strong>{{md.modificador.nome}} {{md.modificador.sobrenome}}</strong></small>
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-
-              </a>
-            </div>
-          </div>
-          <div class="row"><hr/></div>
-          <div class="list-group">
-            <button class="btn btn-primary" type="submit"
-              ng-disabled="form1.$invalid || ctl.wait ">
-              <loading showhidden="ctl.wait"></loading> Salvar</button>
-            <button type="button" class="btn btn-link"
-              ui-sref="aplicacoes">Voltar</button>
-          </div>
-
-        </form>
+            </div-->
+        </div>
       </div>
-    </div>
+      <!-- Formulario de edição -->
+      <div class="panel panel-default" ng-if="ctl.app._id">
+        <div class="panel-body">
+          <h4><label>Conjuntos de modulos</label>
+            <a href="#" class="btn btn-link" ng-click="ctl.editModulo()">
+              <i class="fa fa-plus" aria-hidden="true"></i> Novo</a>
+          </h4>
+          <hr/>
+          <div class="list-group" ng-if="!ctl.app.modulos.length">
+            <div class="alert">
+              <i class="fa fa-info-circle" aria-hidden="true"></i>
+              Nenhum módulo adicionado,
+              <a href="#" ng-click="ctl.editModulo()">
+                Criar novo módulo</a>
+            </div>
+          </div>
+          <div class="list-group">
+            <a href="#" title="Clique para editar o modulo"
+             class="list-group-item" ng-repeat="md in ctl.app.modulos"
+             ng-click="ctl.editModulo(md)">
+              <h5>
+                <i class="fa fa-cube" aria-hidden="true"></i>
+                {{ md.nome }}
+                <small ng-if="md.descricao"> - {{md.descricao}}</small>
+              </h5>
+              <div class="form-group">
+                <ui-select multiple remove-selected="false" theme="bootstrap"
+                  title="Selecione as funções" tagging="ctl.tagTransform" ng-disabled="true"
+                  ng-model="md.select" close-on-select="false">
+                  <ui-select-match placeholder="Selecione as funções">
+                    <i ng-class="$item.class" aria-hidden="true"></i>
+                    <strong>{{$item.name}}</strong>
+                  </ui-select-match>
+                  <ui-select-choices repeat="item in (ctl.itemArray | filter: $select.search) track by item.name">
+                    <i ng-class="item.class" aria-hidden="true"></i>
+                    <!--span ng-bind-html="item.name | highlight: $select.search"></span-->
+                    <span ng-if="item.isTag" ng-bind-html="(item.name | highlight: $select.search) +' (novo)'"></span>
+                    <span ng-if="!item.isTag" ng-bind-html="item.name + item.isTag| highlight: $select.search"></span>
+                    <!--div ng-bind-html="item.name | highlight: $select.search"></div-->
+                  </ui-select-choices>
+                </ui-select>
+                <p ng-if="ctl.md.funcoes.length < 1" class="text-danger">Nenhum função selecionada</p>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <dl>
+                    <dt><small>Situação</small></dt>
+                    <dd>
+                      <p>
+                        <small ng-if="md.isAtivo == true">
+                          <span class="label label-success">Ativo</span></small>
+                        <small ng-if="md.isAtivo == false">
+                          <span class="label label-danger">Desativo</span></small>
+                      </p>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-3" ng-if="md.createdAt">
+                  <dl>
+                    <dt><small>Criador</small></dt>
+                    <dd>
+                      <small>{{ md.createdAt | date:'dd/MM/yyyy HH:mm' }} por
+                        <strong>{{md.criador.nome}} {{md.criador.sobrenome}}</strong></small>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-3" ng-if="md.updatedAt">
+                  <dl>
+                    <dt><small>Modificador</small></dt>
+                    <dd>
+                      <small>{{ md.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                        <strong>{{md.modificador.nome}} {{md.modificador.sobrenome}}</strong></small>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+
+            </a>
+          </div>
+
+            <div class="row"><hr/></div>
+            <div class="list-group">
+              <button class="btn btn-primary" type="submit"
+                ng-disabled="form1.$invalid || ctl.wait ">
+                <loading showhidden="ctl.wait"></loading> Salvar</button>
+              <button type="button" class="btn btn-link"
+                ui-sref="aplicacoes">Voltar</button>
+            </div>
+        </div>
+      </div>
+    </form>
   </div>
 </div>
