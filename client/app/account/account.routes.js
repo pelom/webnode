@@ -29,9 +29,9 @@ export default function routes($stateProvider) {
   })
   .state('signupvalid', {
     url: '/signupvalid?token',
-    referrer: 'login',
-    template: '',
-    controller($state, Auth) {
+    template: require('./signup/signupvalid.html'),
+    controller: 'SignupValidController'
+    /*controller($state, Auth) {
       'ngInject';
       var token = $state.params.token;
       console.log(token);
@@ -45,7 +45,7 @@ export default function routes($stateProvider) {
         .catch(err => {
           console.log(err);
         });
-    }
+    }*/
   })
   .state('settings', {
     url: '/settings',
@@ -54,11 +54,9 @@ export default function routes($stateProvider) {
     controllerAs: 'vm',
     authenticate: true
   })
-  .state('changepassword', {
-    url: '/changePassword',
-    template: require('./change-password/change.password.html'),
-    controller: 'ChangePasswordController',
-    controllerAs: 'vm',
+  .state('settingspassword', {
+    url: '/settings/password',
+    template: require('./settings/settings.password.html'),
     authenticate: true
   })
   .state('perfil', {

@@ -22,6 +22,7 @@ import AplicacaoService from '../components/api/aplicacao/aplicacao.module';
 
 import account from './account';
 import admin from './admin';
+import changePassword from '../components/change-password/change.password.component';
 import navbar from '../components/navbar/navbar.component';
 import footer from '../components/footer/footer.component';
 import main from './main/main.component';
@@ -38,15 +39,14 @@ import './app.css';
 import checkStrength from '../components/check-strength/checkStrength.directive';
 import '../components/check-strength/check.css';
 
-angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize, ngAnimate,
+angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate,
   ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength, googlemaps,
   uiRouter, uiBootstrap, uiSelect, uiMask, AplicacaoService, PermissaoService,
-  _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal
+  _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal, changePassword
 ])
   .config(routeConfig)
   .config(function(uiSelectConfig) {
     'ngInject';
-    console.log(uiSelectConfig);
     uiSelectConfig.theme = 'bootstrap';
     uiSelectConfig.resetSearchInput = true;
     uiSelectConfig.appendToBody = true;
@@ -63,9 +63,8 @@ angular.module('oauthApplicationApp', [ngCookies, ngResource, ngSanitize, ngAnim
     });
   });
 
-angular.element(document)
-  .ready(() => {
-    angular.bootstrap(document, ['oauthApplicationApp'], {
-      strictDi: true
-    });
+angular.element(document).ready(() => {
+  angular.bootstrap(document, ['webnodeApp'], {
+    strictDi: true
   });
+});

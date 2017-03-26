@@ -80,6 +80,6 @@ function Socket(socketFactory) {
   };
 }
 
-export default angular.module('oauthApplicationApp.socket', [])
+export default angular.module('webnodeApp.socket', [])
   .factory('socket', Socket)
   .name;

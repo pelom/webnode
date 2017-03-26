@@ -15,7 +15,7 @@ function addInterceptor($httpProvider) {
   $httpProvider.interceptors.push('authInterceptor');
 }
 
-export default angular.module('oauthApplicationApp.auth', [constants, util, ngCookies, uiRouter])
+export default angular.module('webnodeApp.auth', [constants, util, ngCookies, uiRouter])
   .factory('authInterceptor', authInterceptor)
   .run(routerDecorator)
   .factory('Auth', AuthService)

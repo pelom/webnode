@@ -7,7 +7,7 @@ import usuario from './usuario';
 import permissao from './permissao';
 import aplicacao from './aplicacao';
 
-export default angular.module('oauthApplicationApp.admin',
-['oauthApplicationApp.auth', 'ui.router', usuario, aplicacao, permissao])
+export default angular.module('webnodeApp.admin',
+['webnodeApp.auth', 'ui.router', usuario, aplicacao, permissao])
   .config(routes)
   .controller('AdminController', AdminController).name;

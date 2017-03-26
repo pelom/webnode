@@ -2,7 +2,7 @@
 
 import angular from 'angular';
 
-export default angular.module('oauthApplicationApp.loading', [])
+export default angular.module('webnodeApp.loading', [])
   .directive('loading', function() {
     return {
       restrict: 'E',

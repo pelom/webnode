@@ -1,13 +1,15 @@
 'use strict';
-
+/* globals describe, it, before, beforeEach, afterEach */
 import app from '../..';
 import User from './user.model';
 var user;
 var genUser = function() {
   user = new User({
     provider: 'local',
-    name: 'Fake User',
+    nome: 'User',
+    sobrenome: 'User Faker',
     email: 'test@example.com',
+    username: 'test@example.com',
     password: 'password'
   });
   return user;
@@ -27,12 +29,12 @@ describe('User Model', function() {
     return User.remove();
   });
 
-  it('should begin with no users', function() {
+  it('Deve começar com nenhum usuário', function() {
     return User.find({}).exec().should
       .eventually.have.length(0);
   });
 
-  it('should fail when saving a duplicate user', function() {
+  it('Deve falhar ao salvar um usuário duplicado', function() {
     return user.save()
       .then(function() {
         var userDup = genUser();
@@ -40,53 +42,104 @@ describe('User Model', function() {
       }).should.be.rejected;
   });
 
+  describe('#nome', function() {
+    it('Deve falhar ao salvar com um nome em branco', function() {
+      user.nome = '';
+      return user.save().should.be.rejected;
+    });
+
+    it('Deve falhar ao salvar com um nome nulo', function() {
+      user.nome = null;
+      return user.save().should.be.rejected;
+    });
+
+    it('Deve falhar ao salvar sem um nome', function() {
+      user.nome = undefined;
+      return user.save().should.be.rejected;
+    });
+  });
+
+  describe('#sobrenome', function() {
+    it('Deve falhar ao salvar com sobrenome em branco', function() {
+      user.nome = '';
+      return user.save().should.be.rejected;
+    });
+
+    it('Deve falhar ao salvar com sobrenome nulo', function() {
+      user.nome = null;
+      return user.save().should.be.rejected;
+    });
+
+    it('Deve falhar ao salvar sem um sobrenome', function() {
+      user.nome = undefined;
+      return user.save().should.be.rejected;
+    });
+  });
+
+  describe('#username', function() {
+    it('Deve falhar ao salvar com username em branco', function() {
+      user.username = '';
+      return user.save().should.be.rejected;
+    });
+
+    it('Deve falhar ao salvar com username nulo', function() {
+      user.username = null;
+      return user.save().should.be.rejected;
+    });
+
+    it('Deve falhar ao salvar sem username', function() {
+      user.username = undefined;
+      return user.save().should.be.rejected;
+    });
+  });
+
   describe('#email', function() {
-    it('should fail when saving with a blank email', function() {
+    it('Deve falhar ao salvar com email em branco', function() {
       user.email = '';
       return user.save().should.be.rejected;
     });
 
-    it('should fail when saving with a null email', function() {
+    it('Deve falhar ao salvar com email nulo', function() {
       user.email = null;
       return user.save().should.be.rejected;
     });
 
-    it('should fail when saving without an email', function() {
+    it('Deve falhar ao salvar sem email', function() {
       user.email = undefined;
       return user.save().should.be.rejected;
     });
   });
 
   describe('#password', function() {
-    it('should fail when saving with a blank password', function() {
+    it('Deve falhar ao salvar com senha em branco', function() {
       user.password = '';
       return user.save().should.be.rejected;
     });
 
-    it('should fail when saving with a null password', function() {
+    it('Deve falhar ao salvar com senha nulo', function() {
       user.password = null;
       return user.save().should.be.rejected;
     });
 
-    it('should fail when saving without a password', function() {
+    it('Deve falhar ao salvar sem senha', function() {
       user.password = undefined;
       return user.save().should.be.rejected;
     });
 
-    describe('given the user has been previously saved', function() {
+    describe('Dado que o usuário foi salvo anteriormente', function() {
       beforeEach(function() {
         return user.save();
       });
 
-      it('should authenticate user if valid', function() {
+      it('Deve autenticar usuário se válido', function() {
         user.authenticate('password').should.be.true;
       });
 
-      it('should not authenticate user if invalid', function() {
+      it('Não deve autenticar usuário se inválido', function() {
         user.authenticate('blah').should.not.be.true;
       });
 
-      it('should remain the same hash unless the password is updated', function() {
+      it('Deve permanecer o mesmo hash a menos que a senha seja atualizada', function() {
         user.name = 'Test User';
         return user.save()
           .then(function(u) {

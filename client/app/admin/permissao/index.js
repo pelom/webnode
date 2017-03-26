@@ -3,7 +3,7 @@
 import angular from 'angular';
 import PermissaoController from './permissao.controller';
 import PermissaoEditController from './permissao.edit.controller';
-export default angular.module('oauthApplicationApp.permissao', [])
+export default angular.module('webnodeApp.permissao', [])
   .run(function($rootScope) {
     'ngInject';
     /*$rootScope.$on('$stateChangeStart', function(event, next) {

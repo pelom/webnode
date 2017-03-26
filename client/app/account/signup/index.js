@@ -2,7 +2,8 @@
 
 import angular from 'angular';
 import SignupController from './signup.controller';
-
-export default angular.module('oauthApplicationApp.signup', [])
+import SignupValidController from './signupvalid.controller';
+export default angular.module('webnodeApp.signup', [])
+  .controller('SignupValidController', SignupValidController)
   .controller('SignupController', SignupController)
   .name;

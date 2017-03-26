@@ -1,6 +1,6 @@
 'use strict';
 import angular from 'angular';
-export default angular.module('oauthApplicationApp.checkStrength', [])
+export default angular.module('webnodeApp.checkStrength', [])
   .directive('checkStrength', function() {
     return {
       replace: false,

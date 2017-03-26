@@ -3,6 +3,6 @@
 import angular from 'angular';
 import LoginController from './login.controller';
 
-export default angular.module('oauthApplicationApp.login', [])
+export default angular.module('webnodeApp.login', [])
   .controller('LoginController', LoginController)
   .name;

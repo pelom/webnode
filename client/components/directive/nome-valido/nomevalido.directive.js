@@ -1,6 +1,6 @@
 'use strict';
 const angular = require('angular');
-export default angular.module('oauthApplicationApp.directive.nomevalido', [])
+export default angular.module('webnodeApp.directive.nomevalido', [])
   .directive('nomevalido', function() {
     return {
       require: '?ngModel',

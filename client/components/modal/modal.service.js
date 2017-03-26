@@ -106,5 +106,5 @@ export function Modal($rootScope, $uibModal, $log) {
   };
 }
 
-export default angular.module('oauthApplicationApp.Modal', [])
+export default angular.module('webnodeApp.Modal', [])
   .factory('Modal', Modal).name;

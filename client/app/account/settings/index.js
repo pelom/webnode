@@ -3,6 +3,6 @@
 import angular from 'angular';
 import SettingsController from './settings.controller';
 
-export default angular.module('oauthApplicationApp.settings', [])
+export default angular.module('webnodeApp.settings', [])
   .controller('SettingsController', SettingsController)
   .name;

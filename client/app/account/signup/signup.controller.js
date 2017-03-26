@@ -14,9 +14,15 @@ export default class SignupController {
   errors = {};
   conta = false;
   /*@ngInject*/
-  constructor(Auth, $state, /*$scope*/) {
+  constructor(Auth, $state, appConfig/*$scope*/) {
+    var isSignup = Boolean(appConfig.signup);
+    if(!isSignup) {
+      $state.go('login');
+      return;
+    }
     this.Auth = Auth;
     this.$state = $state;
+
     /*$scope.$watch('vm.user.nome', function() {
       $scope.vm.user.nome = $scope.vm.user.nome.toLowerCase();
     });*/
@@ -24,7 +30,7 @@ export default class SignupController {
 
   register(form) {
     if(form.$valid) {
-      console.log(this.user);
+      //console.log(this.user);
       return this.Auth.createUser({
         nome: this.user.nome,
         sobrenome: this.user.sobrenome,

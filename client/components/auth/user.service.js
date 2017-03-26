@@ -5,6 +5,12 @@ export function UserResource($resource) {
   return $resource('/api/users/:id/:controller', {
     id: '@_id'
   }, {
+    register: {
+      method: 'POST',
+      params: {
+        id: 'register'
+      }
+    },
     signupvalid: {
       method: 'PUT',
       params: {

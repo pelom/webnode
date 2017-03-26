@@ -1,6 +1,6 @@
 'use strict';
 /* https://github.com/bermi/password-generator */
-import generatePassword from 'password-generator';
+let generatePassword = require('password-generator');
 
 let config = {};
 const UPPERCASE_RE = /([A-Z])/g;

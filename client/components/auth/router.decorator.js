@@ -3,7 +3,11 @@
 export function routerDecorator($rootScope, $state, Auth) {
   'ngInject';
   // Redirect to login if route requires auth and the user is not logged in, or doesn't have required role
-
+  /**
+   * Se route requer autenticação e o usuário não
+   * estiver conectado, ou não tiver o papel requerido
+   * redirecionar para login
+   */
   $rootScope.$on('$stateChangeStart', function(event, next) {
     if(!next.authenticate) {
       return;

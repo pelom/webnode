@@ -38,7 +38,7 @@ export class MainController {
   }
 }
 
-export default angular.module('oauthApplicationApp.main', [uiRouter])
+export default angular.module('webnodeApp.main', [uiRouter])
   .config(routing)
   .component('main', {
     template: require('./main.html'),

@@ -391,8 +391,8 @@ gulp.task('test:server', cb => {
 });
 
 gulp.task('mocha:unit', () => {
-    return gulp.src(paths.server.test.unit)
-        .pipe(mocha());
+  return gulp.src(paths.server.test.unit)
+      .pipe(mocha());
 });
 
 gulp.task('mocha:integration', () => {

@@ -8,7 +8,6 @@ import {sendNewUserValidate} from '../../components/nodemailer';
 import jwt from 'jsonwebtoken';
 //import * as mailerUserNew from '../../mailer/userNew.service';
 
-console.log('generatePassword: ', generatePassword);
 const selectProfileRoles = {
   path: 'profileId',
   //match: { age: { $gte: 21 }},
@@ -41,7 +40,7 @@ function handleError(res, statusCode) {
  */
 export function index(req, res) {
   generatePassword.setup();
-  console.log('generatePassword()', generatePassword.generatePassword());
+  //console.log('generatePassword()', generatePassword.generatePassword());
   console.log('generatePass()', generatePassword.generatePass());
   return User.find({}, selectDefault)
     .populate(populateProfile)
@@ -52,11 +51,14 @@ export function index(req, res) {
     })
     .catch(handleError(res));
 }
-
 /**
  * Creates a new user
  */
 export function create(req, res) {
+  //TODO implementar a regra de criação do novo usuário
+}
+
+export function register(req, res) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
   //newUser.role = 'user';
@@ -112,7 +114,7 @@ export function show(req, res, next) {
         return res.status(404).end();
       }
       res.json(user);
-      sendNewUserValidate(req, user);
+      //sendNewUserValidate(req, user);
       return user;
     })
     .catch(err => next(err));

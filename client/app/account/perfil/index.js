@@ -3,5 +3,5 @@
 import angular from 'angular';
 import PerfilController from './perfil.controller';
 
-export default angular.module('oauthApplicationApp.perfil', [])
+export default angular.module('webnodeApp.perfil', [])
   .controller('PerfilController', PerfilController).name;

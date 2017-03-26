@@ -1,5 +1,5 @@
 'use strict';
-
+import * as _ from 'lodash';
 class _User {
   _id = '';
   name = '';
@@ -72,8 +72,8 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
      * @return {Promise}
      */
     createUser(user, callback) {
-      console.log('createUser :', user, callback);
-      return User.save(user, function(data) {
+      //console.log('createUser :', user, callback);
+      return User.register(user, function(/*data*/) {
         //$cookies.put('token', data.token);
         //currentUser = User.get();
         return safeCb(callback)(null, user);

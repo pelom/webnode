@@ -7,10 +7,8 @@ import login from './login';
 import settings from './settings';
 import signup from './signup';
 import perfil from './perfil';
-import changePassword from './change-password';
-
-export default angular.module('oauthApplicationApp.account',
-[uiRouter, login, settings, signup, perfil, changePassword])
+export default angular.module('webnodeApp.account',
+[uiRouter, login, settings, signup, perfil])
   .config(routing)
   .run(function($rootScope) {
     'ngInject';

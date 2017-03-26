@@ -15,14 +15,18 @@ describe('User API:', function() {
   before(function() {
     return User.remove().then(function() {
       profile = new Profile({
-        nome: 'Profile User'
+        nome: 'Profile User',
+        isAtivo: true
       });
       profile.save();
       user = new User({
-        name: 'Fake User',
+        nome: 'User',
+        sobrenome: 'User Faker',
         email: 'test@example.com',
+        username: 'test@example.com',
         password: 'password',
-        profileId: profile._id
+        profileId: profile._id,
+        isAtivo: true
       });
 
       return user.save();
@@ -41,7 +45,7 @@ describe('User API:', function() {
       request(app)
         .post('/auth/local')
         .send({
-          email: 'test@example.com',
+          username: 'test@example.com',
           password: 'password'
         })
         .expect(200)
