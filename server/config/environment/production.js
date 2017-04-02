@@ -4,6 +4,7 @@
 // Production specific configuration
 // =================================
 module.exports = {
+  seedDB: true,
   // Server IP
   ip: process.env.OPENSHIFT_NODEJS_IP
     || process.env.ip
