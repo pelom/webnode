@@ -2,8 +2,15 @@
 
 export default class UsuarioController {
   /*@ngInject*/
-  constructor(User) {
-    this.users = User.query();
+  constructor(UsuarioService) {
+    UsuarioService.loadUserList()
+    .then(users => {
+      console.log('users', users);
+      this.users = users;
+    })
+    .catch(err => {
+      console.log('Ex:', err);
+    })
     this.profiles = [];
   }
 }

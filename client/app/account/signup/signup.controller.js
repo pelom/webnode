@@ -14,13 +14,13 @@ export default class SignupController {
   errors = {};
   conta = false;
   /*@ngInject*/
-  constructor(Auth, $state, appConfig/*$scope*/) {
+  constructor(UsuarioService, $state, appConfig/*$scope*/) {
     var isSignup = Boolean(appConfig.signup);
     if(!isSignup) {
       $state.go('login');
       return;
     }
-    this.Auth = Auth;
+    this.UsuarioService = UsuarioService;
     this.$state = $state;
 
     /*$scope.$watch('vm.user.nome', function() {
@@ -30,8 +30,7 @@ export default class SignupController {
 
   register(form) {
     if(form.$valid) {
-      //console.log(this.user);
-      return this.Auth.createUser({
+      return this.UsuarioService.register({
         nome: this.user.nome,
         sobrenome: this.user.sobrenome,
         email: this.user.email,

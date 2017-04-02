@@ -7,12 +7,11 @@ module.exports = {
 
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://oauthapplication:oauthapplication@localhost:27017/oauthapplication-dev'
+    uri: 'mongodb://webnodedev:webnodedev@localhost:27017/webnodedev'
   },
 
   // Seed database on startup
   seedDB: false,
-
   emailTransportOptions: {
     auth: {
       user: 'pelommedrado@gmail.com', // Basta dizer qual o nosso usuário

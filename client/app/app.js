@@ -19,6 +19,7 @@ import {routeConfig} from './app.config';
 import _Auth from '../components/auth/auth.module';
 import PermissaoService from '../components/api/permissao/permissao.module';
 import AplicacaoService from '../components/api/aplicacao/aplicacao.module';
+import UsuarioService from '../components/api/usuario/usuario.module';
 
 import account from './account';
 import admin from './admin';
@@ -41,7 +42,7 @@ import '../components/check-strength/check.css';
 
 angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate,
   ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength, googlemaps,
-  uiRouter, uiBootstrap, uiSelect, uiMask, AplicacaoService, PermissaoService,
+  uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService, PermissaoService,
   _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal, changePassword
 ])
   .config(routeConfig)

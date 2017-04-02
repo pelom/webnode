@@ -1,16 +1,10 @@
 'use strict';
 
-export function UserResource($resource) {
+export function AuthResource($resource) {
   'ngInject';
   return $resource('/api/users/:id/:controller', {
     id: '@_id'
   }, {
-    register: {
-      method: 'POST',
-      params: {
-        id: 'register'
-      }
-    },
     signupvalid: {
       method: 'PUT',
       params: {

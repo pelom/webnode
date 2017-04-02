@@ -9,7 +9,7 @@ class _User {
   $promise = undefined;
 }
 
-export function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
+export function AuthService($location, $http, $cookies, $q, appConfig, Util, AuthResource) {
   'ngInject';
 
   var safeCb = Util.safeCb;
@@ -25,7 +25,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
   };
 
   if($cookies.get('token') && $location.path() !== '/logout') {
-    currentUser = User.get();
+    currentUser = AuthResource.get();
   }
 
   var Auth = {
@@ -42,7 +42,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
       })
         .then(res => {
           $cookies.put('token', res.data.token);
-          currentUser = User.get();
+          currentUser = AuthResource.get();
           return currentUser.$promise;
         })
         .then(user => {
@@ -63,26 +63,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
       $cookies.remove('token');
       currentUser = new _User();
     },
-
-    /**
-     * Create a new user
-     *
-     * @param  {Object}   user     - user info
-     * @param  {Function} callback - function(error, user)
-     * @return {Promise}
-     */
-    createUser(user, callback) {
-      //console.log('createUser :', user, callback);
-      return User.register(user, function(/*data*/) {
-        //$cookies.put('token', data.token);
-        //currentUser = User.get();
-        return safeCb(callback)(null, user);
-      }, function(err) {
-        Auth.logout();
-        return safeCb(callback)(err);
-      }).$promise;
-    },
-
+    
     /**
      * Change password
      *
@@ -92,7 +73,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
      * @return {Promise}
      */
     changePassword(oldPassword, newPassword, callback) {
-      return User.changePassword({
+      return AuthResource.changePassword({
         id: currentUser._id
       }, {
         oldPassword, newPassword
@@ -105,7 +86,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
     },
 
     getSignupValid(token, callback) {
-      return User.getsignupvalid({ id: token },
+      return AuthResource.getsignupvalid({ id: token },
         function(data) {
           return safeCb(callback)(null, data);
         },
@@ -115,7 +96,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
     },
 
     signupvalid(token, callback) {
-      return User.signupvalid({ id: token }, { token },
+      return AuthResource.signupvalid({ id: token }, { token },
         function(data) {
           $cookies.put('token', data.token);
           currentUser = User.get();

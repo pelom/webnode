@@ -7,7 +7,7 @@ import ngCookies from 'angular-cookies';
 import {authInterceptor} from './interceptor.service';
 import {routerDecorator} from './router.decorator';
 import {AuthService} from './auth.service';
-import {UserResource} from './user.service';
+import {AuthResource} from './auth.resource';
 import uiRouter from 'angular-ui-router';
 
 function addInterceptor($httpProvider) {
@@ -19,6 +19,6 @@ export default angular.module('webnodeApp.auth', [constants, util, ngCookies, ui
   .factory('authInterceptor', authInterceptor)
   .run(routerDecorator)
   .factory('Auth', AuthService)
-  .factory('User', UserResource)
+  .factory('AuthResource', AuthResource)
   .config(['$httpProvider', addInterceptor])
   .name;
