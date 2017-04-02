@@ -14,19 +14,22 @@ function localAuthenticate(User, username, password, done) {
     .then(user => {
       console.log(user);
       if(!user) {
-        return done(null, false, {
+        done(null, false, {
           message: 'Este nome de usuário não está registrado.'
         });
+        return null;
       }
       if(!user.isAtivo) {
-        return done(null, false, {
+        done(null, false, {
           message: 'O Usuário não está ativo, por favor entre em contato com o administrador.'
         });
+        return null;
       }
       if(!user.profileId._id) {
-        return done(null, false, {
+        done(null, false, {
           message: 'Profile not found'
         });
+        return null;
       }
       user.authenticate(password, function(authError, authenticated) {
         if(authError) {

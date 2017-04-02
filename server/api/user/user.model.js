@@ -44,10 +44,13 @@ var UserSchema = new Schema({
   password: {
     type: String, required: true
   },
-  profileId: { type: Schema.Types.ObjectId, ref: 'Profile' },
-  provider: String,
   salt: String,
+  provider: String,
+  profileId: { type: Schema.Types.ObjectId, ref: 'Profile' },
   activeToken: String,
+  passwordReset: {
+    type: Boolean, default: undefined
+  },
   endereco: EnderecoSchema,
   login: [UserLoginSchema]
 }, {

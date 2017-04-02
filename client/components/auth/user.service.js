@@ -17,6 +17,12 @@ export function UserResource($resource) {
         controller: 'signupvalid'
       }
     },
+    getsignupvalid: {
+      method: 'GET',
+      params: {
+        controller: 'signupvalid'
+      }
+    },
     changePassword: {
       method: 'PUT',
       params: {

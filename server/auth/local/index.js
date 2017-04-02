@@ -11,10 +11,12 @@ router.post('/', function(req, res, next) {
     console.log('passport.authenticate', user, info, err);
     var error = err || info;
     if(error) {
-      return res.status(401).json(error);
+      res.status(401).json(error);
+      return;
     }
     if(!user) {
-      return res.status(404).json({message: 'Something went wrong, please try again.'});
+      res.status(404).json({message: 'Something went wrong, please try again.'});
+      return;
     }
     //var token = signToken(user._id, user.role);
     var token = signTokenUser(user);
@@ -27,6 +29,7 @@ router.post('/', function(req, res, next) {
       }
     );
     res.json({ token });
+    return;
   })(req, res, next);
 });
 

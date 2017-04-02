@@ -50,14 +50,14 @@
                     <i class="fa fa-user-circle fa-fw fa-2x"></i>
                     {{ $ctrl.getCurrentUser().nome }} {{ $ctrl.getCurrentUser().sobrenome }}
                   </dt>
-                  <dd><p class="text-left"><small>{{ $ctrl.getCurrentUser().email  }}</small></p></dd>
+                  <dd><p class="text-left"><small>{{ $ctrl.getCurrentUser().username  }}</small></p></dd>
                 </dl>
               </a>
             </li>
             <li class="divider"></li>
             <li>
               <a ui-sref="settingspassword" ui-sref-active="active" ng-click="$ctrl.activeCollapsed();">
-                <i class="fa fa-gear fa-fw" aria-hidden="true"></i> Trocar senha
+                <i class="fa fa-unlock-alt fa-fw" aria-hidden="true"></i> Trocar senha
               </a>
             </li>
             <li>

@@ -14,5 +14,6 @@ router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', controller.create);
 router.post('/register', controller.register);
 router.put('/:id/signupvalid', controller.signupvalid);
+router.get('/:id/signupvalid', controller.getSignupValid);
 
 module.exports = router;

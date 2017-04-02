@@ -71,7 +71,7 @@ export function register(req, res) {
         if(!profile) {
           return res.status(404).end();
         }
-        var token = jwt.sign({ _id: user._id }, config.secrets.session, {
+        var token = jwt.sign(user, config.secrets.session, {
           expiresIn: 60 * 60 * 5
         });
         user.activeToken = token;
@@ -160,7 +160,7 @@ export function changePassword(req, res) {
  */
 export function me(req, res, next) {
   var userId = req.user._id;
-  let select = 'nome sobrenome email role profileId';
+  let select = 'nome sobrenome username role profileId';
   return User.findOne({ _id: userId },
     //'-salt -password -activeToken'
     select)
@@ -176,21 +176,63 @@ export function me(req, res, next) {
     .catch(err => next(err));
 }
 
-export function signupvalid(req, res, next) {
+export function getSignupValid(req, res) {
+  var token = req.params.id;
+  /*var decoded = jwt.decode(token, {complete: true});
+  console.log('decoded.header', decoded.header);
+  console.log('decoded.payload', decoded.payload);
+  var clockTimestamp = Math.floor(Date.now() / 1000);
+  console.log('clockTimestamp', new Date(clockTimestamp * 1000));
+  console.log('payload.exp', new Date(decoded.payload.exp * 1000));
+  console.log(createDateAsUTC(new Date(clockTimestamp * 1000)));
+  console.log(createDateAsUTC(new Date(decoded.payload.exp * 1000)));
+
+  function createDateAsUTC(date) {
+    return new Date(Date.UTC(
+      date.getFullYear(), date.getMonth(), date.getDate(),
+      date.getHours(), date.getMinutes(), date.getSeconds())
+    );
+  }*/
+  try {
+    console.log('config.secrets.session', config.secrets.session);
+    var decod = jwt.verify(token, config.secrets.session);
+    console.log('verify', decod);
+  } catch(err) {
+    console.log(err);
+  }
+
+  let select = 'nome sobrenome username';
+  return User.findOne({ activeToken: token }, select)
+    .exec()
+    .then(user => {
+      console.log(user);
+      if(!user) {
+        return res.status(401).end();
+      }
+      res.json(user);
+      return user;
+    })
+    .catch(handleError(res));
+}
+
+export function signupvalid(req, res) {
   var token = String(req.body.token);
-  return User.findOne({ activeToken: token }, '-salt -password').exec()
+  return User.findOne({ activeToken: token }, '-salt -password')
+    .exec()
     .then(user => { // don't ever give out the password or salt
       if(!user) {
         return res.status(401).end();
       }
       user.activeToken = undefined;
       user.isAtivo = true;
-      user.save();
-      //res.json(user);
-      res.json({ token });
-      return user;
+      return user.save()
+        .then(us => {
+          res.json({ token });
+          return us;
+        })
+        .catch(validationError(res));
     })
-    .catch(err => next(err));
+    .catch(handleError(res));
 }
 
 /**

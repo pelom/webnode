@@ -17,11 +17,30 @@ export class ChangePasswordComponent {
   /*@ngInject*/
   constructor($state, Auth) {
     'ngInject';
-    this.Auth = Auth;
     this.token = $state.params.token;
-    console.log('Token: ', this.token);
+    this.$state = $state;
+    this.Auth = Auth;
+    this.user = Auth.getCurrentUserSync();
+    this.initToken();
   }
-
+  initToken() {
+    if(angular.isUndefined(this.token)) {
+      return;
+    }
+    this.Auth.getSignupValid(this.token)
+      .then(user => {
+        if(!user) {
+          this.$state.go('login');
+          return null;
+        }
+        this.user = user;
+        return user;
+      })
+      .catch(err => {
+        console.log(err);
+        this.$state.go('login');
+      });
+  }
   changePassword(form) {
     this.submitted = true;
     console.log(this.user);
@@ -49,7 +68,8 @@ export default angular.module('directives.changepassword', [])
     template: require('./change.password.html'),
     controller: ChangePasswordComponent,
     bindings: {
-      requiredPassword: '='
+      requiredPassword: '=',
+      title: '@'
     },
   })
   .name;

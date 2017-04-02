@@ -2,7 +2,7 @@
 exports = module.exports = {
   // List of user roles
   userRoles: ['guest', 'user', 'admin'],
-  signup: false,
+  signup: true,
   applicationDefault: {
     name: 'WebNode',
     show: true,

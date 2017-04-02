@@ -4,9 +4,8 @@
 
 export default class SignupValidController {
   /*@ngInject*/
-  constructor($state) {
+  constructor($state, Auth) {
     this.token = $state.params.token;
-    console.log(this.token);
     //TODO: redirecionar para login quando a senha estiver configurada
     /*Auth.signupvalid(token)
       .then(() => {

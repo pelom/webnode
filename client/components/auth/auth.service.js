@@ -104,6 +104,16 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
         .$promise;
     },
 
+    getSignupValid(token, callback) {
+      return User.getsignupvalid({ id: token },
+        function(data) {
+          return safeCb(callback)(null, data);
+        },
+        function(err) {
+          return safeCb(callback)(err);
+        }).$promise;
+    },
+
     signupvalid(token, callback) {
       return User.signupvalid({ id: token }, { token },
         function(data) {
