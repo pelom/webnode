@@ -22,23 +22,20 @@ function isStrongEnough(password) {
     && n && n.length >= config.numberMinCount
     && sc && sc.length >= config.specialMinCount;
 }
-function setup(
-  maxLength = 18,
-  minLength = 12,
+function generatePass(maxLength = 18, minLength = 12,
   uppercaseMinCount = 3, //Deve conter pelo menos tres letras maiusculas
   lowercaseMinCount = 3, //Deve conter pelo menos tres letras minusculas
   numberMinCount = 2,  //Deve conter pelo menos dois números
-  specialMinCount = 2, //Deve conter pelo menos dois caracteres especiais
-) {
-  config.maxLength = maxLength;
-  config.minLength = minLength;
-  config.uppercaseMinCount = uppercaseMinCount;
-
-  config.lowercaseMinCount = lowercaseMinCount;
-  config.numberMinCount = numberMinCount;
-  config.specialMinCount = specialMinCount;
-}
-function generatePass() {
+  specialMinCount = 2 //Deve conter pelo menos dois caracteres especiais
+  ) {
+  config = {
+    maxLength,
+    minLength,
+    uppercaseMinCount,
+    lowercaseMinCount,
+    numberMinCount,
+    specialMinCount
+  };
   var password = '';
   var randomLength = Math.floor(Math.random() * (config.maxLength - config.minLength)) + config.minLength;
   while(!isStrongEnough(password)) {
@@ -50,5 +47,4 @@ function generatePass() {
 module.exports = {
   generatePassword,
   generatePass,
-  setup
 };

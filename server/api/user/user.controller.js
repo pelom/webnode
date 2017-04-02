@@ -1,12 +1,26 @@
 'use strict';
-
 import User from './user.model';
 import Profile from '../profile/profile.model';
 import config from '../../config/environment';
 import generatePassword from '../../components/generate-password';
 import {sendNewUserValidate} from '../../components/nodemailer';
 import jwt from 'jsonwebtoken';
-//import * as mailerUserNew from '../../mailer/userNew.service';
+import {authenticateLogin} from '../../auth/auth.service';
+
+let profileIdDefault = {};
+Profile.findOne({ nome: 'Usuário padrão' }, '_id')
+  .exec()
+  .then(profile => {
+    if(!profile) {
+      console.log('Profile default not found!');
+      return;
+    }
+    profileIdDefault = profile._id;
+    return profile._id;
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
 const selectProfileRoles = {
   path: 'profileId',
@@ -14,7 +28,6 @@ const selectProfileRoles = {
   select: 'role -_id',
   //options: { limit: 5}
 };
-
 const selectDefault = '_id nome sobrenome username isAtivo profileId updatedAt createdAt';
 const populateProfile = {
   path: 'profileId',
@@ -39,9 +52,6 @@ function handleError(res, statusCode) {
  * restriction: 'admin'
  */
 export function index(req, res) {
-  generatePassword.setup();
-  //console.log('generatePassword()', generatePassword.generatePassword());
-  console.log('generatePass()', generatePassword.generatePass());
   return User.find({}, selectDefault)
     .populate(populateProfile)
     .exec()
@@ -55,38 +65,49 @@ export function index(req, res) {
  * Creates a new user
  */
 export function create(req, res) {
-  //TODO implementar a regra de criação do novo usuário
+  var newUser = new User(req.body);
+  newUser.provider = 'local';
+  newUser.password = generatePassword.generatePass();
+  newUser.resetPassword = true;
+  newUser.isAtivo = true;
+  newUser.save()
+    .then(function(user) {
+      let notif = Boolean(req.body.isNotificar);
+      if(notif) {
+        let usertoken = {
+          id: user._id,
+          username: user.username,
+          passwordReset: true
+        };
+        var token = jwt.sign(usertoken, config.secrets.session, {
+          expiresIn: '1d'
+        });
+        user.activeToken = token;
+        sendNewUserValidate(req, user);
+      }
+      res.status(201).json(true);
+      return user;
+    })
+    .catch(validationError(res));
 }
 
 export function register(req, res) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
-  //newUser.role = 'user';
+  newUser.profileId = profileIdDefault;
   newUser.save()
     .then(function(user) {
-      Profile.findOne({ nome: 'Usuário padrão' }, '_id')
-      .exec()
-      .then(profile => {
-        console.log(profile);
-        if(!profile) {
-          return res.status(404).end();
-        }
-        var token = jwt.sign(user, config.secrets.session, {
-          expiresIn: 60 * 60 * 5
-        });
-        user.activeToken = token;
-        user.profileId = profile._id;
-        user.save()
-          .then(() => {
-            res.status(201).json(true);
-            sendNewUserValidate(req, user);
-            //mailerUserNew.sendNewUserValidate(req, user);
-            return user;
-          })
-          .catch(validationError(res));
-        return user;
-      })
-      .catch(validationError(res));
+      let usertoken = {
+        id: user._id,
+        username: user.username,
+        passwordReset: false
+      };
+      var token = jwt.sign(usertoken, config.secrets.session, {
+        expiresIn: '1 days'
+      });
+      user.activeToken = token;
+      res.status(201).json(true);
+      sendNewUserValidate(req, user);
       return user;
     })
     .catch(validationError(res));
@@ -114,7 +135,6 @@ export function show(req, res, next) {
         return res.status(404).end();
       }
       res.json(user);
-      //sendNewUserValidate(req, user);
       return user;
     })
     .catch(err => next(err));
@@ -178,63 +198,71 @@ export function me(req, res, next) {
 
 export function getSignupValid(req, res) {
   var token = req.params.id;
-  /*var decoded = jwt.decode(token, {complete: true});
-  console.log('decoded.header', decoded.header);
-  console.log('decoded.payload', decoded.payload);
-  var clockTimestamp = Math.floor(Date.now() / 1000);
-  console.log('clockTimestamp', new Date(clockTimestamp * 1000));
-  console.log('payload.exp', new Date(decoded.payload.exp * 1000));
-  console.log(createDateAsUTC(new Date(clockTimestamp * 1000)));
-  console.log(createDateAsUTC(new Date(decoded.payload.exp * 1000)));
-
-  function createDateAsUTC(date) {
-    return new Date(Date.UTC(
-      date.getFullYear(), date.getMonth(), date.getDate(),
-      date.getHours(), date.getMinutes(), date.getSeconds())
-    );
-  }*/
   try {
-    console.log('config.secrets.session', config.secrets.session);
     var decod = jwt.verify(token, config.secrets.session);
     console.log('verify', decod);
+    res.json({
+      id: decod.id,
+      username: decod.username,
+      passwordReset: decod.passwordReset
+    });
   } catch(err) {
     console.log(err);
+    return res.status(401).end();
   }
-
-  let select = 'nome sobrenome username';
-  return User.findOne({ activeToken: token }, select)
-    .exec()
-    .then(user => {
-      console.log(user);
-      if(!user) {
-        return res.status(401).end();
-      }
-      res.json(user);
-      return user;
-    })
-    .catch(handleError(res));
 }
 
 export function signupvalid(req, res) {
-  var token = String(req.body.token);
-  return User.findOne({ activeToken: token }, '-salt -password')
-    .exec()
-    .then(user => { // don't ever give out the password or salt
-      if(!user) {
-        return res.status(401).end();
-      }
-      user.activeToken = undefined;
-      user.isAtivo = true;
-      return user.save()
-        .then(us => {
-          res.json({ token });
-          return us;
-        })
-        .catch(validationError(res));
-    })
-    .catch(handleError(res));
-}
+  console.log('signupValid()');
 
+  var paramToken = req.params.id;
+  try {
+    var decod = jwt.verify(paramToken, config.secrets.session);
+    return User.findById(decod.id)
+      .populate({
+        path: 'profileId',
+        select: '_id nome role tempoSessao',
+        match: { isAtivo: true }
+      })
+      .exec()
+      .then(user => {
+        if(!user) {
+          return res.status(401).end();
+        }
+        if(isValidateSign(decod, user)) {
+          user.isAtivo = true;
+        } else if(isResetPassword(decod, user)) {
+          var newPass = String(req.body.newPassword);
+          user.password = newPass;
+          user.resetPassword = undefined;
+        } else {
+          return res.status(401).end();
+        }
+        return user.save()
+          .then(us => {
+            let token = authenticateLogin(req, us);
+            res.json({ token });
+            return us;
+          })
+          .catch(validationError(res));
+      });
+  } catch(err) {
+    console.log(err);
+    return res.status(401).end();
+  }
+}
+function isValidateSign(decod, userRef) {
+  if(userRef.isAtivo || !decod.hasOwnProperty('passwordReset')) {
+    return false;
+  }
+  return decod.passwordReset == false;
+}
+function isResetPassword(decod, userRef) {
+  if(!decod.passwordReset || !userRef.resetPassword) {
+    return false;
+  }
+  return decod.passwordReset === true && userRef.resetPassword === true;
+}
 /**
  * Authentication callback
  */

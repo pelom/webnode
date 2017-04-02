@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import expressJwt from 'express-jwt';
 import compose from 'composable-middleware';
 import UAParser from 'ua-parser-js';
-//import User from '../api/user/user.model';
+import User from '../api/user/user.model';
 
 var validateJwt = expressJwt({
   secret: config.secrets.session
@@ -148,4 +148,17 @@ export function setTokenCookie(req, res) {
   var token = signToken(req.user._id, req.user.profileId.role);
   res.cookie('token', token);
   res.redirect('/');
+}
+
+export function authenticateLogin(req, user) {
+  var token = signTokenUser(user);
+  let userLogin = createUserLogin(req);
+  User.findByIdAndUpdate(
+    user._id,
+    { $push: { login: { $each: [userLogin], $sort: { data: -1 } } }},
+    { safe: true, upsert: true }, function(err, /*model*/) {
+      console.log(err);
+    }
+  );
+  return token;
 }

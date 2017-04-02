@@ -29,23 +29,7 @@ export default function routes($stateProvider) {
   })
   .state('signupvalid', {
     url: '/signupvalid?token',
-    template: require('./signup/signupvalid.html'),
-    controller: 'SignupValidController'
-    /*controller($state, Auth) {
-      'ngInject';
-      var token = $state.params.token;
-      console.log(token);
-      var referrer = $state.current.referrer || 'login';
-      Auth.signupvalid(token)
-        .then(() => {
-          // Account created, redirect to home
-          $state.go('main');
-          //$state.go(referrer);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }*/
+    template: require('./signup/signupvalid.html')
   })
   .state('settings', {
     url: '/settings',

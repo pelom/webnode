@@ -139,6 +139,15 @@
             </div>
           </div>
           <br/>
+          <div class="row">
+            <div class="col-xs-8">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" ng-model="ctl.user.isNotificar"> Gerar a senha e notificar o usuário
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="row"><hr/></div>
           <div class="list-group">
             <button class="btn btn-primary" type="submit">
@@ -260,6 +269,7 @@
         </div>
       </div>
     </form>
+
     <div class="panel panel-default" ng-if="ctl.user.login.length > 0">
       <div class="panel-body">
         <h4><label>Login</label></h4>

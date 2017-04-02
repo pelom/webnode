@@ -2,8 +2,9 @@
 
 export default class UsuarioEditController {
   /*@ngInject*/
-  constructor($stateParams, UsuarioService, PermissaoService) {
+  constructor($stateParams, $state, UsuarioService, PermissaoService) {
     this.id = $stateParams.id;
+    this.$state = $state;
     this.UsuarioService = UsuarioService;
     this.PermissaoService = PermissaoService;
     this.PermissaoService.loadProfileList((err, prof) => {
@@ -22,8 +23,9 @@ export default class UsuarioEditController {
           username: '',
           email: '',
           telefone: '',
-          celular: ''
-        }
+          celular: '',
+          isNotificar: true
+        };
       }
     });
   }
@@ -32,9 +34,16 @@ export default class UsuarioEditController {
   }
   saveUser(form) {
     console.log(this.user);
-  }
-  delete(user) {
-    user.$remove();
-    this.users.splice(this.users.indexOf(user), 1);
+    if(form.$invalid) {
+      return;
+    }
+    this.UsuarioService.saveUser(this.user)
+      .then(user => {
+        console.log('this.user', user);
+        this.$state.go('usuarios');
+      })
+      .catch(err => {
+        console.log('Ex:', err);
+      });
   }
 }

@@ -63,7 +63,42 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Aut
       $cookies.remove('token');
       currentUser = new _User();
     },
-    
+
+    /**
+     * [signupValid description]
+     * @param  {[type]}   token       [description]
+     * @param  {[type]}   newPassword [description]
+     * @param  {Function} callback    [description]
+     * @return {[type]}               [description]
+     */
+    signupValid(token, newPassword, callback) {
+      return AuthResource.signupvalid({ id: token }, { newPassword },
+        function(data) {
+          $cookies.put('token', data.token);
+          currentUser = AuthResource.get();
+          return safeCb(callback)(null);
+        },
+        function(err) {
+          return safeCb(callback)(err);
+        }).$promise;
+    },
+
+    /**
+     * [getSignupValid description]
+     * @param  {[type]}   token    [description]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
+    getSignupValid(token, callback) {
+      return AuthResource.getsignupvalid({ id: token },
+        function(data) {
+          return safeCb(callback)(null, data);
+        },
+        function(err) {
+          return safeCb(callback)(err);
+        }).$promise;
+    },
+
     /**
      * Change password
      *
@@ -84,29 +119,6 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Aut
       })
         .$promise;
     },
-
-    getSignupValid(token, callback) {
-      return AuthResource.getsignupvalid({ id: token },
-        function(data) {
-          return safeCb(callback)(null, data);
-        },
-        function(err) {
-          return safeCb(callback)(err);
-        }).$promise;
-    },
-
-    signupvalid(token, callback) {
-      return AuthResource.signupvalid({ id: token }, { token },
-        function(data) {
-          $cookies.put('token', data.token);
-          currentUser = User.get();
-          return safeCb(callback)(null);
-        },
-        function(err) {
-          return safeCb(callback)(err);
-        }).$promise;
-    },
-
     /**
      * Gets all available info on a user
      *

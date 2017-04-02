@@ -2,8 +2,7 @@
 
 import express from 'express';
 import passport from 'passport';
-import {signTokenUser, createUserLogin} from '../auth.service';
-import User from '../../api/user/user.model';
+import {authenticateLogin} from '../auth.service';
 
 var router = express.Router();
 router.post('/', function(req, res, next) {
@@ -19,15 +18,7 @@ router.post('/', function(req, res, next) {
       return;
     }
     //var token = signToken(user._id, user.role);
-    var token = signTokenUser(user);
-    let userLogin = createUserLogin(req);
-    User.findByIdAndUpdate(
-      user._id,
-      { $push: { login: { $each: [userLogin], $sort: { data: -1 } } }},
-      { safe: true, upsert: true }, function(err, /*model*/) {
-        console.log(err);
-      }
-    );
+    var token = authenticateLogin(req, user);
     res.json({ token });
     return;
   })(req, res, next);

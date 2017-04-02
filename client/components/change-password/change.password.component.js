@@ -33,8 +33,26 @@ export class ChangePasswordComponent {
           this.$state.go('login');
           return null;
         }
+        if(!user.hasOwnProperty('passwordReset') || !user.passwordReset) {
+          this.validateSignup();
+        }
         this.user = user;
         return user;
+      })
+      .catch(err => {
+        console.log(err);
+        this.$state.go('login');
+      });
+  }
+  validateSignup() {
+    this.Auth.signupValid(this.token, this.user.newPassword)
+      .then(us => {
+        if(!us) {
+          this.$state.go('login');
+          return null;
+        }
+        this.$state.go('main');
+        return us;
       })
       .catch(err => {
         console.log(err);
@@ -46,21 +64,9 @@ export class ChangePasswordComponent {
     console.log(this.user);
     console.log(this.requiredPassword);
     if(form.$valid) {
-      /*this.Auth.changePassword(this.user.oldPassword, this.user.newPassword)
-        .then(() => {
-          this.message = 'Password successfully changed.';
-        })
-        .catch(() => {
-          form.password.$setValidity('mongoose', false);
-          this.errors.other = 'Incorrect password';
-          this.message = '';
-        });
-        */
+      this.validateSignup();
     }
   }
-  /*constructor(Auth) {
-    'ngInject';
-  }*/
 }
 
 export default angular.module('directives.changepassword', [])

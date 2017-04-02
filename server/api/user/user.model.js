@@ -1,5 +1,5 @@
-'use strict';
 /*eslint no-invalid-this:0*/
+'use strict';
 import crypto from 'crypto';
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
@@ -44,13 +44,12 @@ var UserSchema = new Schema({
   password: {
     type: String, required: true
   },
+  resetPassword: {
+    type: Boolean, default: undefined },
   salt: String,
   provider: String,
   profileId: { type: Schema.Types.ObjectId, ref: 'Profile' },
   activeToken: String,
-  passwordReset: {
-    type: Boolean, default: undefined
-  },
   endereco: EnderecoSchema,
   login: [UserLoginSchema]
 }, {
@@ -80,6 +79,11 @@ UserSchema.virtual('token').get(function() {
 /**
  * Validations
  */
+
+UserSchema.path('email').validate(function(email) {
+  var emailRegex = /^(([^<>()\[\]\.,;:\s@\\"]+(\.[^<>()\[\]\.,;:\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\]\.,;:\s@\\"]+\.)+[^<>()[\]\.,;:\s@\\"]{2,})$/i;
+  return emailRegex.test(email);
+}, 'The e-mail field cannot be empty.');
 
 // Validate empty username
 UserSchema.path('username').validate(function(username) {
