@@ -10,7 +10,7 @@
 
       <div class="panel panel-default" >
         <div class="panel-body">
-          <h4><label>Informações do usuário</label></h4>
+          <h4><label>{{ctl.user.nome}} {{ctl.user.sobrenome}}</label></h4>
           <hr/>
 
           <div class="row">
@@ -56,89 +56,88 @@
             <div class="col-sm-6">
               <dl>
                 <dt><small>Email</small></dt>
-                <dd ng-class="{'has-error': formUser.userEmail.$invalid && formUser.userEmail.$dirty}">
-                  <input type="email" name="userEmail" class="form-control"
+                <dd ng-class="{'has-error': (formUser.email.$invalid && formUser.email.$dirty) || (formUser.email.$error.mongoose)}">
+                  <input type="email" name="email" class="form-control"
                     placeholder="email@email.com"
                     ng-pattern='/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i'
                     ng-model="ctl.user.email" ng-required="true" mongoose-error/>
 
-                  <p class="help-block" ng-show="formUser.userEmail.$error.required && formUser.userEmail.$dirty">
+                  <p class="help-block" ng-show="formUser.email.$error.required && formUser.email.$dirty">
                     Qual é o seu e-mail?</p>
-                  <p class="help-block" ng-show="formUser.userEmail.$error.pattern">
+                  <p class="help-block" ng-show="formUser.email.$error.pattern">
                     O e-mail não parece válido.</p>
-                  <p class="help-block" ng-show="formUser.userEmail.$error.mongoose">
-                    {{ vm.errors.userEmail }}</p>
+                  <p class="help-block" ng-show="formUser.email.$error.mongoose">
+                    {{ ctl.errors.email }}</p>
                 </dd>
               </dl>
             </div>
             <div class="col-sm-6">
               <dl>
                 <dt><small>Nome de usuário</small></dt>
-                <dd ng-class="{'has-error': formUser.userUserName.$invalid && formUser.userUserName.$dirty}">
-                  <input type="email" name="userUserName" class="form-control"
+                <dd ng-class="{'has-error': (formUser.username.$invalid && formUser.username.$dirty) || (formUser.username.$error.mongoose)}">
+                  <input type="email" name="username" class="form-control"
                    placeholder="nome@email.com"
                    ng-pattern='/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i'
                     ng-model="ctl.user.username" ng-required="true" mongoose-error/>
 
-                  <p class="help-block" ng-show="formUser.userUserName.$error.required && formUser.userUserName.$dirty">
+                  <p class="help-block" ng-show="formUser.username.$error.required && formUser.username.$dirty">
                     O nome de usuário é necessário</p>
-                  <p class="help-block" ng-show="formUser.userUserName.$error.pattern">
+                  <p class="help-block" ng-show="formUser.username.$error.pattern">
                     O nome de usuário não parece válido.</p>
-                  <p class="help-block" ng-show="formUser.userUserName.$error.mongoose">
-                    {{ vm.errors.userUserName }}</p>
+                  <p class="help-block" ng-show="formUser.username.$error.mongoose">
+                    {{ ctl.errors.username }}</p>
                 </dd>
               </dl>
             </div>
           </div>
-          <br/>
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Empresa</small></dt>
-                <dd>
-                  <input type="text" class="form-control"
-                    ng-model="ctl.user.empresa"/>
+                <dt><small>Perfil do usuário</small></dt>
+                <dd ng-class="{'has-error': formUser.userProfile.$invalid}">
+                  <select class="form-control" name="userProfile" ng-model="ctl.user.profileId"
+                     ng-options="item._id as item.nome for item in ctl.selectOptionProfile()"
+                     ng-required="true">
+                     <option value="" ng-if="!ctl.user.profileId">--Nenhum--</option>
+                  </select>
+                  <p class="help-block"
+                    ng-show="formUser.userProfile.$error.required">
+                    O perfil é necessário</p>
                 </dd>
               </dl>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-6">
-              <dl>
-                <dt><small>Telefone</small></dt>
+            <div class="col-sm-6" >
+              <dl ng-if="ctl.user._id">
+                <dt><small>Situação</small></dt>
                 <dd>
-                  <input type="text" class="form-control"
-                    ng-model="ctl.user.telefone" ui-mask="(99) 9999-9999"/>
-                </dd>
+                  <select class="form-control" ng-model="ctl.user.isAtivo"
+                   ng-options="item.value as item.name for item in ctl.situacao"></select>
+                 </dd>
               </dl>
             </div>
-            <div class="col-xs-6">
-              <dt><small>Celular</small></dt>
-              <dd>
-                <input type="text" class="form-control"
-                  ng-model="ctl.user.celular" ui-mask="(99) 9? 9999-9999"/>
-              </dd>
-            </div>
           </div>
-          <br/>
-          <h4><label>Perfil do usuário</label></h4>
-          <hr/>
-          <div class="row">
+          <div class="row" ng-if="ctl.user._id">
             <div class="col-sm-6">
-              <dt><small>Perfil do usuário</small></dt>
-              <dd ng-class="{'has-error': formUser.userProfile.$invalid}">
-                <select class="form-control" name="userProfile" ng-model="ctl.user.profileId"
-                   ng-options="item._id as item.nome for item in ctl.selectOptionProfile()"
-                   ng-required="true">
-                   <option value="" ng-if="!ctl.user.profileId">--Nenhum--</option>
-                </select>
-                <p class="help-block"
-                  ng-show="formUser.userProfile.$error.required">
-                  O perfil é necessário</p>
-              </dd>
+              <dl>
+                <dt><small>Criado</small></dt>
+                <dd>
+                  <small>{{ ctl.user.createdAt | date:'dd/MM/yyyy HH:mm' }} por
+                  <strong>{{ctl.user.criador.nome}} {{ctl.user.criador.sobrenome}}</strong>
+                  </small>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Modificado</small></dt>
+                <dd>
+                  <small>{{ ctl.user.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                  <strong>{{ ctl.user.modificador.nome}} {{ ctl.user.modificador.sobrenome}}</strong>
+                  </small>
+                </dd>
+              </dl>
             </div>
           </div>
-          <br/>
           <div class="row">
             <div class="col-xs-8">
               <div class="checkbox">
@@ -150,19 +149,63 @@
           </div>
           <div class="row"><hr/></div>
           <div class="list-group">
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-primary" type="submit"
+              ng-disabled="formUser.$invalid || ctl.wait">
                 <loading showhidden="ctl.wait"></loading> Salvar</button>
             <button type="button" class="btn btn-link"
-              ng-click="ctl.isNovo = false">Voltar</button>
+              ui-sref="usuario">Voltar</button>
           </div>
         </div>
       </div>
-      <!-- Formulario de edição de usuario -->
+
       <div class="panel panel-default" >
         <div class="panel-body">
-            <h4><label>Endereço do usuário</label></h4>
+            <h4><label>Informações do usuário</label></h4>
             <hr/>
-            <div class="row">
+            <div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <dl>
+                    <dt><small>Empresa</small></dt>
+                    <dd>
+                      <input type="text" class="form-control"
+                        ng-model="ctl.user.empresa"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <dl>
+                    <dt><small>Telefone</small></dt>
+                    <dd>
+                      <input type="text" class="form-control"
+                        ng-model="ctl.user.telefone" ui-mask="(99) 9999-9999"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-xs-6">
+                  <dt><small>Celular</small></dt>
+                  <dd>
+                    <input type="text" class="form-control"
+                      ng-model="ctl.user.celular" ui-mask="(99) 9? 9999-9999"/>
+                  </dd>
+                </div>
+              </div>
+            </div>
+
+        </div>
+      </div>
+      <div class="panel panel-default" >
+        <div class="panel-body">
+            <h4>
+              <label>Endereço do usuário</label>
+              <button class="btn btn-default btn-sm" type="button" ng-click="ctl.isCollapsed = !ctl.isCollapsed">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </button>
+            </h4>
+            <hr/>
+            <div class="row" uib-collapse="ctl.isCollapsed">
               <div class="col-lg-12">
                 <googlemaps ng-model="ctl.user.endereco.nome"
                   zip="ctl.user.endereco.zipcode"
@@ -175,7 +218,6 @@
                 </googlemaps>
               </div>
             </div>
-            <br/>
             <br/>
             <div class="row">
               <div class="col-sm-6">
@@ -261,10 +303,11 @@
 
             <div class="row"><hr/></div>
             <div class="list-group">
-              <button class="btn btn-primary" type="submit">
+              <button class="btn btn-primary" type="submit"
+                ng-disabled="formUser.$invalid || ctl.wait">
                   <loading showhidden="ctl.wait"></loading> Salvar</button>
               <button type="button" class="btn btn-link"
-                ng-click="ctl.isNovo = false">Voltar</button>
+                ui-sref="usuario">Voltar</button>
             </div>
         </div>
       </div>

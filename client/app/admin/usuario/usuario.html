@@ -51,7 +51,7 @@
                   </div>
                 </a>
               </th>
-              <th>
+              <!--th>
                 <a href="#" ui-sref-active="active"
                   ng-click="sortType = 'profileId.nome'; sortReverse = !sortReverse">
                   <strong>Perfil<strong>
@@ -62,7 +62,7 @@
                       class="fa fa-sort-amount-desc"></span>
                   </div>
                 </a>
-              </th>
+              </th-->
               <th>
                 <a href="#" ui-sref-active="active"
                   ng-click="sortType = 'isAtivo'; sortReverse = !sortReverse">
@@ -92,9 +92,9 @@
                 <a href="#" uib-tooltip="Editar">
                   <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
               </td>
-              <td><a href="#" ui-sref-active="active">{{ us.nome }}</a></td>
-              <td><small>{{ us.username }}</small></td>
-              <td>{{ us.profileId.nome }}</td>
+              <td><a href="#" ui-sref-active="active">{{ us.nome }} {{ us.sobrenome }}</a></td>
+              <td><a href="#" ui-sref-active="active">{{ us.username }}</a></td>
+              <!--td>{{ us.profileId.nome }}</td-->
               <td>
                 <small ng-if="us.isAtivo === true">
                   <span class="label label-success">Ativo</span></small>

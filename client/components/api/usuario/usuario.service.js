@@ -1,8 +1,16 @@
 'use strict';
+import angular from 'angular';
 export function UsuarioService(Util, UsuarioResource) {
   'ngInject';
+  let itemIsAtivo = [
+    { name: 'Ativo', value: true },
+    { name: 'Desativo', value: false }
+  ];
   let safeCb = Util.safeCb;
   let usuarioService = {
+    getItemIsAtivoDefault() {
+      return itemIsAtivo;
+    },
     /**
      * Create a new user
      *
@@ -18,10 +26,19 @@ export function UsuarioService(Util, UsuarioResource) {
         return safeCb(callback)(err);
       }).$promise;
     },
-    saveUser(user, callback) {
-      return UsuarioResource.save(user, function(/*data*/) {
-        return safeCb(callback)(null, user);
+    saveUser(newUser, callback) {
+      if(angular.isUndefined(newUser._id)) {
+        return UsuarioResource.save(newUser, function(/*data*/) {
+          return safeCb(callback)(null, newUser);
+        }, function(err) {
+          return safeCb(callback)(err);
+        }).$promise;
+      }
+      Reflect.deleteProperty(newUser, 'login');
+      return UsuarioResource.update(newUser, function(data) {
+        return safeCb(callback)(null, data);
       }, function(err) {
+        console.log('Ex:', err);
         return safeCb(callback)(err);
       }).$promise;
     },

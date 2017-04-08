@@ -5,6 +5,7 @@ export function UsuarioResource($resource) {
   return $resource('/api/users/:id/:controller', {
     id: '@_id'
   }, {
+    update: { method: 'PUT' },
     register: {
       method: 'POST',
       params: {

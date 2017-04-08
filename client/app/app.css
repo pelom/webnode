@@ -1,5 +1,6 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~ui-select/dist/select.css';
+@import '~angular-toastr/dist/angular-toastr.css';
 /**
  * Bootstrap Fonts
  */

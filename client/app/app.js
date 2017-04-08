@@ -31,7 +31,9 @@ import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
 import Modal from '../components/modal/modal.service';
+import mongooseError from '../components/mongoose-error/mongoose-error.directive';
 
+import toastr from 'angular-toastr';
 import loadingDirec from '../components/directive/loading/loading.directive';
 import nomeValidoDirec from '../components/directive/nome-valido/nomevalido.directive';
 import googlemaps from '../components/googlemaps/googlemaps.directive';
@@ -40,10 +42,10 @@ import './app.css';
 import checkStrength from '../components/check-strength/checkStrength.directive';
 import '../components/check-strength/check.css';
 
-angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate,
+angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toastr,
   ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength, googlemaps,
   uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService, PermissaoService,
-  _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal, changePassword
+  _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal, changePassword, mongooseError
 ])
   .config(routeConfig)
   .config(function(uiSelectConfig) {
@@ -51,6 +53,12 @@ angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate,
     uiSelectConfig.theme = 'bootstrap';
     uiSelectConfig.resetSearchInput = true;
     uiSelectConfig.appendToBody = true;
+  })
+  .config(function(toastrConfig) {
+    'ngInject';
+    angular.extend(toastrConfig, {
+      positionClass: 'toast-top-center'
+    });
   })
   .run(function($rootScope, $location, Auth) {
     'ngInject';

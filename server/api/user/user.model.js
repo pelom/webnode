@@ -26,21 +26,21 @@ var EnderecoSchema = new Schema({
 });
 var UserSchema = new Schema({
   nome: {
-    type: String, required: true, maxlength: 20 },
+    type: String, required: true, minlength: 3, maxlength: 20, trim: true },
   sobrenome: {
-    type: String, required: true, maxlength: 40 },
+    type: String, required: true, minlength: 3, maxlength: 40, trim: true },
   celular: {
-    type: String, required: false },
+    type: String, required: false, maxlength: 20 },
   telefone: {
-    type: String, required: false },
+    type: String, required: false, maxlength: 20 },
   empresa: {
     type: String, required: false, maxlength: 40 },
   email: {
-    type: String, required: true, maxlength: 60, lowercase: true },
+    type: String, required: true, maxlength: 60, lowercase: true, trim: true },
   isAtivo: {
     type: Boolean, required: true, default: false },
   username: {
-    type: String, required: true, maxlength: 60, lowercase: true },
+    type: String, required: true, maxlength: 60, lowercase: true, trim: true },
   password: {
     type: String, required: true
   },
@@ -49,9 +49,10 @@ var UserSchema = new Schema({
   salt: String,
   provider: String,
   profileId: { type: Schema.Types.ObjectId, ref: 'Profile' },
-  activeToken: String,
   endereco: EnderecoSchema,
-  login: [UserLoginSchema]
+  login: [UserLoginSchema],
+  criador: { type: Schema.Types.ObjectId, ref: 'User' },
+  modificador: { type: Schema.Types.ObjectId, ref: 'User'}
 }, {
   timestamps: true
 });
@@ -83,38 +84,32 @@ UserSchema.virtual('token').get(function() {
 UserSchema.path('email').validate(function(email) {
   var emailRegex = /^(([^<>()\[\]\.,;:\s@\\"]+(\.[^<>()\[\]\.,;:\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\]\.,;:\s@\\"]+\.)+[^<>()[\]\.,;:\s@\\"]{2,})$/i;
   return emailRegex.test(email);
-}, 'The e-mail field cannot be empty.');
+}, 'Email formaro inválido');
 
-// Validate empty username
-UserSchema.path('username').validate(function(username) {
-  return username.length;
-}, 'UserName cannot be blank');
+UserSchema.path('username').validate(function(value) {
+  return new Promise(validateUsername(value, this._id));
+}, 'O nome de usuário especificado já está em uso');
 
-// Validate empty password
-UserSchema.path('password').validate(function(password) {
-  return password.length;
-}, 'Password cannot be blank');
-
-// Validate username is not taken
-UserSchema.path('username').validate(function(value, respond) {
-  return this.constructor.findOne({
-    username: value
-  })
-  .exec()
-  .then(user => {
-    if(user) {
-      if(this.id === user.id) {
-        return respond(true);
+function validateUsername(value, id) {
+  return function(resolve, reject) {
+    let User = mongoose.model('User', UserSchema);
+    return User.findOne({
+      username: value
+    }).exec()
+    .then(user => {
+      if(user) {
+        if(id.equals(user._id)) {
+          return resolve(true);
+        }
+        return reject();
       }
-      return respond(false);
-    }
-    return respond(true);
-  })
-  .catch(function(err) {
-    throw err;
-  });
-}, 'The specified username is already in use.');
-
+      return resolve(true);
+    })
+    .catch(err => {
+      reject(err);
+    });
+  };
+}
 var validatePresenceOf = function(value) {
   return value && value.length;
 };
@@ -127,7 +122,6 @@ UserSchema.pre('save', function(next) {
   if(!this.isModified('password')) {
     return next();
   }
-
   if(!validatePresenceOf(this.password)) {
     return next(new Error('Invalid password'));
   }

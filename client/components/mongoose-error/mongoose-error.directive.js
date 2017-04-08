@@ -5,13 +5,15 @@ import angular from 'angular';
 /**
  * Removes server error when user updates input
  */
-angular.module('webnodeApp')
+export default angular.module('webnodeApp.directive.mongooseError', [])
   .directive('mongooseError', function() {
     return {
       restrict: 'A',
       require: 'ngModel',
       link(scope, element, attrs, ngModel) {
-        element.on('keydown', () => ngModel.$setValidity('mongoose', true));
+        element.on('keydown', () => {
+          ngModel.$setValidity('mongoose', true);
+        });
       }
     };
-  });
+  }).name;

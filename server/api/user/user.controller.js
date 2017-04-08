@@ -6,8 +6,33 @@ import generatePassword from '../../components/generate-password';
 import {sendNewUserValidate} from '../../components/nodemailer';
 import jwt from 'jsonwebtoken';
 import {authenticateLogin} from '../../auth/auth.service';
+import ApiService from '../api.service';
 
+let api = ApiService();
+let handleError = api.handleError;
+let respondWithResult = api.respondWithResult;
+let handleEntityNotFound = api.handleEntityNotFound;
+let handleValidationError = api.handleValidationError;
+const populationProfileRoles = {
+  path: 'profileId',
+  select: 'role -_id',
+};
+const populateProfile = {
+  path: 'profileId',
+  select: '_id nome'
+};
+const populationLogin = {
+  path: 'login',
+  select: 'data ip browser device os',
+  options: {
+    limit: 5
+  }
+};
+const selectIndex = '_id nome sobrenome username isAtivo profileId criador modificador updatedAt createdAt';
+const selectShow = '_id nome sobrenome username isAtivo profileId criador modificador updatedAt createdAt endereco email celular telefone empresa login';
+const selectMe = 'nome sobrenome username role profileId';
 let profileIdDefault = {};
+
 Profile.findOne({ nome: 'Usuário padrão' }, '_id')
   .exec()
   .then(profile => {
@@ -22,128 +47,28 @@ Profile.findOne({ nome: 'Usuário padrão' }, '_id')
     console.log(err);
   });
 
-const selectProfileRoles = {
-  path: 'profileId',
-  //match: { age: { $gte: 21 }},
-  select: 'role -_id',
-  //options: { limit: 5}
-};
-const selectDefault = '_id nome sobrenome username isAtivo profileId updatedAt createdAt';
-const populateProfile = {
-  path: 'profileId',
-  select: '_id nome'
-};
-function validationError(res, statusCode) {
-  statusCode = statusCode || 422;
-  return function(err) {
-    return res.status(statusCode).json(err);
-  };
-}
-
-function handleError(res, statusCode) {
-  statusCode = statusCode || 500;
-  return function(err) {
-    return res.status(statusCode).send(err);
-  };
-}
-
-/**
- * Get list of users
- * restriction: 'admin'
- */
 export function index(req, res) {
-  return User.find({}, selectDefault)
-    .populate(populateProfile)
-    .exec()
-    .then(users => {
-      res.status(200).json(users);
-      return users;
-    })
-    .catch(handleError(res));
-}
-/**
- * Creates a new user
- */
-export function create(req, res) {
-  var newUser = new User(req.body);
-  newUser.provider = 'local';
-  newUser.password = generatePassword.generatePass();
-  newUser.resetPassword = true;
-  newUser.isAtivo = true;
-  newUser.save()
-    .then(function(user) {
-      let notif = Boolean(req.body.isNotificar);
-      if(notif) {
-        let usertoken = {
-          id: user._id,
-          username: user.username,
-          passwordReset: true
-        };
-        var token = jwt.sign(usertoken, config.secrets.session, {
-          expiresIn: '1d'
-        });
-        user.activeToken = token;
-        sendNewUserValidate(req, user);
+  return api.find({
+    model: 'User',
+    select: selectIndex,
+    populate: [populateProfile, api.populationCriador, api.populationModificador],
+    where: {},
+    options: { skip: 0, limit: 50,
+      sort: {
+        createdAt: -1
       }
-      res.status(201).json(true);
-      return user;
-    })
-    .catch(validationError(res));
+    }
+  }, res);
 }
 
-export function register(req, res) {
-  var newUser = new User(req.body);
-  newUser.provider = 'local';
-  newUser.profileId = profileIdDefault;
-  newUser.save()
-    .then(function(user) {
-      let usertoken = {
-        id: user._id,
-        username: user.username,
-        passwordReset: false
-      };
-      var token = jwt.sign(usertoken, config.secrets.session, {
-        expiresIn: '1 days'
-      });
-      user.activeToken = token;
-      res.status(201).json(true);
-      sendNewUserValidate(req, user);
-      return user;
-    })
-    .catch(validationError(res));
+export function show(req, res) {
+  return api.findById(req.params.id, {
+    model: 'User',
+    select: selectShow,
+    populate: [populationLogin, api.populationCriador, api.populationModificador],
+  }, res);
 }
 
-/**
- * Get a single user
- */
-export function show(req, res, next) {
-  var userId = req.params.id;
-  const select = '_id nome sobrenome username isAtivo profileId updatedAt createdAt, endereco email celular telefone empresa login';
-
-  return User.findById(userId)
-    .select(select)
-    .populate({
-      path: 'login',
-      select: 'data ip browser device os',
-      options: {
-        limit: 5
-      }
-    })
-    .exec()
-    .then(user => {
-      if(!user) {
-        return res.status(404).end();
-      }
-      res.json(user);
-      return user;
-    })
-    .catch(err => next(err));
-}
-
-/**
- * Deletes a user
- * restriction: 'admin'
- */
 export function destroy(req, res) {
   return User.findByIdAndRemove(req.params.id).exec()
     .then(function() {
@@ -152,9 +77,111 @@ export function destroy(req, res) {
     .catch(handleError(res));
 }
 
-/**
- * Change a users password
- */
+export function create(req, res) {
+  let newUser = requestUserCreate(req);
+  newUser.save()
+    .then(callbackCreateUser(req, res))
+    .catch(handleValidationError(res));
+}
+
+function requestUserCreate(req) {
+  var newUser = new User(req.body);
+  newUser.provider = 'local';
+  newUser.criador = req.user._id;
+  newUser.modificador = req.user._id;
+  newUser.isAtivo = true;
+  resetPasswordUser(newUser);
+  return newUser;
+}
+function resetPasswordUser(user) {
+  user.password = generatePassword.generatePass();
+  user.resetPassword = true;
+  return user;
+}
+function callbackCreateUser(req, res) {
+  return function(user) {
+    let notifyEmail = Boolean(req.body.isNotificar);
+    if(notifyEmail) {
+      notifyUserEmail(req, user, true);
+    }
+    res.status(201).json(true);
+    return user;
+  };
+}
+
+function notifyUserEmail(req, user, passwordReset) {
+  let usertoken = {
+    id: user._id,
+    username: user.username,
+    passwordReset
+  };
+  let token = jwt.sign(usertoken, config.secrets.session, {
+    expiresIn: '1d'
+  });
+  user.activeToken = token;
+  sendNewUserValidate(req, user);
+}
+
+export function register(req, res) {
+  var newUser = new User(req.body);
+  newUser.provider = 'local';
+  newUser.profileId = profileIdDefault;
+  newUser.save()
+    .then(user => {
+      notifyUserEmail(req, user, false);
+      res.status(201).json(true);
+      return user;
+    })
+    .catch(handleValidationError(res));
+}
+
+export function update(req, res, next) {
+  console.log('update');
+  let userId = req.params.id;
+  let userJson = requestUserUpdate(req);
+  User.findOne({
+    _id: req.params.id
+  }).exec()
+    .then(handleEntityNotFound(res))
+    .then(user => {
+      Object.assign(user, userJson);
+      return user.save()
+        .then(newUser => {
+          let notifyEmail = Boolean(req.body.isNotificar);
+          if(notifyEmail) {
+            notifyUserEmail(req, newUser, true);
+          }
+          req.params.id = userId;
+          return show(req, res, next);
+        })
+        .catch(handleValidationError(res));
+    })
+    .catch(handleError(res));
+}
+
+function requestUserUpdate(req) {
+  let userId = req.params.id;
+  let userUpdate = {
+    _id: userId,
+    nome: String(req.body.nome),
+    sobrenome: String(req.body.sobrenome),
+    username: String(req.body.username),
+    email: String(req.body.email),
+    empresa: req.body.empresa,
+    telefone: String(req.body.telefone),
+    celular: String(req.body.celular),
+    profileId: String(req.body.profileId),
+    endereco: req.body.endereco,
+    isAtivo: req.body.isAtivo,
+    modificador: req.user._id,
+  };
+  let notify = Boolean(req.body.isNotificar);
+  if(notify) {
+    resetPasswordUser(userUpdate);
+  }
+  return userUpdate;
+}
+
 export function changePassword(req, res) {
   var userId = req.user._id;
   var oldPass = String(req.body.oldPassword);
@@ -168,23 +195,17 @@ export function changePassword(req, res) {
           .then(() => {
             res.status(204).end();
           })
-          .catch(validationError(res));
+          .catch(handleValidationError(res));
       } else {
         return res.status(403).end();
       }
     });
 }
 
-/**
- * Get my info
- */
 export function me(req, res, next) {
   var userId = req.user._id;
-  let select = 'nome sobrenome username role profileId';
-  return User.findOne({ _id: userId },
-    //'-salt -password -activeToken'
-    select)
-    .populate(selectProfileRoles)
+  return User.findOne({ _id: userId }, selectMe)
+    .populate(populationProfileRoles)
     .exec()
     .then(user => { // don't ever give out the password or salt
       if(!user) {
@@ -200,7 +221,6 @@ export function getSignupValid(req, res) {
   var token = req.params.id;
   try {
     var decod = jwt.verify(token, config.secrets.session);
-    console.log('verify', decod);
     res.json({
       id: decod.id,
       username: decod.username,
@@ -213,56 +233,58 @@ export function getSignupValid(req, res) {
 }
 
 export function signupvalid(req, res) {
-  console.log('signupValid()');
-
   var paramToken = req.params.id;
   try {
     var decod = jwt.verify(paramToken, config.secrets.session);
+    console.log(decod);
     return User.findById(decod.id)
-      .populate({
-        path: 'profileId',
-        select: '_id nome role tempoSessao',
-        match: { isAtivo: true }
-      })
+      .populate(api.populationProfile)
       .exec()
-      .then(user => {
-        if(!user) {
-          return res.status(401).end();
-        }
-        if(isValidateSign(decod, user)) {
-          user.isAtivo = true;
-        } else if(isResetPassword(decod, user)) {
-          var newPass = String(req.body.newPassword);
-          user.password = newPass;
-          user.resetPassword = undefined;
-        } else {
-          return res.status(401).end();
-        }
-        return user.save()
-          .then(us => {
-            let token = authenticateLogin(req, us);
-            res.json({ token });
-            return us;
-          })
-          .catch(validationError(res));
-      });
+      .then(callbackSignupValid(req, res, decod));
   } catch(err) {
     console.log(err);
     return res.status(401).end();
   }
 }
+
+function callbackSignupValid(req, res, decod) {
+  return function(user) {
+    if(!user) {
+      return res.status(401).end();
+    }
+    if(isValidateSign(decod, user)) {
+      user.isAtivo = true;
+    } else if(isResetPassword(decod, user)) {
+      var newPass = String(req.body.newPassword);
+      user.password = newPass;
+      user.resetPassword = undefined;
+    } else {
+      return res.status(401).end();
+    }
+    return user.save()
+      .then(us => {
+        let token = authenticateLogin(req, us);
+        res.json({ token });
+        return us;
+      })
+      .catch(handleValidationError(res));
+  };
+}
+
 function isValidateSign(decod, userRef) {
   if(userRef.isAtivo || !decod.hasOwnProperty('passwordReset')) {
     return false;
   }
   return decod.passwordReset == false;
 }
+
 function isResetPassword(decod, userRef) {
   if(!decod.passwordReset || !userRef.resetPassword) {
     return false;
   }
   return decod.passwordReset === true && userRef.resetPassword === true;
 }
+
 /**
  * Authentication callback
  */

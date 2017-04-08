@@ -49,8 +49,11 @@
     "socketio-jwt": "^4.2.0",
     "sprint-js": "~0.1.0",
     "ua-parser-js": "^0.7.12",
-    "ui-select": "^0.19.6",
-
+    "ui-select": "^0.19.6"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.6.0",
+    "autoprefixer": "^6.0.0",
     "babel-core": "^6.6.5",
     "babel-eslint": "^6.0.4",
     "babel-register": "^6.6.5",
@@ -106,10 +109,6 @@
     "postcss-loader": "^0.11.1",
     "raw-loader": "^0.5.1",
     "style-loader": "^0.13.0",
-  },
-  "devDependencies": {
-    "angular-mocks": "~1.6.0",
-    "autoprefixer": "^6.0.0",
     "karma-webpack": "^1.7.0",
     "through2": "^2.0.1",
     "open": "~0.0.4",
