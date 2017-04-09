@@ -51,9 +51,7 @@ export function showList(req, res) {
     populate: [populationShowModulo, api.populationCriador, api.populationModificador],
     where: { isAtivo: true },
     options: { skip: 0, limit: 50,
-      sort: {
-        sort: { nome: 1 }
-      }
+      sort: { nome: 1 }
     }
   }, res);
 }
