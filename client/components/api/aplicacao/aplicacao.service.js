@@ -43,9 +43,7 @@ export function AplicacaoService(Util, AplicacaoResource, AplicacaoModuloResourc
       modalCtl = modCtl;
     },
     loadAppListFull(callback) {
-      console.log('AplicacaoService.loadAppListFull');
       return AplicacaoResource.showList(function(data) {
-        console.log('AplicacaoResource.get', data);
         appList = data;
         return safeCb(callback)(null, appList);
       }, function(err) {
@@ -54,9 +52,7 @@ export function AplicacaoService(Util, AplicacaoResource, AplicacaoModuloResourc
       }).$promise;
     },
     loadApp(ap, callback) {
-      console.log('AplicacaoService.loadApp');
       return AplicacaoResource.get(ap, function(data) {
-        console.log('AplicacaoResource.get', data);
         app = data;
         return safeCb(callback)(null, data);
       }, function(err) {
@@ -65,9 +61,7 @@ export function AplicacaoService(Util, AplicacaoResource, AplicacaoModuloResourc
       }).$promise;
     },
     loadAppList(callback) {
-      console.log('AplicacaoService.loadAppList');
       return AplicacaoResource.query(function(data) {
-        console.log('AplicacaoService.query', data);
         appList = data;
         return safeCb(callback)(null, data);
       }, function(err) {
@@ -82,11 +76,9 @@ export function AplicacaoService(Util, AplicacaoResource, AplicacaoModuloResourc
         descricao: newApp.descricao,
         isAtivo: newApp.isAtivo,
       };
-      console.log('AplicacaoService.saveApp', appSend);
       if(angular.isUndefined(newApp._id)) {
         return AplicacaoResource.save(appSend, function(data) {
-          console.log('AplicacaoResource.save', data);
-          app = data;//atualizar das do Aplicativo referencia
+          app = data;
           return safeCb(callback)(app);
         }, function(err) {
           console.log('Ex:', err);
@@ -94,7 +86,6 @@ export function AplicacaoService(Util, AplicacaoResource, AplicacaoModuloResourc
         }).$promise;
       }
       return AplicacaoResource.update(appSend, function(data) {
-        console.log('AplicacaoResource.update', data);
         app = data;
         return safeCb(callback)(data);
       }, function(err) {
@@ -113,7 +104,6 @@ export function AplicacaoService(Util, AplicacaoResource, AplicacaoModuloResourc
       };
       if(angular.isUndefined(modSend._id)) {
         return AplicacaoModuloResource.save(modSend, function(data) {
-          console.log('AplicacaoModuloResource.save', data);
           return safeCb(callback)(data);
         }, function(err) {
           console.log('Ex:', err);
@@ -121,7 +111,6 @@ export function AplicacaoService(Util, AplicacaoResource, AplicacaoModuloResourc
         }).$promise;
       } else {
         return AplicacaoModuloResource.update(modSend, function(data) {
-          console.log('AplicacaoModuloResource.update', data);
           return safeCb(callback)(data);
         }, function(err) {
           console.log('Ex:', err);

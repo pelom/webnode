@@ -40,9 +40,7 @@ export function PermissaoService(Util, PermissaoResource) {
       return profileList;
     },
     loadProfile(prof, callback) {
-      console.log('PermissaoService.loadProfile');
       return PermissaoResource.get(prof, function(data) {
-        console.log('PermissaoResource.get', data);
         profile = data;
         return safeCb(callback)(null, data);
       }, function(err) {
@@ -51,9 +49,7 @@ export function PermissaoService(Util, PermissaoResource) {
       }).$promise;
     },
     loadProfileList(callback) {
-      console.log('PermissaoService.loadProfileList');
       return PermissaoResource.query(function(data) {
-        console.log('PermissaoResource.query', data);
         profileList = data;
         return safeCb(callback)(null, data);
       }, function(err) {
@@ -62,11 +58,9 @@ export function PermissaoService(Util, PermissaoResource) {
       }).$promise;
     },
     saveProfile(newProfile, callback) {
-      console.log('PermissaoService.saveProfile', newProfile);
       if(angular.isUndefined(newProfile._id)) {
         return PermissaoResource.save(newProfile, function(data) {
-          console.log('PermissaoResource.save', data);
-          profile = data;//atualizar das do Aplicativo referencia
+          profile = data;
           return safeCb(callback)(profile);
         }, function(err) {
           console.log('Ex:', err);
@@ -74,7 +68,6 @@ export function PermissaoService(Util, PermissaoResource) {
         }).$promise;
       }
       return PermissaoResource.update(newProfile, function(data) {
-        console.log('PermissaoResource.update', data);
         profile = data;
         return safeCb(callback)(profile);
       }, function(err) {

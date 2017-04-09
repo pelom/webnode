@@ -43,9 +43,7 @@ export function UsuarioService(Util, UsuarioResource) {
       }).$promise;
     },
     loadUserList(callback) {
-      console.log('UsuarioService.loadUserList');
       return UsuarioResource.query(function(data) {
-        console.log('UsuarioService.query', data);
         return safeCb(callback)(null, data);
       }, function(err) {
         console.log('Ex:', err);
@@ -53,9 +51,7 @@ export function UsuarioService(Util, UsuarioResource) {
       }).$promise;
     },
     loadUser(user, callback) {
-      console.log('UsuarioService.loadUser');
       return UsuarioResource.get(user, function(data) {
-        console.log('UsuarioService.get', data);
         return safeCb(callback)(null, data);
       }, function(err) {
         console.log('Ex:', err);

@@ -4,11 +4,5 @@ export function PermissaoResource($resource) {
     id: '@_id'
   }, {
     update: { method: 'PUT' },
-    /*modulo: {
-      method: 'PUT',
-      params: {
-        controller: 'modulo'
-      }
-    }*/
   });
 }

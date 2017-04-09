@@ -1,5 +1,11 @@
 'use strict';
 
+export function respondStatusCode(res, statusCode) {
+  return function() {
+    return res.status(statusCode).end();
+  };
+}
+
 export function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {

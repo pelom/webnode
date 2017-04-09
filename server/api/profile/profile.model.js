@@ -2,6 +2,7 @@
 /*eslint no-invalid-this:0*/
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
+
 var PermissaoSchema = new Schema({
   application: {type: Schema.Types.ObjectId, ref: 'Application', required: true },
   modulo: {type: Schema.Types.ObjectId, ref: 'ApplicationModulo', required: true },
@@ -9,6 +10,7 @@ var PermissaoSchema = new Schema({
 }, {
   timestamps: true
 });
+
 var ProfileSchema = new Schema({
   nome: { type: String, required: true },
   descricao: String,

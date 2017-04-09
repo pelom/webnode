@@ -19,11 +19,10 @@ export function routerDecorator($rootScope, $state, Auth) {
           if(has) {
             return;
           }
-
           event.preventDefault();
           return Auth.isLoggedIn()
             .then(is => {
-              $state.go(is ? 'main' : 'login');
+              $state.go(is ? 'perfil' : 'login');
             });
         });
     } else {
@@ -32,9 +31,7 @@ export function routerDecorator($rootScope, $state, Auth) {
           if(is) {
             return;
           }
-
           event.preventDefault();
-
           $state.go('login');
         });
     }

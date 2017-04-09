@@ -13,39 +13,27 @@ let handleError = api.handleError;
 let respondWithResult = api.respondWithResult;
 let handleEntityNotFound = api.handleEntityNotFound;
 let handleValidationError = api.handleValidationError;
-const populationProfileRoles = {
-  path: 'profileId',
-  select: 'role -_id',
-};
-const populateProfile = {
-  path: 'profileId',
-  select: '_id nome'
-};
-const populationLogin = {
-  path: 'login',
-  select: 'data ip browser device os',
-  options: {
-    limit: 5
-  }
-};
-const selectIndex = '_id nome sobrenome username isAtivo profileId criador modificador updatedAt createdAt';
-const selectShow = '_id nome sobrenome username isAtivo profileId criador modificador updatedAt createdAt endereco email celular telefone empresa login';
-const selectMe = 'nome sobrenome username role profileId';
-let profileIdDefault = {};
 
-Profile.findOne({ nome: 'Usuário padrão' }, '_id')
-  .exec()
-  .then(profile => {
-    if(!profile) {
-      console.log('Profile default not found!');
-      return;
-    }
-    profileIdDefault = profile._id;
-    return profile._id;
-  })
-  .catch(err => {
-    console.log(err);
-  });
+let PROFILE_ID = {};
+function obterProfileDefault(where, select) {
+  Profile.findOne({ nome: where }, select).exec()
+    .then(profile => {
+      if(!profile) {
+        console.log('Profile default not found!');
+        return;
+      }
+      PROFILE_ID = profile._id;
+      return profile._id;
+    })
+    .catch(err => {
+      console.log('Ex:', err);
+    });
+}
+obterProfileDefault('Usuário padrão', '_id');
+
+const selectIndex = '_id nome sobrenome username isAtivo profileId criador '
+  + 'modificador updatedAt createdAt';
+const populateProfile = { path: 'profileId', select: '_id nome' };
 
 export function index(req, res) {
   return api.find({
@@ -61,12 +49,39 @@ export function index(req, res) {
   }, res);
 }
 
+const selectShow = '_id nome sobrenome username isAtivo profileId criador '
+  + 'modificador updatedAt createdAt endereco email celular telefone empresa login';
+
+const populationLogin = { path: 'login', select: 'data ip browser device os',
+  options: {
+    limit: 5
+  }
+};
+
 export function show(req, res) {
   return api.findById(req.params.id, {
     model: 'User',
     select: selectShow,
     populate: [populationLogin, api.populationCriador, api.populationModificador],
   }, res);
+}
+
+const selectMe = 'nome sobrenome username role profileId';
+const populationProfileRoles = { path: 'profileId', select: 'role -_id', };
+
+export function me(req, res, next) {
+  var userId = req.user._id;
+  return User.findOne({ _id: userId }, selectMe)
+    .populate(populationProfileRoles)
+    .exec()
+    .then(user => {
+      if(!user) {
+        return res.status(401).end();
+      }
+      return user;
+    })
+    .then(respondWithResult(res))
+    .catch(err => next(err));
 }
 
 export function destroy(req, res) {
@@ -110,11 +125,7 @@ function callbackCreateUser(req, res) {
 }
 
 function notifyUserEmail(req, user, passwordReset) {
-  let usertoken = {
-    id: user._id,
-    username: user.username,
-    passwordReset
-  };
+  let usertoken = { id: user._id, username: user.username, passwordReset };
   let token = jwt.sign(usertoken, config.secrets.session, {
     expiresIn: '1d'
   });
@@ -125,7 +136,7 @@ function notifyUserEmail(req, user, passwordReset) {
 export function register(req, res) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
-  newUser.profileId = profileIdDefault;
+  newUser.profileId = PROFILE_ID;
   newUser.save()
     .then(user => {
       notifyUserEmail(req, user, false);
@@ -135,30 +146,29 @@ export function register(req, res) {
     .catch(handleValidationError(res));
 }
 
-export function update(req, res, next) {
-  console.log('update');
-  let userId = req.params.id;
-  let userJson = requestUserUpdate(req);
-  User.findOne({
-    _id: req.params.id
-  }).exec()
+export function update(req, res) {
+  User.findOne({ _id: req.params.id })
+    .exec()
     .then(handleEntityNotFound(res))
-    .then(user => {
-      Object.assign(user, userJson);
-      return user.save()
-        .then(newUser => {
-          let notifyEmail = Boolean(req.body.isNotificar);
-          if(notifyEmail) {
-            notifyUserEmail(req, newUser, true);
-          }
-          req.params.id = userId;
-          return show(req, res, next);
-        })
-        .catch(handleValidationError(res));
-    })
+    .then(callbackUpdateUser(req, res))
     .catch(handleError(res));
 }
-
+function callbackUpdateUser(req, res) {
+  return function(user) {
+    let userJson = requestUserUpdate(req);
+    Object.assign(user, userJson);
+    return user.save()
+      .then(newUser => {
+        let notifyEmail = Boolean(req.body.isNotificar);
+        if(notifyEmail) {
+          notifyUserEmail(req, newUser, true);
+        }
+        req.params.id = user._id;
+        return show(req, res);
+      })
+      .catch(handleValidationError(res));
+  };
+}
 function requestUserUpdate(req) {
   let userId = req.params.id;
   let userUpdate = {
@@ -187,7 +197,7 @@ export function changePassword(req, res) {
   var oldPass = String(req.body.oldPassword);
   var newPass = String(req.body.newPassword);
 
-  return User.findById(userId).exec()
+  User.findById(userId).exec()
     .then(user => {
       if(user.authenticate(oldPass)) {
         user.password = newPass;
@@ -200,21 +210,6 @@ export function changePassword(req, res) {
         return res.status(403).end();
       }
     });
-}
-
-export function me(req, res, next) {
-  var userId = req.user._id;
-  return User.findOne({ _id: userId }, selectMe)
-    .populate(populationProfileRoles)
-    .exec()
-    .then(user => { // don't ever give out the password or salt
-      if(!user) {
-        return res.status(401).end();
-      }
-      res.json(user);
-      return user;
-    })
-    .catch(err => next(err));
 }
 
 export function getSignupValid(req, res) {
@@ -236,7 +231,6 @@ export function signupvalid(req, res) {
   var paramToken = req.params.id;
   try {
     var decod = jwt.verify(paramToken, config.secrets.session);
-    console.log(decod);
     return User.findById(decod.id)
       .populate(api.populationProfile)
       .exec()

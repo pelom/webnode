@@ -41,8 +41,6 @@ export default class UsuarioEditController {
     return this.PermissaoService.getProfileList();
   }
   saveUser(form) {
-    console.log(this.user);
-    console.log(form);
     if(form.$invalid) {
       return;
     }

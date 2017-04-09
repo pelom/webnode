@@ -88,7 +88,7 @@ describe('User API Router:', function() {
   describe('POST /api/users', function() {
     it('should route to user.controller.create', function() {
       routerStub.post
-        .withArgs('/', 'userCtrl.create')
+        .withArgs('/', 'authService.isAuthenticated', 'userCtrl.create')
         .should.have.been.calledOnce;
     });
   });

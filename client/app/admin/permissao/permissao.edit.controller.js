@@ -3,11 +3,12 @@
 export default class PermissaoEditController {
   errors = {};
   /*@ngInject*/
-  constructor($stateParams, $state, $timeout, AplicacaoService, PermissaoService) {
+  constructor($stateParams, $state, toastr, AplicacaoService, PermissaoService) {
     this.id = $stateParams.id;
     this.PermissaoService = PermissaoService;
     this.AplicacaoService = AplicacaoService;
     this.$state = $state;
+    this.toastr = toastr;
     this.AplicacaoService.loadAppListFull((err, appList) => {
       if(err) {
         console.log('Ex: loadAppListFull() ', err);
@@ -24,6 +25,18 @@ export default class PermissaoEditController {
     this.situacao = this.PermissaoService.getItemIsAtivoDefault();
     this.itemRole = this.PermissaoService.getItemRoleDefault();
     this.itemSessao = this.PermissaoService.getItemSessaoDefault();
+  }
+  _initMapAppModulo(appList) {
+    this.appMap = new Map();
+    appList.forEach(ap => {
+      let apId = ap._id;
+      ap.isCollapsed = true;
+      ap.modulos.forEach(md => {
+        md.select = { funcoes: [] };
+        let key = apId.concat(':').concat(md._id);
+        this.appMap.set(key, md);
+      });
+    });
   }
   _loadProfile() {
     this.PermissaoService.loadProfile({ id: this.id }, (err, profile) => {
@@ -45,18 +58,6 @@ export default class PermissaoEditController {
       this.profile = profile;
     });
   }
-  _initMapAppModulo(appList) {
-    this.appMap = new Map();
-    appList.forEach(ap => {
-      let apId = ap._id;
-      ap.isCollapsed = true;
-      ap.modulos.forEach(md => {
-        md.select = { funcoes: [] };
-        let key = apId.concat(':').concat(md._id);
-        this.appMap.set(key, md);
-      });
-    });
-  }
   _createProfile() {
     return {
       nome: '',
@@ -66,7 +67,6 @@ export default class PermissaoEditController {
     };
   }
   addAllFuncoes(mod) {
-    console.log(mod);
     mod.select.funcoes = mod.funcoes;
   }
   saveProfile(form) {
@@ -93,12 +93,17 @@ export default class PermissaoEditController {
     });
     this.profile.permissoes = permList;
     this.PermissaoService.saveProfile(this.profile)
-    .then(newProfile => {
-      console.log('newProfile', newProfile);
+    .then(() => {
+      this.toastr.success('Perfil salvo com sucesso', `${this.profile.nome}`);
       this.$state.go('permissoes');
     })
     .catch(err => {
       console.log('Ex:', err);
+      this.toastr.error(err.data.message, err.data.name, {
+        autoDismiss: false,
+        closeButton: true,
+        timeOut: 0,
+      });
     })
     .finally(() => {
       this.wait = false;

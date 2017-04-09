@@ -2,7 +2,8 @@
 import angular from 'angular';
 export default class AplicacaoModuloEditController {
   /*@ngInject*/
-  constructor($scope, AplicacaoService) {
+  constructor($scope, toastr, AplicacaoService) {
+    this.toastr = toastr;
     this.AplicacaoService = AplicacaoService;
     this.modalCtl = this.AplicacaoService.getModalCtl();
     let moduloEdit = this.AplicacaoService.getModuloEdit();
@@ -17,7 +18,7 @@ export default class AplicacaoModuloEditController {
     this.itemAtivo = this.AplicacaoService.getItemIsAtivoDefault();
     $scope.$watchCollection('ctl.modulo.select', function() {
       $scope.ctl.modulo.funcoes = [];
-      angular.forEach($scope.ctl.modulo.select, function(value, key) {
+      angular.forEach($scope.ctl.modulo.select, function(value, /*key*/) {
         $scope.ctl.modulo.funcoes.push(value.name);
       });
     });
@@ -32,9 +33,10 @@ export default class AplicacaoModuloEditController {
     this.modulo.select = [];
   }
   saveModulo(form) {
-    console.log(this.modulo);
-    if(form.$valid && this.modulo.funcoes.length > 0) {
-      return this.AplicacaoService.saveModulo(this.modulo)
+    if(form.$invalid || this.modulo.funcoes.length == 0) {
+      return;
+    }
+    this.AplicacaoService.saveModulo(this.modulo)
       .then(newModulo => {
         newModulo.select = [];
         newModulo.funcoes.forEach(f => {
@@ -46,6 +48,7 @@ export default class AplicacaoModuloEditController {
         } else if(moduloEdit.isNew) {
           this.AplicacaoService.getModalCtl().onModulo(newModulo);
         }
+        this.toastr.success('Módulo salvo com sucesso.', `${this.modulo.nome}`);
       })
       .catch(err => {
         console.log('Ex:', err);
@@ -54,16 +57,6 @@ export default class AplicacaoModuloEditController {
         this.wait = false;
         this.modalCtl.dismiss();
       });
-      //let app = this.AplicacaoService.getApp();
-      //app.modulos.push(this.modulo);
-      /*if(this.modulo._id) {
-        Object.assign(moduloEdit, this.modulo);
-      } else {
-      }*/
-      //moduloEdit.nome = 'Ola';
-      //moduloEdit = this.modulo;
-      //this.AplicacaoService.setModuloEdit(this.modulo);
-    }
   }
   tagTransform(newTag) {
     var item = { id: 0, name: newTag, class: 'fa fa-tag' };
