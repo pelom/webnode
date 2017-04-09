@@ -14,8 +14,8 @@ module.exports = {
   seedDB: false,
   emailTransportOptions: {
     auth: {
-      user: 'pelommedrado@gmail.com', // Basta dizer qual o nosso usuário
-      pass: 'soad87wwpl,' // e a senha da nossa conta
+      user: 'pelommedrado@gmail.com',
+      pass: 'soad87wwpl,'
     },
     host: 'smtp.gmail.com',
     port: 465,

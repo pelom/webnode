@@ -3,7 +3,7 @@ import User from './user.model';
 import Profile from '../profile/profile.model';
 import config from '../../config/environment';
 import generatePassword from '../../components/generate-password';
-import {sendNewUserValidate} from '../../components/nodemailer';
+import {sendMailNovoConta, sendMailRedefinirSenha} from '../../components/nodemailer';
 import jwt from 'jsonwebtoken';
 import {authenticateLogin} from '../../auth/auth.service';
 import ApiService from '../api.service';
@@ -117,29 +117,46 @@ function callbackCreateUser(req, res) {
   return function(user) {
     let notifyEmail = Boolean(req.body.isNotificar);
     if(notifyEmail) {
-      notifyUserEmail(req, user, true);
+      notifyNewAccount(req, user, true);
     }
     res.status(201).json(true);
     return user;
   };
 }
-
-function notifyUserEmail(req, user, passwordReset) {
+function notifyNewAccount(req, user, passwordReset) {
+  gerarTokenValidate(user, passwordReset);
+  sendMailNovoConta(req, user);
+}
+function notifyResetPassword(req, user) {
+  gerarTokenValidate(user, true);
+  sendMailRedefinirSenha(req, user);
+}
+function gerarTokenValidate(user, passwordReset) {
   let usertoken = { id: user._id, username: user.username, passwordReset };
   let token = jwt.sign(usertoken, config.secrets.session, {
     expiresIn: '1d'
   });
   user.activeToken = token;
-  sendNewUserValidate(req, user);
+  return token;
 }
+
+/*function notifyUserEmail(req, user, passwordReset) {
+  let usertoken = { id: user._id, username: user.username, passwordReset };
+  let token = jwt.sign(usertoken, config.secrets.session, {
+    expiresIn: '1d'
+  });
+  user.activeToken = token;
+  sendMailNovoConta(req, user);
+}*/
 
 export function register(req, res) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.profileId = PROFILE_ID;
+  console.log('register', newUser);
   newUser.save()
     .then(user => {
-      notifyUserEmail(req, user, false);
+      notifyNewAccount(req, user, false);
       res.status(201).json(true);
       return user;
     })
@@ -161,7 +178,7 @@ function callbackUpdateUser(req, res) {
       .then(newUser => {
         let notifyEmail = Boolean(req.body.isNotificar);
         if(notifyEmail) {
-          notifyUserEmail(req, newUser, true);
+          notifyResetPassword(req, newUser);
         }
         req.params.id = user._id;
         return show(req, res);

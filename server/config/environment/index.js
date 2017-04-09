@@ -36,6 +36,16 @@ var all = {
     session: 'oauth-application-secret'
   },
 
+  emailTransportOptions: {
+    auth: {
+      user: '_@gmail.com',
+      pass: ''
+    },
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // use SSL
+  },
+
   // MongoDB connection options
   mongo: {
     options: {
