@@ -6,7 +6,6 @@ angular.module('filters.nomeProprio', []);
 export default angular.module('filters.nomeProprio', [])
 .filter('nomeProprio', function() {
   return function(input) {
-    console.log(input);
     if(!input) {
       return input;
     }

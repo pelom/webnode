@@ -47,7 +47,6 @@ export function Modal($rootScope, $uibModal, $log) {
               $log.info('Modal dismissed at: ' + new Date());
             });
           return showModal;
-          //console.log(showModal);
         };
       }
     },

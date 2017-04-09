@@ -5,7 +5,6 @@ export default class UsuarioController {
   constructor(UsuarioService) {
     UsuarioService.loadUserList()
     .then(users => {
-      console.log('users', users);
       this.users = users;
     })
     .catch(err => {

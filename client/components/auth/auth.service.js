@@ -4,6 +4,7 @@ class _User {
   _id = '';
   name = '';
   email = '';
+  username = '';
   profileId = { role: '' };
   isNewUser = false;
   $promise = undefined;

@@ -25,10 +25,8 @@ export default class LoginController {
         username: this.user.username,
         password: this.user.password
       })
-        .then(user => {
-          console.log('User:', user);
+        .then(/*user*/() => {
           this.Auth.isAdmin(result => {
-            console.log('isAdmin()', result);
             if(result) {
               // Logged in, redirect to home
               this.$state.go('admin');

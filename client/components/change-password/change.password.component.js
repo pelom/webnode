@@ -4,21 +4,16 @@
 import angular from 'angular';
 
 export class ChangePasswordComponent {
-  user = {
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  };
   errors = {
     other: undefined
   };
   message = '';
-  submitted = false;
   /*@ngInject*/
-  constructor($state, Auth) {
+  constructor($state, toastr, Auth) {
     'ngInject';
     this.token = $state.params.token;
     this.$state = $state;
+    this.toastr = toastr;
     this.Auth = Auth;
     this.user = Auth.getCurrentUserSync();
     this.initToken();
@@ -61,10 +56,26 @@ export class ChangePasswordComponent {
   }
   changePassword(form) {
     this.submitted = true;
-    console.log(this.user);
-    console.log(this.requiredPassword);
     if(form.$valid) {
-      this.validateSignup();
+      if(!angular.isUndefined(this.token)) {
+        this.validateSignup();
+      } else {
+        this.Auth.changePassword(this.user.oldPassword, this.user.newPassword)
+          .then(() => {
+            this.message = 'Password successfully changed.';
+            this.toastr.success('Operação realizada com sucesso', 'Senha alterada');
+            this.user.oldPassword = '';
+            this.user.newPassword = '';
+            this.user.confirmPassword = '';
+            form.$setPristine();
+            form.$setUntouched();
+          })
+          .catch(() => {
+            form.password.$setValidity('mongoose', false);
+            this.errors.other = 'Senha inválida';
+            this.message = '';
+          });
+      }
     }
   }
 }

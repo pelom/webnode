@@ -60,7 +60,6 @@ export default class UsuarioEditController {
         this.errors = {};
 
         angular.forEach(err.errors, (error, field) => {
-          console.log(error, field);
           if(form.hasOwnProperty(field)) {
             form[field].$setValidity('mongoose', false);
           } else {

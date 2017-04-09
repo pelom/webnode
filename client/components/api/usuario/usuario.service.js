@@ -19,7 +19,6 @@ export function UsuarioService(Util, UsuarioResource) {
      * @return {Promise}
      */
     register(user, callback) {
-      //console.log('createUser :', user, callback);
       return UsuarioResource.register(user, function(/*data*/) {
         return safeCb(callback)(null, user);
       }, function(err) {
