@@ -38,9 +38,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Aut
      * @return {Promise}
      */
     login({ username, password }, callback) {
-      return $http.post('/auth/local', {
-        username, password
-      })
+      return $http.post('/auth/local', { username, password })
         .then(res => {
           $cookies.put('token', res.data.token);
           currentUser = AuthResource.get();
@@ -109,16 +107,13 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Aut
      * @return {Promise}
      */
     changePassword(oldPassword, newPassword, callback) {
-      return AuthResource.changePassword({
-        id: currentUser._id
-      }, {
+      return AuthResource.changePassword({ id: currentUser._id }, {
         oldPassword, newPassword
       }, function() {
         return safeCb(callback)(null);
       }, function(err) {
         return safeCb(callback)(err);
-      })
-        .$promise;
+      }).$promise;
     },
     /**
      * Gets all available info on a user

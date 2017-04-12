@@ -17,17 +17,22 @@ export class NavbarComponent {
     this.isLoggedIn = Auth.isLoggedInSync;
     this.isAdmin = Auth.isAdminSync;
     this.getCurrentUser = Auth.getCurrentUserSync;
+    this.application = {show: true};
     $rootScope.$on('$stateChangeStart', (event, next) => {
       Auth.isLoggedIn(loggedIn => {
         if(isNaoEstaLogando(loggedIn)) {
           this.application = criarApplication();
-        } else if(this.isAdmin()) {
+        }/* else if(this.isAdmin()) {
           this.application = criarApplicationAdmin();
         } else {
           this.application = criarApplicationUser();
-        }
-        configApplication(this.application, next);
+        }*/
+        //configApplication(this.application, next);
       });
+    });
+    $rootScope.$on('newapp', (event, appli) => {
+      console.log('newapp', appli);
+      this.application = appli;
     });
     let isNaoEstaLogando = function(logIn) {
       return !logIn;
@@ -39,7 +44,7 @@ export class NavbarComponent {
     let criarApplication = function() {
       return angular.copy(appConfig.applicationDefault);
     };
-    let criarMenuLeftUser = function() {
+    /*let criarMenuLeftUser = function() {
       let menuItemList = [];
       //menuItemList.push(new MenuItem('main', 'Home'));
       return menuItemList;
@@ -60,7 +65,7 @@ export class NavbarComponent {
       application.menuRight = [];
       application.menuLeft = criarMenuLeftUser();
       return application;
-    };
+    };*/
   }
   activeCollapsed() {
     this.isCollapsed = true;
