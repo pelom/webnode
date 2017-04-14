@@ -26,9 +26,9 @@ export default class LoginController {
         username: this.user.username, password: this.user.password
       })
       .then(/*user*/() => {
-        this.Auth.isAdmin(result => {
+        this.$state.go('home');
+        /*this.Auth.isAdmin(result => {
           if(result) {
-            // Logged in, redirect to home
             this.$state.go('admin');
 
             this.$scope.$emit('newapp', {
@@ -40,30 +40,14 @@ export default class LoginController {
                 { state: 'aplicacoes', title: 'Aplicações', show: true }
               ],
               menuRight: [
-                /*{ state: 'signup', title: 'Cadastre-se', icon: 'fa-edit', show: false },
-                { state: 'login', title: 'Entrar', icon: 'fa-sign-in', show: true }
-                */
+                //{ state: 'signup', title: 'Cadastre-se', icon: 'fa-edit', show: false },
+                //{ state: 'login', title: 'Entrar', icon: 'fa-sign-in', show: true }
               ]
             });
             return result;
           }
-          this.$scope.$emit('newapp', {
-            name: 'My Profile',
-            show: true,
-            menuLeft: [
-              /*{ state: 'usuario', title: 'Usuários', show: true },
-              { state: 'permissoes', title: 'Permissões', show: true },
-              { state: 'aplicacoes', title: 'Aplicações', show: true }*/
-            ],
-            menuRight: [
-              /*{ state: 'signup', title: 'Cadastre-se', icon: 'fa-edit', show: false },
-              { state: 'login', title: 'Entrar', icon: 'fa-sign-in', show: true }
-              */
-            ]
-          });
-          // Logged in, redirect to home
           this.$state.go('perfil');
-        });
+        });*/
       })
       .catch(err => {
         this.errors.login = err.message;

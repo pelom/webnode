@@ -45,6 +45,7 @@
 
 /* Component styles are injected through gulp */
 /* inject:css */
+@import 'account/home.css';
 @import 'admin/admin.css';
 @import 'main/main.css';
 @import '../components/check-strength/check.css';

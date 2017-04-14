@@ -7,6 +7,7 @@ import {sendMailNovoConta, sendMailRedefinirSenha} from '../../components/nodema
 import jwt from 'jsonwebtoken';
 import {authenticateLogin} from '../../auth/auth.service';
 import ApiService from '../api.service';
+import {findAllProfilePermission} from '../api.permission.service';
 
 let api = ApiService();
 let handleError = api.handleError;
@@ -36,6 +37,7 @@ const selectIndex = '_id nome sobrenome username isAtivo profileId criador '
 const populateProfile = { path: 'profileId', select: '_id nome' };
 
 export function index(req, res) {
+  console.log('Index');
   return api.find({
     model: 'User',
     select: selectIndex,
@@ -69,19 +71,82 @@ export function show(req, res) {
 const selectMe = 'nome sobrenome username role profileId';
 const populationProfileRoles = { path: 'profileId', select: 'role -_id', };
 
+const populationModulo = {
+  path: 'permissoes.modulo',
+  match: { isAtivo: true },
+  select: '_id nome application',
+};
 export function me(req, res, next) {
   var userId = req.user._id;
-  return User.findOne({ _id: userId }, selectMe)
+  console.log(req.session);
+
+  findAllProfilePermission(req.user.profileId, (err, permissoes) => {
+    if(err) {
+      return;
+    }
+    return res.status(200).json({
+      _id: req.user._id,
+      nome: req.user.nome,
+      sobrenome: req.user.sobrenome,
+      profileId: { role: req.user.role },
+      username: req.user.username,
+      application: permissoes,
+    });
+  });
+  /*Profile.findOne({ _id: req.user.profileId }, 'role permissoes')
+    .populate([populationModulo])
+    .exec()
+    .then(profile => {
+      let menuRight = [];
+      profile.permissoes.forEach(item => {
+        if(item.modulo) {
+          menuRight.push({
+            state: 'usuario', title: item.modulo.nome, icon: 'fa-users', show: true
+          });
+        }
+      });
+      req.user.application = {
+        name: 'Standard',
+        show: true,
+        menuLeft: [],
+        menuRight
+      };
+      return res.status(200).json({
+        _id: req.user._id,
+        nome: req.user.nome,
+        profileId: { role: req.user.role },
+        username: req.user.username,
+        application: {
+          name: 'Standard',
+          show: true,
+          menuLeft: [],
+          menuRight
+        },
+      });
+    })
+    .catch(err => next(err));
+    */
+  /*return User.findOne({ _id: userId }, selectMe)
     .populate(populationProfileRoles)
     .exec()
     .then(user => {
       if(!user) {
         return res.status(401).end();
       }
-      return user;
+      let userResponse = user.toJSON();
+      userResponse.application = {
+        name: 'Standard',
+        show: true,
+        menuLeft: [],
+        menuRight: [
+          { state: 'usuario', title: 'Usuários', icon: 'fa-users', show: true },
+          { state: 'permissoes', title: 'Permissões', icon: 'fa-cubes', show: true },
+          { state: 'aplicacoes', title: 'Aplicações', icon: 'fa-rocket', show: true }
+        ]
+      };
+      return res.status(200).json(userResponse);
     })
-    .then(respondWithResult(res))
-    .catch(err => next(err));
+    .catch(err => next(err));*/
 }
 
 export function destroy(req, res) {

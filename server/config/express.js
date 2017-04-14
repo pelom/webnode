@@ -48,14 +48,13 @@ export default function(app) {
 
   const mStore = new MongoStore({
     mongooseConnection: mongoose.connection,
-    db: 'oauthapplication-dev',
     ttl: 30 * 60 // = 14 days. Default
   });
   mStore.on('create', function(event) {
-    console.log('Session create');
+    console.log(`Session create: ${event}`);
   });
   mStore.on('touch', function(event) {
-      console.log('Session touch');
+    console.log(`Session touch: ${event}`);
   });
   // Persist sessions with MongoStore / sequelizeStore
   // We need to enable sessions for passport-twitter because it's an

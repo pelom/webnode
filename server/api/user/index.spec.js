@@ -4,7 +4,7 @@
 
 var proxyquire = require('proxyquire').noPreserveCache();
 
-var userCtrlStub = {
+var userControllerStub = {
   index: 'userCtrl.index',
   destroy: 'userCtrl.destroy',
   me: 'userCtrl.me',
@@ -22,6 +22,11 @@ var authServiceStub = {
   }
 };
 
+var permissionServiceStub = {
+  isPermission(reqPermission) {
+    return reqPermission;
+  },
+};
 var routerStub = {
   get: sinon.spy(),
   put: sinon.spy(),
@@ -36,8 +41,9 @@ var userIndex = proxyquire('./index', {
       return routerStub;
     }
   },
-  './user.controller': userCtrlStub,
-  '../../auth/auth.service': authServiceStub
+  './user.controller': userControllerStub,
+  '../../auth/auth.service': authServiceStub,
+  '../api.permission.service': permissionServiceStub
 });
 
 describe('User API Router:', function() {
@@ -46,9 +52,14 @@ describe('User API Router:', function() {
   });
 
   describe('GET /api/users', function() {
-    it('should verify admin role and route to user.controller.index', function() {
+    it('Deve possui permissao Ler para a rota user.controller.index', function() {
       routerStub.get
-        .withArgs('/', 'authService.hasRole.admin', 'userCtrl.index')
+        .withArgs('/', {
+          aplicacao: 'Webnode',
+          modulo: 'Usuários',
+          funcao: 'Ler',
+          role: 'admin'
+        }, 'userCtrl.index')
         .should.have.been.calledOnce;
     });
   });
@@ -80,7 +91,12 @@ describe('User API Router:', function() {
   describe('GET /api/users/:id', function() {
     it('should be authenticated and route to user.controller.show', function() {
       routerStub.get
-        .withArgs('/:id', 'authService.isAuthenticated', 'userCtrl.show')
+        .withArgs('/:id', {
+          aplicacao: 'Webnode',
+          modulo: 'Usuários',
+          funcao: 'Ler',
+          role: 'admin'
+        }, 'userCtrl.show')
         .should.have.been.calledOnce;
     });
   });
@@ -88,7 +104,12 @@ describe('User API Router:', function() {
   describe('POST /api/users', function() {
     it('should route to user.controller.create', function() {
       routerStub.post
-        .withArgs('/', 'authService.isAuthenticated', 'userCtrl.create')
+        .withArgs('/', {
+          aplicacao: 'Webnode',
+          modulo: 'Usuários',
+          funcao: 'Criar',
+          role: 'admin'
+        }, 'userCtrl.create')
         .should.have.been.calledOnce;
     });
   });

@@ -14,6 +14,9 @@ export default class AplicacaoModuloEditController {
         name: f
       });
     });
+    if(!this.modulo.icon) {
+      this.modulo.icon = 'fa-cube';
+    }
     this.itemArray = this.AplicacaoService.getItemFuncaoDefault();
     this.itemAtivo = this.AplicacaoService.getItemIsAtivoDefault();
     $scope.$watchCollection('ctl.modulo.select', function() {

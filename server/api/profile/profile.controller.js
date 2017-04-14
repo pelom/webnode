@@ -54,8 +54,8 @@ export function create(req, res) {
     })
     .catch(handleValidationError(res));
 }
-
 function requestCreateProfile(req) {
+  let permissoes = getPermissoes(req);
   return {
     nome: String(req.body.nome),
     descricao: String(req.body.descricao),
@@ -64,10 +64,12 @@ function requestCreateProfile(req) {
     modificador: req.user._id,
     tempoSessao: Number(req.body.tempoSessao),
     role: String(req.body.role),
-    permissoes: req.body.permissoes
+    permissoes
   };
 }
-
+function getPermissoes(req) {
+  return req.body.permissoes.filter(item => item.funcoes.length > 0);
+}
 export function update(req, res) {
   let profileJson = requestUpdateProfile(req);
   Profile.findByIdAndUpdate(req.params.id, profileJson, { safe: true })
@@ -80,12 +82,14 @@ export function update(req, res) {
 }
 
 function requestUpdateProfile(req) {
+  let permissoes = getPermissoes(req);
+  console.log(permissoes);
   return {
     nome: String(req.body.nome),
     descricao: String(req.body.descricao),
     isAtivo: req.body.isAtivo,
     modificador: req.user._id,
     tempoSessao: Number(req.body.tempoSessao),
-    permissoes: req.body.permissoes
+    permissoes
   };
 }

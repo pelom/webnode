@@ -3,60 +3,10 @@ import config from '../config/environment';
 import jwt from 'jsonwebtoken';
 import expressJwt from 'express-jwt';
 import compose from 'composable-middleware';
-import UAParser from 'ua-parser-js';
-import User from '../api/user/user.model';
-
+import {registerUserLogin} from '../api/api.login';
 var validateJwt = expressJwt({
   secret: config.secrets.session
 });
-
-export function createUserLogin(req) {
-  let uAgent = req.headers['user-agent'];
-  let uIp = req.ip;
-  let uSessionId = req.sessionID;
-  let result = parserAgente(uAgent);
-  let userLogin = {
-    ip: uIp,
-    userAgent: uAgent,
-    sessionid: uSessionId
-  };
-  if(result.browser) {
-    userLogin.browser = {};
-    if(result.browser.hasOwnProperty('name')) {
-      userLogin.browser.name = result.browser.name;
-    }
-    if(result.browser.hasOwnProperty('version')) {
-      userLogin.browser.version = result.browser.version;
-    }
-  }
-  if(result.device) {
-    userLogin.device = {};
-    if(result.device.hasOwnProperty('model')) {
-      userLogin.device.model = result.device.model;
-    }
-    if(result.device.hasOwnProperty('type')) {
-      userLogin.device.type_ = result.device.type;
-    }
-    if(result.device.hasOwnProperty('vendor')) {
-      userLogin.device.vendor = result.device.vendor;
-    }
-  }
-  if(result.os) {
-    userLogin.os = {};
-    if(result.os.hasOwnProperty('name')) {
-      userLogin.os.name = result.os.name;
-    }
-    if(result.os.hasOwnProperty('version')) {
-      userLogin.os.version = result.os.version;
-    }
-  }
-  return userLogin;
-}
-let parserAgente = function(uAgent) {
-  var parser = new UAParser();
-  parser.setUA(uAgent);
-  return parser.getResult();
-};
 /**
  * Attaches the user object to the request if authenticated
  * Otherwise returns 403
@@ -103,7 +53,6 @@ export function hasRole(roleRequired) {
   if(!roleRequired) {
     throw new Error('Required role needs to be set');
   }
-
   return compose()
     .use(isAuthenticated())
     .use(function meetsRequirements(req, res, next) {
@@ -120,7 +69,9 @@ export function hasRole(roleRequired) {
 export function signTokenUser(user) {
   return jwt.sign({
     _id: user.id,
-    nome: `${user.nome} ${user.sobrenome}`,
+    nome: `${user.nome} `,
+    sobrenome: `${user.sobrenome}`,
+    username: `${user.username}`,
     role: user.profileId.role,
     profileId: user.profileId._id
   }, config.secrets.session, {
@@ -152,13 +103,6 @@ export function setTokenCookie(req, res) {
 
 export function authenticateLogin(req, user) {
   var token = signTokenUser(user);
-  let userLogin = createUserLogin(req);
-  User.findByIdAndUpdate(
-    user._id,
-    { $push: { login: { $each: [userLogin], $sort: { data: -1 } } }},
-    { safe: true, upsert: true }, function(err, /*model*/) {
-      console.log(err);
-    }
-  );
+  registerUserLogin(req, user);
   return token;
 }

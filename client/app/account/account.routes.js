@@ -49,5 +49,12 @@ export default function routes($stateProvider) {
     controller: 'PerfilController',
     controllerAs: 'vm',
     authenticate: true
+  })
+  .state('home', {
+    url: '/home',
+    template: require('./home.html'),
+    controller: 'HomeController',
+    controllerAs: 'ctl',
+    authenticate: true
   });
 }

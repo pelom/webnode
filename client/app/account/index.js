@@ -7,6 +7,7 @@ import login from './login';
 import settings from './settings';
 import signup from './signup';
 import perfil from './perfil';
+import HomeController from './home.controller';
 export default angular.module('webnodeApp.account',
 [uiRouter, login, settings, signup, perfil])
   .config(routing)
@@ -19,4 +20,4 @@ export default angular.module('webnodeApp.account',
       }
     });
   })
-  .name;
+  .controller('HomeController', HomeController).name;

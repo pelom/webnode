@@ -25,6 +25,9 @@ export default class AplicacaoEditController {
       this.app = app;
       this.app.modulos.forEach(m => {
         m.select = [];
+        if(!m.icon) {
+          m.icon = 'fa-cube';
+        }
         m.funcoes.forEach(f => {
           m.select.push({ name: f });
         });

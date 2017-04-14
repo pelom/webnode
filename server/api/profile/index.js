@@ -2,11 +2,15 @@
 
 import {Router} from 'express';
 import * as controller from './profile.controller';
-import * as auth from '../../auth/auth.service';
+import {LER, CRIAR, MODIFICAR,
+  PermissionWebnode, isPermission} from '../api.permission.service';
 
+let permissao = function(funcao) {
+  return PermissionWebnode('Perfis', funcao);
+};
 let router = new Router();
-router.get('/', auth.hasRole('admin'), controller.index);
-router.get('/:id', auth.hasRole('admin'), controller.show);
-router.post('/', auth.hasRole('admin'), controller.create);
-router.put('/:id', auth.hasRole('admin'), controller.update);
+router.get('/', isPermission(permissao(LER)), controller.index);
+router.get('/:id', isPermission(permissao(LER)), controller.show);
+router.post('/', isPermission(permissao(CRIAR)), controller.create);
+router.put('/:id', isPermission(permissao(MODIFICAR)), controller.update);
 module.exports = router;

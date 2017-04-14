@@ -4,6 +4,7 @@ export function authInterceptor($rootScope, $q, $cookies, $injector, Util) {
   'ngInject';
 
   var state;
+  var toastr;
   return {
     // Add authorization token to headers
     request(config) {
@@ -21,6 +22,12 @@ export function authInterceptor($rootScope, $q, $cookies, $injector, Util) {
         .go('login');
         // remove any stale tokens
         $cookies.remove('token');
+      }
+
+      if(response.status === 403) {
+        (toastr || (toastr = $injector.get('toastr')))
+        .error('Você não possui permissões necessárias para efetuar a operação.',
+        'Privilégios insuficientes');
       }
       return $q.reject(response);
     }

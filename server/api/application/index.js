@@ -3,26 +3,19 @@
 import {Router} from 'express';
 import * as controller from './application.controller';
 import * as auth from '../../auth/auth.service';
-import * as profile from '../profile/profile.service';
+import {LER, CRIAR, MODIFICAR, /*EXCLUIR,*/ ROLE_ADMIN,
+  PermissionWebnode, isPermission} from '../api.permission.service';
+
 let router = new Router();
-let permissao = function(fun) {
-  return {
-    aplicacao: 'Standard',
-    modulo: 'Aplicação',
-    funcao: fun,
-    role: 'admin'
-  };
+let permissao = function(funcao) {
+  return PermissionWebnode('Aplicações', funcao);
 };
-router.get('/', profile.isPermission(permissao('Ler')), controller.index);
-router.get('/showlist', profile.isPermission(permissao('Ler')), controller.showList);
-
-router.get('/:id', profile.isPermission(permissao('Ler')), controller.show);
-
-router.post('/', profile.isPermission(permissao('Criar')), controller.create);
-
-router.put('/:id', profile.isPermission(permissao('Modificar')), controller.update);
-
-router.post('/:id/modulo', auth.hasRole('admin'), controller.createModulo);
-router.put('/:id/modulo', auth.hasRole('admin'), controller.updateModulo);
+router.get('/', isPermission(permissao(LER)), controller.index);
+router.get('/showlist', isPermission(permissao(LER)), controller.showList);
+router.get('/:id', isPermission(permissao(LER)), controller.show);
+router.post('/', isPermission(permissao(CRIAR)), controller.create);
+router.post('/:id/modulo', auth.hasRole(ROLE_ADMIN), controller.createModulo);
+router.put('/:id', isPermission(permissao(MODIFICAR)), controller.update);
+router.put('/:id/modulo', auth.hasRole(ROLE_ADMIN), controller.updateModulo);
 
 module.exports = router;

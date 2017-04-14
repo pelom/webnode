@@ -22,7 +22,7 @@ export function routerDecorator($rootScope, $state, Auth) {
           event.preventDefault();
           return Auth.isLoggedIn()
             .then(is => {
-              $state.go(is ? 'perfil' : 'login');
+              $state.go(is ? 'home' : 'login');
             });
         });
     } else {

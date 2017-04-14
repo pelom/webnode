@@ -93,7 +93,7 @@
             class="list-group-item" ng-repeat="md in ctl.app.modulos"
             ng-click="ctl.editModulo(md)">
             <h5>
-              <i class="fa fa-cube" aria-hidden="true"></i>
+              <i class="fa {{md.icon}} fa-2x" aria-hidden="true"></i>
               {{ md.nome }}
               <small ng-if="md.descricao"> - {{md.descricao}}</small>
             </h5>

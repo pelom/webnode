@@ -108,7 +108,7 @@ let createApp = function(modulos) {
       Application.create({
         nome: 'Standard',
         descricao: 'Aplicação padrão resposável por fornecer os módulos utéis',
-        modulos: modulos
+        modulos
       }).then(app => {
         console.log('finished populating Application', app);
         createProfile(app);
@@ -120,10 +120,10 @@ let createAppModulo = function() {
     .then(() => {
       let fnList = ['Ler', 'Criar', 'Modificar', 'Excluir'];
       ApplicationModulo.create([
-        { nome: 'Usuário', funcoes: fnList },
-        { nome: 'Perfil de usuário', funcoes: fnList },
-        { nome: 'Aplicação', funcoes: fnList },
-        { nome: 'Modulo de aplicação', funcoes: fnList }
+        { nome: 'Usuários', funcoes: fnList, state: 'usuario', icon: 'fa-users' },
+        { nome: 'Perfis', funcoes: fnList, state: 'permissoes', icon: 'fa-cubes' },
+        { nome: 'Aplicações', funcoes: fnList, state: 'aplicacoes', icon: 'fa-rocket' },
+        { nome: 'Módulos', funcoes: fnList, state: '', icon: 'fa-cube' }
       ])
       .then(modulos => {
         console.log('finished populating Application Modulo', modulos);

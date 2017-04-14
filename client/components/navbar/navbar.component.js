@@ -8,6 +8,10 @@ class MenuItem {
     this.state = state;
     this.title = title;
     this.show = show;
+    this.itemList = [];
+  }
+  addItem(item) {
+    this.itemList.push(item);
   }
 }
 export class NavbarComponent {
@@ -22,7 +26,17 @@ export class NavbarComponent {
       Auth.isLoggedIn(loggedIn => {
         if(isNaoEstaLogando(loggedIn)) {
           this.application = criarApplication();
-        }/* else if(this.isAdmin()) {
+        } else {
+          let user = Auth.getCurrentUserSync();
+          user.application.forEach(item => {
+            item.modulos.forEach(m => {
+              m.show = true;
+            });
+          });
+          this.application = user.application[0];
+        }
+
+        /* else if(this.isAdmin()) {
           this.application = criarApplicationAdmin();
         } else {
           this.application = criarApplicationUser();
@@ -30,10 +44,11 @@ export class NavbarComponent {
         //configApplication(this.application, next);
       });
     });
-    $rootScope.$on('newapp', (event, appli) => {
+    /*$rootScope.$on('newapp', (event, appli) => {
       console.log('newapp', appli);
       this.application = appli;
     });
+    */
     let isNaoEstaLogando = function(logIn) {
       return !logIn;
     };
