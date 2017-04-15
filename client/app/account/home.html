@@ -1,13 +1,12 @@
 <div class="container">
   <h3>
     <i class="fa fa-user-circle" aria-hidden="true"></i> Bem-vindo,
-    {{ ctl.getCurrentUser().nome  }} {{ ctl.getCurrentUser().sobrenome  }}
+     <small>{{ ctl.getCurrentUser().nome  }} {{ ctl.getCurrentUser().sobrenome  }}</small>
   </h3>
   <hr/>
   <div class="row">
     <div class="col-sm-4" ng-repeat="model in ctl.getCurrentUser().application[0].modulos">
       <div class="panel panel-default">
-        <a ui-sref="{{model.state}}">
           <div class="panel-heading">
             <div class="row">
               <div class="col-xs-6">
@@ -19,7 +18,7 @@
               </div>
             </div>
           </div>
-
+          <a ui-sref="{{model.state}}">
           <div class="panel-footer">
             <div class="row">
               <div class="col-xs-6">
@@ -30,36 +29,9 @@
               </div>
             </div>
           </div>
-        </a>
+          </a>
       </div>
     </div>
-    <!--div class="col-sm-3">
-      <div class="panel panel-success">
-        <div class="panel-heading">
-          <div class="row">
-            <div class="col-xs-6">
-              <i class="fa fa-comments fa-3x"></i>
-            </div>
-            <div class="col-xs-6 text-right">
-              <p class="announcement-heading">9000</p>
-              <p class="announcement-text"> Orders!</p>
-            </div>
-          </div>
-        </div>
-        <a href="#">
-          <div class="panel-footer announcement-bottom">
-            <div class="row">
-              <div class="col-xs-6">
-                Expand
-              </div>
-              <div class="col-xs-6 text-right">
-                <i class="fa fa-arrow-circle-right"></i>
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div-->
   </div>
   <hr/>
 

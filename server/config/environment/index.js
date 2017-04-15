@@ -29,23 +29,12 @@ var all = {
   ip: process.env.IP || '0.0.0.0',
 
   // Should we populate the DB with sample data?
-  seedDB: false,
+  seedDB: true,
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {
     session: 'oauth-application-secret'
   },
-
-  emailTransportOptions: {
-    auth: {
-      user: '_@gmail.com',
-      pass: ''
-    },
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // use SSL
-  },
-
   // MongoDB connection options
   mongo: {
     options: {
