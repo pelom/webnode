@@ -22,6 +22,7 @@ export class ChangePasswordComponent {
     if(angular.isUndefined(this.token)) {
       return;
     }
+    this.Auth.logout();
     this.Auth.getSignupValid(this.token)
       .then(user => {
         if(!user) {
@@ -46,7 +47,7 @@ export class ChangePasswordComponent {
           this.$state.go('login');
           return null;
         }
-        this.$state.go('main');
+        this.$state.go('home');
         return us;
       })
       .catch(err => {

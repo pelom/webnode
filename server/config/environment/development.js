@@ -13,12 +13,10 @@ module.exports = {
   // Seed database on startup
   seedDB: false,
   emailTransportOptions: {
+    service: 'gmail',
     auth: {
       user: 'pelommedrado@gmail.com',
       pass: 'soad87wwpl,'
-    },
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // use SSL
+    }
   }
 };

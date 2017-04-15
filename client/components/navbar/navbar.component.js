@@ -29,13 +29,17 @@ export class NavbarComponent {
         } else {
           let user = Auth.getCurrentUserSync();
           user.application.forEach(item => {
+            item.show = true;
             item.modulos.forEach(m => {
               m.show = true;
             });
           });
           this.application = user.application[0];
         }
-
+        console.log('next.name', next.name);
+        if(next.name === 'signupvalid') {
+          this.application.show = false;
+        }
         /* else if(this.isAdmin()) {
           this.application = criarApplicationAdmin();
         } else {

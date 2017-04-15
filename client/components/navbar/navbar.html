@@ -18,24 +18,11 @@
         </li>
       </ul>
 
-      <ul class="nav navbar-nav navbar-right">
-        <!--li ng-hide="$ctrl.isLoggedIn()" ui-sref-active="active">
-          <a ui-sref="signup" ng-click="$ctrl.activeCollapsed();">
-            <i class="fa fa-edit fa-fw" aria-hidden="true"></i> Cadastra-se</a>
-        </li>
-        <li ng-hide="$ctrl.isLoggedIn()" ui-sref-active="active">
-          <a ui-sref="login" ng-click="$ctrl.activeCollapsed();">
-            <i class="fa fa-sign-in" aria-hidden="true"></i> Entrar</a>
-        </li-->
+      <ul ng-show="$ctrl.application.show" class="nav navbar-nav navbar-right">
         <li ng-repeat="item in $ctrl.application.modulos">
           <a ng-if="item.show" ng-click="$ctrl.activeCollapsed();" ui-sref="{{item.state}}" title="{{item.nome}}">
             <i class="fa fa-fw {{item.icon}}" ng-if="item.icon" aria-hidden="true"></i> <small>{{item.nome}}</small></a>
         </li>
-        <!--li ng-show="$ctrl.isLoggedIn()">
-          <a ui-sref="perfil" ng-click="$ctrl.activeCollapsed();">
-            <i class="fa fa-user-circle" aria-hidden="true"></i>
-             {{ $ctrl.getCurrentUser().nome }}</a>
-        </li-->
         <li ng-show="$ctrl.isLoggedIn()" class="dropdown" uib-dropdown>
           <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown"
             role="button" aria-haspopup="true" aria-expanded="false"
