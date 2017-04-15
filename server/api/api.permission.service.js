@@ -84,6 +84,8 @@ function setPermissionListRequest(req, res, next) {
   return function(permissionList) {
     permissionList.forEach(perm => {
       console.log('permissionItem:', perm);
+      console.log('permissionItem:', perm.application);
+      console.log('permissionItem:', perm.modulo);
     });
 
     if(permissionList.length == 0) {

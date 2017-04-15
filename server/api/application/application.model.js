@@ -4,7 +4,8 @@ mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
 
 var ApplicationSchema = new Schema({
-  nome: String,
+  nome: {
+    type: String, required: true, minlength: 3, maxlength: 30, trim: true, unique: true },
   descricao: String,
   modulos: [{ type: Schema.Types.ObjectId, ref: 'ApplicationModulo' }],
   isAtivo: { type: Boolean, required: true, default: true },

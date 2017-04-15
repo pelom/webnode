@@ -69,6 +69,9 @@ export default class PermissaoEditController {
   addAllFuncoes(mod) {
     mod.select.funcoes = mod.funcoes;
   }
+  removeAllFuncoes(mod) {
+    mod.select.funcoes = [];
+  }
   saveProfile(form) {
     if(form.$invalid) {
       return;

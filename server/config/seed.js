@@ -106,7 +106,7 @@ let createApp = function(modulos) {
   Application.find({}).remove()
     .then(() => {
       Application.create({
-        nome: 'Standard',
+        nome: 'Webnode',
         descricao: 'Aplicação padrão resposável por fornecer os módulos utéis',
         modulos
       }).then(app => {
@@ -122,6 +122,7 @@ let createAppModulo = function() {
       ApplicationModulo.create([
         { nome: 'Usuários', funcoes: fnList, state: 'usuario', icon: 'fa-users' },
         { nome: 'Perfis', funcoes: fnList, state: 'permissoes', icon: 'fa-cubes' },
+        { nome: 'Usuário Conta', funcoes: fnList, state: 'perfil', icon: 'fa-user-circle' },
         { nome: 'Aplicações', funcoes: fnList, state: 'aplicacoes', icon: 'fa-rocket' },
         { nome: 'Módulos', funcoes: fnList, state: '', icon: 'fa-cube' }
       ])

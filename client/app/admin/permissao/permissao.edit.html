@@ -137,13 +137,19 @@
               <table class="table table-hover table-bordered">
                 <tbody>
                   <tr class="active" ng-repeat="m in app.modulos">
-                    <td><small uib-tooltip="{{m.descricao}}">{{ m.nome}}</small></td>
+                    <!--td><small uib-tooltip="{{m.descricao}}">{{ m.nome}}</small></td-->
                     <td>
-                      <button type="button" ng-click="ctl.addAllFuncoes(m)"
+                      <p uib-tooltip="{{m.descricao}}">
+                        <i class="fa {{m.icon}} fa-2x" aria-hidden="true"></i>
+                        <label><small>{{ m.nome}}</small></label>
+                        <small ng-if="md.descricao"> - {{m.descricao}}</small>
+                      </p>
+                      <a href="#" ng-click="ctl.addAllFuncoes(m)"
                         uib-tooltip="Adicionar todas as funções">
-                        <i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
-                    </td>
-                    <td>
+                        Adicionar todas</a>
+                      <a href="#" ng-click="ctl.removeAllFuncoes(m)"
+                          uib-tooltip="Remover todas as funções">
+                        Remover todas</a>&nbsp;
                       <ui-select multiple remove-selected="false" theme="bootstrap"
                         title="Selecione as funções"
                         ng-model="m.select.funcoes" close-on-select="false">
