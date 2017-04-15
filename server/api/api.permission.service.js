@@ -140,7 +140,6 @@ export function findAllProfilePermission(profileId, callback) {
       if(!profile) {
         return callback(null, []);
       }
-      console.log('profile', profile);
       return callback(null, createPermission(profile.permissoes));
     })
     .catch(err => {

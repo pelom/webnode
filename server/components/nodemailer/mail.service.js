@@ -1,17 +1,13 @@
 'use strict';
 import Transport from './transport';
-import config from '../../config/environment';
-
 export default class EmailService {
   constructor() {
-    let configTransport = config.emailTransportOptions;
-    this.transport = new Transport(configTransport);
+    this.transport = new Transport();
   }
 
   enviar(template, callback) {
     console.log('enviar', template, callback);
     let message = this.createMessage(template);
-    console.log('SEND: ', message);
     this.transport.send(message, callback);
   }
 

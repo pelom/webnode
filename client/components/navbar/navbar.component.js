@@ -36,7 +36,6 @@ export class NavbarComponent {
           });
           this.application = user.application[0];
         }
-        console.log('next.name', next.name);
         if(next.name === 'signupvalid') {
           this.application.show = false;
         }

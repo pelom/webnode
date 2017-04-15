@@ -37,7 +37,6 @@ const selectIndex = '_id nome sobrenome username isAtivo profileId criador '
 const populateProfile = { path: 'profileId', select: '_id nome' };
 
 export function index(req, res) {
-  console.log('Index');
   return api.find({
     model: 'User',
     select: selectIndex,

@@ -83,7 +83,6 @@ export function update(req, res) {
 
 function requestUpdateProfile(req) {
   let permissoes = getPermissoes(req);
-  console.log(permissoes);
   return {
     nome: String(req.body.nome),
     descricao: String(req.body.descricao),

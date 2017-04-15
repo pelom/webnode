@@ -125,11 +125,18 @@ function createProfileUser(app, modulos) {
 function criarDados() {
   let funcaoList = ['Ler', 'Criar', 'Modificar', 'Excluir'];
   let moduloList = [
-    { nome: 'Usuário Conta', funcoes: funcaoList, state: 'perfil', icon: 'fa-user-circle' },
+    { nome: 'Usuário Conta', funcoes: funcaoList, state: '', icon: 'fa-user-circle' },
     { nome: 'Usuários', funcoes: funcaoList, state: 'usuario', icon: 'fa-users' },
     { nome: 'Perfis', funcoes: funcaoList, state: 'permissoes', icon: 'fa-cubes' },
     { nome: 'Aplicações', funcoes: funcaoList, state: 'aplicacoes', icon: 'fa-rocket' },
-    { nome: 'Módulos', funcoes: funcaoList, state: '', icon: 'fa-cube' }
+    { nome: 'Módulos', funcoes: funcaoList, state: '', icon: 'fa-cube' },
+    { nome: 'Servidor Email', funcoes: funcaoList, state: '', icon: 'fa-envelope',
+      serveEmail: {
+        service: 'gmail',
+        user: '******@gmail.com',
+        password: '******'
+      }
+    }
   ];
 
   let profileMap = new Map();
