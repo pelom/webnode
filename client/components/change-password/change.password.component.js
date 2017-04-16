@@ -36,7 +36,7 @@ export class ChangePasswordComponent {
         return user;
       })
       .catch(err => {
-        console.log(err);
+        console.log('Ex:', err);
         this.$state.go('login');
       });
   }

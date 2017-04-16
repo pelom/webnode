@@ -55,8 +55,6 @@ export function hasRole(roleRequired) {
   return compose()
     .use(isAuthenticated())
     .use(function meetsRequirements(req, res, next) {
-      console.log(req.user);
-      console.log(config.userRoles, roleRequired);
       if(config.userRoles.indexOf(req.user.role) >= config.userRoles.indexOf(roleRequired)) {
         return next();
       } else {

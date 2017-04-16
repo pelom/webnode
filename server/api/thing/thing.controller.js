@@ -7,7 +7,7 @@
  * PATCH   /api/things/:id          ->  patch
  * DELETE  /api/things/:id          ->  destroy
  */
-
+/*eslint prefer-reflect:0*/
 'use strict';
 
 import jsonpatch from 'fast-json-patch';
@@ -26,8 +26,7 @@ function respondWithResult(res, statusCode) {
 function patchUpdates(patches) {
   return function(entity) {
     try {
-      Reflect.apply(jsonpatch, entity, patches, /*validate*/ true);
-      //jsonpatch.apply(entity, patches, /*validate*/ true);
+      jsonpatch.apply(entity, patches, /*validate*/ true);
     } catch(err) {
       return Promise.reject(err);
     }

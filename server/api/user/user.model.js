@@ -1,5 +1,6 @@
 /*eslint no-invalid-this:0*/
 /*eslint no-sync:0*/
+/*eslint prefer-rest-params:0*/
 'use strict';
 import crypto from 'crypto';
 mongoose.Promise = require('bluebird');
@@ -181,14 +182,14 @@ UserSchema.methods = {
    * @return {String}
    * @api public
    */
-  makeSalt(byteSize, callback, ...args) {
+  makeSalt(byteSize, callback) {
     var defaultByteSize = 16;
 
-    if(typeof args[0] === 'function') {
-      callback = args[0];
+    if(typeof arguments[0] === 'function') {
+      callback = arguments[0];
       byteSize = defaultByteSize;
-    } else if(typeof args[1] === 'function') {
-      callback = args[1];
+    } else if(typeof arguments[1] === 'function') {
+      callback = arguments[1];
     } else {
       throw new Error('Missing Callback');
     }
