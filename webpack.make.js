@@ -258,18 +258,20 @@ module.exports = function makeWebpackConfig(options) {
     }));
   }
 
-  // Skip rendering index.html in test mode
-  // Reference: https://github.com/ampedandwired/html-webpack-plugin
-  // Render index.html
-  let htmlConfig = {
-    template: 'client/_index.html',
-    filename: '../client/index.html',
-    alwaysWriteToDisk: true
-  };
-  config.plugins.push(
-    new HtmlWebpackPlugin(htmlConfig),
-    new HtmlWebpackHarddiskPlugin()
-  );
+  if(!TEST) {
+    // Skip rendering index.html in test mode
+    // Reference: https://github.com/ampedandwired/html-webpack-plugin
+    // Render index.html
+    let htmlConfig = {
+      template: 'client/_index.html',
+      filename: '../client/index.html',
+      alwaysWriteToDisk: true
+    };
+    config.plugins.push(
+      new HtmlWebpackPlugin(htmlConfig),
+      new HtmlWebpackHarddiskPlugin()
+    );
+  }
 
   // Add build specific plugins
   if(BUILD) {

@@ -465,10 +465,12 @@ gulp.task('test:e2e', ['webpack:e2e', 'env:all', 'env:test', 'start:server', 'we
 });
 
 gulp.task('test:client', done => {
+  console.log(`${__dirname}/${paths.karma}`);
   new KarmaServer({
     configFile: `${__dirname}/${paths.karma}`,
     singleRun: true
   }, err => {
+    console.log(err);
     done(err);
     process.exit(err);
   }).start();
