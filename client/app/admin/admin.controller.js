@@ -1,5 +1,5 @@
 'use strict';
-
+/*eslint no-sync: 0*/
 export default class AdminController {
   /*@ngInject*/
   constructor(Auth) {

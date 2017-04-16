@@ -1,3 +1,4 @@
+/*eslint no-process-env:0*/
 /**
  * Express configuration
  */

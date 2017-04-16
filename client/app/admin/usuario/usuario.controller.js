@@ -9,7 +9,7 @@ export default class UsuarioController {
     })
     .catch(err => {
       console.log('Ex:', err);
-    })
+    });
     this.profiles = [];
   }
 }

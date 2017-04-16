@@ -5,10 +5,10 @@ export default angular.module('webnodeApp.checkStrength', [])
     return {
       replace: false,
       restrict: 'EACM',
-      link: function(scope, elem, attr) {
+      link(scope, elem, attr) {
         var strength = {
           colors: ['#F00', '#F90', '#FF0', '#9F0', '#0F0'],
-          passedMatches: function(pass) {
+          passedMatches(pass) {
             var _regex = /[$-/:-?{-~!"^_`\[\]]/g;
             var _lowerLetters = /[a-z]+/.test(pass);
             var _upperLetters = /[A-Z]+/.test(pass);
@@ -20,7 +20,7 @@ export default angular.module('webnodeApp.checkStrength', [])
             });
             return _passed.length;
           },
-          mesureStrength: function(pass) {
+          mesureStrength(pass) {
             var _force = 0;
             var _passedMatches = this.passedMatches(pass);
             _force += 2 * pass.length + (pass.length >= 10 ? 1 : 0);
@@ -33,7 +33,7 @@ export default angular.module('webnodeApp.checkStrength', [])
             _force = _passedMatches == 3 ? Math.min(_force, 40) : _force;
             return _force;
           },
-          getColor: function(s) {
+          getColor(s) {
             var idx = 0;
             if(s <= 10) {
               idx = 0;
@@ -52,7 +52,7 @@ export default angular.module('webnodeApp.checkStrength', [])
             };
           }
         };
-        scope.$watch(attr.checkStrength, function(newValue, oldValue) {
+        scope.$watch(attr.checkStrength, function(newValue/*, oldValue*/) {
           let formField = attr.formField || 'password';
           if(angular.isUndefined(newValue) || newValue === '') {
             elem.css({ display: 'none' });

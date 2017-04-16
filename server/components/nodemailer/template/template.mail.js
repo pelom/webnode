@@ -1,5 +1,5 @@
 'use strict';
-
+/*eslint no-sync:0*/
 import * as fs from 'fs';
 import path from 'path';
 import _ from 'lodash';

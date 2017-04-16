@@ -1,4 +1,6 @@
 'use strict';
+/*eslint camelcase: 0*/
+/*global google:true*/
 import angular from 'angular';
 export default angular.module('webnodeApp.googlemaps', [])
   .directive('googlemaps', function() {
@@ -16,7 +18,7 @@ export default angular.module('webnodeApp.googlemaps', [])
         zip: '=',
       },
       template: require('./googlemaps.html'),
-      link: function(scope, element, attrs, model) {
+      link(scope, element, attrs, model) {
         let options = {
           types: [],
           componentRestrictions: { country: 'br' }
@@ -45,7 +47,7 @@ export default angular.module('webnodeApp.googlemaps', [])
           scope.$apply(function() {
             var place = autocomplete.getPlace();
 
-            mapField.forEach((v, k) => {
+            mapField.forEach(v /*(v, k)*/ => {
               scope[v] = '';
             });
 
@@ -63,5 +65,5 @@ export default angular.module('webnodeApp.googlemaps', [])
           });
         });
       }
-    }
+    };
   }).name;

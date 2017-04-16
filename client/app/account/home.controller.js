@@ -1,5 +1,5 @@
 'use strict';
-
+/* eslint no-sync: 0 */
 export default class HomeController {
   /*@ngInject*/
   constructor(Auth) {

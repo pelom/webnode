@@ -1,5 +1,5 @@
 'use strict';
-
+/*eslint prefer-reflect: 0*/
 import angular from 'angular';
 
 export function Modal($rootScope, $uibModal, $log) {
@@ -29,22 +29,23 @@ export function Modal($rootScope, $uibModal, $log) {
 
     show: {
       open(del = angular.noop) {
-        return function() {
-          var args = Array.prototype.slice.call(arguments);
+        return function(...arg) {
+          var args = Array.prototype.slice.call(arg);
           var modal = args.shift();
 
           var showModal;
 
           showModal = openModal({
-            modal: modal
+            modal
           }, 'modal-primary');
 
           showModal.result.then(
             function(event) {
-              del.apply(event, args);
+              Reflect.apply(del, event, args);
+              //del.apply(event, args);
             },
             function() {
-              $log.info('Modal dismissed at: ' + new Date());
+              $log.info(`Modal dismissed at: ${new Date()}`);
             });
           return showModal;
         };
@@ -65,8 +66,8 @@ export function Modal($rootScope, $uibModal, $log) {
          * @param  {String} name   - name or info to show on modal
          * @param  {All}           - any additional args are passed straight to del callback
          */
-        return function() {
-          var args = Array.prototype.slice.call(arguments);
+        return function(...arg) {
+          var args = Array.prototype.slice.call(arg);
           var name = args.shift();
           var deleteModal;
 
@@ -93,10 +94,11 @@ export function Modal($rootScope, $uibModal, $log) {
 
           deleteModal.result.then(
             function(event) {
-              del.apply(event, args);
+              Reflect.apply(del, event, args);
+              //del.apply(event, args);
             },
             function() {
-              $log.info('Modal dismissed at: ' + new Date());
+              $log.info(`Modal dismissed at: ${new Date()}`);
             });
         };
       }

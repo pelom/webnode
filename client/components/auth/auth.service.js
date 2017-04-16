@@ -1,4 +1,6 @@
 'use strict';
+/* eslint no-sync: 0 */
+/*eslint prefer-reflect: 0*/
 import * as _ from 'lodash';
 class _User {
   _id = '';
@@ -202,8 +204,8 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Aut
      * @param  {Function|*} callback - optional, function(is)
      * @return {Bool|Promise}
      */
-    isAdmin() {
-      return Auth.hasRole(...[].concat.apply(['admin'], arguments));
+    isAdmin(...args) {
+      return Auth.hasRole(...[].concat.apply(['admin'], args));
     },
 
     /**
