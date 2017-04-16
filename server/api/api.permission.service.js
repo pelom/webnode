@@ -82,12 +82,6 @@ function hasPermissionApplication(permission) {
 
 function setPermissionListRequest(req, res, next) {
   return function(permissionList) {
-    permissionList.forEach(perm => {
-      console.log('permissionItem:', perm);
-      console.log('permissionItem:', perm.application);
-      console.log('permissionItem:', perm.modulo);
-    });
-
     if(permissionList.length == 0) {
       console.log('Permissao nao encontrada no profile: ');
       return res.status(403).send('Forbidden');

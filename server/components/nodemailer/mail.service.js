@@ -6,7 +6,6 @@ export default class EmailService {
   }
 
   enviar(template, callback) {
-    console.log('enviar', template, callback);
     let message = this.createMessage(template);
     this.transport.send(message, callback);
   }

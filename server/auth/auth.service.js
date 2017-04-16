@@ -27,7 +27,6 @@ export function isAuthenticated() {
     });
     // Attach user to request
     /*.use(function(req, res, next) {
-      console.log('Resquest', req);
       User.findById(req.user._id)
         .populate({
           path: 'profileId',

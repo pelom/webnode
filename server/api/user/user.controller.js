@@ -11,7 +11,7 @@ import {findAllProfilePermission} from '../api.permission.service';
 
 let api = ApiService();
 let handleError = api.handleError;
-let respondWithResult = api.respondWithResult;
+//let respondWithResult = api.respondWithResult;
 let handleEntityNotFound = api.handleEntityNotFound;
 let handleValidationError = api.handleValidationError;
 
@@ -30,7 +30,7 @@ function obterProfileDefault(where, select) {
       console.log('Ex:', err);
     });
 }
-obterProfileDefault('Usuário padrão', '_id');
+obterProfileDefault('Usuário', '_id');
 
 const selectIndex = '_id nome sobrenome username isAtivo profileId criador '
   + 'modificador updatedAt createdAt';
@@ -67,18 +67,7 @@ export function show(req, res) {
   }, res);
 }
 
-const selectMe = 'nome sobrenome username role profileId';
-const populationProfileRoles = { path: 'profileId', select: 'role -_id', };
-
-const populationModulo = {
-  path: 'permissoes.modulo',
-  match: { isAtivo: true },
-  select: '_id nome application',
-};
-export function me(req, res, next) {
-  var userId = req.user._id;
-  console.log(req.session);
-
+export function me(req, res, /*next*/) {
   findAllProfilePermission(req.user.profileId, (err, permissoes) => {
     if(err) {
       return;
@@ -92,60 +81,6 @@ export function me(req, res, next) {
       application: permissoes,
     });
   });
-  /*Profile.findOne({ _id: req.user.profileId }, 'role permissoes')
-    .populate([populationModulo])
-    .exec()
-    .then(profile => {
-      let menuRight = [];
-      profile.permissoes.forEach(item => {
-        if(item.modulo) {
-          menuRight.push({
-            state: 'usuario', title: item.modulo.nome, icon: 'fa-users', show: true
-          });
-        }
-      });
-      req.user.application = {
-        name: 'Standard',
-        show: true,
-        menuLeft: [],
-        menuRight
-      };
-      return res.status(200).json({
-        _id: req.user._id,
-        nome: req.user.nome,
-        profileId: { role: req.user.role },
-        username: req.user.username,
-        application: {
-          name: 'Standard',
-          show: true,
-          menuLeft: [],
-          menuRight
-        },
-      });
-    })
-    .catch(err => next(err));
-    */
-  /*return User.findOne({ _id: userId }, selectMe)
-    .populate(populationProfileRoles)
-    .exec()
-    .then(user => {
-      if(!user) {
-        return res.status(401).end();
-      }
-      let userResponse = user.toJSON();
-      userResponse.application = {
-        name: 'Standard',
-        show: true,
-        menuLeft: [],
-        menuRight: [
-          { state: 'usuario', title: 'Usuários', icon: 'fa-users', show: true },
-          { state: 'permissoes', title: 'Permissões', icon: 'fa-cubes', show: true },
-          { state: 'aplicacoes', title: 'Aplicações', icon: 'fa-rocket', show: true }
-        ]
-      };
-      return res.status(200).json(userResponse);
-    })
-    .catch(err => next(err));*/
 }
 
 export function destroy(req, res) {
@@ -203,15 +138,6 @@ function gerarTokenValidate(user, passwordReset) {
   user.activeToken = token;
   return token;
 }
-
-/*function notifyUserEmail(req, user, passwordReset) {
-  let usertoken = { id: user._id, username: user.username, passwordReset };
-  let token = jwt.sign(usertoken, config.secrets.session, {
-    expiresIn: '1d'
-  });
-  user.activeToken = token;
-  sendMailNovoConta(req, user);
-}*/
 
 export function register(req, res) {
   var newUser = new User(req.body);
