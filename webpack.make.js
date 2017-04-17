@@ -52,6 +52,8 @@ module.exports = function makeWebpackConfig(options) {
         'angular-ui-bootstrap',
         'angular-ui-router',
         'angular-toastr',
+        'spin',
+        'angular-spinner',
         'ui-select',
         'lodash'
       ]

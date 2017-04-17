@@ -164,7 +164,7 @@ function requestUpdateModulo(req) {
 }
 function callbackUpdateModulo(res) {
   return function(modulo) {
-    ApplicationModulo.findById(modulo._id)
+    return ApplicationModulo.findById(modulo._id)
     .populate([api.populationCriador, api.populationModificador])
     .exec()
     .then(mod => {

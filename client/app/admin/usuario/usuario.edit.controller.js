@@ -4,38 +4,52 @@ export default class UsuarioEditController {
   errors = {};
   isCollapsed = true;
   /*@ngInject*/
-  constructor($stateParams, $state, UsuarioService, PermissaoService, toastr) {
+  constructor($stateParams, $state, UsuarioService,
+    PermissaoService, toastr, usSpinnerService) {
     this.id = $stateParams.id;
     this.$state = $state;
     this.toastr = toastr;
+    this.usSpinnerService = usSpinnerService;
     this.UsuarioService = UsuarioService;
     this.PermissaoService = PermissaoService;
-    this.PermissaoService.loadProfileList(err => {
+    this.PermissaoService.loadProfileList(this.callLoadProfileList());
+    this.situacao = this.UsuarioService.getItemIsAtivoDefault();
+  }
+  callLoadProfileList() {
+    return err => {
       if(err) {
+        this.toastr.error(err.data.message, err.data.name);
         return;
       }
-
       if(this.id) {
-        this.UsuarioService.loadUser({ id: $stateParams.id }, (err, user) => {
-          if(err) {
-            return;
-          }
-          this.user = user;
-          this.user.isNotificar = false;
-        });
+        this.UsuarioService.loadUser({ id: this.id }, this.callbackLoadUser());
       } else {
-        this.user = {
-          nome: '',
-          sobrenome: '',
-          username: '',
-          email: '',
-          telefone: '',
-          celular: '',
-          isNotificar: true
-        };
+        this.user = this.createUser();
+        this.usSpinnerService.stop('spinner-1');
       }
-    });
-    this.situacao = this.UsuarioService.getItemIsAtivoDefault();
+    };
+  }
+  callbackLoadUser() {
+    return (err, user) => {
+      this.usSpinnerService.stop('spinner-1');
+      if(err) {
+        this.toastr.error(err.data.message, err.data.name);
+        return;
+      }
+      this.user = user;
+      this.user.isNotificar = false;
+    };
+  }
+  createUser() {
+    return {
+      nome: '',
+      sobrenome: '',
+      username: '',
+      email: '',
+      telefone: '',
+      celular: '',
+      isNotificar: true
+    };
   }
   selectOptionProfile() {
     return this.PermissaoService.getProfileList();
@@ -44,7 +58,9 @@ export default class UsuarioEditController {
     if(form.$invalid) {
       return;
     }
-    this.UsuarioService.saveUser(this.user)
+    let userSend = angular.copy(this.user);
+    this.usSpinnerService.spin('spinner-1');
+    this.UsuarioService.saveUser(userSend)
       .then(() => {
         this.toastr.success('Usuário salvo com sucesso', `${this.user.nome} ${this.user.sobrenome}`);
         this.$state.go('usuario');
@@ -69,6 +85,9 @@ export default class UsuarioEditController {
           }
           this.errors[field] = error.message;
         });
+      })
+      .finally(() => {
+        this.usSpinnerService.stop('spinner-1');
       });
   }
 }

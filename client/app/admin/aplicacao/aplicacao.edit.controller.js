@@ -2,37 +2,36 @@
 import angular from 'angular';
 export default class AplicacaoEditController {
   /*@ngInject*/
-  constructor($stateParams, $state, toastr, AplicacaoService, Modal) {
+  constructor($stateParams, $state, toastr, usSpinnerService, AplicacaoService, Modal) {
     this.id = $stateParams.id;
     this.$state = $state;
     this.toastr = toastr;
+    this.usSpinnerService = usSpinnerService;
     this.AplicacaoService = AplicacaoService;
     this.Modal = Modal;
     this.modulo = {};
     if(this.id) {
-      this._loadApp();
+      this.AplicacaoService.loadApp({ id: this.id })
+        .then(app => {
+          this.app = app;
+          this.app.modulos.forEach(m => {
+            m.select = [];
+            if(!m.icon) {
+              m.icon = 'fa-cube';
+            }
+            m.funcoes.forEach(f => {
+              m.select.push({ name: f });
+            });
+          });
+        })
+        .finally(() => {
+          usSpinnerService.stop('spinner-1');
+        });
     } else {
       this.app = this._createApp();
     }
     this.itemArray = this.AplicacaoService.getItemFuncaoDefault();
     this.situacao = this.AplicacaoService.getItemIsAtivoDefault();
-  }
-  _loadApp() {
-    this.AplicacaoService.loadApp({ id: this.id }, (err, app) => {
-      if(err) {
-        return;
-      }
-      this.app = app;
-      this.app.modulos.forEach(m => {
-        m.select = [];
-        if(!m.icon) {
-          m.icon = 'fa-cube';
-        }
-        m.funcoes.forEach(f => {
-          m.select.push({ name: f });
-        });
-      });
-    });
   }
   _createApp() {
     return {
@@ -84,6 +83,7 @@ export default class AplicacaoEditController {
     if(form.$invalid) {
       return;
     }
+    this.usSpinnerService.spin('spinner-1');
     this.AplicacaoService.saveApp(this.app)
     .then(newApp => {
       let isUpdate = this.app._id;
@@ -97,9 +97,15 @@ export default class AplicacaoEditController {
     })
     .catch(err => {
       console.log('Ex:', err);
+      this.toastr.error(err.data.message, err.data.name, {
+        autoDismiss: false,
+        closeButton: true,
+        timeOut: 0,
+      });
     })
     .finally(() => {
       this.wait = false;
+      this.usSpinnerService.stop('spinner-1');
     });
   }
 }

@@ -4,6 +4,8 @@
     <h4><i class="fa fa-cubes" aria-hidden="true"></i> Perfil do usuário</h4>
     <!--p>Um perfil é responsável por agrupar o conjunto de permissões do usuário</p-->
     <hr/>
+    <span spinner-key="spinner-1" spinner-start-active="true"
+      us-spinner="{radius:24, width:8, length: 16}"/>
 
     <form class="form" name="formProfile" novalidate
       ng-submit="ctl.saveProfile(formProfile)">
@@ -140,8 +142,8 @@
                     <!--td><small uib-tooltip="{{m.descricao}}">{{ m.nome}}</small></td-->
                     <td>
                       <p uib-tooltip="{{m.descricao}}">
-                        <i class="fa {{m.icon}} fa-2x" aria-hidden="true"></i>
-                        <label><small>{{ m.nome}}</small></label>
+                        <i class="fa {{m.icon}}" aria-hidden="true"></i>
+                        &nbsp;<label><small>{{ m.nome}}</small></label>
                         <small ng-if="md.descricao"> - {{m.descricao}}</small>
                       </p>
                       <a href="#" ng-click="ctl.addAllFuncoes(m)"

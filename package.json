@@ -10,6 +10,7 @@
     "angular-resource": "^1.6.4",
     "angular-sanitize": "^1.6.4",
     "angular-socket-io": "^0.7.0",
+    "angular-spinner": "^1.0.1",
     "angular-toastr": "^2.1.1",
     "angular-ui-bootstrap": "^2.5.0",
     "angular-ui-mask": "^1.8.7",
@@ -46,6 +47,7 @@
     "socket.io": "^1.7.3",
     "socket.io-client": "^1.7.3",
     "socketio-jwt": "^4.5.0",
+    "spin": "0.0.1",
     "sprint-js": "^0.1.0",
     "ua-parser-js": "^0.7.12",
     "ui-select": "^0.19.7"

@@ -2,6 +2,8 @@
   <p><a ui-sref="aplicacoes"><small>Voltar para aplicações</small></a></p>
   <h4><i class="fa fa-rocket" aria-hidden="true"></i> Aplicação</h4>
   <hr/>
+  <span spinner-key="spinner-1" spinner-start-active="true"
+    us-spinner="{radius:24, width:8, length: 16}"/>
   <form class="form " name="form1" novalidate ng-submit="ctl.saveApp(form1)">
     <div class="panel panel-default">
       <div class="panel-body">
@@ -93,8 +95,8 @@
             class="list-group-item" ng-repeat="md in ctl.app.modulos"
             ng-click="ctl.editModulo(md)">
             <h5>
-              <i class="fa {{md.icon}} fa-2x" aria-hidden="true"></i>
-              {{ md.nome }}
+              <i class="fa {{md.icon}} " aria-hidden="true"></i>
+              &nbsp;<label>{{ md.nome}}</label>
               <small ng-if="md.descricao"> - {{md.descricao}}</small>
             </h5>
             <div class="form-group">

@@ -34,6 +34,7 @@ import Modal from '../components/modal/modal.service';
 import mongooseError from '../components/mongoose-error/mongoose-error.directive';
 
 import toastr from 'angular-toastr';
+import 'angular-spinner';
 import loadingDirec from '../components/directive/loading/loading.directive';
 import nomeValidoDirec from '../components/directive/nome-valido/nomevalido.directive';
 import googlemaps from '../components/googlemaps/googlemaps.directive';
@@ -45,7 +46,8 @@ import '../components/check-strength/check.css';
 angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toastr,
   ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength, googlemaps,
   uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService, PermissaoService,
-  _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal, changePassword, mongooseError
+  _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal,
+  changePassword, mongooseError, 'angularSpinner'
 ])
   .config(routeConfig)
   .config(function(uiSelectConfig) {
