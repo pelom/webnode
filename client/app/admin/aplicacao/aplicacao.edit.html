@@ -1,13 +1,16 @@
 <div class="container">
   <p><a ui-sref="aplicacoes"><small>Voltar para aplicações</small></a></p>
-  <h4><i class="fa fa-rocket" aria-hidden="true"></i> Aplicação</h4>
-  <hr/>
+  <!--h4><i class="fa fa-rocket" aria-hidden="true"></i> Aplicação</h4>
+  <hr/-->
   <span spinner-key="spinner-1" spinner-start-active="true"
     us-spinner="{radius:24, width:8, length: 16}"/>
   <form class="form " name="form1" novalidate ng-submit="ctl.saveApp(form1)">
     <div class="panel panel-default">
       <div class="panel-body">
-        <h4><label>Informações da aplicação</label></h4>
+        <h4>
+          <i class="fa fa-rocket" aria-hidden="true"></i>
+          &nbsp;<label>{{ ctl.app.nome }}</label>
+        </h4>
         <hr/>
         <div class="row">
           <div class="col-sm-6">

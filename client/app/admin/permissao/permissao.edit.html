@@ -1,9 +1,9 @@
 <div class="container">
   <div >
     <p><a ui-sref="permissoes"><small>Voltar para permissões</small></a></p>
-    <h4><i class="fa fa-cubes" aria-hidden="true"></i> Perfil do usuário</h4>
+    <!--h4><i class="fa fa-cubes" aria-hidden="true"></i> Perfil do usuário</h4-->
     <!--p>Um perfil é responsável por agrupar o conjunto de permissões do usuário</p-->
-    <hr/>
+    <!--hr/-->
     <span spinner-key="spinner-1" spinner-start-active="true"
       us-spinner="{radius:24, width:8, length: 16}"/>
 
@@ -12,7 +12,11 @@
 
       <div class="panel panel-default" >
         <div class="panel-body">
-          <h4><label>Informações do perfil</label></h4>
+          <h4>
+            <i class="fa fa-cubes" aria-hidden="true"></i>
+            &nbsp;<label>{{ ctl.profile.nome }}</label>
+            &nbsp;<small>{{ ctl.profile.role }}</small>
+          </h4>
           <hr/>
           <div class="row">
             <div class="col-sm-6">
@@ -48,14 +52,19 @@
 
           <div class="row">
             <div class="col-xs-12">
-              <textarea class="form-control" rows="3" placeholder="Descrição"
-                ng-model="ctl.profile.descricao"></textarea>
+              <dl>
+                <!--dt><small>Descrição</small></dt-->
+                <dd>
+                  <textarea class="form-control" rows="3" placeholder="Descrição"
+                    ng-model="ctl.profile.descricao"></textarea>
+                 </dd>
+              </dl>
             </div>
           </div>
 
           <div class="row" ng-if="ctl.profile._id">
-            <div class="col-xs-6">
-              <dl>
+            <div class="col-sm-6">
+              <dl >
                 <dt><small>Situação</small></dt>
                 <dd>
                   <select class="form-control" ng-model="ctl.profile.isAtivo"
@@ -63,11 +72,13 @@
                  </dd>
               </dl>
             </div>
-            <div class="col-xs-6">
+            <div class="col-sm-6">
               <!--dl>
-                <dt><small>Modificado</small></dt>
-                <dd><small>{{ ctl.app().updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <strong>{{ctl.app().criador.nome}} {{ctl.app().criador.sobrenome}}</strong></small></dd>
+                <dt><small>Descrição</small></dt>
+                <dd>
+                  <textarea class="form-control" rows="3" placeholder="Descrição"
+                    ng-model="ctl.profile.descricao"></textarea>
+                 </dd>
               </dl-->
             </div>
           </div>

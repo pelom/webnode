@@ -2,7 +2,7 @@
 import angular from 'angular';
 export default class AplicacaoEditController {
   /*@ngInject*/
-  constructor($stateParams, $state, toastr, usSpinnerService, AplicacaoService, Modal) {
+  constructor($stateParams, $timeout, $state, toastr, usSpinnerService, AplicacaoService, Modal) {
     this.id = $stateParams.id;
     this.$state = $state;
     this.toastr = toastr;
@@ -25,10 +25,13 @@ export default class AplicacaoEditController {
           });
         })
         .finally(() => {
-          usSpinnerService.stop('spinner-1');
+          this.usSpinnerService.stop('spinner-1');
         });
     } else {
       this.app = this._createApp();
+      $timeout(() => {
+        this.usSpinnerService.stop('spinner-1');
+      }, 100);
     }
     this.itemArray = this.AplicacaoService.getItemFuncaoDefault();
     this.situacao = this.AplicacaoService.getItemIsAtivoDefault();

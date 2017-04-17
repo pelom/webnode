@@ -7,6 +7,7 @@
   <div class="row">
     <div class="col-sm-4" ng-repeat="model in ctl.getCurrentUser().application[0].modulos">
       <div class="panel panel-default">
+        <a ui-sref="{{model.state}}">
           <div class="panel-heading">
             <div class="row">
               <div class="col-xs-6">
@@ -18,7 +19,7 @@
               </div>
             </div>
           </div>
-          <a ui-sref="{{model.state}}">
+
           <div class="panel-footer">
             <div class="row">
               <div class="col-xs-6">
@@ -29,7 +30,7 @@
               </div>
             </div>
           </div>
-          </a>
+        </a>
       </div>
     </div>
   </div>

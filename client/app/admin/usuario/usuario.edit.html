@@ -1,9 +1,9 @@
 <div class="container">
   <div>
     <p><a ui-sref="usuario"><small>Voltar para usuários</small></a></p>
-    <h4><i class="fa fa-user" aria-hidden="true"></i> Usuário</h4>
+    <!--h4><i class="fa fa-user" aria-hidden="true"></i> Usuário</h4-->
     <!--p>Um perfil é responsável por agrupar o conjunto de permissões do usuário</p-->
-    <hr/>
+    <!--hr/-->
     <span spinner-key="spinner-1" spinner-start-active="true"
       us-spinner="{radius:24, width:8, length: 16}"/>
 
@@ -12,7 +12,11 @@
 
       <div class="panel panel-default" >
         <div class="panel-body">
-          <h4><label>{{ctl.user.nome}} {{ctl.user.sobrenome}}</label></h4>
+          <h4>
+            <i class="fa fa-user" aria-hidden="true"></i>
+            &nbsp;<label>{{ctl.user.nome}} {{ctl.user.sobrenome}}</label>
+            &nbsp;<small>{{ctl.user.username}}</small>
+          </h4>
           <hr/>
 
           <div class="row">
