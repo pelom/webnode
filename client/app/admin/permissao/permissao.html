@@ -84,13 +84,13 @@
           </thead>
 
           <tbody>
-            <tr ng-repeat="ap in ctl.profileList() | orderBy:sortType:sortReverse | filter:filtrarResult"
-              ui-sref="permissoesedit({id: ap._id})">
+            <tr ng-repeat="ap in ctl.profileList() | orderBy:sortType:sortReverse | filter:filtrarResult">
               <td>
-                <a href="#" uib-tooltip="Editar">
+                <a href="#" ui-sref="permissoesedit({id: ap._id})" uib-tooltip="Editar">
                   <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
               </td>
-              <td><a href="#" ui-sref-active="active">{{ ap.nome }}</a></td>
+              <td><a href="#" ui-sref="permissoesedit({id: ap._id})" ui-sref-active="active">
+                <small>{{ ap.nome }}</small></a></td>
               <td>{{ ap.role }}</td>
               <!--td><small>{{ ap.descricao}}</small></td-->
               <td>
@@ -99,11 +99,11 @@
                 <small ng-if="ap.isAtivo == false">
                   <span class="label label-danger">Desativo</span></small>
               </td>
-              <!--td><small>{{ ap.createdAt | date:'dd/MM/yyyy HH:mm' }} por
-                <strong>{{ ap.criador.nome}} {{ap.criador.sobrenome}}</strong></small></td-->
               <td>
                 <small>{{ ap.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <strong>{{ap.modificador.nome}} {{ap.modificador.sobrenome}}</strong></small>
+                  <a href="#" ui-sref="usuarioedit({id: ap.modificador._id})"
+                      ui-sref-active="active" uib-tooltip="Ver usuário">
+                    {{ ap.modificador.nome}} {{ ap.modificador.sobrenome}}</a></small>
               </td>
             </tr>
           </tbody>

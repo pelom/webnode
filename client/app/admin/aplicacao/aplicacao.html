@@ -74,13 +74,13 @@
           </thead>
 
           <tbody>
-            <tr ng-repeat="ap in ctl.appList() | orderBy:sortType:sortReverse | filter:filtrarResult"
-                ui-sref="aplicacoesedit({id: ap._id})">
+            <tr ng-repeat="ap in ctl.appList() | orderBy:sortType:sortReverse | filter:filtrarResult">
               <td>
-                <a href="#" uib-tooltip="Editar">
+                <a href="#" ui-sref="aplicacoesedit({id: ap._id})" uib-tooltip="Editar">
                   <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
               </td>
-              <td><a href="#" ui-sref-active="active">{{ ap.nome }}</a></td>
+              <td><a href="#" ui-sref="aplicacoesedit({id: ap._id})"
+                ui-sref-active="active"><small>{{ ap.nome }}</small></a></td>
               <td><small>{{ ap.descricao}}</small></td>
               <td>
                 <small ng-if="ap.isAtivo == true">
@@ -90,7 +90,9 @@
               </td>
               <td>
                 <small>{{ ap.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <strong>{{ap.modificador.nome}} {{ap.modificador.sobrenome}}</strong></small>
+                  <a href="#" ui-sref="usuarioedit({id: ap.modificador._id})"
+                      ui-sref-active="active" uib-tooltip="Ver usuário">
+                    {{ ap.modificador.nome}} {{ ap.modificador.sobrenome}}</a></small>
               </td>
             </tr>
           </tbody>

@@ -46,15 +46,18 @@ module.exports = function makeWebpackConfig(options) {
         'angular-aria',
         'angular-cookies',
         'angular-resource',
-
         'angular-sanitize',
         'angular-socket-io',
         'angular-ui-bootstrap',
         'angular-ui-router',
+        'angular-ui-calendar',
         'angular-toastr',
-        'spin',
         'angular-spinner',
         'ui-select',
+        'jquery',
+        'moment',
+        'fullcalendar',
+        'spin',
         'lodash'
       ]
     };
@@ -231,6 +234,11 @@ module.exports = function makeWebpackConfig(options) {
    * List: http://webpack.github.io/docs/list-of-plugins.html
    */
   config.plugins = [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      'window.jQuery': 'jquery',
+      moment: 'moment'
+    }),
     /*
      * Plugin: ForkCheckerPlugin
      * Description: Do type checking in a separate process, so webpack don't need to wait.

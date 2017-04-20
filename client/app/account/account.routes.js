@@ -50,6 +50,13 @@ export default function routes($stateProvider) {
     controllerAs: 'vm',
     authenticate: true
   })
+  .state('homemenu', {
+    url: '/home/menu',
+    template: require('./home.menu.html'),
+    controller: 'HomeMenuController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
   .state('home', {
     url: '/home',
     template: require('./home.html'),

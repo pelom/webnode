@@ -11,6 +11,7 @@ export default function(app) {
   app.use('/api/users', require('./api/user'));
   app.use('/api/application', require('./api/application'));
   app.use('/api/profile', require('./api/profile'));
+  app.use('/api/event', require('./api/event'));
 
   app.use('/auth', require('./auth').default);
 

@@ -14,12 +14,18 @@ import uiMask from 'angular-ui-mask';
 // import ngMessages from 'angular-messages';
 import ngValidationMatch from 'angular-validation-match';
 
+import toastr from 'angular-toastr';
+import 'angular-spinner';
+import 'angular-ui-calendar';
+import 'fullcalendar/dist/locale-all';
+
 import {routeConfig} from './app.config';
 
 import _Auth from '../components/auth/auth.module';
 import PermissaoService from '../components/api/permissao/permissao.module';
 import AplicacaoService from '../components/api/aplicacao/aplicacao.module';
 import UsuarioService from '../components/api/usuario/usuario.module';
+import EventoService from '../components/api/evento/evento.module';
 
 import account from './account';
 import admin from './admin';
@@ -33,8 +39,6 @@ import socket from '../components/socket/socket.service';
 import Modal from '../components/modal/modal.service';
 import mongooseError from '../components/mongoose-error/mongoose-error.directive';
 
-import toastr from 'angular-toastr';
-import 'angular-spinner';
 import loadingDirec from '../components/directive/loading/loading.directive';
 import nomeValidoDirec from '../components/directive/nome-valido/nomevalido.directive';
 import googlemaps from '../components/googlemaps/googlemaps.directive';
@@ -45,9 +49,9 @@ import '../components/check-strength/check.css';
 
 angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toastr,
   ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength, googlemaps,
-  uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService, PermissaoService,
+  uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService, PermissaoService, EventoService,
   _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal,
-  changePassword, mongooseError, 'angularSpinner'
+  changePassword, mongooseError, 'angularSpinner', 'ui.calendar'
 ])
   .config(routeConfig)
   .config(function(uiSelectConfig) {

@@ -1,20 +1,39 @@
 <div class="container">
-  <h3><i class="fa fa-home" aria-hidden="true"></i> Início</h3>
+  <h3>
+    <i class="fa fa-bars" aria-hidden="true"></i> Menu
+  </h3>
   <hr/>
   <div class="row">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <div ui-calendar="ctl.uiConfig.calendar" ng-model="ctl.events">
+    <div class="col-sm-4" ng-repeat="model in ctl.getCurrentUser().application[0].modulos">
+      <div class="panel panel-info">
+        <a ui-sref="{{model.state}}">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col-xs-6">
+                <i class="fa {{model.icon}} fa-3x"></i>
+              </div>
+              <div class="col-xs-6 text-right">
+                <p class="lead">18</p>
+                <!--p class="announcement-text">Users</p-->
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-footer">
+            <div class="row">
+              <div class="col-xs-6">
+                {{model.nome}}
+              </div>
+              <div class="col-xs-6 text-right">
+                <i class="fa fa-arrow-circle-right"></i>
+              </div>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
-    <!--div class="col-sm-8">
-    </div>
-    <div class="col-sm-4">
-    </div-->
   </div>
-
   <hr/>
-
   <!--ul class="breadcrumb">
     <li class="completed"><a href="javascript:void(0);">Personal Contact</a></li>
     <li class="active"><a href="javascript:void(0);">Educational/Experience</a></li>

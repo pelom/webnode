@@ -54,7 +54,7 @@
                   </div>
                 </a>
               </th>
-              <!--th>
+              <th>
                 <a href="#" ui-sref-active="active"
                   ng-click="sortType = 'profileId.nome'; sortReverse = !sortReverse">
                   <strong>Perfil<strong>
@@ -65,7 +65,7 @@
                       class="fa fa-sort-amount-desc"></span>
                   </div>
                 </a>
-              </th-->
+              </th>
               <th>
                 <a href="#" ui-sref-active="active"
                   ng-click="sortType = 'isAtivo'; sortReverse = !sortReverse">
@@ -89,15 +89,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="us in  ctl.users | orderBy:sortType:sortReverse | filter:filtrarResult"
-              ui-sref="usuarioedit({id: us._id})">
+            <tr ng-repeat="us in  ctl.users | orderBy:sortType:sortReverse | filter:filtrarResult">
               <td>
-                <a href="#" uib-tooltip="Editar">
+                <a href="#" uib-tooltip="Editar" ui-sref="usuarioedit({id: us._id})">
                   <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
               </td>
-              <td><a href="#" ui-sref-active="active">{{ us.nome }} {{ us.sobrenome }}</a></td>
-              <td><a href="#" ui-sref-active="active">{{ us.username }}</a></td>
-              <!--td>{{ us.profileId.nome }}</td-->
+              <td><a href="#" ui-sref="usuarioedit({id: us._id})"
+                  ui-sref-active="active"><small>{{ us.nome }} {{ us.sobrenome }}</small></a></td>
+              <td><a href="#" ui-sref="usuarioedit({id: us._id})"
+                  ui-sref-active="active"><small>{{ us.username }}</small></a></td>
+              <td><a href="#" ui-sref="permissoesedit({id: us.profileId._id})"
+                  ui-sref-active="active" uib-tooltip="Ver perfil">
+                  <small>{{ us.profileId.nome }}</small></a></td>
               <td>
                 <small ng-if="us.isAtivo === true">
                   <span class="label label-success">Ativo</span></small>
@@ -106,7 +109,9 @@
               </td>
               <td>
                 <small>{{ us.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <strong>{{ us.modificador.nome}} {{ us.modificador.sobrenome}}</strong></small>
+                  <a href="#" ui-sref="usuarioedit({id: us.modificador._id})"
+                      ui-sref-active="active" uib-tooltip="Ver usuário">
+                    {{ us.modificador.nome}} {{ us.modificador.sobrenome}}</a></small>
               </td>
             </tr>
           </tbody>
