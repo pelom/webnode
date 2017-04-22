@@ -18,9 +18,9 @@ export class NavbarComponent {
           let user = Auth.getCurrentUserSync();
           user.application.forEach(item => {
             item.show = true;
-            item.modulos.forEach(m => {
+            /*item.modulos.forEach(m => {
               m.show = true;
-            });
+            });*/
           });
           this.application = user.application[0];
         }

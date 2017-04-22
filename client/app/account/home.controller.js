@@ -1,19 +1,31 @@
 'use strict';
+import angular from 'angular';
+import {openModalView} from './agenda/agenda.model.service';
 /* eslint no-sync: 0 */
 export default class HomeController {
   /*@ngInject*/
-  constructor(EventoService, $scope, $compile, Auth) {
+  constructor($stateParams, $state, EventoService, $scope,
+    $compile, Auth, usSpinnerService, Modal) {
     this.getCurrentUser = Auth.getCurrentUserSync;
+    this.Modal = Modal;
+    this.$stateParams = $stateParams;
+    this.defaultView = $stateParams.defaultView || 'listWeek';
+    this.defaultDate = $stateParams.defaultDate || {};
+    this.EventoService = EventoService;
+    this.events = [];
+    this.eventList = [];
+    this.$state = $state;
     this.uiConfig = {
       calendar: {
         header: {
           //left: 'month basicWeek basicDay agendaWeek agendaDay',
           left: 'title',
-          right: 'prev,next',
-          center: 'today,listWeek,agendaWeek,agendaDay,month'
+          right: 'today prev,next',
+          center: 'agendaDay,listWeek,agendaWeek,month'
           //right: 'today,month,basicWeek basicDay,agendaWeek,agendaDay,listWeek'
         },
-        defaultView: 'listWeek',
+        defaultView: this.defaultView,
+        defaultDate: this.defaultDate,
         locale: 'pt-br',
         lang: 'pt-br',
         height: 500,
@@ -21,77 +33,117 @@ export default class HomeController {
         editable: true,
         selectable: true,
         eventLimit: true, // allow "more" link when too many events
-        businessHours: true, // display business hours
+        businessHours: [{
+          dow: [1, 2, 3], // Monday, Tuesday, Wednesday
+          start: '08:00', // 8am
+          end: '18:00' // 6pm
+        },
+        {
+          dow: [4, 5], // Thursday, Friday
+          start: '10:00', // 10am
+          end: '16:00' // 4pm
+        }],
         selectHelper: true,
         startEditable: true,
+        slotDuration: '01:00:00',
         timezone: 'local',
         loading(bool) {
+          if(bool) {
+            usSpinnerService.spin('spinner-1');
+          } else {
+            usSpinnerService.stop('spinner-1');
+          }
           console.log('loading:', bool);
         },
-        viewRender(view, /*element*/) {
-          console.log("The view's title is " + view.intervalStart.format());
-          console.log("The view's title is " + view.name);
-          console.log("The view's title is ", view);
+        viewRender: view /*element*/ => {
+          this.defaultView = view.name;
+          this.defaultDate = view.intervalStart.format();
+          usSpinnerService.spin('spinner-1');
+          EventoService.loadEventoList({
+            start: view.intervalStart.format(),
+            end: view.intervalEnd.format()
+          })
+            .then(eventList => {
+              this.eventList = eventList;
+              this.eventList.forEach(item => {
+                if(item.status === 'Pendente') {
+                  item.color = '#f0ad4e';
+                } else if(item.status === 'Em Andamento') {
+                  item.color = '#428bca';
+                } else if(item.status === 'Concluído') {
+                  item.color = '#5cb85c';
+                } else if(item.status === 'Cancelado') {
+                  item.color = '#d9534f';
+                }
+              });
+              let eventSource = {
+                //color: '#378006',
+                //textColor: '#FFF',
+                //eventColor: '#378006',
+                events: this.eventList,
+              };
+              this.events.pop();
+              this.events.push(eventSource);
+              console.log(this.events);
+            })
+            .finally(() => {
+              usSpinnerService.stop('spinner-1');
+            });
         },
-        eventRender(event, element, view) {
+        /*eventRender(event, element, view) {
           console.log('eventRender', event, element, view);
           element.attr({
-            'tooltip': event.title, 'tooltip-append-to-body' : true
+            tooltip: event.title
           });
           $compile(element)($scope);
+        },*/
+        eventClick: (calEvent, jsEvent, view) => {
+          let event = this.createEvent(calEvent);
+          let modalCtl = openModalView(event, this.Modal);
+          modalCtl.defaultView = this.defaultView;
+          modalCtl.defaultDate = this.defaultDate;
+          this.EventoService.setModalCtl(modalCtl);
         },
-        dayClick(date) {
-          console.log('dayClick', date.format());
-        },
-        select(startDate, endDate) {
+        /*dayClick: date => {
+          let stgStart = date.format('YYYY-MM-DD HH:mm:ss');
+          let modalCtl = openModalView({
+            title: 'Novo',
+            start: new Date(stgStart),
+            end: null
+          }, this.Modal);
+          this.EventoService.setModalCtl(modalCtl);
+        },*/
+        select: (startDate, endDate) => {
           console.log('select', startDate.format(), endDate.format());
-          var title = prompt('Event Title:');
-          var eventData;
-          if(title) {
-            eventData = {
-              title,
-              start: startDate,
-              end: endDate
-            };
-            //$('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
-          }
-          //$('#calendar').fullCalendar('unselect');
+          let modalCtl = openModalView({
+            title: 'Novo',
+            start: this.momentToDate(startDate),
+            end: this.momentToDate(endDate),
+            status: 'Pendente',
+            prioridade: 'Normal'
+          }, this.Modal);
+          modalCtl.defaultView = this.defaultView;
+          modalCtl.defaultDate = this.defaultDate;
+          this.EventoService.setModalCtl(modalCtl);
         }
       }
     };
-    /*var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
-    this.eventSource2 = {
-      currentTimezone: 'America/Sao_Paulo', // an option!
-      color: '#000',
-      backgroundColor: '#337ab7',
-      textColor: '#FFF',
-      eventColor: '#378006',
-      events: [
-        {title: 'All Day Event', start: new Date(y, m, 1)},
-        {title: 'Long Event', start: new Date(y, m, d - 5), end: new Date(y, m, d - 2)},
-        {id: 999, title: 'Repeating Event', start: new Date(y, m, d - 3, 16, 0), allDay: false},
-        {id: 999, title: 'Repeating Event', start: new Date(y, m, d + 4, 16, 0), allDay: false},
-        {title: 'Birthday Party', start: new Date(y, m, d + 1, 19, 0), end: new Date(y, m, d + 1, 22, 30), allDay: false},
-        {title: 'Click for Google', start: new Date(y, m, 28), end: new Date(y, m, 29), url: 'http://google.com/'}
-      ],
-    };*/
-    this.events = [];
-    EventoService.loadEventoList()
-      .then(eventList => {
-        /*eventList.forEach(event => {
-          console.log(event);
-          event.start = new Date(event.start).toISOString().slice(0, 10);
-        });
-        */
-        let eventSource = {
-          color: '#378006',
-          textColor: '#FFF',
-          events: eventList
-        };
-        this.events.push(eventSource);
-      });
+  }
+  createEvent(calEvent) {
+    let event = angular.copy(calEvent);
+    event.start = this.momentToDate(event.start);
+    if(event.end !== null) {
+      event.end = this.momentToDate(event.end);
+    }
+    return event;
+  }
+  momentToDate(momentDate) {
+    try {
+      let stgStart = momentDate.format();
+      return new Date(stgStart);
+    } catch(err) {
+      console.log(err);
+      return null;
+    }
   }
 }

@@ -1,6 +1,7 @@
 'use strict';
 import {handleError, respondWithResult, handleEntityNotFound, handleValidationError} from './utils/response';
-import {populationCriador, populationModificador, populationProfile} from './utils/population';
+import {populationCriador, populationModificador,
+  populationProfile, populationProprietario} from './utils/population';
 mongoose.Promise = require('bluebird');
 import mongoose from 'mongoose';
 
@@ -30,7 +31,8 @@ export default function ApiService() {
     handleValidationError,
     populationCriador,
     populationModificador,
-    populationProfile
+    populationProfile,
+    populationProprietario,
   };
   return API;
 }

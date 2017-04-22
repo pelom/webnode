@@ -124,7 +124,7 @@ const populationApplication = {
 const populationModulo = {
   path: 'permissoes.modulo',
   match: { isAtivo: true },
-  select: '_id nome application state icon',
+  select: '_id nome application state icon funcoes',
 };
 export function findAllProfilePermission(profileId, callback) {
   Profile.findOne({ _id: profileId }, 'permissoes')
@@ -154,6 +154,7 @@ export function createPermission(permissionList) {
       appIdModuloListMap.set(appIdKey, moduloList);
     }
     if(isModulo(item.modulo)) {
+      item.modulo.show = isMenuShow(item.modulo);
       moduloList.push(item.modulo);
     }
   });
@@ -166,7 +167,17 @@ function isModulo(modulo) {
   }
   return true;
 }
-
+function isMenuShow(modulo) {
+  if(!modulo) {
+    return false;
+  }
+  modulo.funcoes.forEach(item => {
+    if(item === 'showView') {
+      return true;
+    }
+  });
+  return false;
+}
 function convertMapArray(appMap, appIdModuloListMap) {
   for(let application of appMap.values()) {
     let moduloList = appIdModuloListMap.get(application._id);

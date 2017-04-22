@@ -16,8 +16,10 @@ import ngValidationMatch from 'angular-validation-match';
 
 import toastr from 'angular-toastr';
 import 'angular-spinner';
-import 'angular-ui-calendar';
+import 'moment/locale/pt-br';
 import 'fullcalendar/dist/locale-all';
+import 'angular-i18n/angular-locale_pt-br';
+import 'angular-ui-calendar';
 
 import {routeConfig} from './app.config';
 

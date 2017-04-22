@@ -14,7 +14,7 @@ export function Modal($rootScope, $uibModal, $log) {
     var modalScope = $rootScope.$new();
 
     angular.extend(modalScope, scope);
-
+    modalScope.test = 'test';
     return $uibModal.open({
       template: scope.modal.html,
       windowClass: modalClass,
@@ -37,12 +37,13 @@ export function Modal($rootScope, $uibModal, $log) {
 
           showModal = openModal({
             modal
-          }, 'modal-primary');
-
+          }, 'modal-light');
           showModal.result.then(
             function(event) {
-              Reflect.apply(del, event, args);
+              console.log(event);
+              //Reflect.apply(del, event, args);
               //del.apply(event, args);
+              return event;
             },
             function() {
               $log.info(`Modal dismissed at: ${new Date()}`);

@@ -7,10 +7,12 @@ import login from './login';
 import settings from './settings';
 import signup from './signup';
 import perfil from './perfil';
+import agenda from './agenda';
 import HomeController from './home.controller';
 import HomeMenuController from './home.menu.controller';
+import AgendaModalController from './agenda/agenda.modal.controller';
 export default angular.module('webnodeApp.account',
-[uiRouter, login, settings, signup, perfil])
+[uiRouter, login, settings, signup, perfil, agenda])
   .config(routing)
   .run(function($rootScope) {
     'ngInject';
@@ -21,5 +23,6 @@ export default angular.module('webnodeApp.account',
       }
     });
   })
+  .controller('AgendaModalController', AgendaModalController)
   .controller('HomeMenuController', HomeMenuController)
   .controller('HomeController', HomeController).name;

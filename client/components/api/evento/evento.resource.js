@@ -4,5 +4,11 @@ export function EventoResource($resource) {
     id: '@_id'
   }, {
     update: { method: 'PUT' },
+    domain: {
+      method: 'GET',
+      params: {
+        id: 'domain'
+      }
+    }
   });
 }

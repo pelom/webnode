@@ -7,6 +7,7 @@
     "angular-animate": "^1.6.4",
     "angular-aria": "^1.6.4",
     "angular-cookies": "^1.6.4",
+    "angular-i18n": "^1.6.4",
     "angular-resource": "^1.6.4",
     "angular-sanitize": "^1.6.4",
     "angular-socket-io": "^0.7.0",

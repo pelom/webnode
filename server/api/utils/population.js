@@ -14,3 +14,8 @@ export const populationProfile = {
   select: '_id nome role tempoSessao',
   match: { isAtivo: true }
 };
+
+export const populationProprietario = {
+  path: 'proprietario',
+  select: '_id nome sobrenome',
+};
