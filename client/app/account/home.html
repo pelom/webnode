@@ -1,6 +1,26 @@
 <div class="container">
-  <h3><i class="fa fa-home" aria-hidden="true"></i> Início</h3>
-  <hr/>
+  <h3><i class="fa fa-home" aria-hidden="true"></i> <b>Início</b></h3>
+  <!--hr/-->
+  <div class="row">
+    <ul class="breadcrumb">
+      <li title="Itens no calendário">
+        <a href="#" ng-click="ctl.findEventListStatus('');">
+          <i class="fa fa-calendar" aria-hidden="true"></i> <b>{{ctl.eventList.length}}</b></a>
+      </li>
+      <li class="completed" title="Concluído">
+        <a href="" ng-click="ctl.findEventListStatus('Concluído');">
+          <i class="fa fa-check" aria-hidden="true"></i> <b>{{ctl.concluido}}</b></a></li>
+      <li class="pending" title="Pendente">
+        <a href="" ng-click="ctl.findEventListStatus('Pendente');">
+          <i class="fa fa-clock-o" aria-hidden="true"></i> <b>{{ctl.pendente}}</b></a></li>
+      <li class="inprocess" title="Em Andamento">
+        <a href="" ng-click="ctl.findEventListStatus('Em Andamento');">
+          <i class="fa fa-spinner" aria-hidden="true"></i> <b>{{ctl.emAndamento}}</b></a></li>
+      <li class="cancel" title="Cancelado">
+        <a href="" ng-click="ctl.findEventListStatus('Cancelado');">
+        <i class="fa fa-ban" aria-hidden="true"></i> <b>{{ctl.cancelado}}</b></a></li>
+    </ul>
+  </div>
   <div class="row">
     <span spinner-key="spinner-1" spinner-start-active="true"
       us-spinner="{radius:24, width:8, length: 16}"/>
@@ -23,13 +43,7 @@
     <li><a href="javascript:void(0);">Photo Upload</a></li>
     <li><a href="javascript:void(0);">Payment</a></li>
   </ul>
-
-  <ul class="breadcrumb">
-    <li class="completed"><a href="javascript:void(0);">about</a></li>
-    <li class="active"><a href="javascript:void(0);">business</a></li>
-    <li><a href="javascript:void(0);">gallery</a></li>
-  </ul-->
-  <!--div class="process">
+  <div class="process">
     <div class="process-row">
       <div class="process-step">
         <button type="button" class="btn btn-default btn-circle">

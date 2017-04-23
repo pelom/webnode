@@ -9,11 +9,16 @@ export default class HomeController {
     this.getCurrentUser = Auth.getCurrentUserSync;
     this.Modal = Modal;
     this.$stateParams = $stateParams;
+    this.usSpinnerService = usSpinnerService;
     this.defaultView = $stateParams.defaultView || 'listWeek';
-    this.defaultDate = $stateParams.defaultDate || {};
+    this.defaultDate = $stateParams.defaultDate || new Date();
+    this.defaultStatus = $stateParams.defaultStatus || null;
+    this.startInterval = null;
+    this.endInterval = null;
     this.EventoService = EventoService;
     this.events = [];
     this.eventList = [];
+    this.resetNumberResult();
     this.$state = $state;
     this.uiConfig = {
       calendar: {
@@ -56,39 +61,7 @@ export default class HomeController {
           console.log('loading:', bool);
         },
         viewRender: view /*element*/ => {
-          this.defaultView = view.name;
-          this.defaultDate = view.intervalStart.format();
-          usSpinnerService.spin('spinner-1');
-          EventoService.loadEventoList({
-            start: view.intervalStart.format(),
-            end: view.intervalEnd.format()
-          })
-            .then(eventList => {
-              this.eventList = eventList;
-              this.eventList.forEach(item => {
-                if(item.status === 'Pendente') {
-                  item.color = '#f0ad4e';
-                } else if(item.status === 'Em Andamento') {
-                  item.color = '#428bca';
-                } else if(item.status === 'Concluído') {
-                  item.color = '#5cb85c';
-                } else if(item.status === 'Cancelado') {
-                  item.color = '#d9534f';
-                }
-              });
-              let eventSource = {
-                //color: '#378006',
-                //textColor: '#FFF',
-                //eventColor: '#378006',
-                events: this.eventList,
-              };
-              this.events.pop();
-              this.events.push(eventSource);
-              console.log(this.events);
-            })
-            .finally(() => {
-              usSpinnerService.stop('spinner-1');
-            });
+          this.findEventListView(view);
         },
         /*eventRender(event, element, view) {
           console.log('eventRender', event, element, view);
@@ -98,11 +71,8 @@ export default class HomeController {
           $compile(element)($scope);
         },*/
         eventClick: (calEvent, jsEvent, view) => {
-          let event = this.createEvent(calEvent);
-          let modalCtl = openModalView(event, this.Modal);
-          modalCtl.defaultView = this.defaultView;
-          modalCtl.defaultDate = this.defaultDate;
-          this.EventoService.setModalCtl(modalCtl);
+          let event = this.createEventClick(calEvent);
+          this.openModalEvent(event);
         },
         /*dayClick: date => {
           let stgStart = date.format('YYYY-MM-DD HH:mm:ss');
@@ -115,21 +85,19 @@ export default class HomeController {
         },*/
         select: (startDate, endDate) => {
           console.log('select', startDate.format(), endDate.format());
-          let modalCtl = openModalView({
-            title: 'Novo',
-            start: this.momentToDate(startDate),
-            end: this.momentToDate(endDate),
-            status: 'Pendente',
-            prioridade: 'Normal'
-          }, this.Modal);
-          modalCtl.defaultView = this.defaultView;
-          modalCtl.defaultDate = this.defaultDate;
-          this.EventoService.setModalCtl(modalCtl);
+          let event = this.createEventSelect(startDate, endDate);
+          this.openModalEvent(event);
         }
       }
     };
   }
-  createEvent(calEvent) {
+  resetNumberResult() {
+    this.pendente = 0;
+    this.emAndamento = 0;
+    this.concluido = 0;
+    this.cancelado = 0;
+  }
+  createEventClick(calEvent) {
     let event = angular.copy(calEvent);
     event.start = this.momentToDate(event.start);
     if(event.end !== null) {
@@ -145,5 +113,79 @@ export default class HomeController {
       console.log(err);
       return null;
     }
+  }
+  createEventSelect(startDate, endDate) {
+    return {
+      title: 'Novo evento',
+      start: this.momentToDate(startDate),
+      end: this.momentToDate(endDate),
+      status: 'Pendente',
+      prioridade: 'Normal'
+    };
+  }
+  openModalEvent(event) {
+    let modalCtl = openModalView(event, this.Modal);
+    modalCtl.defaultView = this.defaultView;
+    modalCtl.defaultDate = this.defaultDate;
+    this.EventoService.setModalCtl(modalCtl);
+  }
+  findEventListView(view) {
+    this.setParamRealod(view);
+    this.startInterval = view.intervalStart.format();
+    this.endInterval = view.intervalEnd.format();
+    this.findEventList();
+  }
+  findEventList() {
+    this.usSpinnerService.spin('spinner-1');
+    this.EventoService.loadEventoList({
+      start: this.startInterval,
+      end: this.endInterval,
+      status: this.defaultStatus
+    })
+    .then(this.callbackLoadEventoList())
+    .finally(() => {
+      this.usSpinnerService.stop('spinner-1');
+    });
+  }
+  setParamRealod(view) {
+    this.defaultView = view.name;
+    this.defaultDate = view.intervalStart.format();
+  }
+  callbackLoadEventoList() {
+    return eventList => {
+      this.resetNumberResult();
+      this.eventList = eventList;
+      this.eventList.forEach(item => {
+        this.setColor(item);
+      });
+      let eventSource = {
+        //color: '#378006',
+        //textColor: '#FFF',
+        //eventColor: '#378006',
+        events: this.eventList,
+      };
+      this.events.pop();
+      this.events.push(eventSource);
+      console.log(this.events);
+    };
+  }
+  setColor(item) {
+    if(item.status === 'Pendente') {
+      this.pendente++;
+      item.color = '#f0ad4e';
+    } else if(item.status === 'Em Andamento') {
+      this.emAndamento++;
+      item.color = '#428bca';
+    } else if(item.status === 'Concluído') {
+      this.concluido++;
+      item.color = '#5cb85c';
+    } else if(item.status === 'Cancelado') {
+      this.cancelado++;
+      item.color = '#d9534f';
+    }
+  }
+  findEventListStatus(status) {
+    this.defaultStatus = status;
+    this.findEventList();
   }
 }

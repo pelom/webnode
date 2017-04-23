@@ -65,28 +65,47 @@ padding-top: 70px;
   /* fallback color */
   background: #ffc107;
 }
-
 .breadcrumb li.completed a {
   background: brown;
-  /* fallback color */
-  background: hsla(153, 57%, 51%, 1);
+  background: #5cb85c;
 }
-
+.breadcrumb li.completed a:after {
+  border-left: 30px solid #5cb85c;
+}
+.breadcrumb li.pending a {
+  background: brown;
+  background: #f0ad4e;
+}
+.breadcrumb li.pending a:after {
+  border-left: 30px solid #f0ad4e;
+}
+.breadcrumb li.inprocess a {
+  background: brown;
+  background: #428bca;
+}
+.breadcrumb li.inprocess a:after {
+  border-left: 30px solid #428bca;
+}
+.breadcrumb li.cancel a {
+  background: brown;
+  background: #d9534f;
+}
+.breadcrumb li.cancel a:after {
+  border-left: 30px solid #d9534f;
+}
+.breadcrumb li.in a {
+  background: brown;
+  background: #5cb85c;
+}
 .breadcrumb li.active a:after {
   border-left: 30px solid #ffc107;
 }
-
-.breadcrumb li.completed a:after {
-  border-left: 30px solid hsla(153, 57%, 51%, 1);
-}
-
 .breadcrumb li a {
   color: white;
   text-decoration: none;
-  padding: 10px 0 10px 45px;
+  padding: 5px 5px 5px 40px;
   position: relative;
-  display: block;
-  float: left;
+  display: inline-block;
 }
 
 .breadcrumb li a:after {
@@ -127,11 +146,11 @@ padding-top: 70px;
 }
 
 .breadcrumb li a:hover {
-  background: #ffc107;
+  /*background: #ffc107;*/
 }
 
 .breadcrumb li a:hover:after {
-  border-left-color: #ffc107 !important;
+  /*border-left-color: #ffc107 !important;*/
 }
 
 .stepwizard-step p {

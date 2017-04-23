@@ -23,6 +23,7 @@ export function index(req, res) {
   //var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
   var firstDay = new Date(req.query.start);
   var lastDay = new Date(req.query.end);
+  var status = req.query.status || 'Pendente,Em Andamento,Concluído,Cancelado'.split(',');
   console.log('firstDay', firstDay);
   console.log('lastDay', lastDay);
   console.log(Event.schema.path('status').enumValues);
@@ -32,7 +33,8 @@ export function index(req, res) {
     populate: [api.populationProprietario, api.populationCriador, api.populationModificador],
     where: {
       start: { $gte: firstDay, $lte: lastDay },
-      proprietario: req.user._id
+      proprietario: req.user._id,
+      status: { $in: status }
     },
     options: { skip: 0, limit: 50,
       sort: {
