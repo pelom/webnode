@@ -1,7 +1,7 @@
 <div class="modal-header">
   <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
 
-  <h4><i class="fa fa-calendar" aria-hidden="true"></i>
+  <h4><i class="fa {{ctl.event.icon}}" aria-hidden="true"></i>
     <strong><span ng-bind="modal.title" class="modal-title"></span></strong></h4>
 </div>
 
@@ -18,13 +18,13 @@
           <div class="col-md-12">
             <dl>
               <dt><small>Título</small></dt>
-              <dd ng-class="{'has-error': form.nomeMod.$invalid && form.nomeMod.$dirty}">
+              <dd ng-class="{'has-error': form.nomeMod.$invalid}">
                 <input type="text" class="form-control" placeholder="Digite um nome"
                  name="nomeMod" ng-model="ctl.event.title"
                   ng-required="true" ng-minlength="3" ng-maxlength="40" />
 
                 <p class="help-block" ng-show="form.nomeMod.$error.required && form.nomeMod.$dirty">
-                  O sobrenome é necessário</p>
+                  O título é necessário</p>
                 <p class="help-block" ng-show="form.nomeMod.$error.pattern">
                   Somente letras são permitidas</p>
                 <p class="help-block" ng-show="form.nomeMod.$error.minlength">
@@ -40,7 +40,7 @@
             <dl>
               <dt><small>Data</small></dt>
               {{ctl.form.dateStart.$error}}
-              <dd ng-class="{'has-error': form.dateStart.$invalid && form.dateStart.$dirty}">
+              <dd ng-class="{'has-error': form.dateStart.$invalid}">
                 <p class="input-group">
                   <input type="text" class="form-control" name="dateStart"
                     ng-model="ctl.event.start"

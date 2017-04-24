@@ -6,6 +6,10 @@ export function EventoService(EventoResource, Util) {
   let modalCtl;
   let eventoList = [];
   let evento;
+  let pendente = 0;
+  let emAndamento = 0;
+  let concluido = 0;
+  let cancelado = 0;
   let itemIsAtivo = [
     { name: 'Ativo', value: true },
     { name: 'Desativo', value: false }
@@ -25,6 +29,46 @@ export function EventoService(EventoResource, Util) {
     },
     setModalCtl(modCtl) {
       modalCtl = modCtl;
+    },
+    getNumPendente() {
+      return pendente;
+    },
+    getNumConcluido() {
+      return concluido;
+    },
+    getNumEmAndamento() {
+      return emAndamento;
+    },
+    getNumCancelado() {
+      return cancelado;
+    },
+    resetNumberResult() {
+      pendente = 0;
+      emAndamento = 0;
+      concluido = 0;
+      cancelado = 0;
+    },
+    setEventList(eventList) {
+      this.resetNumberResult();
+      eventList.forEach(item => {
+        if(item.status === 'Pendente') {
+          pendente++;
+          item.color = '#f0ad4e';
+          item.icon = 'fa-clock-o';
+        } else if(item.status === 'Em Andamento') {
+          emAndamento++;
+          item.color = '#428bca';
+          item.icon = 'fa-spinner';
+        } else if(item.status === 'Concluído') {
+          concluido++;
+          item.color = '#5cb85c';
+          item.icon = 'fa-check';
+        } else if(item.status === 'Cancelado') {
+          cancelado++;
+          item.color = '#d9534f';
+          item.icon = 'fa-ban';
+        }
+      });
     },
     loadDomain(callback) {
       return EventoResource.domain(function(data) {
@@ -83,6 +127,18 @@ export function EventoService(EventoResource, Util) {
         return safeCb(callback)(err);
       }).$promise;
     },
+    getIcon(event) {
+      if(event.status === 'Pendente') {
+        event.icon = 'fa-clock-o';
+      } else if(event.status === 'Em Andamento') {
+        event.icon = 'fa-spinner';
+      } else if(event.status === 'Concluído') {
+        event.icon = 'fa-check';
+      } else if(event.status === 'Cancelado') {
+        event.icon = 'fa-ban';
+      }
+      return 'fa-calendar';
+    }
   };
   return eventoService;
 }

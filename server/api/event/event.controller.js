@@ -84,9 +84,11 @@ function requestCreateEvent(req) {
 export function update(req, res) {
   let eventJson = requestUpdateEvent(req);
   console.log(eventJson);
+  console.log(req.params.id);
   Event.findByIdAndUpdate(req.params.id, eventJson)
     .then(handleEntityNotFound(res))
     .then(event => {
+      console.log('BD:', event);
       req.params.id = event._id;
       return show(req, res);
     })

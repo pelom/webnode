@@ -4,22 +4,22 @@ import {openModalView} from './agenda/agenda.model.service';
 /* eslint no-sync: 0 */
 export default class HomeController {
   /*@ngInject*/
-  constructor($stateParams, $state, EventoService, $scope,
-    $compile, Auth, usSpinnerService, Modal) {
+  constructor($stateParams, $state, EventoService, Auth,
+    toastr, usSpinnerService, Modal) {
     this.getCurrentUser = Auth.getCurrentUserSync;
-    this.Modal = Modal;
     this.$stateParams = $stateParams;
+    this.$state = $state;
+    this.toastr = toastr;
     this.usSpinnerService = usSpinnerService;
+    this.Modal = Modal;
     this.defaultView = $stateParams.defaultView || 'listWeek';
     this.defaultDate = $stateParams.defaultDate || new Date();
     this.defaultStatus = $stateParams.defaultStatus || null;
     this.startInterval = null;
     this.endInterval = null;
     this.EventoService = EventoService;
-    this.events = [];
+    this.eventSources = [];
     this.eventList = [];
-    this.resetNumberResult();
-    this.$state = $state;
     this.uiConfig = {
       calendar: {
         header: {
@@ -38,6 +38,8 @@ export default class HomeController {
         editable: true,
         selectable: true,
         eventLimit: true, // allow "more" link when too many events
+        selectConstraint: 'businessHours',
+        eventConstraint: 'businessHours',
         businessHours: [{
           dow: [1, 2, 3], // Monday, Tuesday, Wednesday
           start: '08:00', // 8am
@@ -45,32 +47,31 @@ export default class HomeController {
         },
         {
           dow: [4, 5], // Thursday, Friday
-          start: '10:00', // 10am
-          end: '16:00' // 4pm
+          start: '08:00', // 10am
+          end: '18:00' // 4pm
         }],
         selectHelper: true,
         startEditable: true,
         slotDuration: '01:00:00',
         timezone: 'local',
-        loading(bool) {
+        loading: bool => {
           if(bool) {
-            usSpinnerService.spin('spinner-1');
+            this.usSpinnerService.spin('spinner-1');
           } else {
-            usSpinnerService.stop('spinner-1');
+            this.usSpinnerService.stop('spinner-1');
           }
           console.log('loading:', bool);
         },
         viewRender: view /*element*/ => {
           this.findEventListView(view);
         },
-        /*eventRender(event, element, view) {
-          console.log('eventRender', event, element, view);
-          element.attr({
-            tooltip: event.title
-          });
-          $compile(element)($scope);
-        },*/
-        eventClick: (calEvent, jsEvent, view) => {
+        eventRender: (event, element) => {
+          element.attr('title', event.start.format('LLLL'));
+          element.find('.fc-title')
+            .html('<i class="fa ' + event.icon + '" aria-hidden="true"></i>'
+              + ' <b>' + event.title + '</b>');
+        },
+        eventClick: calEvent/*(calEvent, jsEvent, view)*/ => {
           let event = this.createEventClick(calEvent);
           this.openModalEvent(event);
         },
@@ -84,44 +85,46 @@ export default class HomeController {
           this.EventoService.setModalCtl(modalCtl);
         },*/
         select: (startDate, endDate) => {
-          console.log('select', startDate.format(), endDate.format());
           let event = this.createEventSelect(startDate, endDate);
           this.openModalEvent(event);
+        },
+        eventDrop: calEvent /*(calEvent, delta, revertFunc, jsEvent, ui, view)*/ => {
+          let evento = this.createEventClick(calEvent);
+          this.saveEvent(evento);
+        },
+        eventResize: calEvent /*(calEvent, delta, revertFunc, jsEvent, ui, view)*/ => {
+          let evento = this.createEventClick(calEvent);
+          this.saveEvent(evento);
         }
       }
     };
   }
-  resetNumberResult() {
-    this.pendente = 0;
-    this.emAndamento = 0;
-    this.concluido = 0;
-    this.cancelado = 0;
-  }
   createEventClick(calEvent) {
-    let event = angular.copy(calEvent);
-    event.start = this.momentToDate(event.start);
-    if(event.end !== null) {
-      event.end = this.momentToDate(event.end);
+    let evento = angular.copy(calEvent);
+    evento.start = this.momentToDate(evento.start);
+    if(evento.end !== null) {
+      evento.end = this.momentToDate(evento.end);
     }
-    return event;
+    return evento;
   }
   momentToDate(momentDate) {
     try {
-      let stgStart = momentDate.format();
-      return new Date(stgStart);
+      return momentDate.local().toDate();
     } catch(err) {
       console.log(err);
       return null;
     }
   }
   createEventSelect(startDate, endDate) {
-    return {
-      title: 'Novo evento',
+    let evento = {
+      title: startDate.format('LLLL'),
       start: this.momentToDate(startDate),
       end: this.momentToDate(endDate),
       status: 'Pendente',
       prioridade: 'Normal'
     };
+    this.EventoService.getIcon(evento);
+    return evento;
   }
   openModalEvent(event) {
     let modalCtl = openModalView(event, this.Modal);
@@ -153,39 +156,38 @@ export default class HomeController {
   }
   callbackLoadEventoList() {
     return eventList => {
-      this.resetNumberResult();
       this.eventList = eventList;
-      this.eventList.forEach(item => {
-        this.setColor(item);
-      });
+      this.EventoService.setEventList(this.eventList);
       let eventSource = {
         //color: '#378006',
         //textColor: '#FFF',
         //eventColor: '#378006',
         events: this.eventList,
       };
-      this.events.pop();
-      this.events.push(eventSource);
-      console.log(this.events);
+      this.eventSources.pop();
+      this.eventSources.push(eventSource);
     };
-  }
-  setColor(item) {
-    if(item.status === 'Pendente') {
-      this.pendente++;
-      item.color = '#f0ad4e';
-    } else if(item.status === 'Em Andamento') {
-      this.emAndamento++;
-      item.color = '#428bca';
-    } else if(item.status === 'Concluído') {
-      this.concluido++;
-      item.color = '#5cb85c';
-    } else if(item.status === 'Cancelado') {
-      this.cancelado++;
-      item.color = '#d9534f';
-    }
   }
   findEventListStatus(status) {
     this.defaultStatus = status;
     this.findEventList();
+  }
+  saveEvent(evento) {
+    this.usSpinnerService.spin('spinner-1');
+    this.EventoService.saveEvent(evento)
+    .then(newEvento => {
+      this.toastr.success('Evento salvo com sucesso.', `${newEvento.title}`);
+    })
+    .catch(err => {
+      console.log('Ex:', err);
+      this.toastr.error(err.data.message, err.data.name, {
+        autoDismiss: false,
+        closeButton: true,
+        timeOut: 0,
+      });
+    })
+    .finally(() => {
+      this.usSpinnerService.stop('spinner-1');
+    });
   }
 }

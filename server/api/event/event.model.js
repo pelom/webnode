@@ -5,13 +5,13 @@ import mongoose, {Schema} from 'mongoose';
 
 var EventSchema = new Schema({
   title: {
-    type: String, required: true, minlength: 3, maxlength: 20, trim: true },
+    type: String, required: true, minlength: 3, maxlength: 40, trim: true },
   url: String,
   start: { type: Date, required: true },
   end: Date,
   allDay: {type: Boolean, required: true, default: false },
   nome: {
-    type: String, required: false, minlength: 3, maxlength: 30, trim: true },
+    type: String, required: false, minlength: 3, maxlength: 40, trim: true },
   descricao: String,
   status: { type: String, enum: [
     'Pendente', 'Em Andamento', 'Concluído', 'Cancelado'], default: 'Pendente'},

@@ -1,6 +1,4 @@
 'use strict';
-import moment from 'moment';
-
 export default class AgendaModalController {
   /*@ngInject*/
   constructor($timeout, EventoService, $state, $scope, toastr, usSpinnerService) {
@@ -58,7 +56,6 @@ export default class AgendaModalController {
     if(form.$invalid) {
       return;
     }
-    //this.start = moment(this.event.start).utc().format();
     this.usSpinnerService.spin('spinner-1');
     this.EventoService.saveEvent(this.event)
     .then(newEvento => {

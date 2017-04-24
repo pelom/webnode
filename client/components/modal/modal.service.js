@@ -40,10 +40,8 @@ export function Modal($rootScope, $uibModal, $log) {
           }, 'modal-light');
           showModal.result.then(
             function(event) {
-              console.log(event);
               //Reflect.apply(del, event, args);
-              //del.apply(event, args);
-              return event;
+              del.apply(event, args);
             },
             function() {
               $log.info(`Modal dismissed at: ${new Date()}`);
@@ -95,8 +93,8 @@ export function Modal($rootScope, $uibModal, $log) {
 
           deleteModal.result.then(
             function(event) {
-              Reflect.apply(del, event, args);
-              //del.apply(event, args);
+              //Reflect.apply(del, event, args);
+              del.apply(event, args);
             },
             function() {
               $log.info(`Modal dismissed at: ${new Date()}`);
