@@ -4,22 +4,20 @@ import {openModalView} from './agenda/agenda.model.service';
 /* eslint no-sync: 0 */
 export default class HomeController {
   /*@ngInject*/
-  constructor($stateParams, $state, EventoService, Auth,
+  constructor($stateParams, EventoService, Auth,
     toastr, usSpinnerService, Modal) {
     this.getCurrentUser = Auth.getCurrentUserSync;
     this.$stateParams = $stateParams;
-    this.$state = $state;
     this.toastr = toastr;
     this.usSpinnerService = usSpinnerService;
     this.Modal = Modal;
+    this.EventoService = EventoService;
     this.defaultView = $stateParams.defaultView || 'listWeek';
     this.defaultDate = $stateParams.defaultDate || new Date();
     this.defaultStatus = $stateParams.defaultStatus || null;
     this.startInterval = null;
     this.endInterval = null;
-    this.EventoService = EventoService;
     this.eventSources = [];
-    this.eventList = [];
     this.uiConfig = {
       calendar: {
         header: {
@@ -38,14 +36,13 @@ export default class HomeController {
         editable: true,
         selectable: true,
         eventLimit: true, // allow "more" link when too many events
-        selectConstraint: 'businessHours',
-        eventConstraint: 'businessHours',
+        //selectConstraint: 'businessHours',
+        //eventConstraint: 'businessHours',
         businessHours: [{
           dow: [1, 2, 3], // Monday, Tuesday, Wednesday
           start: '08:00', // 8am
           end: '18:00' // 6pm
-        },
-        {
+        }, {
           dow: [4, 5], // Thursday, Friday
           start: '08:00', // 10am
           end: '18:00' // 4pm
@@ -123,8 +120,9 @@ export default class HomeController {
       status: 'Pendente',
       prioridade: 'Normal'
     };
-    this.EventoService.getIcon(evento);
-    return evento;
+    let evList = [evento];
+    this.EventoService.setEventList(evList);
+    return evList[0];
   }
   openModalEvent(event) {
     let modalCtl = openModalView(event, this.Modal);
@@ -156,13 +154,10 @@ export default class HomeController {
   }
   callbackLoadEventoList() {
     return eventList => {
-      this.eventList = eventList;
-      this.EventoService.setEventList(this.eventList);
+      this.EventoService.setEventList(eventList);
       let eventSource = {
-        //color: '#378006',
-        //textColor: '#FFF',
-        //eventColor: '#378006',
-        events: this.eventList,
+        //color: '#378006', textColor: '#FFF', eventColor: '#378006',
+        events: eventList,
       };
       this.eventSources.pop();
       this.eventSources.push(eventSource);

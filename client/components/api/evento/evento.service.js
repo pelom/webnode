@@ -48,9 +48,9 @@ export function EventoService(EventoResource, Util) {
       concluido = 0;
       cancelado = 0;
     },
-    setEventList(eventList) {
+    setEventList(evList) {
       this.resetNumberResult();
-      eventList.forEach(item => {
+      evList.forEach(item => {
         if(item.status === 'Pendente') {
           pendente++;
           item.color = '#f0ad4e';
@@ -126,18 +126,6 @@ export function EventoService(EventoResource, Util) {
         console.log('Ex:', err);
         return safeCb(callback)(err);
       }).$promise;
-    },
-    getIcon(event) {
-      if(event.status === 'Pendente') {
-        event.icon = 'fa-clock-o';
-      } else if(event.status === 'Em Andamento') {
-        event.icon = 'fa-spinner';
-      } else if(event.status === 'Concluído') {
-        event.icon = 'fa-check';
-      } else if(event.status === 'Cancelado') {
-        event.icon = 'fa-ban';
-      }
-      return 'fa-calendar';
     }
   };
   return eventoService;

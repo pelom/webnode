@@ -5,7 +5,7 @@
     <ul class="breadcrumb">
       <li title="Itens no calendário">
         <a href="#" ng-click="ctl.findEventListStatus('');">
-          <i class="fa fa-calendar" aria-hidden="true"></i> <b> {{ctl.eventList.length}}</b></a>
+          <i class="fa fa-calendar" aria-hidden="true"></i> <b> {{ctl.EventoService.getEventoList().length}}</b></a>
       </li>
       <li class="completed" title="Concluído">
         <a href="" ng-click="ctl.findEventListStatus('Concluído');">
