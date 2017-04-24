@@ -24,7 +24,7 @@ export default class HomeController {
           //left: 'month basicWeek basicDay agendaWeek agendaDay',
           left: 'title',
           right: 'today prev,next',
-          center: 'agendaDay,listWeek,agendaWeek,month'
+          center: 'timelineDay,agendaDay,listWeek,agendaWeek,month'
           //right: 'today,month,basicWeek basicDay,agendaWeek,agendaDay,listWeek'
         },
         defaultView: this.defaultView,
@@ -32,6 +32,7 @@ export default class HomeController {
         locale: 'pt-br',
         lang: 'pt-br',
         height: 500,
+        nowIndicator: true,
         navLinks: true, // can click day/week names to navigate views
         editable: true,
         selectable: true,
@@ -132,8 +133,8 @@ export default class HomeController {
   }
   findEventListView(view) {
     this.setParamRealod(view);
-    this.startInterval = view.intervalStart.format();
-    this.endInterval = view.intervalEnd.format();
+    this.startInterval = view.intervalStart.local().format();
+    this.endInterval = view.intervalEnd.local().format();
     this.findEventList();
   }
   findEventList() {
