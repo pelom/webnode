@@ -9,7 +9,9 @@ import mongoose from 'mongoose';
 mongoose.Promise = require('bluebird');
 import config from './config/environment';
 import http from 'http';
-
+import agendaUI from 'agenda-ui';
+import agendaJobs from './components/agenda';
+//import {sendMailNovoConta} from './components/nodemailer';
 // Connect to MongoDB
 mongoose.connect(config.mongo.uri, config.mongo.options);
 mongoose.connection.on('error', function(err) {
@@ -24,6 +26,7 @@ if(config.seedDB) {
 
 // Setup server
 var app = express();
+
 var server = http.createServer(app);
 var socketio = require('socket.io')(server, {
   serveClient: config.env !== 'production',
@@ -31,7 +34,24 @@ var socketio = require('socket.io')(server, {
 });
 require('./config/socketio').default(socketio);
 require('./config/express').default(app);
-require('./routes').default(app);
+
+
+let agendaOptions = Object.assign({
+  db: { address: config.mongo.uri }
+}, config.agenda);
+
+let agenda = agendaJobs(agendaOptions);
+agenda.on('ready', function() {
+  //agenda.schedule('in 1 minute', 'send email report', {to: 'admin@example.com'});
+  //agenda.start();
+  //var weeklyReport = agenda.create('send email report', {to: 'another-guy@example.com'});
+  //weeklyReport.repeatEvery('30 minutes').save();
+  //agenda.start();
+  agenda._db = agenda._collection;
+  app.use('/agenda-ui', agendaUI(agenda, { poll: 5000 }));
+});
+
+require('./routes').default(app, agenda);
 
 // Start server
 function startServer() {

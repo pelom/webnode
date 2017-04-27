@@ -20,6 +20,7 @@ import passport from 'passport';
 import session from 'express-session';
 import connectMongo from 'connect-mongo/es5';
 import mongoose from 'mongoose';
+
 var MongoStore = connectMongo(session);
 
 export default function(app) {

@@ -6,8 +6,9 @@ import AdminController from './admin.controller';
 import usuario from './usuario';
 import permissao from './permissao';
 import aplicacao from './aplicacao';
+import job from './job';
 
 export default angular.module('webnodeApp.admin',
-['webnodeApp.auth', 'ui.router', usuario, aplicacao, permissao])
+['webnodeApp.auth', 'ui.router', usuario, aplicacao, permissao, job])
   .config(routes)
   .controller('AdminController', AdminController).name;

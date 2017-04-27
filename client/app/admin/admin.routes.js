@@ -52,5 +52,12 @@ export default function routes($stateProvider) {
     controller: 'AplicacaoEditController',
     controllerAs: 'ctl',
     authenticate: 'admin'
+  })
+  .state('myjobs', {
+    url: '/myjobs',
+    template: require('./job/job.html'),
+    controller: 'JobController',
+    controllerAs: 'ctl',
+    authenticate: 'admin'
   });
 }

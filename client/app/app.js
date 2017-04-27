@@ -28,6 +28,7 @@ import PermissaoService from '../components/api/permissao/permissao.module';
 import AplicacaoService from '../components/api/aplicacao/aplicacao.module';
 import UsuarioService from '../components/api/usuario/usuario.module';
 import EventoService from '../components/api/evento/evento.module';
+import JobService from '../components/api/job/job.module';
 
 import account from './account';
 import admin from './admin';
@@ -51,7 +52,7 @@ import '../components/check-strength/check.css';
 
 angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toastr,
   ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength, googlemaps,
-  uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService, PermissaoService, EventoService,
+  uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService, PermissaoService, EventoService, JobService,
   _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal,
   changePassword, mongooseError, 'angularSpinner', 'ui.calendar'
 ])

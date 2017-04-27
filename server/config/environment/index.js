@@ -42,6 +42,39 @@ var all = {
         safe: true
       }
     }
+  },
+
+  logger: {
+    file: {
+      level: 'info',
+      filename: './logs.log',
+      handleExceptions: true,
+      json: false,
+      maxsize: 5242880, //5MB
+      maxFiles: 5,
+      colorize: false,
+    },
+    console: {
+      level: 'debug',
+      handleExceptions: true,
+      json: false,
+      colorize: 'all',
+    }
+  },
+
+  agenda: {
+    //db: { address: mongo.uri },
+    processEvery: '30 seconds',
+    maxConcurrency: 20, //numero max de jobs execucao simultanea
+    lockLimit: 0, //numero de jobs que pode ser bloqueados em qualquer momento
+    defaultConcurrency: 5, //numero de jobs execucao simultanea
+    defaultLockLimit: 0, //numero de jobs que pode ser bloqueados
+    defaultLockLifetime: 5 * 60 * 1000, //5 minute
+    jobFiles: [{
+      name: 'event.job',
+      cron: '*/1 * * * *',
+      job: 'Registration New Accout'
+    }]
   }
 };
 

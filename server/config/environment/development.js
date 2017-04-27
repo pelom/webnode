@@ -10,6 +10,15 @@ module.exports = {
     uri: 'mongodb://webnodedev:webnodedev@localhost:27017/webnodedev'
   },
 
+  logger: {
+    file: {
+      level: 'debug',
+    },
+    console: {
+      level: 'debug',
+    }
+  },
+
   // Seed database on startup
   seedDB: false
 };

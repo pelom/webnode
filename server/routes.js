@@ -6,12 +6,15 @@
 
 import errors from './components/errors';
 import path from 'path';
-export default function(app) {
+
+export default function(app, agenda) {
   app.use('/api/things', require('./api/thing'));
   app.use('/api/users', require('./api/user'));
   app.use('/api/application', require('./api/application'));
   app.use('/api/profile', require('./api/profile'));
   app.use('/api/event', require('./api/event'));
+
+  app.use('/api/job', require('./api/job')(agenda));
 
   app.use('/auth', require('./auth').default);
 
