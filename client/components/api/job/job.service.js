@@ -13,7 +13,9 @@ export function JobService(JobResource, Util) {
         jobList = data;
         jobList.forEach((item, index, theArray) => {
           console.log(new Date(item.nextRunAt) > new Date());
-          if(new Date(item.nextRunAt) > new Date()) {
+          if(new Date(item.locketAt) > new Date()) {
+            item.status = 'Executando';
+          } else if(new Date(item.nextRunAt) > new Date()) {
             item.status = 'Aguardando';
           } else if(item.hasOwnProperty('lastFinishedAt')) {
             item.status = 'Completou';

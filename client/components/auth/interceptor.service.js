@@ -26,7 +26,7 @@ export function authInterceptor($rootScope, $q, $cookies, $injector, Util) {
 
       if(response.status === 403) {
         (toastr || (toastr = $injector.get('toastr')))
-        .error('Você não possui permissões necessárias para efetuar a operação.',
+        .error('Você não possui as permissões necessárias para efetuar a operação.',
         'Privilégios insuficientes');
       }
       return $q.reject(response);

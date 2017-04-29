@@ -2,26 +2,35 @@
 import EmailService from './mail.service';
 import NovaContaMail from './template/nova.conta.mail';
 import RedefiniSenhaMail from './template/redefinir.senha.mail';
+import EventInformeMail from './template/event.informe.mail';
 
 export function sendMailNovoConta(req, user) {
-  let novaContaMail = new NovaContaMail(req, user);
-  console.log(novaContaMail);
-  let mailService = new EmailService();
-  console.log(mailService);
-  //try {
-  mailService.enviar(novaContaMail, () => {
-    console.log('enviar');
-  });
-  //} catch(err) {
-  //  console.log(err);
-  //}
+  try {
+    let novaContaMail = new NovaContaMail(req, user);
+    let mailService = new EmailService();
+    mailService.enviar(novaContaMail, () => {
+    });
+  } catch(err) {
+    console.log(err);
+  }
 }
 
 export function sendMailRedefinirSenha(req, user) {
-  let novaContaMail = new RedefiniSenhaMail(req, user);
-  let mailService = new EmailService();
   try {
+    let novaContaMail = new RedefiniSenhaMail(req, user);
+    let mailService = new EmailService();
     mailService.enviar(novaContaMail, () => {
+    });
+  } catch(err) {
+    console.log(err);
+  }
+}
+
+export function sendEventosAtradados(user, events) {
+  try {
+    let eventInfo = new EventInformeMail(user, events);
+    let mailService = new EmailService();
+    mailService.enviar(eventInfo, () => {
     });
   } catch(err) {
     console.log(err);

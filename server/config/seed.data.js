@@ -130,6 +130,7 @@ function criarDados() {
     { nome: 'Perfis', funcoes: funcaoList, state: 'permissoes', icon: 'fa-cubes' },
     { nome: 'Aplicações', funcoes: funcaoList, state: 'aplicacoes', icon: 'fa-rocket' },
     { nome: 'Módulos', funcoes: funcaoList, state: '', icon: 'fa-cube' },
+    { nome: 'Tarefas Agendadas', funcoes: funcaoList, state: 'jobs', icon: 'fa-clock-o' },
     { nome: 'Servidor Email', funcoes: funcaoList, state: '', icon: 'fa-envelope',
       serveEmail: {
         service: 'gmail',

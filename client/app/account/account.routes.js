@@ -4,7 +4,8 @@ export default function routes($stateProvider) {
   'ngInject';
 
   $stateProvider.state('login', {
-    url: '/login',
+    url: '/login?referrer',
+    referrer: 'home',
     template: require('./login/login.html'),
     controller: 'LoginController',
     controllerAs: 'vm'

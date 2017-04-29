@@ -16,6 +16,7 @@ export default class LoginController {
     this.Auth = Auth;
     this.$state = $state;
     this.$scope = $scope;
+    this.referrer = $state.params.referrer || $state.current.referrer || 'home';
   }
 
   login(form) {
@@ -26,28 +27,7 @@ export default class LoginController {
         username: this.user.username, password: this.user.password
       })
       .then(/*user*/() => {
-        this.$state.go('home');
-        /*this.Auth.isAdmin(result => {
-          if(result) {
-            this.$state.go('admin');
-
-            this.$scope.$emit('newapp', {
-              name: 'Standard',
-              show: true,
-              menuLeft: [
-                { state: 'usuario', title: 'Usuários', show: true },
-                { state: 'permissoes', title: 'Permissões', show: true },
-                { state: 'aplicacoes', title: 'Aplicações', show: true }
-              ],
-              menuRight: [
-                //{ state: 'signup', title: 'Cadastre-se', icon: 'fa-edit', show: false },
-                //{ state: 'login', title: 'Entrar', icon: 'fa-sign-in', show: true }
-              ]
-            });
-            return result;
-          }
-          this.$state.go('perfil');
-        });*/
+        this.$state.go(this.referrer);
       })
       .catch(err => {
         this.errors.login = err.message;

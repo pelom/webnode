@@ -69,17 +69,18 @@ angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toas
       positionClass: 'toast-top-center'
     });
   })
-  .run(function($rootScope, $location, Auth) {
+  /*.run(function($rootScope, $location, Auth) {
     'ngInject';
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function(event, next) {
+      console.log('APP: stateChangeStart: ', next);
       Auth.isLoggedIn(function(loggedIn) {
         if(next.authenticate && !loggedIn) {
           $location.path('/login');
         }
       });
     });
-  });
+  })*/;
 
 angular.element(document).ready(() => {
   angular.bootstrap(document, ['webnodeApp'], {

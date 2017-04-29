@@ -9,7 +9,6 @@ import mongoose from 'mongoose';
 mongoose.Promise = require('bluebird');
 import config from './config/environment';
 import http from 'http';
-import agendaUI from 'agenda-ui';
 import agendaJobs from './components/agenda';
 //import {sendMailNovoConta} from './components/nodemailer';
 // Connect to MongoDB
@@ -41,15 +40,13 @@ let agendaOptions = Object.assign({
 }, config.agenda);
 
 let agenda = agendaJobs(agendaOptions);
-agenda.on('ready', function() {
+/*agenda.on('ready', function() {
   //agenda.schedule('in 1 minute', 'send email report', {to: 'admin@example.com'});
   //agenda.start();
   //var weeklyReport = agenda.create('send email report', {to: 'another-guy@example.com'});
   //weeklyReport.repeatEvery('30 minutes').save();
   //agenda.start();
-  agenda._db = agenda._collection;
-  app.use('/agenda-ui', agendaUI(agenda, { poll: 5000 }));
-});
+});*/
 
 require('./routes').default(app, agenda);
 

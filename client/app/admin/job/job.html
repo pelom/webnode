@@ -11,6 +11,7 @@
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-6">
+            <i ng-show="ctl.showhidden" class="fa fa-spinner fa-spinner-animate" aria-hidden="true"></i>
             <!--div class="btn-group">
               <a class="btn btn-default" ui-sref="aplicacoesedit()">
                 <i class="fa fa-plus" aria-hidden="true"></i> Novo</a>
@@ -61,8 +62,18 @@
               </th>
               <th>
                 <a href="#" ui-sref-active="active"
+                  ng-click="sortType = 'lastRunAt'; sortReverse = !sortReverse">
+                  <strong>Iníciado<strong>
+                  <div class="pull-right">
+                    <span ng-show="sortType == 'lastRunAt' && !sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="sortType == 'lastRunAt' && sortReverse" class="fa fa-caret-up"></span>
+                  </div>
+                </a>
+              </th>
+              <th>
+                <a href="#" ui-sref-active="active"
                   ng-click="sortType = 'lastFinishedAt'; sortReverse = !sortReverse">
-                  <strong>Última<strong>
+                  <strong>Términado<strong>
                   <div class="pull-right">
                     <span ng-show="sortType == 'lastFinishedAt' && !sortReverse" class="fa fa-caret-down"></span>
                     <span ng-show="sortType == 'lastFinishedAt' && sortReverse" class="fa fa-caret-up"></span>
@@ -72,7 +83,7 @@
               <th>
                 <a href="#" ui-sref-active="active"
                   ng-click="sortType = 'nextRunAt'; sortReverse = !sortReverse">
-                  <strong>Próxima<strong>
+                  <strong>Agendado<strong>
                   <div class="pull-right">
                     <span ng-show="sortType == 'nextRunAt' && !sortReverse" class="fa fa-caret-down"></span>
                     <span ng-show="sortType == 'nextRunAt' && sortReverse" class="fa fa-caret-up"></span>
@@ -91,6 +102,7 @@
                 <span ng-if="job.status == 'Completou'" class="label label-success">{{job.status}}</span>
                 <span ng-if="job.status == 'Falhou'" class="label label-danger">{{job.status}}</span>
               </td>
+              <td><small>{{job.lastRunAt | date:'dd/MM/yyyy HH:mm:ss' }}</small></td>
               <td><small>{{job.lastFinishedAt | date:'dd/MM/yyyy HH:mm:ss' }}</small></td>
               <td><small>{{job.nextRunAt | date:'dd/MM/yyyy HH:mm:ss' }}</small></td>
             </tr>

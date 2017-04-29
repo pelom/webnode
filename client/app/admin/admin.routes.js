@@ -53,8 +53,8 @@ export default function routes($stateProvider) {
     controllerAs: 'ctl',
     authenticate: 'admin'
   })
-  .state('myjobs', {
-    url: '/myjobs',
+  .state('jobs', {
+    url: '/tarefas/agendadas',
     template: require('./job/job.html'),
     controller: 'JobController',
     controllerAs: 'ctl',

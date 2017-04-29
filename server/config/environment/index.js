@@ -72,8 +72,8 @@ var all = {
     defaultLockLifetime: 5 * 60 * 1000, //5 minute
     jobFiles: [{
       name: 'event.job',
-      cron: '*/1 * * * *',
-      job: 'Registration New Accout'
+      cron: '*/3 * * * *',
+      job: 'Notificação de eventos não concluídos'
     }]
   }
 };
