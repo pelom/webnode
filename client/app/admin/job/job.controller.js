@@ -1,5 +1,5 @@
 'use strict';
-
+import moment from 'moment';
 export default class JobController {
   errors = {};
   /*@ngInject*/
@@ -14,9 +14,23 @@ export default class JobController {
     .finally(() => {
       usSpinnerService.stop('spinner-1');
     });
-    $interval(() => {
+    moment.locale('pt-br');
+    let timer = $interval(() => {
       this.showhidden = true;
       this.JobService.loadJobList()
+      .then(jobList => {
+        jobList.forEach(item => {
+          if(item.lastRunAt) {
+            item.lastRunAt = moment(item.lastRunAt).fromNow();
+          }
+          if(item.lastFinishedAt) {
+            item.lastFinishedAt = moment(item.lastFinishedAt).fromNow();
+          }
+          if(item.nextRunAt) {
+            item.nextRunAt = moment(item.nextRunAt).fromNow();
+          }
+        });
+      })
       .catch(err => {
         console.log('Ex:', err);
       })
@@ -24,7 +38,11 @@ export default class JobController {
         this.showhidden = false;
         //this.usSpinnerService.stop('spinner-1');
       });
-    }, 5000);
+    }, 2500);
+    $scope.$on('$destroy', function(event) {
+      console.log(event);
+      $interval.cancel(timer);
+    });
   }
   jobList() {
     return this.JobService.getJobList();

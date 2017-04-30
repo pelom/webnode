@@ -22,10 +22,14 @@ export default class TemplateMail {
   getTemplate() {
     return this.pathResolve('./template.default.html');
   }
+  getHead() {
+    return fs.readFileSync(this.pathResolve('./head.html'), 'utf8');
+  }
   pathResolve(template) {
     return path.resolve(__dirname, template);
   }
   bindDataHtml() {
+    this.data.head = this.getHead();
     //Get required data to generate HTML
     var templateName = this.defaultTemplate;
     //Resolve our template path using the path of a template given in options,

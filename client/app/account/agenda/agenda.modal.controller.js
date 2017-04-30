@@ -1,12 +1,11 @@
 'use strict';
 export default class AgendaModalController {
   /*@ngInject*/
-  constructor($timeout, EventoService, $state, $scope, toastr, usSpinnerService) {
+  constructor(EventoService, $state, $scope, toastr, usSpinnerService) {
     this.EventoService = EventoService;
     this.usSpinnerService = usSpinnerService;
     this.toastr = toastr;
     this.$state = $state;
-    this.$timeout = $timeout;
     this.modalCtl = EventoService.getModalCtl();
     this.event = this.modalCtl.dataSource;
     this.status = [];
@@ -64,6 +63,7 @@ export default class AgendaModalController {
       this.$state.go('home', {
         defaultView: this.modalCtl.defaultView,
         defaultDate: this.modalCtl.defaultDate,
+        eventId: undefined
       }, {reload: true});
     })
     .catch(err => {

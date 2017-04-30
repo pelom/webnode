@@ -15,6 +15,9 @@ export default class HomeController {
     this.defaultView = $stateParams.defaultView || 'listWeek';
     this.defaultDate = $stateParams.defaultDate || new Date();
     this.defaultStatus = $stateParams.defaultStatus || null;
+    if($stateParams.eventId) {
+      this.openModalEventId($stateParams.eventId);
+    }
     this.startInterval = null;
     this.endInterval = null;
     this.eventSources = [];
@@ -181,6 +184,24 @@ export default class HomeController {
         closeButton: true,
         timeOut: 0,
       });
+    })
+    .finally(() => {
+      this.usSpinnerService.stop('spinner-1');
+    });
+  }
+  openModalEventId(eventId) {
+    this.usSpinnerService.spin('spinner-1');
+    this.EventoService.loadEvento({id: eventId})
+    .then(event => {
+      event.start = new Date(event.start);
+      if(event.end) {
+        event.end = new Date(event.end);
+      }
+      this.openModalEvent(event);
+    })
+    .catch(err => {
+      console.log(err);
+      this.toastr.error('Não foi possível abrir o evento');
     })
     .finally(() => {
       this.usSpinnerService.stop('spinner-1');

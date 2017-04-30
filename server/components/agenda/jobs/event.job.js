@@ -6,7 +6,7 @@ import Event from '../../../api/event/event.model';
 import User from '../../../api/user/user.model';
 import {sendEventosAtradados} from '../../nodemailer';
 import moment from 'moment';
-import {tz} from 'moment-timezone';
+import 'moment-timezone';
 
 module.exports = function(agenda, jobFile) {
   const buscarEvent = 'Buscar eventos atrasados';
@@ -23,64 +23,82 @@ module.exports = function(agenda, jobFile) {
       }
     })
     .then(users => {
+      if(users.length == 0) {
+        return done();
+      }
       let time = 10;
       users.forEach(item => {
         agenda.schedule(`in ${time} segunds`, buscarEvent, item);
         time += 5;
       });
+      return done();
     })
     .catch(err => {
-      job.fail(err);
-      job.save();
-    })
-    .finally(() => {
-      done();
+      logger.error(err);
+      done(err);
     });
   });
-
 
   agenda.define(buscarEvent, function(job, done) {
-    logger.info('Executando', job.attrs.name, new Date());
-    logger.debug('User :', job.attrs.data);
+    print(job);
 
     let user = job.attrs.data;
-    Event.find({
+    let statusList = ['Pendente', 'Em Andamento'];
+    let now = new Date();
+    let where = {
       proprietario: user._id,
-      status: { $in: ['Pendente', 'Em Andamento'] },
-      start: { $lte: new Date() }
-    }, '_id title start status', {
+      status: { $in: statusList },
+      start: { $lte: now }
+    };
+    let options = {
       limit: 10,
       sort: { start: -1 }
-    })
-    .then(events => {
-      if(events.length == 0) {
-        return;
-      }
-      let eventos = [];
-      events.forEach(item => {
-        let evento = {
-          _id: item._id.toString(),
-          start: moment(item.start).tz('America/Sao_Paulo')
-          .format('DD/MM/YYYY HH:mm'),
-          status: item.status,
-          title: item.title,
+    };
+    Event.find(where, '_id title start status proprietario', options)
+      .then(events => {
+        let eventos = [];
+        if(events.length == 0) {
+          return eventos;
+        }
+
+        let createEvent = function(item) {
+          return {
+            _id: item._id.toString(),
+            proprietario: item.proprietario,
+            start: formatEventDate(item.start),
+            status: item.status,
+            title: item.title,
+          };
         };
-        eventos.push(evento);
-        logger.debug('Event : ', evento);
+        let formatEventDate = function(data) {
+          return moment(data).tz('America/Sao_Paulo')
+            .format('DD/MM/YYYY HH:mm');
+        };
+
+        events.forEach(item => {
+          let evento = createEvent(item);
+          eventos.push(evento);
+          logger.debug('Event : ', evento);
+        });
+        return eventos;
+      })
+      .then(eventos => {
+        if(eventos.length == 0) {
+          done();
+          return;
+        }
+        sendEventosAtradados(user, eventos);
+        done();
+      })
+      .catch(err => {
+        logger.error(err);
+        done(err);
       });
-      //sendEventosAtradados(user, eventos);
-      return eventos;
-    })
-    .catch(err => {
-      job.fail(err);
-      job.save();
-    })
-    .finally(() => {
-      done();
-    });
   });
+
   agenda.on(`complete:${buscarEvent}`, function(job) {
     logger.debug('Job complete', job.attrs.name);
+    logger.debug('Job complete', job.attrs.data);
   });
   agenda.on('ready', function() {
     logger.debug('agenda.ready() job event');

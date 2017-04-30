@@ -1,5 +1,5 @@
 'use strict';
-
+import url from 'url';
 export default class LoginController {
   user = {
     username: '',
@@ -12,9 +12,10 @@ export default class LoginController {
 
 
   /*@ngInject*/
-  constructor(Auth, $state, $scope) {
+  constructor(Auth, $location, $state, $scope) {
     this.Auth = Auth;
     this.$state = $state;
+    this.$location = $location;
     this.$scope = $scope;
     this.referrer = $state.params.referrer || $state.current.referrer || 'home';
   }
@@ -27,7 +28,8 @@ export default class LoginController {
         username: this.user.username, password: this.user.password
       })
       .then(/*user*/() => {
-        this.$state.go(this.referrer);
+        let urlData = url.parse(this.referrer, true);
+        this.$location.path(`${urlData.pathname}`).search(urlData.query);
       })
       .catch(err => {
         this.errors.login = err.message;

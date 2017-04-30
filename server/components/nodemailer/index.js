@@ -26,13 +26,13 @@ export function sendMailRedefinirSenha(req, user) {
   }
 }
 
-export function sendEventosAtradados(user, events) {
+export function sendEventosAtradados(user, events, callback) {
   try {
     let eventInfo = new EventInformeMail(user, events);
     let mailService = new EmailService();
-    mailService.enviar(eventInfo, () => {
-    });
+    mailService.enviar(eventInfo, callback);
   } catch(err) {
     console.log(err);
+    return callback(err);
   }
 }

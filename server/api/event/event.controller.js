@@ -4,6 +4,7 @@ import ApiService from '../api.service';
 
 let api = ApiService();
 let handleError = api.handleError;
+let respondWithResult = api.respondWithResult;
 let handleEntityNotFound = api.handleEntityNotFound;
 let handleValidationError = api.handleValidationError;
 
@@ -47,11 +48,26 @@ const selectShow = '_id title start end status prioridade allDay descricao isAti
   + ' proprietario criador modificador createdAt updatedAt';
 
 export function show(req, res) {
-  return api.findById(req.params.id, {
+  return Event.find({_id: req.params.id, proprietario: req.user._id}, selectShow, {
+    limit: 1
+  })
+    .populate([api.populationProprietario, api.populationCriador, api.populationModificador])
+    .exec()
+    .then(events => {
+      if(events.length == 0) {
+        handleEntityNotFound(res)();
+      }
+      respondWithResult(res)(events[0]);
+    })
+    .catch(handleError(res));
+  /*return api.findById(req.params.id, {
     model: 'Event',
     select: selectShow,
     populate: [api.populationProprietario, api.populationCriador, api.populationModificador],
-  }, res);
+    query: {
+      proprietario: req.user._id,
+    },
+  }, res);*/
 }
 
 export function create(req, res) {

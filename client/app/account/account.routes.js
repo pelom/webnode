@@ -59,7 +59,7 @@ export default function routes($stateProvider) {
     authenticate: true
   })
   .state('home', {
-    url: '/home?defaultView&defaultDate',
+    url: '/home?defaultView&defaultDate&eventId',
     template: require('./home.html'),
     controller: 'HomeController',
     controllerAs: 'ctl',

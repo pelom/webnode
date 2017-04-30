@@ -19,6 +19,8 @@ module.exports = {
     }
   },
 
+  url: 'http://localhost:3000/',
+
   // Seed database on startup
   seedDB: false
 };

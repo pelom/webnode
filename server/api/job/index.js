@@ -1,11 +1,10 @@
 'use strict';
 import {Router} from 'express';
 import * as controller from './job.controller';
-import agendaJobs from '../../components/agenda';
-import config from '../../config/environment';
-
-module.exports = function(agenda) {
+import * as auth from '../../auth/auth.service';
+import {ROLE_ADMIN} from '../api.permission.service';
+module.exports = function(/*agenda*/) {
   let router = new Router();
-  router.get('/', controller.index);
+  router.get('/', auth.hasRole(ROLE_ADMIN), controller.index);
   return router;
 };

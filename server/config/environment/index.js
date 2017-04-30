@@ -28,6 +28,8 @@ var all = {
   // Server IP
   ip: process.env.IP || '0.0.0.0',
 
+  url: 'https://app-webnode.herokuapp.com/',
+
   // Should we populate the DB with sample data?
   seedDB: false,
 
@@ -50,8 +52,8 @@ var all = {
       filename: './logs.log',
       handleExceptions: true,
       json: false,
-      maxsize: 5242880, //5MB
-      maxFiles: 5,
+      maxsize: 1024 * 1024 * 2, //2MB
+      maxFiles: 10,
       colorize: false,
     },
     console: {
@@ -64,7 +66,7 @@ var all = {
 
   agenda: {
     //db: { address: mongo.uri },
-    processEvery: '30 seconds',
+    processEvery: '5 minutes',
     maxConcurrency: 20, //numero max de jobs execucao simultanea
     lockLimit: 0, //numero de jobs que pode ser bloqueados em qualquer momento
     defaultConcurrency: 5, //numero de jobs execucao simultanea
@@ -72,8 +74,8 @@ var all = {
     defaultLockLifetime: 5 * 60 * 1000, //5 minute
     jobFiles: [{
       name: 'event.job',
-      cron: '*/3 * * * *',
-      job: 'Notificação de eventos não concluídos'
+      cron: '*/10 * * * *',
+      job: 'Resumo diário de eventos atrasados'
     }]
   }
 };

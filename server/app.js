@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 mongoose.Promise = require('bluebird');
 import config from './config/environment';
 import http from 'http';
+
 import agendaJobs from './components/agenda';
 //import {sendMailNovoConta} from './components/nodemailer';
 // Connect to MongoDB
@@ -25,7 +26,6 @@ if(config.seedDB) {
 
 // Setup server
 var app = express();
-
 var server = http.createServer(app);
 var socketio = require('socket.io')(server, {
   serveClient: config.env !== 'production',
@@ -33,7 +33,6 @@ var socketio = require('socket.io')(server, {
 });
 require('./config/socketio').default(socketio);
 require('./config/express').default(app);
-
 
 let agendaOptions = Object.assign({
   db: { address: config.mongo.uri }
