@@ -1,5 +1,6 @@
 'use strict';
 import Event from './event.model';
+import User from '../user/user.model';
 import ApiService from '../api.service';
 
 let api = ApiService();
@@ -14,20 +15,67 @@ export function domain(req, res) {
     prioridade: Event.schema.path('prioridade').enumValues,
   });
 }
+
+export function calendar(req, res) {
+  User.findById(req.user._id)
+    .select('_id locale timezone laguage agenda')
+    //.populate(query.populate)
+    .exec()
+    .then(handleEntityNotFound(res))
+    .then(user => {
+      if(!user.agenda) {
+        user.agenda = {
+          editable: false,
+          selectable: false,
+          eventLimit: false,
+          startEditable: false,
+          slotDuration: '01:00:00',
+          businessHours: []
+        };
+      }
+      user.agenda.businessHours.forEach(item => {
+        item._id = undefined;
+      });
+      let configCalendar = {
+        header: {
+          //left: 'month basicWeek basicDay agendaWeek agendaDay',
+          //right: 'today,month,basicWeek basicDay,agendaWeek,agendaDay,listWeek'
+          left: 'title',
+          right: 'today prev,next',
+          center: 'timelineDay,agendaDay,listWeek,agendaWeek,month'
+        },
+        locale: user.locale,
+        lang: user.laguage,
+        timezone: 'local', // user.timezone,
+        ignoreTimezone: false,
+        height: 500,
+        selectHelper: true,
+        nowIndicator: true,
+        navLinks: true, // can click day/week names to navigate views
+        editable: user.agenda.editable,
+        selectable: user.agenda.selectable,
+        eventLimit: user.agenda.eventLimit, // allow "more" link when too many events
+        startEditable: user.agenda.startEditable,
+        slotDuration: user.agenda.slotDuration,
+        //selectConstraint: 'businessHours',
+        //eventConstraint: 'businessHours',
+        businessHours: user.agenda.businessHours,
+      };
+      res.status(200).json(configCalendar);
+      return configCalendar;
+    })
+    .catch(handleError(res));
+}
+
 const selectIndex = '_id title start end status prioridade allDay descricao isAtivo'
   + ' proprietario criador modificador createdAt updatedAt';
 
 export function index(req, res) {
-  //Event.create({title: 'Hello Word', start: new Date('2017-04-21'), proprietario: req.user._id});
-  var date = new Date();
-  //var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-  //var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-  var firstDay = new Date(req.query.start);
-  var lastDay = new Date(req.query.end);
-  var status = req.query.status || 'Pendente,Em Andamento,Concluído,Cancelado'.split(',');
+  let firstDay = new Date(req.query.start);
+  let lastDay = new Date(req.query.end);
+  let status = req.query.status || 'Pendente,Em Andamento,Concluído,Cancelado'.split(',');
   console.log('firstDay', firstDay);
   console.log('lastDay', lastDay);
-  console.log(Event.schema.path('status').enumValues);
   return api.find({
     model: 'Event',
     select: selectIndex,
@@ -57,17 +105,9 @@ export function show(req, res) {
       if(events.length == 0) {
         handleEntityNotFound(res)();
       }
-      respondWithResult(res)(events[0]);
+      return respondWithResult(res)(events[0]);
     })
     .catch(handleError(res));
-  /*return api.findById(req.params.id, {
-    model: 'Event',
-    select: selectShow,
-    populate: [api.populationProprietario, api.populationCriador, api.populationModificador],
-    query: {
-      proprietario: req.user._id,
-    },
-  }, res);*/
 }
 
 export function create(req, res) {
@@ -99,12 +139,9 @@ function requestCreateEvent(req) {
 
 export function update(req, res) {
   let eventJson = requestUpdateEvent(req);
-  console.log(eventJson);
-  console.log(req.params.id);
   Event.findByIdAndUpdate(req.params.id, eventJson)
     .then(handleEntityNotFound(res))
     .then(event => {
-      console.log('BD:', event);
       req.params.id = event._id;
       return show(req, res);
     })

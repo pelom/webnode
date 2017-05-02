@@ -11,6 +11,14 @@ export function UsuarioService(Util, UsuarioResource) {
     getItemIsAtivoDefault() {
       return itemIsAtivo;
     },
+    loadDomain(callback) {
+      return UsuarioResource.domain(function(data) {
+        return safeCb(callback)(null, data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
+    },
     /**
      * Create a new user
      *
@@ -26,6 +34,7 @@ export function UsuarioService(Util, UsuarioResource) {
       }).$promise;
     },
     saveUser(newUser, callback) {
+      console.log(newUser);
       if(angular.isUndefined(newUser._id)) {
         return UsuarioResource.save(newUser, function(/*data*/) {
           return safeCb(callback)(null, newUser);

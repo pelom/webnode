@@ -12,8 +12,14 @@ export default class UsuarioEditController {
     this.usSpinnerService = usSpinnerService;
     this.UsuarioService = UsuarioService;
     this.PermissaoService = PermissaoService;
-    this.PermissaoService.loadProfileList(this.callLoadProfileList());
-    this.situacao = this.UsuarioService.getItemIsAtivoDefault();
+    this.UsuarioService.loadDomain().then(domain => {
+      this.situacao = domain.itemIsAtivo;
+      this.itemSlotDuration = domain.itemSlotDuration;
+      this.businessHours = domain.businessHours;
+      this.itemWeek = domain.itemWeek;
+      this.itemHours = domain.itemHours;
+      this.PermissaoService.loadProfileList(this.callLoadProfileList());
+    });
   }
   callLoadProfileList() {
     return err => {
@@ -38,6 +44,19 @@ export default class UsuarioEditController {
       }
       this.user = user;
       this.user.isNotificar = false;
+      if(!this.user.agenda) {
+        this.user.agenda = {};
+      }
+      if(!this.user.agenda.businessHours) {
+        this.user.agenda.businessHours = this.businessHours;
+      } else {
+        this.user.agenda.businessHours.forEach(item => {
+          let week = this.itemWeek[item.dow[0]];
+          item.name = week;
+          this.businessHours[item.dow[0]] = item;
+        });
+        this.user.agenda.businessHours = this.businessHours;
+      }
     };
   }
   createUser() {
@@ -48,7 +67,15 @@ export default class UsuarioEditController {
       email: '',
       telefone: '',
       celular: '',
-      isNotificar: true
+      isNotificar: true,
+      agenda: {
+        startEditable: false,
+        eventLimit: false,
+        selectable: false,
+        editable: false,
+        slotDuration: '00:30:00',
+        businessHours: []
+      }
     };
   }
   selectOptionProfile() {

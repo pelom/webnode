@@ -32,11 +32,69 @@ function obterProfileDefault(where, select) {
 }
 obterProfileDefault('Usuário', '_id');
 
+export function domain(req, res) {
+  let start = '00:00';
+  let end = '00:00';
+  let itemHours = [];
+  for(let i = 0; i < 24; i++) {
+    let hour = i < 10 ? `0${i}:00` : `${i}:00`;
+    itemHours.push(hour);
+  }
+  let itemWeek = 'Domingo Segunda Terça Quarta Quita Sexta Sábado'.split(' ');
+  let businessHours = [];
+  itemWeek.forEach((item, INDEX) => {
+    businessHours.push({
+      name: item, dow: [INDEX], start, end
+    });
+  });
+  res.status(200).json({
+    itemHours,
+    itemWeek,
+    businessHours,
+    itemIsAtivo: [
+      { name: 'Ativo', value: true },
+      { name: 'Desativo', value: false }
+    ],
+    itemSlotDuration: User.schema.path('agenda.slotDuration').enumValues,
+  });
+}
+
 const selectIndex = '_id nome sobrenome username isAtivo profileId criador '
   + 'modificador updatedAt createdAt';
 const populateProfile = { path: 'profileId', select: '_id nome' };
 
 export function index(req, res) {
+  /*var jsforce = require('jsforce');
+  var conn = new jsforce.Connection({
+    // you can change loginUrl to connect to sandbox or prerelease env.
+    //loginUrl: 'https://login.salesforce.com'
+  });
+  conn.login('andre.leite@pjsign.com.br', 'soad87wwDG9jQdG76sncJk3QtAD78ZIp', function(err, userInfo) {
+    if(err) {
+      return console.error(err);
+    }
+    // Now you can get the access token and instance URL information.
+    // Save them to establish connection next time.
+    console.log(conn.accessToken);
+    console.log(conn.instanceUrl);
+    console.log("User ID: " + userInfo.id);
+    console.log("Org ID: " + userInfo.organizationId);
+
+    var records = [];
+    conn.query('SELECT Id, Name, LastModifiedDate, LastModifiedBy.Name FROM ApexClass', function(err, result) {
+      if(err) { return console.error(err); }
+      console.log(result);
+      //console.log("total : " + result.totalSize);
+      //console.log("fetched : " + result.records.length);
+      //console.log("done ? : " + result.done);
+      //if(!result.done) {
+        // you can use the locator to fetch next records set.
+        // Connection#queryMore()
+      //  console.log("next records URL : " + result.nextRecordsUrl);
+      //}
+    });
+
+  });*/
   return api.find({
     model: 'User',
     select: selectIndex,
@@ -51,7 +109,7 @@ export function index(req, res) {
 }
 
 const selectShow = '_id nome sobrenome username isAtivo profileId criador '
-  + 'modificador updatedAt createdAt endereco email celular telefone empresa login';
+  + 'modificador updatedAt createdAt endereco email celular telefone empresa login agenda';
 
 const populationLogin = { path: 'login', select: 'data ip browser device os',
   options: {
@@ -100,10 +158,12 @@ export function create(req, res) {
 
 function requestUserCreate(req) {
   var newUser = new User(req.body);
+  let agenda = requestUserAgendaCreate(req);
   newUser.provider = 'local';
   newUser.criador = req.user._id;
   newUser.modificador = req.user._id;
   newUser.isAtivo = true;
+  newUser.agenda = agenda;
   resetPasswordUser(newUser);
   return newUser;
 }
@@ -111,6 +171,13 @@ function resetPasswordUser(user) {
   user.password = generatePassword.generatePass();
   user.resetPassword = true;
   return user;
+}
+function requestUserAgendaCreate(req) {
+  let agenda = req.body.agenda;
+  agenda.businessHours = agenda.businessHours.filter(function(item) {
+    return item.start !== '00:00' && item.end !== '00:00';
+  });
+  return agenda;
 }
 function callbackCreateUser(req, res) {
   return function(user) {
@@ -143,7 +210,6 @@ export function register(req, res) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.profileId = PROFILE_ID;
-  console.log('register', newUser);
   newUser.save()
     .then(user => {
       notifyNewAccount(req, user, false);
@@ -153,8 +219,10 @@ export function register(req, res) {
     .catch(handleValidationError(res));
 }
 
+const selectUpdate = '_id nome sobrenome username isAtivo profileId criador '
+  + 'modificador updatedAt createdAt endereco email celular telefone empresa agenda';
 export function update(req, res) {
-  User.findOne({ _id: req.params.id })
+  User.findOne({ _id: req.params.id }, selectUpdate)
     .exec()
     .then(handleEntityNotFound(res))
     .then(callbackUpdateUser(req, res))
@@ -178,6 +246,7 @@ function callbackUpdateUser(req, res) {
 }
 function requestUserUpdate(req) {
   let userId = req.params.id;
+  let agenda = requestUserAgendaCreate(req);
   let userUpdate = {
     _id: userId,
     nome: String(req.body.nome),
@@ -191,6 +260,7 @@ function requestUserUpdate(req) {
     endereco: req.body.endereco,
     isAtivo: req.body.isAtivo,
     modificador: req.user._id,
+    agenda
   };
   let notify = Boolean(req.body.isNotificar);
   if(notify) {
@@ -199,12 +269,14 @@ function requestUserUpdate(req) {
   return userUpdate;
 }
 
+const selectUpdatePassword = '_id nome sobrenome username isAtivo '
+  + 'email password salt';
 export function changePassword(req, res) {
   var userId = req.user._id;
   var oldPass = String(req.body.oldPassword);
   var newPass = String(req.body.newPassword);
 
-  User.findById(userId).exec()
+  User.findById(userId, selectUpdatePassword).exec()
     .then(user => {
       if(user.authenticate(oldPass)) {
         user.password = newPass;

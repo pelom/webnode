@@ -78,6 +78,14 @@ export function EventoService(EventoResource, Util) {
         return safeCb(callback)(err);
       }).$promise;
     },
+    loadCalendar(callback) {
+      return EventoResource.calendar(function(data) {
+        return safeCb(callback)(null, data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
+    },
     loadEvento(ev, callback) {
       return EventoResource.get(ev, function(data) {
         evento = data;

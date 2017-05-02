@@ -5,6 +5,12 @@ export function UsuarioResource($resource) {
   return $resource('/api/users/:id/:controller', {
     id: '@_id'
   }, {
+    domain: {
+      method: 'GET',
+      params: {
+        id: 'domain'
+      }
+    },
     update: { method: 'PUT' },
     register: {
       method: 'POST',

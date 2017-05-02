@@ -5,6 +5,23 @@
 import crypto from 'crypto';
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
+
+var AgendaSchema = new Schema({
+  editable: { type: Boolean, default: false },
+  selectable: { type: Boolean, default: false },
+  eventLimit: { type: Boolean, default: false },
+  startEditable: { type: Boolean, default: false },
+  slotDuration: { type: String, enum: [
+    '00:15:00', '00:30:00', '01:00:00', '01:30:00'], default: '00:30:00'},
+  selectConstraint: String,
+  eventConstraint: String,
+  businessHours: [{
+    dow: { type: Array, default: [1, 2, 3, 4, 5] },
+    start: { type: String, default: '08:00'},
+    end: { type: String, default: '18:00'}
+  }],
+});
+
 var UserLoginSchema = new Schema({
   sessionid: String,
   userAgent: String,
@@ -46,6 +63,10 @@ var UserSchema = new Schema({
   password: {
     type: String, required: true
   },
+  locale: { type: String, enum: ['pt-br', 'en'], default: 'pt-br' },
+  laguage: { type: String, enum: ['pt_br'], default: 'pt_br' },
+  timezone: { type: String, enum: ['America/Sao_Paulo'], default: 'America/Sao_Paulo' },
+  agenda: AgendaSchema,
   resetPassword: {
     type: Boolean, default: undefined },
   salt: String,

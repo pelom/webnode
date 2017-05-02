@@ -9,6 +9,7 @@ var router = new Router();
 let permissao = function(funcao) {
   return PermissionWebnode('Usuários', funcao);
 };
+router.get('/domain', isPermission(permissao(MODIFICAR)), controller.domain);
 router.get('/', isPermission(permissao(LER)), controller.index);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/me', auth.isAuthenticated(), controller.me);

@@ -9,6 +9,12 @@ export function EventoResource($resource) {
       params: {
         id: 'domain'
       }
+    },
+    calendar: {
+      method: 'GET',
+      params: {
+        id: 'calendar'
+      }
     }
   });
 }

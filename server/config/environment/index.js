@@ -66,7 +66,7 @@ var all = {
 
   agenda: {
     //db: { address: mongo.uri },
-    processEvery: '5 minutes',
+    processEvery: '1 minutes',
     maxConcurrency: 20, //numero max de jobs execucao simultanea
     lockLimit: 0, //numero de jobs que pode ser bloqueados em qualquer momento
     defaultConcurrency: 5, //numero de jobs execucao simultanea
@@ -74,7 +74,7 @@ var all = {
     defaultLockLifetime: 5 * 60 * 1000, //5 minute
     jobFiles: [{
       name: 'event.job',
-      cron: '*/10 * * * *',
+      cron: '0 22 * * *',
       job: 'Resumo diário de eventos atrasados'
     }]
   }

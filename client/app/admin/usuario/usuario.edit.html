@@ -319,6 +319,84 @@
       </div>
     </form>
 
+    <div class="panel panel-default" >
+      <div class="panel-body">
+          <h4><label>Configurações da agenda</label></h4>
+          <hr/>
+          <div>
+            <div class="row">
+              <div class="col-sm-6" >
+                <dl ng-if="ctl.user._id">
+                  <dt><small>Duração da linha do evento</small></dt>
+                  <dd>
+                    <select class="form-control" ng-model="ctl.user.agenda.slotDuration"
+                     ng-options="item as item for item in ctl.itemSlotDuration"></select>
+                   </dd>
+                </dl>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="ctl.user.agenda.editable"> Editar eventos
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="ctl.user.agenda.selectable"> Selecionar eventos
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="ctl.user.agenda.eventLimit"> Limitar a visualização de eventos
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="ctl.user.agenda.startEditable"> Editar data de início
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br/>
+          <h4><label>Horário de trabalho</label></h4>
+          <hr/>
+          <div class="table-responsive">
+            <table class="table table-striped table-condensed">
+              <thead>
+                <tr>
+                  <th><small>Dia</small></th>
+                  <th><small>Início</small></th>
+                  <th><small>Fim</small></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="bh in ctl.user.agenda.businessHours">
+                  <td>{{ bh.name }}</td>
+                  <td>
+                    <select class="form-control" ng-model="bh.start"
+                     ng-options="item as item for item in ctl.itemHours"></select>
+                  </td>
+                  <td>
+                    <select class="form-control" ng-model="bh.end"
+                     ng-options="item as item for item in ctl.itemHours"></select></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+
     <div class="panel panel-default" ng-if="ctl.user.login.length > 0">
       <div class="panel-body">
         <h4><label>Login</label></h4>

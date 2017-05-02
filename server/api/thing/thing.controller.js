@@ -88,8 +88,8 @@ export function create(req, res) {
 // Upserts the given Thing in the DB at the specified ID
 export function upsert(req, res) {
   if(req.body._id) {
-    //delete req.body._id;
-    Reflect.deleteProperty(req.body, '_id');
+    delete req.body._id;
+    //Reflect.deleteProperty(req.body, '_id');
   }
   return Thing.findOneAndUpdate({
     _id: req.params.id
@@ -103,8 +103,8 @@ export function upsert(req, res) {
 // Updates an existing Thing in the DB
 export function patch(req, res) {
   if(req.body._id) {
-    //delete req.body._id;
-    Reflect.deleteProperty(req.body, '_id');
+    delete req.body._id;
+    //Reflect.deleteProperty(req.body, '_id');
   }
   return Thing.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))

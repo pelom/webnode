@@ -1,6 +1,7 @@
 'use strict';
 import angular from 'angular';
 import {openModalView} from './agenda/agenda.model.service';
+import moment from 'moment';
 /* eslint no-sync: 0 */
 export default class HomeController {
   /*@ngInject*/
@@ -12,6 +13,15 @@ export default class HomeController {
     this.usSpinnerService = usSpinnerService;
     this.Modal = Modal;
     this.EventoService = EventoService;
+    this.EventoService.loadCalendar()
+      .then(calendar => {
+        let calendarDefault = this.createCalendar();
+        const config = Object.assign(calendarDefault, calendar);
+        this.uiConfig = {
+          calendar: config
+        };
+        console.log(config);
+      });
     this.defaultView = $stateParams.defaultView || 'listWeek';
     this.defaultDate = $stateParams.defaultDate || new Date();
     this.defaultStatus = $stateParams.defaultStatus || null;
@@ -21,87 +31,61 @@ export default class HomeController {
     this.startInterval = null;
     this.endInterval = null;
     this.eventSources = [];
-    this.uiConfig = {
-      calendar: {
-        header: {
-          //left: 'month basicWeek basicDay agendaWeek agendaDay',
-          left: 'title',
-          right: 'today prev,next',
-          center: 'timelineDay,agendaDay,listWeek,agendaWeek,month'
-          //right: 'today,month,basicWeek basicDay,agendaWeek,agendaDay,listWeek'
-        },
-        defaultView: this.defaultView,
-        defaultDate: this.defaultDate,
-        locale: 'pt-br',
-        lang: 'pt-br',
-        height: 500,
-        nowIndicator: true,
-        navLinks: true, // can click day/week names to navigate views
-        editable: true,
-        selectable: true,
-        eventLimit: true, // allow "more" link when too many events
-        //selectConstraint: 'businessHours',
-        //eventConstraint: 'businessHours',
-        businessHours: [{
-          dow: [1, 2, 3], // Monday, Tuesday, Wednesday
-          start: '08:00', // 8am
-          end: '18:00' // 6pm
-        }, {
-          dow: [4, 5], // Thursday, Friday
-          start: '08:00', // 10am
-          end: '18:00' // 4pm
-        }],
-        selectHelper: true,
-        startEditable: true,
-        slotDuration: '01:00:00',
-        timezone: 'local',
-        loading: bool => {
-          if(bool) {
-            this.usSpinnerService.spin('spinner-1');
-          } else {
-            this.usSpinnerService.stop('spinner-1');
-          }
-          console.log('loading:', bool);
-        },
-        viewRender: view /*element*/ => {
-          this.findEventListView(view);
-        },
-        eventRender: (event, element) => {
-          element.attr('title', event.start.format('LLLL'));
-          element.find('.fc-title')
-            .html('<i class="fa ' + event.icon + '" aria-hidden="true"></i>'
-              + ' <b>' + event.title + '</b>');
-        },
-        eventClick: calEvent/*(calEvent, jsEvent, view)*/ => {
-          let event = this.createEventClick(calEvent);
-          this.openModalEvent(event);
-        },
-        /*dayClick: date => {
-          let stgStart = date.format('YYYY-MM-DD HH:mm:ss');
-          let modalCtl = openModalView({
-            title: 'Novo',
-            start: new Date(stgStart),
-            end: null
-          }, this.Modal);
-          this.EventoService.setModalCtl(modalCtl);
-        },*/
-        select: (startDate, endDate) => {
-          let event = this.createEventSelect(startDate, endDate);
-          this.openModalEvent(event);
-        },
-        eventDrop: calEvent /*(calEvent, delta, revertFunc, jsEvent, ui, view)*/ => {
-          let evento = this.createEventClick(calEvent);
-          this.saveEvent(evento);
-        },
-        eventResize: calEvent /*(calEvent, delta, revertFunc, jsEvent, ui, view)*/ => {
-          let evento = this.createEventClick(calEvent);
-          this.saveEvent(evento);
+  }
+  createCalendar() {
+    return {
+      defaultView: this.defaultView,
+      defaultDate: this.defaultDate,
+      loading: bool => {
+        if(bool) {
+          this.usSpinnerService.spin('spinner-1');
+        } else {
+          this.usSpinnerService.stop('spinner-1');
         }
+        console.log('loading:', bool);
+      },
+      viewRender: view /*element*/ => {
+        this.findEventListView(view);
+      },
+      eventRender: (event, element) => {
+        element.attr('title', event.start.format('LLLL'));
+        element.find('.fc-title')
+          .html('<i class="fa ' + event.icon + '" aria-hidden="true"></i>'
+            + ' <b>' + event.title + '</b>');
+        if(event.start.hasZone()) {
+          element.find('.fc-title').after(event.start.format('Z'));
+        }
+      },
+      eventClick: calEvent/*(calEvent, jsEvent, view)*/ => {
+        let event = this.createEventClick(calEvent);
+        this.openModalEvent(event);
+      },
+      /*dayClick: date => {
+        let stgStart = date.format('YYYY-MM-DD HH:mm:ss');
+        let modalCtl = openModalView({
+          title: 'Novo',
+          start: new Date(stgStart),
+          end: null
+        }, this.Modal);
+        this.EventoService.setModalCtl(modalCtl);
+      },*/
+      select: (startDate, endDate) => {
+        let event = this.createEventSelect(startDate, endDate);
+        this.openModalEvent(event);
+      },
+      eventDrop: calEvent /*(calEvent, delta, revertFunc, jsEvent, ui, view)*/ => {
+        let evento = this.createEventClick(calEvent);
+        this.saveEvent(evento);
+      },
+      eventResize: calEvent /*(calEvent, delta, revertFunc, jsEvent, ui, view)*/ => {
+        let evento = this.createEventClick(calEvent);
+        this.saveEvent(evento);
       }
     };
   }
   createEventClick(calEvent) {
     let evento = angular.copy(calEvent);
+    console.log(evento.start);
     evento.start = this.momentToDate(evento.start);
     if(evento.end !== null) {
       evento.end = this.momentToDate(evento.end);
@@ -110,13 +94,14 @@ export default class HomeController {
   }
   momentToDate(momentDate) {
     try {
-      return momentDate.local().toDate();
+      return moment(momentDate.format()).toDate();
     } catch(err) {
       console.log(err);
       return null;
     }
   }
   createEventSelect(startDate, endDate) {
+    console.log(startDate);
     let evento = {
       title: startDate.format('LLLL'),
       start: this.momentToDate(startDate),
