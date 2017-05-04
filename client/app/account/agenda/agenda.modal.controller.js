@@ -32,6 +32,7 @@ export default class AgendaModalController {
     $scope.$watch('ctl.event.end', () => {
       this.validateDates($scope);
     });
+
     this.isEdit = true;
   }
   validateDates($scope) {

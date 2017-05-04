@@ -20,7 +20,7 @@
               <dt><small>Título</small></dt>
               <dd ng-class="{'has-error': form.nomeMod.$invalid}">
                 <input type="text" class="form-control" placeholder="Digite um nome"
-                 name="nomeMod" ng-model="ctl.event.title" disabled="!ctl.isEdit"
+                 name="nomeMod" ng-model="ctl.event.title" ng-disabled="!ctl.isEdit"
                   ng-required="true" ng-minlength="3" ng-maxlength="60" />
 
                 <p class="help-block" ng-show="form.nomeMod.$error.required && form.nomeMod.$dirty">
@@ -43,7 +43,7 @@
               <dd ng-class="{'has-error': form.dateStart.$invalid}">
                 <p class="input-group">
                   <input type="text" class="form-control" name="dateStart"
-                    ng-model="ctl.event.start" disabled="!ctl.isEdit"
+                    ng-model="ctl.event.start" ng-disabled="!ctl.isEdit"
                     uib-datepicker-popup="{{ctl.format}}"
                     is-open="ctl.popup1.opened" datepicker-options="ctl.dateOptions"
                     ng-required="true" show-button-bar="false"/>
@@ -81,7 +81,7 @@
               <dd ng-class="{'has-error': form.dateEnd.$invalid}">
                 <p class="input-group">
                   <input type="text" class="form-control" name="dateEnd"
-                    ng-model="ctl.event.end" disabled="!ctl.isEdit"
+                    ng-model="ctl.event.end" ng-disabled="!ctl.isEdit"
                     uib-datepicker-popup="{{ctl.format}}"
                     is-open="ctl.popup2.opened" datepicker-options="ctl.dateOptions"
                     show-button-bar="false"/>
@@ -116,7 +116,7 @@
             <dl>
               <dt><small>Status</small></dt>
               <dd>
-                <select class="form-control" ng-model="ctl.event.status" disabled="!ctl.isEdit"
+                <select class="form-control" ng-model="ctl.event.status" ng-disabled="!ctl.isEdit"
                  ng-options="item as item for item in ctl.status"></select>
                </dd>
             </dl>
@@ -125,7 +125,7 @@
             <dl>
               <dt><small>Prioridade</small></dt>
               <dd>
-                <select class="form-control" ng-model="ctl.event.prioridade" disabled="!ctl.isEdit"
+                <select class="form-control" ng-model="ctl.event.prioridade" ng-disabled="!ctl.isEdit"
                  ng-options="item as item for item in ctl.prioridade"></select>
                </dd>
             </dl>
@@ -134,7 +134,7 @@
         <div class="row">
           <div class="col-md-12">
             <textarea class="form-control" rows="2" placeholder="Descrição"
-              ng-model="ctl.event.descricao" disabled="!ctl.isEdit"></textarea>
+              ng-model="ctl.event.descricao" ng-disabled="!ctl.isEdit"></textarea>
           </div>
         </div>
         <br/>
@@ -148,7 +148,7 @@
           <div class="col-xs-6">
             <div class="checkbox">
               <label>
-                <input type="checkbox" ng-model="ctl.event.allDay" disabled="!ctl.isEdit"> Dia inteiro
+                <input type="checkbox" ng-model="ctl.event.allDay" ng-disabled="!ctl.isEdit"> Dia inteiro
               </label>
             </div>
           </div>
