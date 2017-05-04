@@ -24,47 +24,55 @@ export function calendar(req, res) {
     .then(handleEntityNotFound(res))
     .then(user => {
       if(!user.agenda) {
-        user.agenda = {
-          editable: false,
-          selectable: false,
-          eventLimit: false,
-          startEditable: false,
-          slotDuration: '01:00:00',
-          businessHours: []
-        };
+        user.agenda = createAgenda();
       }
       user.agenda.businessHours.forEach(item => {
         item._id = undefined;
       });
-      let configCalendar = {
-        header: {
-          //left: 'month basicWeek basicDay agendaWeek agendaDay',
-          //right: 'today,month,basicWeek basicDay,agendaWeek,agendaDay,listWeek'
-          left: 'title',
-          right: 'today prev,next',
-          center: 'timelineDay,agendaDay,listWeek,agendaWeek,month'
-        },
-        locale: user.locale,
-        lang: user.laguage,
-        timezone: 'local', // user.timezone,
-        ignoreTimezone: false,
-        height: 500,
-        selectHelper: true,
-        nowIndicator: true,
-        navLinks: true, // can click day/week names to navigate views
-        editable: user.agenda.editable,
-        selectable: user.agenda.selectable,
-        eventLimit: user.agenda.eventLimit, // allow "more" link when too many events
-        startEditable: user.agenda.startEditable,
-        slotDuration: user.agenda.slotDuration,
-        //selectConstraint: 'businessHours',
-        //eventConstraint: 'businessHours',
-        businessHours: user.agenda.businessHours,
-      };
+      let configCalendar = createAgendaConfig(user);
       res.status(200).json(configCalendar);
       return configCalendar;
     })
     .catch(handleError(res));
+}
+
+function createAgenda() {
+  return {
+    editable: false,
+    selectable: false,
+    eventLimit: false,
+    startEditable: false,
+    slotDuration: '01:00:00',
+    businessHours: []
+  };
+}
+
+function createAgendaConfig(user) {
+  return {
+    header: {
+      //left: 'month basicWeek basicDay agendaWeek agendaDay',
+      //right: 'today,month,basicWeek basicDay,agendaWeek,agendaDay,listWeek'
+      left: 'title',
+      right: 'today prev,next',
+      center: 'agendaDay,listWeek,agendaWeek,month'
+    },
+    locale: user.locale,
+    lang: user.laguage,
+    editable: user.agenda.editable,
+    selectable: user.agenda.selectable,
+    eventLimit: user.agenda.eventLimit, // allow "more" link when too many events
+    startEditable: user.agenda.startEditable,
+    slotDuration: user.agenda.slotDuration,
+    //selectConstraint: 'businessHours',
+    //eventConstraint: 'businessHours',
+    businessHours: user.agenda.businessHours,
+    timezone: 'local', // user.timezone,
+    ignoreTimezone: false,
+    height: 500,
+    selectHelper: true,
+    nowIndicator: true,
+    navLinks: true, // can click day/week names to navigate views
+  };
 }
 
 const selectIndex = '_id title start end status prioridade allDay descricao isAtivo'
@@ -92,6 +100,7 @@ export function index(req, res) {
     }
   }, res);
 }
+
 const selectShow = '_id title start end status prioridade allDay descricao isAtivo'
   + ' proprietario criador modificador createdAt updatedAt';
 

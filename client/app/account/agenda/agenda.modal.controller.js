@@ -21,9 +21,10 @@ export default class AgendaModalController {
       dateDisabled: false,
       //maxDate: new Date(2020, 5, 22),
       //minDate: new Date(),
-      startingDay: 1,
+      //startingDay: 1,
       weekStart: 0,
-      todayHighlight: true
+      todayHighlight: true,
+      showWeeks: false
     };
     $scope.$watch('ctl.event.start', () => {
       this.validateDates($scope);
@@ -31,6 +32,7 @@ export default class AgendaModalController {
     $scope.$watch('ctl.event.end', () => {
       this.validateDates($scope);
     });
+    this.isEdit = true;
   }
   validateDates($scope) {
     if(!$scope.form.hasOwnProperty('dateEnd')) {

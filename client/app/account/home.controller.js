@@ -5,10 +5,14 @@ import moment from 'moment';
 /* eslint no-sync: 0 */
 export default class HomeController {
   /*@ngInject*/
-  constructor($stateParams, EventoService, Auth,
-    toastr, usSpinnerService, Modal) {
-    this.getCurrentUser = Auth.getCurrentUserSync;
+  constructor($stateParams, EventoService, toastr, usSpinnerService, Modal) {
     this.$stateParams = $stateParams;
+    this.defaultView = $stateParams.defaultView || 'listWeek';
+    this.defaultDate = $stateParams.defaultDate || new Date();
+    this.defaultStatus = $stateParams.defaultStatus || null;
+    this.startInterval = null;
+    this.endInterval = null;
+    this.eventSources = [];
     this.toastr = toastr;
     this.usSpinnerService = usSpinnerService;
     this.Modal = Modal;
@@ -22,15 +26,10 @@ export default class HomeController {
         };
         console.log(config);
       });
-    this.defaultView = $stateParams.defaultView || 'listWeek';
-    this.defaultDate = $stateParams.defaultDate || new Date();
-    this.defaultStatus = $stateParams.defaultStatus || null;
+
     if($stateParams.eventId) {
       this.openModalEventId($stateParams.eventId);
     }
-    this.startInterval = null;
-    this.endInterval = null;
-    this.eventSources = [];
   }
   createCalendar() {
     return {

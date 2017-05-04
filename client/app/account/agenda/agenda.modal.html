@@ -20,8 +20,8 @@
               <dt><small>Título</small></dt>
               <dd ng-class="{'has-error': form.nomeMod.$invalid}">
                 <input type="text" class="form-control" placeholder="Digite um nome"
-                 name="nomeMod" ng-model="ctl.event.title"
-                  ng-required="true" ng-minlength="3" ng-maxlength="40" />
+                 name="nomeMod" ng-model="ctl.event.title" disabled="!ctl.isEdit"
+                  ng-required="true" ng-minlength="3" ng-maxlength="60" />
 
                 <p class="help-block" ng-show="form.nomeMod.$error.required && form.nomeMod.$dirty">
                   O título é necessário</p>
@@ -30,7 +30,7 @@
                 <p class="help-block" ng-show="form.nomeMod.$error.minlength">
                   São necessários no minimo 3 letras</p>
                 <p class="help-block" ng-show="form.nomeMod.$error.maxlength">
-                  São permitidos no máximo 40 letras</p>
+                  São permitidos no máximo 60 letras</p>
               </dd>
             </dl>
           </div>
@@ -43,10 +43,10 @@
               <dd ng-class="{'has-error': form.dateStart.$invalid}">
                 <p class="input-group">
                   <input type="text" class="form-control" name="dateStart"
-                    ng-model="ctl.event.start"
+                    ng-model="ctl.event.start" disabled="!ctl.isEdit"
                     uib-datepicker-popup="{{ctl.format}}"
                     is-open="ctl.popup1.opened" datepicker-options="ctl.dateOptions"
-                    ng-required="true" close-text="Fechar" clear-text="Limpar"/>
+                    ng-required="true" show-button-bar="false"/>
                   <span class="input-group-btn">
                    <button type="button" class="btn btn-default"
                    ng-click="ctl.popup1.opened = true;">
@@ -68,7 +68,7 @@
             <dl>
               <dt><small>Horário</small></dt>
               <dd>
-                <div uib-timepicker ng-model="ctl.event.start"
+                <div uib-timepicker ng-model="ctl.event.start" readonly-input="!ctl.isEdit"
                   hour-step="ctl.hstep" minute-step="ctl.mstep" show-meridian="false" show-spinners="false"></div>
                </dd>
             </dl>
@@ -81,10 +81,10 @@
               <dd ng-class="{'has-error': form.dateEnd.$invalid}">
                 <p class="input-group">
                   <input type="text" class="form-control" name="dateEnd"
-                    ng-model="ctl.event.end"
+                    ng-model="ctl.event.end" disabled="!ctl.isEdit"
                     uib-datepicker-popup="{{ctl.format}}"
                     is-open="ctl.popup2.opened" datepicker-options="ctl.dateOptions"
-                    close-text="Fechar" clear-text="Limpar"/>
+                    show-button-bar="false"/>
                   <span class="input-group-btn">
                    <button type="button" class="btn btn-default"
                    ng-click="ctl.popup2.opened = true;">
@@ -100,7 +100,7 @@
             <dl>
               <dt><small>Horário Término</small></dt>
               <dd>
-                <div uib-timepicker ng-model="ctl.event.end"
+                <div uib-timepicker ng-model="ctl.event.end" readonly-input="!ctl.isEdit"
                   hour-step="ctl.hstep" minute-step="ctl.mstep"
                   show-meridian="false" show-spinners="false"></div>
                </dd>
@@ -116,7 +116,7 @@
             <dl>
               <dt><small>Status</small></dt>
               <dd>
-                <select class="form-control" ng-model="ctl.event.status"
+                <select class="form-control" ng-model="ctl.event.status" disabled="!ctl.isEdit"
                  ng-options="item as item for item in ctl.status"></select>
                </dd>
             </dl>
@@ -125,7 +125,7 @@
             <dl>
               <dt><small>Prioridade</small></dt>
               <dd>
-                <select class="form-control" ng-model="ctl.event.prioridade"
+                <select class="form-control" ng-model="ctl.event.prioridade" disabled="!ctl.isEdit"
                  ng-options="item as item for item in ctl.prioridade"></select>
                </dd>
             </dl>
@@ -134,7 +134,7 @@
         <div class="row">
           <div class="col-md-12">
             <textarea class="form-control" rows="2" placeholder="Descrição"
-              ng-model="ctl.event.descricao"></textarea>
+              ng-model="ctl.event.descricao" disabled="!ctl.isEdit"></textarea>
           </div>
         </div>
         <br/>
@@ -148,7 +148,7 @@
           <div class="col-xs-6">
             <div class="checkbox">
               <label>
-                <input type="checkbox" ng-model="ctl.event.allDay"> Dia inteiro
+                <input type="checkbox" ng-model="ctl.event.allDay" disabled="!ctl.isEdit"> Dia inteiro
               </label>
             </div>
           </div>
@@ -176,7 +176,7 @@
     <div class="row"><hr/></div>
     <div class="row">
       <div class="col-xs-12">
-        <button type="submit" class="btn btn-primary"
+        <button type="submit" class="btn btn-primary" ng-show="ctl.isEdit"
           ng-disabled="form.$invalid">Salvar</button>
         <button type="button" class="btn btn-default"
           ng-click="$dismiss()">Fechar</button>

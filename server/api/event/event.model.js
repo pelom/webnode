@@ -5,7 +5,7 @@ import mongoose, {Schema} from 'mongoose';
 
 var EventSchema = new Schema({
   title: {
-    type: String, required: true, minlength: 3, maxlength: 40, trim: true },
+    type: String, required: true, minlength: 3, maxlength: 60, trim: true },
   url: String,
   start: { type: Date, required: true },
   end: Date,
