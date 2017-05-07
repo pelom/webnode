@@ -1,4 +1,5 @@
 'use strict';
+import moment from 'moment';
 export default class AgendaModalController {
   /*@ngInject*/
   constructor(EventoService, $state, $scope, toastr, usSpinnerService) {
@@ -8,6 +9,26 @@ export default class AgendaModalController {
     this.$state = $state;
     this.modalCtl = EventoService.getModalCtl();
     this.event = this.modalCtl.dataSource;
+    if(this.event.tarefas) {
+      this.EventoService.setEventList(this.event.tarefas);
+      let dur = 0;
+      this.event.tarefas.forEach(item => {
+        //var duration = moment.duration(item.end.diff(item.start));
+        //var hours = duration.asHours();
+        if(item.end) {
+          var ms = moment(item.end).diff(moment(item.start));
+          var d = moment.duration(ms);
+          var h = Math.floor(d.asHours());
+          dur += ms;
+          item.duration = (h < 10 ? '0' + h : h) + moment.utc(ms).format(":mm:ss");
+          //item.duration = moment(moment.duration(diff)).format('HH:mm:ss');
+          //item.duration = `${hourDuration} : ${minuteDuration}`;
+        }
+      });
+      var d = moment.duration(dur);
+      var h = Math.floor(d.asHours());
+      this.durationTotal = (h < 10 ? '0' + h : h) + moment.utc(dur).format(":mm:ss");
+    }
     this.status = [];
     this.prioridade = [];
     EventoService.loadDomain().then(domain => {
@@ -63,10 +84,16 @@ export default class AgendaModalController {
     .then(newEvento => {
       this.toastr.success('Evento salvo com sucesso.', `${newEvento.title}`);
       this.modalCtl.dismiss();
+      let origin;
+      if(this.event.origin && typeof this.event.origin === 'string') {
+        origin = this.event.origin;
+      } else if(this.event.origin) {
+        origin = this.event.origin._id;
+      }
       this.$state.go('home', {
         defaultView: this.modalCtl.defaultView,
         defaultDate: this.modalCtl.defaultDate,
-        eventId: undefined
+        eventId: origin
       }, {reload: true});
     })
     .catch(err => {
@@ -80,5 +107,21 @@ export default class AgendaModalController {
     .finally(() => {
       this.usSpinnerService.stop('spinner-1');
     });
+  }
+  close() {
+    this.modalCtl.dismiss();
+    this.$state.go('home', {
+      defaultView: this.modalCtl.defaultView,
+      defaultDate: this.modalCtl.defaultDate,
+      eventId: undefined
+    });
+  }
+  newTask() {
+    this.modalCtl.dismiss();
+    this.$state.go('home', {
+      defaultView: this.modalCtl.defaultView,
+      defaultDate: this.modalCtl.defaultDate,
+      eventId: `task:${this.event._id}`
+    }, { reload: true });
   }
 }

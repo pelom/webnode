@@ -14,13 +14,14 @@ export function Modal($rootScope, $uibModal, $log) {
     var modalScope = $rootScope.$new();
 
     angular.extend(modalScope, scope);
-    modalScope.test = 'test';
     return $uibModal.open({
       template: scope.modal.html,
       windowClass: modalClass,
       scope: modalScope,
       controller: scope.modal.controller,
-      controllerAs: scope.modal.controllerAs
+      controllerAs: scope.modal.controllerAs,
+      backdrop: scope.modal.backdrop,
+      keyboard: scope.modal.keyboard
     });
   }
 

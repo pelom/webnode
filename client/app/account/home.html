@@ -1,9 +1,9 @@
 <div class="container">
-  <h3><i class="fa fa-home" aria-hidden="true"></i> <b>Início</b></h3>
+  <!--h3><i class="fa fa-home" aria-hidden="true"></i> <b>Início</b></h3-->
   <!--hr/-->
   <div class="row">
     <ul class="breadcrumb">
-      <li title="Itens no calendário">
+      <li title="Itens no calendário" uib-popover="I appeared on mouse enter!" popover-trigger="'mouseenter'">
         <a href="#" ng-click="ctl.findEventListStatus('');">
           <i class="fa fa-calendar" aria-hidden="true"></i> <b> {{ctl.EventoService.getEventoList().length}}</b></a>
       </li>

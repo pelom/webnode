@@ -14,7 +14,9 @@ export function createModalView(title) {
   return {
     controller: 'AgendaModalController',
     controllerAs: 'ctl',
-    dismissable: true,
+    dismissable: false,
+    backdrop: 'static',
+    keyboard: false,
     title,
     html: require('./agenda.modal.html')
   };

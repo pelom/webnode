@@ -5,7 +5,7 @@ import moment from 'moment';
 /* eslint no-sync: 0 */
 export default class HomeController {
   /*@ngInject*/
-  constructor($stateParams, EventoService, toastr, usSpinnerService, Modal) {
+  constructor($stateParams, $location, EventoService, toastr, usSpinnerService, Modal) {
     this.$stateParams = $stateParams;
     this.defaultView = $stateParams.defaultView || 'listWeek';
     this.defaultDate = $stateParams.defaultDate || new Date();
@@ -21,15 +21,25 @@ export default class HomeController {
       .then(calendar => {
         let calendarDefault = this.createCalendar();
         const config = Object.assign(calendarDefault, calendar);
+        moment.locale(config.locale);
         this.uiConfig = {
           calendar: config
         };
-        console.log(config);
-      });
 
-    if($stateParams.eventId) {
-      this.openModalEventId($stateParams.eventId);
-    }
+        if($stateParams.eventId) {
+          let parse = $stateParams.eventId.split(':');
+          console.log(parse);
+          if(parse.length == 2 && parse[0] === 'task') {
+            let event = this.createEventSelect(moment().local(), moment().local());
+            event.typeTask = 'task';
+            event.origin = parse[1];
+            this.openModalEvent(event);
+          } else {
+            this.openModalEventId($stateParams.eventId);
+          }
+          //$location.search('eventId', null);
+        }
+      });
   }
   createCalendar() {
     return {
@@ -48,12 +58,17 @@ export default class HomeController {
       },
       eventRender: (event, element) => {
         element.attr('title', event.start.format('LLLL'));
+        //element.find('.fc-title').after('<div ></div>');
+        //element.find('.fc-title').attr('popover-trigger', 'mouseenter');
         element.find('.fc-title')
-          .html('<i class="fa ' + event.icon + '" aria-hidden="true"></i>'
-            + ' <b>' + event.title + '</b>');
-        if(event.start.hasZone()) {
-          element.find('.fc-title').after(event.start.format('Z'));
+          .html(`<i class="fa ${event.icon}" aria-hidden="true"></i> <b>${event.title}</b>`);
+        if(event.origin) {
+          element.find('.fc-title').after(
+            `&nbsp;<span style="color: #777;">[${event.origin.title}]</span>`);
         }
+        /*if(event.start.hasZone()) {
+          element.find('.fc-title').after(event.start.format('Z'));
+        }*/
       },
       eventClick: calEvent/*(calEvent, jsEvent, view)*/ => {
         let event = this.createEventClick(calEvent);

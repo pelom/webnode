@@ -1,7 +1,7 @@
 <div class="modal-header">
   <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
 
-  <h4><i class="fa {{ctl.event.icon}}" aria-hidden="true"></i>
+  <h4><i class="fa {{ctl.event.icon}}" style="color:{{ctl.event.color}}" aria-hidden="true"></i>
     <strong><span ng-bind="modal.title" class="modal-title"></span></strong></h4>
 </div>
 
@@ -65,7 +65,7 @@
             </dl>
           </div>
           <div class="col-xs-6">
-            <dl>
+            <dl ng-show="!ctl.event.allDay">
               <dt><small>Horário</small></dt>
               <dd>
                 <div uib-timepicker ng-model="ctl.event.start" readonly-input="!ctl.isEdit"
@@ -97,13 +97,29 @@
             </dl>
           </div>
           <div class="col-xs-6">
-            <dl>
+            <dl ng-show="!ctl.event.allDay">
               <dt><small>Horário Término</small></dt>
               <dd>
                 <div uib-timepicker ng-model="ctl.event.end" readonly-input="!ctl.isEdit"
                   hour-step="ctl.hstep" minute-step="ctl.mstep"
                   show-meridian="false" show-spinners="false"></div>
                </dd>
+            </dl>
+          </div>
+        </div>
+        <div class="row" ng-if="ctl.event._id">
+          <div class="col-xs-6">
+            <dl>
+              <dt><small>Criado</small></dt>
+              <dd><small>{{ ctl.event.createdAt | date:'dd/MM/yyyy HH:mm' }} por
+                <strong>{{ctl.event.criador.nome}} {{ctl.event.criador.sobrenome}}</strong></small></dd>
+            </dl>
+          </div>
+          <div class="col-xs-6">
+            <dl>
+              <dt><small>Modificado</small></dt>
+              <dd><small>{{ ctl.event.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                <strong>{{ctl.event.modificador.nome}} {{ctl.event.modificador.sobrenome}}</strong></small></dd>
             </dl>
           </div>
         </div>
@@ -133,8 +149,34 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <textarea class="form-control" rows="2" placeholder="Descrição"
+            <textarea class="form-control" rows="4" placeholder="Descrição"
               ng-model="ctl.event.descricao" ng-disabled="!ctl.isEdit"></textarea>
+          </div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col-md-12">
+            <dl>
+              <dt><small>Local</small></dt>
+              <dd>
+                <input type="text" class="form-control" name="local"
+                  ng-model="ctl.event.local" ng-disabled="!ctl.isEdit"/>
+              </dd>
+            </dl>
+          </div>
+        </div>
+        <div class="row" ng-show="ctl.event.origin._id">
+          <div class="col-xs-12">
+            <label>Origem</label>
+          </div>
+          <div class="col-xs-6">
+            <a href="#" ui-sref="home({eventId: ctl.event.origin._id})">{{ctl.event.origin.title}}</a>
+          </div>
+          <div class="col-sm-3">
+            <small>{{ ctl.event.origin.start | date:'dd/MM/yyyy HH:mm' }}</small>
+          </div>
+          <div class="col-sm-3">
+            <small>{{ ctl.event.origin.status }}</small>
           </div>
         </div>
         <br/>
@@ -154,32 +196,43 @@
           </div>
         </div>
       </uib-tab>
+      <uib-tab ng-show="ctl.event.tarefas.length">
+        <uib-tab-heading>Tarefas <span class="badge">{{ctl.event.tarefas.length}}</span></uib-tab-heading>
+        <br/>
+        <p>Total de horas: {{ctl.durationTotal}}</p>
+        <hr/>
+        <div ng-repeat="task in ctl.event.tarefas">
+          <div class="row">
+            <div class="col-md-6">
+              <i class="fa {{task.icon}}" style="color:{{task.color}}" aria-hidden="true"></i>&nbsp;
+              <a href="#" ui-sref="home({eventId: task._id})">{{task.title}}</a>
+            </div>
+            <div class="col-xs-3">
+              <small>{{ task.start | date:'dd/MM/yyyy HH:mm' }}</small>
+            </div>
+            <div class="col-xs-3">
+              <small ng-if="task.end">{{ task.end | date:'dd/MM/yyyy HH:mm' }}</small>
+              <small ng-if="!task.end">-</small>
+            </div>
+            <div class="col-xs-3">
+              <small ng-if="task.duration">{{ task.duration }}</small>
+              <small ng-if="!task.duration">-</small>
+            </div>
+          </div>
+          <br/>
+        </div>
+      </uib-tab>
     </uib-tabset>
-
-    <div class="row" ng-if="ctl.event._id">
-      <div class="col-xs-6">
-        <dl>
-          <dt><small>Criado</small></dt>
-          <dd><small>{{ ctl.event.createdAt | date:'dd/MM/yyyy HH:mm' }} por
-            <strong>{{ctl.event.criador.nome}} {{ctl.event.criador.sobrenome}}</strong></small></dd>
-        </dl>
-      </div>
-      <div class="col-xs-6">
-        <dl>
-          <dt><small>Modificado</small></dt>
-          <dd><small>{{ ctl.event.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-            <strong>{{ctl.event.modificador.nome}} {{ctl.event.modificador.sobrenome}}</strong></small></dd>
-        </dl>
-      </div>
-    </div>
-
     <div class="row"><hr/></div>
     <div class="row">
       <div class="col-xs-12">
         <button type="submit" class="btn btn-primary" ng-show="ctl.isEdit"
           ng-disabled="form.$invalid">Salvar</button>
+        <button type="button" class="btn btn-default" ng-show="ctl.isEdit && ctl.event._id"
+              ng-click="ctl.newTask()">Nova Tarefa</button>
         <button type="button" class="btn btn-default"
-          ng-click="$dismiss()">Fechar</button>
+          ng-click="ctl.close()">Fechar</button>
+
       </div>
     </div>
   </form>

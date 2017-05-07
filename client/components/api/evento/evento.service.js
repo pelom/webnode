@@ -111,12 +111,13 @@ export function EventoService(EventoResource, Util) {
         end: newEvent.end,
         allDay: newEvent.allDay,
         _id: newEvent._id,
-        nome: newEvent.nome,
+        local: newEvent.local,
         descricao: newEvent.descricao,
         prioridade: newEvent.prioridade,
         status: newEvent.status,
         isAtivo: newEvent.isAtivo,
         proprietario: newEvent.proprietario,
+        origin: newEvent.origin,
       };
       if(angular.isUndefined(event._id)) {
         return EventoResource.save(event, function(data) {

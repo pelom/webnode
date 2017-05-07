@@ -76,7 +76,20 @@ function createAgendaConfig(user) {
 }
 
 const selectIndex = '_id title start end status prioridade allDay descricao isAtivo'
-  + ' proprietario criador modificador createdAt updatedAt';
+  + ' proprietario criador modificador createdAt updatedAt tarefas origin local';
+
+const populationOrigin = {
+  path: 'origin',
+  select: '_id title start status'
+};
+
+const populationTarefa = {
+  path: 'tarefas',
+  select: '_id title start end status',
+  options: {
+    sort: { start: -1 }
+  }
+};
 
 export function index(req, res) {
   let firstDay = new Date(req.query.start);
@@ -87,7 +100,8 @@ export function index(req, res) {
   return api.find({
     model: 'Event',
     select: selectIndex,
-    populate: [api.populationProprietario, api.populationCriador, api.populationModificador],
+    populate: [populationTarefa, populationOrigin, api.populationProprietario,
+      api.populationCriador, api.populationModificador],
     where: {
       start: { $gte: firstDay, $lte: lastDay },
       proprietario: req.user._id,
@@ -102,13 +116,14 @@ export function index(req, res) {
 }
 
 const selectShow = '_id title start end status prioridade allDay descricao isAtivo'
-  + ' proprietario criador modificador createdAt updatedAt';
+  + ' proprietario criador modificador createdAt updatedAt tarefas origin local';
 
 export function show(req, res) {
   return Event.find({_id: req.params.id, proprietario: req.user._id}, selectShow, {
     limit: 1
   })
-    .populate([api.populationProprietario, api.populationCriador, api.populationModificador])
+    .populate([populationTarefa, populationOrigin, api.populationProprietario,
+      api.populationCriador, api.populationModificador])
     .exec()
     .then(events => {
       if(events.length == 0) {
@@ -124,6 +139,14 @@ export function create(req, res) {
   var newApp = new Event(eventJson);
   newApp.save()
     .then(function(event) {
+      if(event.origin) {
+        Event.findByIdAndUpdate(event.origin,
+          { $push: { tarefas: { $each: [event._id], $sort: { start: 1 } } }},
+          { safe: true }, function(err, /*model*/) {
+            console.log(err);
+          }
+        );
+      }
       res.status(201).json(event);
       return event;
     })
@@ -137,9 +160,10 @@ function requestCreateEvent(req) {
     allDay: req.body.allDay,
     status: req.body.status,
     prioridade: req.body.prioridade,
-    nome: req.body.nome,
+    local: req.body.local,
     title: req.body.title,
     descricao: req.body.descricao,
+    origin: req.body.origin,
     proprietario: req.user._id,
     criador: req.user._id,
     modificador: req.user._id
@@ -165,11 +189,11 @@ function requestUpdateEvent(req) {
     allDay: req.body.allDay,
     status: req.body.status,
     prioridade: req.body.prioridade,
-    nome: req.body.nome,
+    local: req.body.local,
     title: req.body.title,
     descricao: req.body.descricao,
     isAtivo: req.body.isAtivo,
     proprietario: req.user._id,
-    modificador: req.user._id
+    modificador: req.user._id,
   };
 }
