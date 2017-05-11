@@ -48,7 +48,7 @@ export default function routes($stateProvider) {
     url: '/perfil',
     template: require('./perfil/perfil.html'),
     controller: 'PerfilController',
-    controllerAs: 'vm',
+    controllerAs: 'ctl',
     authenticate: true
   })
   .state('homemenu', {

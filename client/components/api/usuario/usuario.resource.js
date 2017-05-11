@@ -11,6 +11,13 @@ export function UsuarioResource($resource) {
         id: 'domain'
       }
     },
+    meProfile: {
+      method: 'GET',
+      params: {
+        id: 'me',
+        controller: 'profile'
+      }
+    },
     update: { method: 'PUT' },
     register: {
       method: 'POST',

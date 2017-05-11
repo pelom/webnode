@@ -4,6 +4,7 @@ import {populationCriador, populationModificador,
   populationProfile, populationProprietario} from './utils/population';
 mongoose.Promise = require('bluebird');
 import mongoose from 'mongoose';
+import {findAllProfilePermission} from './api.permission.service';
 
 export default function ApiService() {
   let API = {
@@ -24,6 +25,25 @@ export default function ApiService() {
         .then(handleEntityNotFound(res))
         .then(respondWithResult(res))
         .catch(handleError(res));
+    },
+    getUserRequest(req) {
+      return {
+        _id: req.user._id,
+        nome: req.user.nome,
+        sobrenome: req.user.sobrenome,
+        profileId: { role: req.user.role },
+        username: req.user.username,
+      };
+    },
+    getUserPermissionRequest(req, callback) {
+      findAllProfilePermission(req.user.profileId, (err, permissoes) => {
+        if(err) {
+          return callback(err, null);
+        }
+        let user = this.getUserRequest(req);
+        user.application = permissoes;
+        return callback(err, user);
+      });
     },
     handleError,
     respondWithResult,

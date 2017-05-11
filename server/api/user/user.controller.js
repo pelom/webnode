@@ -7,11 +7,10 @@ import {sendMailNovoConta, sendMailRedefinirSenha} from '../../components/nodema
 import jwt from 'jsonwebtoken';
 import {authenticateLogin} from '../../auth/auth.service';
 import ApiService from '../api.service';
-import {findAllProfilePermission} from '../api.permission.service';
 
 let api = ApiService();
 let handleError = api.handleError;
-//let respondWithResult = api.respondWithResult;
+let respondWithResult = api.respondWithResult;
 let handleEntityNotFound = api.handleEntityNotFound;
 let handleValidationError = api.handleValidationError;
 
@@ -126,7 +125,13 @@ export function show(req, res) {
 }
 
 export function me(req, res, /*next*/) {
-  findAllProfilePermission(req.user.profileId, (err, permissoes) => {
+  api.getUserPermissionRequest(req, (err, user) => {
+    if(err) {
+      handleError(res)(err);
+    }
+    respondWithResult(res)(user);
+  });
+  /*findAllProfilePermission(req.user.profileId, (err, permissoes) => {
     if(err) {
       return;
     }
@@ -138,7 +143,17 @@ export function me(req, res, /*next*/) {
       username: req.user.username,
       application: permissoes,
     });
-  });
+  });*/
+}
+
+const selectMeProfile = '_id nome sobrenome username '
+  + 'endereco email celular telefone empresa';
+
+export function meProfile(req, res, /*next*/) {
+  User.findById(req.user._id, selectMeProfile)
+  .then(handleEntityNotFound(res))
+  .then(respondWithResult(res))
+  .catch(handleError(res));
 }
 
 export function destroy(req, res) {

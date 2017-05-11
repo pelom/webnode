@@ -2,6 +2,7 @@
 import Event from './event.model';
 import User from '../user/user.model';
 import ApiService from '../api.service';
+import EventPdf from '../../components/genarate-pdf/event.pdf';
 
 let api = ApiService();
 let handleError = api.handleError;
@@ -90,6 +91,31 @@ const populationTarefa = {
     sort: { start: -1 }
   }
 };
+
+export function indexPdf(req, res) {
+  let firstDay = new Date(req.query.start);
+  let lastDay = new Date(req.query.end);
+  let status = req.query.status || 'Concluído'.split(',');
+  console.log(firstDay, lastDay, status);
+
+  Event.find({
+    start: { $gte: firstDay, $lte: lastDay },
+    proprietario: req.user._id,
+    status: { $in: status }
+  }, selectShow, {
+    skip: 0, limit: 200,
+    sort: {
+      start: 1
+    }
+  })
+    .populate([api.populationProprietario, api.populationCriador, api.populationModificador])
+    .exec()
+    .then(events => {
+      let user = api.getUserRequest(req);
+      EventPdf().generateEventHour(user, events, res);
+    })
+    .catch(handleError(res));
+}
 
 export function index(req, res) {
   let firstDay = new Date(req.query.start);

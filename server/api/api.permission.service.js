@@ -132,9 +132,11 @@ export function findAllProfilePermission(profileId, callback) {
     .exec()
     .then(profile => {
       if(!profile) {
-        return callback(null, []);
+        callback(null, []);
+        return;
       }
-      return callback(null, createPermission(profile.permissoes));
+      callback(null, createPermission(profile.permissoes));
+      return profile;
     })
     .catch(err => {
       console.log('Ex: ', err);

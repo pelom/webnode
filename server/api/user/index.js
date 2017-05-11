@@ -13,6 +13,7 @@ router.get('/domain', isPermission(permissao(MODIFICAR)), controller.domain);
 router.get('/', isPermission(permissao(LER)), controller.index);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/me', auth.isAuthenticated(), controller.me);
+router.get('/me/profile', auth.isAuthenticated(), controller.meProfile);
 router.get('/:id', isPermission(permissao(LER)), controller.show);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 

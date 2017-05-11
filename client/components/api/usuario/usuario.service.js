@@ -65,6 +65,14 @@ export function UsuarioService(Util, UsuarioResource) {
         console.log('Ex:', err);
         return safeCb(callback)(err);
       }).$promise;
+    },
+    loadMeProfile(callback) {
+      return UsuarioResource.meProfile(function(data) {
+        return safeCb(callback)(null, data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
     }
   };
   return usuarioService;

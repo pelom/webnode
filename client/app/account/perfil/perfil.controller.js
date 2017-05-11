@@ -2,10 +2,14 @@
 
 export default class PerfilController {
   /*@ngInject*/
-  constructor(Auth, $state) {
+  constructor(UsuarioService, Auth, $state) {
     this.Auth = Auth;
     this.$state = $state;
-
+    this.meProfile = {};
+    UsuarioService.loadMeProfile().then(meProfile => {
+      this.meProfile = meProfile;
+      console.log(meProfile);
+    });
     this.user = {
       nome: 'André',
       sobrenome: 'Leite',
