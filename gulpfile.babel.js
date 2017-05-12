@@ -498,6 +498,7 @@ gulp.task('build', cb => {
       'webpack:dist'
     ],
     'revReplaceWebpack',
+    'revReplaceTemplateWebpack',
     cb);
 });
 
@@ -538,6 +539,14 @@ gulp.task('revReplaceWebpack', function() {
       manifest: gulp.src(`${paths.dist}/${paths.client.revManifest}`)
     }))
     .pipe(gulp.dest('dist/client'));
+});
+
+gulp.task('revReplaceTemplateWebpack', function() {
+  return gulp.src('dist/server/components/html-template/*.html')
+    .pipe(plugins.revReplace({
+      manifest: gulp.src(`${paths.dist}/${paths.client.revManifest}`)
+    }))
+    .pipe(gulp.dest('dist/server/components/html-template/'));
 });
 
 gulp.task('copy:extras', () => {
@@ -589,7 +598,9 @@ gulp.task('copy:assets', () => {
 
 gulp.task('copy:server', () => {
   return gulp.src([
-    'package.json'
+    'package.json',
+    '.buildpacks',
+    'Aptfile'
   ], {
     cwdbase: true
   })
@@ -599,6 +610,7 @@ gulp.task('copy:server', () => {
 gulp.task('copy:server:template', () => {
   return gulp.src([
     `${serverPath}/components/nodemailer/template/*.html`,
+    `${serverPath}/components/html-template/*.html`,
   ], {
     cwdbase: true
   })

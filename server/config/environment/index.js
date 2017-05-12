@@ -58,7 +58,7 @@ var all = {
     },
     console: {
       level: 'debug',
-      handleExceptions: true,
+      handleExceptions: false,
       json: false,
       colorize: 'all',
     }
