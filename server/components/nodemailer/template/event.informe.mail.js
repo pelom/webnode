@@ -7,7 +7,7 @@ export default class EventInformeMail extends TemplateMail {
     this.subject = 'Lista de eventos atrasados';
     this.to = user.email;
     this.data = {
-      title: 'Webnode - Eventos',
+      title: 'webnode - Eventos',
       message: 'Resumo diário de eventos atrasados',
       copymark: 'PJsin 2008-2017',
       events,

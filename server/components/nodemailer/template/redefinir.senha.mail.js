@@ -8,7 +8,7 @@ export default class RedefiniSenhaMail extends TemplateMail {
     this.to = user.email;
     this.data = {
       title: 'Solicitação de redefinição de senha',
-      message: 'Recentimente houve uma solicitou de redefinição de senha para sua conta Webnode. Clique no botão abaixo para redefini-lá',
+      message: 'Recentimente houve uma solicitou de redefinição de senha para sua conta webnode. Clique no botão abaixo para redefini-lá',
       action: `${req.headers.origin}/signupvalid?token=${user.activeToken}`,
       copymark: 'PJsin 2008-2017',
       message2: 'Caso você não tenha solicitado essa redefinição de senha, por favor ignore este e-mail ou entre em contato com o administrador. '

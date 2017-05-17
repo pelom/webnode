@@ -4,10 +4,10 @@ export default class NovaContaMail extends TemplateMail {
   constructor(req, user) {
     super();
     this.from = 'pelommedrado@gmail.com';
-    this.subject = 'Bem-vindo(a) ao WebNode';
+    this.subject = 'Bem-vindo(a) ao webnode';
     this.to = user.email;
     this.data = {
-      title: 'Bem-vindo(a) ao Webnode',
+      title: 'Bem-vindo(a) ao webnode',
       name: `${user.nome} ${user.sobrenome}`,
       message: 'Clique abaixo para fazer a verificação de sua conta.',
       action: `${req.headers.origin}/signupvalid?token=${user.activeToken}`,

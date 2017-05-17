@@ -69,7 +69,6 @@ export default class UsuarioEditController {
       celular: '',
       isNotificar: true,
       agenda: {
-        startEditable: false,
         eventLimit: false,
         selectable: false,
         editable: false,

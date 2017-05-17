@@ -16,11 +16,15 @@ export function domain(req, res) {
     prioridade: Event.schema.path('prioridade').enumValues,
   });
 }
+const populationProfile = {
+  path: 'profileId',
+  select: '_id nome property'
+};
 
 export function calendar(req, res) {
   User.findById(req.user._id)
-    .select('_id locale timezone laguage agenda')
-    //.populate(query.populate)
+    .select('_id locale timezone laguage agenda profileId')
+    .populate([populationProfile])
     .exec()
     .then(handleEntityNotFound(res))
     .then(user => {
@@ -42,7 +46,6 @@ function createAgenda() {
     editable: false,
     selectable: false,
     eventLimit: false,
-    startEditable: false,
     slotDuration: '01:00:00',
     businessHours: []
   };
@@ -50,19 +53,12 @@ function createAgenda() {
 
 function createAgendaConfig(user) {
   return {
-    header: {
-      //left: 'month basicWeek basicDay agendaWeek agendaDay',
-      //right: 'today,month,basicWeek basicDay,agendaWeek,agendaDay,listWeek'
-      left: 'title',
-      right: 'today prev,next',
-      center: 'agendaDay,listWeek,agendaWeek,month'
-    },
+    header: user.profileId.property.header,
     locale: user.locale,
     lang: user.laguage,
     editable: user.agenda.editable,
     selectable: user.agenda.selectable,
-    eventLimit: user.agenda.eventLimit, // allow "more" link when too many events
-    startEditable: user.agenda.startEditable,
+    eventLimit: user.agenda.eventLimit,
     slotDuration: user.agenda.slotDuration,
     //selectConstraint: 'businessHours',
     //eventConstraint: 'businessHours',

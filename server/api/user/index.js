@@ -4,10 +4,10 @@ import {Router} from 'express';
 import * as controller from './user.controller';
 import * as auth from '../../auth/auth.service';
 import {LER, CRIAR, MODIFICAR,
-  PermissionWebnode, isPermission} from '../api.permission.service';
+  Permissionwebnode, isPermission} from '../api.permission.service';
 var router = new Router();
 let permissao = function(funcao) {
-  return PermissionWebnode('Usuários', funcao);
+  return Permissionwebnode('Usuários', funcao);
 };
 router.get('/domain', isPermission(permissao(MODIFICAR)), controller.domain);
 router.get('/', isPermission(permissao(LER)), controller.index);

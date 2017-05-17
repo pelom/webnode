@@ -20,7 +20,7 @@ export default class HomeController {
     this.EventoService.loadCalendar()
       .then(calendar => {
         let calendarDefault = this.createCalendar();
-        const config = Object.assign(calendarDefault, calendar);
+        let config = Object.assign(calendarDefault, calendar);
         moment.locale(config.locale);
         this.uiConfig = {
           calendar: config

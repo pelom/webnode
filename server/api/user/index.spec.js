@@ -55,7 +55,7 @@ describe('User API Router:', function() {
     it('Deve possui permissao Ler para a rota user.controller.index', function() {
       routerStub.get
         .withArgs('/', {
-          aplicacao: 'Webnode',
+          aplicacao: 'webnode',
           modulo: 'Usuários',
           funcao: 'Ler',
           role: 'admin'
@@ -92,7 +92,7 @@ describe('User API Router:', function() {
     it('should be authenticated and route to user.controller.show', function() {
       routerStub.get
         .withArgs('/:id', {
-          aplicacao: 'Webnode',
+          aplicacao: 'webnode',
           modulo: 'Usuários',
           funcao: 'Ler',
           role: 'admin'
@@ -105,7 +105,7 @@ describe('User API Router:', function() {
     it('should route to user.controller.create', function() {
       routerStub.post
         .withArgs('/', {
-          aplicacao: 'Webnode',
+          aplicacao: 'webnode',
           modulo: 'Usuários',
           funcao: 'Criar',
           role: 'admin'

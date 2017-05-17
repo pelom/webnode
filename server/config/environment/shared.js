@@ -4,7 +4,7 @@ exports = module.exports = {
   userRoles: ['guest', 'user', 'admin'],
   signup: true,
   applicationDefault: {
-    nome: 'WebNode',
+    nome: 'webnode',
     show: true,
     menuLeft: [
       /*{ state: 'login', title: 'Meu test', show: true }*/

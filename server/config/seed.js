@@ -106,7 +106,7 @@ let createApp = function(modulos) {
   Application.find({}).remove()
     .then(() => {
       Application.create({
-        nome: 'Webnode',
+        nome: 'webnode',
         descricao: 'Aplicação padrão resposável por fornecer os módulos utéis',
         modulos
       }).then(app => {

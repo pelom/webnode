@@ -3,10 +3,10 @@
 import {Router} from 'express';
 import * as controller from './profile.controller';
 import {LER, CRIAR, MODIFICAR,
-  PermissionWebnode, isPermission} from '../api.permission.service';
+  Permissionwebnode, isPermission} from '../api.permission.service';
 
 let permissao = function(funcao) {
-  return PermissionWebnode('Perfis', funcao);
+  return Permissionwebnode('Perfis', funcao);
 };
 let router = new Router();
 router.get('/', isPermission(permissao(LER)), controller.index);

@@ -4,11 +4,11 @@ import {Router} from 'express';
 import * as controller from './application.controller';
 import * as auth from '../../auth/auth.service';
 import {LER, CRIAR, MODIFICAR, /*EXCLUIR,*/ ROLE_ADMIN,
-  PermissionWebnode, isPermission} from '../api.permission.service';
+  Permissionwebnode, isPermission} from '../api.permission.service';
 
 let router = new Router();
 let permissao = function(funcao) {
-  return PermissionWebnode('Aplicações', funcao);
+  return Permissionwebnode('Aplicações', funcao);
 };
 router.get('/', isPermission(permissao(LER)), controller.index);
 router.get('/showlist', isPermission(permissao(LER)), controller.showList);

@@ -10,7 +10,7 @@ export const EXCLUIR = 'Excluir';
 export const APPLICATION = 'Webnode';
 export const ROLE_ADMIN = 'admin';
 
-export function PermissionWebnode(modulo, funcao) {
+export function Permissionwebnode(modulo, funcao) {
   return {
     aplicacao: APPLICATION,
     modulo,
