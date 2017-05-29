@@ -21,9 +21,10 @@ const populationProfile = {
   select: '_id nome property'
 };
 
+const selectUserCalendar = '_id locale timezone laguage agenda profileId';
 export function calendar(req, res) {
   User.findById(req.user._id)
-    .select('_id locale timezone laguage agenda profileId')
+    .select(selectUserCalendar)
     .populate([populationProfile])
     .exec()
     .then(handleEntityNotFound(res))
@@ -113,10 +114,11 @@ export function indexPdf(req, res) {
     .catch(handleError(res));
 }
 
+const statusDefaultList = 'Pendente,Em Andamento,Concluído,Cancelado';
 export function index(req, res) {
   let firstDay = new Date(req.query.start);
   let lastDay = new Date(req.query.end);
-  let status = req.query.status || 'Pendente,Em Andamento,Concluído,Cancelado'.split(',');
+  let status = req.query.status || statusDefaultList.split(',');
   console.log('firstDay', firstDay);
   console.log('lastDay', lastDay);
   return api.find({
@@ -162,12 +164,7 @@ export function create(req, res) {
   newApp.save()
     .then(function(event) {
       if(event.origin) {
-        Event.findByIdAndUpdate(event.origin,
-          { $push: { tarefas: { $each: [event._id], $sort: { start: 1 } } }},
-          { safe: true }, function(err, /*model*/) {
-            console.log(err);
-          }
-        );
+        addTask(event);
       }
       res.status(201).json(event);
       return event;
@@ -190,6 +187,15 @@ function requestCreateEvent(req) {
     criador: req.user._id,
     modificador: req.user._id
   };
+}
+
+function addTask(event) {
+  Event.findByIdAndUpdate(event.origin,
+    { $push: { tarefas: { $each: [event._id], $sort: { start: 1 } } }},
+    { safe: true }, function(err, /*model*/) {
+      console.log(err);
+    }
+  );
 }
 
 export function update(req, res) {
@@ -218,4 +224,59 @@ function requestUpdateEvent(req) {
     proprietario: req.user._id,
     modificador: req.user._id,
   };
+}
+
+export function destroy(req, res) {
+  Event.find({_id: req.params.id, proprietario: req.user._id}, selectShow, {
+    limit: 1
+  })
+    .populate([populationTarefa, populationOrigin, api.populationProprietario,
+      api.populationCriador, api.populationModificador])
+    .exec()
+    .then(callbackDestroy(res))
+    .catch(handleError(res));
+}
+
+function callbackDestroy(res) {
+  return function(events) {
+    if(events.length == 0) {
+      return handleEntityNotFound(res)();
+    }
+
+    let eventObject = events[0].toObject();
+
+    if(eventObject.hasOwnProperty('origin')) {
+      removeTask(eventObject);
+    }
+
+    if(eventObject.hasOwnProperty('tarefas')) {
+      eventObject.tarefas.forEach(item => {
+        removeOrigin(item);
+      });
+    }
+
+    return Event.findByIdAndRemove(eventObject._id).exec()
+      .then(function() {
+        return res.status(204).end();
+      })
+      .catch(handleError(res));
+  };
+}
+
+function removeTask(event) {
+  Event.findByIdAndUpdate(event.origin,
+    { $pull: { tarefas: { $in: [event._id] } } },
+    { safe: true }, function(err, /*model*/) {
+      console.log(err);
+    }
+  );
+}
+
+function removeOrigin(event) {
+  Event.findByIdAndUpdate(event._id,
+    { origin: undefined },
+    { safe: true }, function(err, /*model*/) {
+      console.log(event, err);
+    }
+  );
 }

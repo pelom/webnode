@@ -1,7 +1,7 @@
 <div class="modal-header">
   <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
 
-  <h4><i class="fa {{ctl.event.icon}}" style="color:{{ctl.event.color}}" aria-hidden="true"></i>
+  <h4 style="color:{{ctl.event.color}}"><i class="fa {{ctl.event.icon}}" aria-hidden="true"></i>
     <strong><span ng-bind="modal.title" class="modal-title"></span></strong></h4>
 </div>
 
@@ -226,10 +226,12 @@
     <div class="row"><hr/></div>
     <div class="row">
       <div class="col-xs-12">
-        <button type="submit" class="btn btn-primary" ng-show="ctl.isEdit"
+        <button type="submit" class="btn btn-primary" ng-show="ctl.isSave()"
           ng-disabled="form.$invalid">Salvar</button>
-        <button type="button" class="btn btn-default" ng-show="ctl.isEdit && ctl.event._id"
+        <button type="button" class="btn btn-default" ng-show="ctl.isSave() && ctl.event._id"
               ng-click="ctl.newTask()">Nova Tarefa</button>
+        <button type="button" class="btn btn-default"
+              ng-click="ctl.confirmDelete()" ng-show="ctl.isDelete()">Excluir</button>
         <button type="button" class="btn btn-default"
           ng-click="ctl.close()">Fechar</button>
 

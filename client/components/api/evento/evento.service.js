@@ -135,6 +135,14 @@ export function EventoService(EventoResource, Util) {
         console.log('Ex:', err);
         return safeCb(callback)(err);
       }).$promise;
+    },
+    deleteEvent(event, callback) {
+      return EventoResource.delete({id: event._id}, function(data) {
+        return safeCb(callback)(data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
     }
   };
   return eventoService;

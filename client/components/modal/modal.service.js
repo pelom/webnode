@@ -74,28 +74,31 @@ export function Modal($rootScope, $uibModal, $log) {
           deleteModal = openModal({
             modal: {
               dismissable: true,
-              title: 'Confirm Delete',
-              html: `<p>Are you sure you want to delete <strong>${name}</strong> ?</p>`,
+              title: 'Confirmação de exclusão',
+              html: require('./modal.html'),
+              icon: 'fa-info-circle',
+              text: 'Deseja realmente excluir?',
+              divhtml: `<ul><li><code>${name}</code></li></ul>`,
               buttons: [{
                 classes: 'btn-danger',
-                text: 'Delete',
+                text: 'Sim',
                 click(e) {
                   deleteModal.close(e);
                 }
               }, {
                 classes: 'btn-default',
-                text: 'Cancel',
+                text: 'Não',
                 click(e) {
                   deleteModal.dismiss(e);
                 }
               }]
             }
-          }, 'modal-primary');
+          }, 'modal-danger');
 
           deleteModal.result.then(
-            function(event) {
+            function(/*event*/) {
               //Reflect.apply(del, event, args);
-              del.apply(event, args);
+              del();
             },
             function() {
               $log.info(`Modal dismissed at: ${new Date()}`);

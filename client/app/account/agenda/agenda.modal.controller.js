@@ -2,11 +2,13 @@
 import moment from 'moment';
 export default class AgendaModalController {
   /*@ngInject*/
-  constructor(EventoService, $state, $scope, toastr, usSpinnerService) {
+  constructor(Auth, EventoService, $state, $scope, toastr, usSpinnerService, Modal) {
     this.EventoService = EventoService;
     this.usSpinnerService = usSpinnerService;
+    this.Auth = Auth;
     this.toastr = toastr;
     this.$state = $state;
+    this.Modal = Modal;
     this.modalCtl = EventoService.getModalCtl();
     this.event = this.modalCtl.dataSource;
     if(this.event.tarefas) {
@@ -123,5 +125,52 @@ export default class AgendaModalController {
       defaultDate: this.modalCtl.defaultDate,
       eventId: `task:${this.event._id}`
     }, { reload: true });
+  }
+
+  confirmDelete() {
+    let confimDelete = this.Modal.confirm.delete(this.deleteEvent());
+    confimDelete(this.event.title);
+  }
+
+  deleteEvent() {
+    return () => {
+      this.usSpinnerService.spin('spinner-1');
+      this.EventoService.deleteEvent(this.event)
+      .then(() => {
+        this.toastr.success('Evento excluído com sucesso.');
+        this.modalCtl.dismiss();
+        this.$state.go('home', {
+          defaultView: this.modalCtl.defaultView,
+          defaultDate: this.modalCtl.defaultDate,
+          eventId: undefined
+        }, { reload: true });
+      })
+      .catch(err => {
+        console.log('Ex:', err);
+        this.toastr.error(err.data.message, err.data.name, {
+          autoDismiss: false,
+          closeButton: true,
+          timeOut: 0,
+        });
+      })
+      .finally(() => {
+        this.usSpinnerService.stop('spinner-1');
+      });
+    };
+  }
+
+  isSave() {
+    if(!this.event._id) {
+      return true;
+    }
+    let user = this.Auth.getCurrentUserSync();
+    return this.event.proprietario._id === user._id;
+  }
+  isDelete() {
+    if(!this.event._id) {
+      return false;
+    }
+    let user = this.Auth.getCurrentUserSync();
+    return this.event.proprietario._id === user._id;
   }
 }
