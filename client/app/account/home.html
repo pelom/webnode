@@ -1,26 +1,28 @@
 <div class="container">
   <!--h3><i class="fa fa-home" aria-hidden="true"></i> <b>Início</b></h3-->
   <!--hr/-->
+
   <div class="row">
     <ul class="breadcrumb">
-      <li title="Itens no calendário" uib-popover="I appeared on mouse enter!" popover-trigger="'mouseenter'">
+      <li title="Itens no calendário">
         <a href="#" ng-click="ctl.findEventListStatus('');">
-          <i class="fa fa-calendar" aria-hidden="true"></i> <b> {{ctl.EventoService.getEventoList().length}}</b></a>
+          <i class="fa fa-calendar" aria-hidden="true"></i> <b>{{ctl.EventoService.getEventoList().length}}</b></a>
       </li>
-      <li class="completed" title="Concluído">
-        <a href="" ng-click="ctl.findEventListStatus('Concluído');">
+      <li title="Concluído">
+        <a href="" ng-click="ctl.findEventListStatus('Concluído');" class="completed">
           <i class="fa fa-check" aria-hidden="true"></i> <b>{{ctl.EventoService.getNumConcluido()}}</b></a></li>
-      <li class="pending" title="Pendente">
-        <a href="" ng-click="ctl.findEventListStatus('Pendente');">
+      <li title="Pendente">
+        <a href="" ng-click="ctl.findEventListStatus('Pendente');" class="pending">
           <i class="fa fa-clock-o" aria-hidden="true"></i> <b>{{ctl.EventoService.getNumPendente()}}</b></a></li>
-      <li class="inprocess" title="Em Andamento">
-        <a href="" ng-click="ctl.findEventListStatus('Em Andamento');">
+      <li title="Em Andamento">
+        <a href="" ng-click="ctl.findEventListStatus('Em Andamento');" class="inprocess">
           <i class="fa fa-spinner" aria-hidden="true"></i> <b>{{ctl.EventoService.getNumEmAndamento()}}</b></a></li>
-      <li class="cancel" title="Cancelado">
-        <a href="" ng-click="ctl.findEventListStatus('Cancelado');">
+      <li title="Cancelado">
+        <a href="" ng-click="ctl.findEventListStatus('Cancelado');" class="cancel">
         <i class="fa fa-ban" aria-hidden="true"></i> <b>{{ctl.EventoService.getNumCancelado()}}</b></a></li>
     </ul>
   </div>
+
   <div class="row">
     <span spinner-key="spinner-1" spinner-start-active="true"
       us-spinner="{radius:24, width:8, length: 16}"/>

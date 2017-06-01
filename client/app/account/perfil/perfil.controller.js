@@ -2,13 +2,16 @@
 
 export default class PerfilController {
   /*@ngInject*/
-  constructor(UsuarioService, Auth, $state) {
+  constructor(UsuarioService, Auth, $state, Modal) {
     this.Auth = Auth;
     this.$state = $state;
     this.meProfile = {};
+    this.Modal = Modal;
     UsuarioService.loadMeProfile().then(meProfile => {
       this.meProfile = meProfile;
       console.log(meProfile);
+
+      this.openModalView();
     });
     this.user = {
       nome: 'André',
@@ -25,6 +28,25 @@ export default class PerfilController {
         complemento: 'Minha Casa',
         numero: '441'
       }
+    };
+  }
+
+  openModalView() {
+    let modalView = this.createModalView(this.meProfile.nome + ' ' + this.meProfile.sobrenome);
+    let showOpen = this.Modal.show.open();
+    let modalCtl = showOpen(modalView);
+    return modalCtl;
+  }
+
+  createModalView(title) {
+    return {
+      controller: 'PerfilEditModalController',
+      controllerAs: 'ctl',
+      dismissable: false,
+      backdrop: 'static',
+      keyboard: false,
+      title,
+      html: require('./perfiledit.modal.html')
     };
   }
 }

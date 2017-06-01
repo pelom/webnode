@@ -12,6 +12,10 @@ padding-top: 70px;
   margin: 20px 0;
 }
 
+.fc h2 {
+   font-size: 20px;
+}
+
 #banner {
   border-bottom: none;
   margin-top: -20px;
@@ -66,6 +70,7 @@ padding-top: 70px;
 
 .breadcrumb li {
   float: left;
+  font-size: 16px;
 }
 
 .breadcrumb li.active a {
@@ -73,30 +78,26 @@ padding-top: 70px;
   /* fallback color */
   background: #ffc107;
 }
-.breadcrumb li.completed a {
-  background: brown;
-  background: #5cb85c;
+.breadcrumb a.completed {
+  color: #5cb85c;
 }
 .breadcrumb li.completed a:after {
   border-left: 30px solid #5cb85c;
 }
-.breadcrumb li.pending a {
-  background: brown;
-  background: #f0ad4e;
+.breadcrumb a.pending {
+  color: #f0ad4e;
 }
 .breadcrumb li.pending a:after {
   border-left: 30px solid #f0ad4e;
 }
-.breadcrumb li.inprocess a {
-  background: brown;
-  background: #428bca;
+.breadcrumb a.inprocess {
+  color: #428bca;
 }
 .breadcrumb li.inprocess a:after {
   border-left: 30px solid #428bca;
 }
-.breadcrumb li.cancel a {
-  background: brown;
-  background: #d9534f;
+.breadcrumb a.cancel {
+  color: #d9534f;
 }
 .breadcrumb li.cancel a:after {
   border-left: 30px solid #d9534f;
