@@ -284,6 +284,47 @@ function requestUserUpdate(req) {
   return userUpdate;
 }
 
+const selectProfileUpdate = '_id nome sobrenome criador '
+  + 'modificador updatedAt createdAt endereco email celular telefone empresa';
+
+export function updateProfile(req, res) {
+  User.findOne({ _id: req.params.id }, selectProfileUpdate)
+    .exec()
+    .then(handleEntityNotFound(res))
+    .then(callbackUpdateProfile(req, res))
+    .catch(handleError(res));
+}
+function callbackUpdateProfile(req, res) {
+  return function(user) {
+    let userJson = requestUpdateProfile(req);
+    Object.assign(user, userJson);
+    return user.save()
+      .then(newUser => {
+        let notifyEmail = Boolean(req.body.isNotificar);
+        if(notifyEmail) {
+          notifyResetPassword(req, newUser);
+        }
+        req.params.id = user._id;
+        return show(req, res);
+      })
+      .catch(handleValidationError(res));
+  };
+}
+function requestUpdateProfile(req) {
+  let userId = req.params.id;
+  let userUpdate = {
+    _id: userId,
+    nome: String(req.body.nome),
+    sobrenome: String(req.body.sobrenome),
+    email: String(req.body.email),
+    empresa: req.body.empresa,
+    celular: String(req.body.celular),
+    endereco: req.body.endereco,
+    modificador: req.user._id
+  };
+  return userUpdate;
+}
+
 const selectUpdatePassword = '_id nome sobrenome username isAtivo '
   + 'email password salt';
 export function changePassword(req, res) {

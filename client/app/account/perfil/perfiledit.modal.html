@@ -1,8 +1,10 @@
 <div class="modal-header">
   <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
 
-  <h4 style="color:{{ctl.event.color}}"><i class="fa {{ctl.event.icon}}" aria-hidden="true"></i>
-    <strong><span ng-bind="modal.title" class="modal-title"></span></strong></h4>
+  <h5 style="color:{{ctl.event.color}}">
+    <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
+    <strong><span ng-bind="modal.title" class="modal-title"></span></strong>
+  </h5>
 </div>
 
 <div class="modal-body">
@@ -161,9 +163,10 @@
     <div class="row"><hr/></div>
     <div class="row">
       <div class="col-xs-12">
+        <button type="button" class="btn btn-primary"
+          ng-click="ctl.saveProfile()">Salvar</button>
         <button type="button" class="btn btn-default"
           ng-click="$dismiss()">Fechar</button>
-
       </div>
     </div>
   </form>

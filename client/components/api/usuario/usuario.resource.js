@@ -25,6 +25,12 @@ export function UsuarioResource($resource) {
         id: 'register'
       }
     },
+    updateProfile: {
+      method: 'PUT',
+      params: {
+        controller: 'profile'
+      }
+    },
     changePassword: {
       method: 'PUT',
       params: {

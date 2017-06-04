@@ -64,6 +64,7 @@ export default class AplicacaoEditController {
       controller: 'AplicacaoModuloEditController',
       controllerAs: 'ctl',
       dismissable: true,
+      backdrop: 'static',
       title: modalTitle,
       html: require('./aplicacao.modulo.edit.html'),
     };

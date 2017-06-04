@@ -43,6 +43,7 @@ padding-top: 70px;
 .navbar-img {
   height: 32px;
   display: inline-block !important;
+  float: left;
   width: 32px;
   padding: 5px;
 }

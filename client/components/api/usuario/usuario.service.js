@@ -2,6 +2,7 @@
 import angular from 'angular';
 export function UsuarioService(Util, UsuarioResource) {
   'ngInject';
+  let modalCtl;
   let itemIsAtivo = [
     { name: 'Ativo', value: true },
     { name: 'Desativo', value: false }
@@ -50,6 +51,15 @@ export function UsuarioService(Util, UsuarioResource) {
         return safeCb(callback)(err);
       }).$promise;
     },
+    updateProfile(newUser, callback) {
+      console.log(newUser);
+      return UsuarioResource.updateProfile(newUser, function(data) {
+        return safeCb(callback)(null, data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
+    },
     loadUserList(callback) {
       return UsuarioResource.query(function(data) {
         return safeCb(callback)(null, data);
@@ -73,7 +83,13 @@ export function UsuarioService(Util, UsuarioResource) {
         console.log('Ex:', err);
         return safeCb(callback)(err);
       }).$promise;
-    }
+    },
+    getModalCtl() {
+      return modalCtl;
+    },
+    setModalCtl(modCtl) {
+      modalCtl = modCtl;
+    },
   };
   return usuarioService;
 }

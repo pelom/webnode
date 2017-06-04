@@ -16,6 +16,7 @@ router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/me/profile', auth.isAuthenticated(), controller.meProfile);
 router.get('/:id', isPermission(permissao(LER)), controller.show);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
+router.put('/:id/profile', auth.isAuthenticated(), controller.updateProfile);
 
 router.post('/', isPermission(permissao(CRIAR)), controller.create);
 router.put('/:id', isPermission(permissao(MODIFICAR)), controller.update);
