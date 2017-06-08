@@ -52,7 +52,7 @@ var UserSchema = new Schema({
   telefone: {
     type: String, required: false, maxlength: 20 },
   empresa: {
-    type: String, required: false, maxlength: 40 },
+    type: String, required: false, maxlength: 60 },
   email: {
     type: String, required: true, maxlength: 60, lowercase: true, trim: true },
   isAtivo: {

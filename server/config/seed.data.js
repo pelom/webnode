@@ -137,7 +137,8 @@ function criarDados() {
         user: '******@gmail.com',
         password: '******'
       }
-    }
+    },
+    { nome: 'Leads', funcoes: funcaoList, state: 'leads', icon: 'fa-child' },
   ];
 
   let profileMap = new Map();

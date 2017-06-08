@@ -58,6 +58,20 @@ export default function routes($stateProvider) {
     controllerAs: 'ctl',
     authenticate: true
   })
+  .state('leads', {
+    url: '/leads',
+    template: require('./lead/lead.html'),
+    controller: 'LeadController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
+  .state('leadedit', {
+    url: '/leads/edit/:id',
+    template: require('./lead/lead.edit.html'),
+    controller: 'LeadEditController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
   .state('home', {
     url: '/home?defaultView&defaultDate&eventId',
     template: require('./home.html'),
