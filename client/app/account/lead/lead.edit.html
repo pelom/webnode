@@ -13,7 +13,7 @@
         <div class="panel panel-default" >
           <div class="panel-body">
             <h4>
-              <i class="fa fa-child" aria-hidden="true"></i>
+              <i class="fa fa-child fa-2x" aria-hidden="true"></i>
               &nbsp;<label>{{ctl.lead.nome}} {{ctl.lead.sobrenome}}</label>
               &nbsp;<small>({{ctl.lead.status}})</small>
             </h4>
@@ -157,6 +157,16 @@
                 <textarea class="form-control" rows="4" placeholder="Descrição"
                   ng-model="ctl.lead.descricao"></textarea>
               </div>
+            </div>
+
+            <br/>
+            <hr/>
+            <div class="list-group">
+              <button class="btn btn-primary" type="submit"
+                ng-disabled="form.$invalid || ctl.wait">
+                  <loading showhidden="ctl.wait"></loading> Salvar</button>
+              <button type="button" class="btn btn-link"
+                ui-sref="leads">Voltar</button>
             </div>
 
             <br/>

@@ -5,11 +5,11 @@ import moment from 'moment';
 /* eslint no-sync: 0 */
 export default class HomeController {
   /*@ngInject*/
-  constructor($stateParams, $location, EventoService, toastr, usSpinnerService, Modal) {
+  constructor($stateParams, $window, $scope, $location, EventoService, toastr, usSpinnerService, Modal) {
     this.$stateParams = $stateParams;
     this.defaultView = $stateParams.defaultView || 'listWeek';
     this.defaultDate = $stateParams.defaultDate || new Date();
-    this.defaultStatus = $stateParams.defaultStatus || null;
+    this.defaultStatus = $stateParams.defaultStatus || '';
     this.startInterval = null;
     this.endInterval = null;
     this.eventSources = [];
@@ -18,41 +18,56 @@ export default class HomeController {
     this.Modal = Modal;
     this.EventoService = EventoService;
     this.EventoService.loadCalendar()
-      .then(calendar => {
-        let calendarDefault = this.createCalendar();
-        let config = Object.assign(calendarDefault, calendar);
-        moment.locale(config.locale);
-        this.uiConfig = {
-          calendar: config
-        };
-
-        if($stateParams.eventId) {
-          let parse = $stateParams.eventId.split(':');
-          console.log(parse);
-          if(parse.length == 2 && parse[0] === 'task') {
-            let event = this.createEventSelect(moment().local(), moment().local());
-            event.typeTask = 'task';
-            event.origin = parse[1];
-            this.openModalEvent(event);
-          } else {
-            this.openModalEventId($stateParams.eventId);
-          }
-          //$location.search('eventId', null);
-        }
-      });
+      .then(this.initCalendar());
+    this.managerLayout($window, $scope);
   }
+
+  initCalendar() {
+    return calendar => {
+      let calendarDefault = this.createCalendar();
+      let config = Object.assign(calendarDefault, calendar);
+      moment.locale(config.locale);
+      this.uiConfig = {
+        calendar: config
+      };
+
+      if(this.$stateParams.eventId) {
+        let parse = this.$stateParams.eventId.split(':');
+
+        if(parse.length == 2 && parse[0] === 'task') {
+          let event = this.createEventSelect(moment().local(), moment().local());
+          event.typeTask = 'task';
+          event.origin = parse[1];
+          this.openModalEvent(event);
+        } else {
+          this.openModalEventId(this.$stateParams.eventId);
+        }
+        //$location.search('eventId', null);
+      }
+    };
+  }
+
+  managerLayout($window, $scope) {
+    this.width = $window.innerWidth;
+
+    let onResize = () => {
+      //console.log('$window.innerWidth:', $window.innerWidth);
+      this.width = $window.innerWidth;
+      $scope.$digest();
+    };
+
+    angular.element($window).on('resize', onResize);
+
+    $scope.$on('$destroy', () => {
+      console.log('$destroy');
+      angular.element($window).off('resize', onResize);
+    });
+  }
+
   createCalendar() {
     return {
       defaultView: this.defaultView,
       defaultDate: this.defaultDate,
-      loading: bool => {
-        if(bool) {
-          this.usSpinnerService.spin('spinner-1');
-        } else {
-          this.usSpinnerService.stop('spinner-1');
-        }
-        console.log('loading:', bool);
-      },
       viewRender: view /*element*/ => {
         this.findEventListView(view);
       },
@@ -97,6 +112,7 @@ export default class HomeController {
       }
     };
   }
+
   createEventClick(calEvent) {
     let evento = angular.copy(calEvent);
     console.log(evento.start);
@@ -106,6 +122,7 @@ export default class HomeController {
     }
     return evento;
   }
+
   momentToDate(momentDate) {
     try {
       return moment(momentDate.format()).toDate();
@@ -114,6 +131,7 @@ export default class HomeController {
       return null;
     }
   }
+
   createEventSelect(startDate, endDate) {
     console.log(startDate);
     let evento = {
@@ -127,18 +145,26 @@ export default class HomeController {
     this.EventoService.setEventList(evList);
     return evList[0];
   }
+
   openModalEvent(event) {
     let modalCtl = openModalView(event, this.Modal);
     modalCtl.defaultView = this.defaultView;
     modalCtl.defaultDate = this.defaultDate;
     this.EventoService.setModalCtl(modalCtl);
   }
+
   findEventListView(view) {
     this.setParamRealod(view);
     this.startInterval = view.intervalStart.local().format();
     this.endInterval = view.intervalEnd.local().format();
     this.findEventList();
   }
+
+  setParamRealod(view) {
+    this.defaultView = view.name;
+    this.defaultDate = view.intervalStart.format();
+  }
+
   findEventList() {
     this.usSpinnerService.spin('spinner-1');
     this.EventoService.loadEventoList({
@@ -151,25 +177,23 @@ export default class HomeController {
       this.usSpinnerService.stop('spinner-1');
     });
   }
-  setParamRealod(view) {
-    this.defaultView = view.name;
-    this.defaultDate = view.intervalStart.format();
-  }
+
   callbackLoadEventoList() {
     return eventList => {
       this.EventoService.setEventList(eventList);
       let eventSource = {
-        //color: '#378006', textColor: '#FFF', eventColor: '#378006',
         events: eventList,
       };
       this.eventSources.pop();
       this.eventSources.push(eventSource);
     };
   }
+
   findEventListStatus(status) {
     this.defaultStatus = status;
     this.findEventList();
   }
+
   saveEvent(evento) {
     this.usSpinnerService.spin('spinner-1');
     this.EventoService.saveEvent(evento)
@@ -188,6 +212,7 @@ export default class HomeController {
       this.usSpinnerService.stop('spinner-1');
     });
   }
+
   openModalEventId(eventId) {
     this.usSpinnerService.spin('spinner-1');
     this.EventoService.loadEvento({id: eventId})
@@ -205,5 +230,23 @@ export default class HomeController {
     .finally(() => {
       this.usSpinnerService.stop('spinner-1');
     });
+  }
+
+  isActive(path) {
+    if(this.defaultStatus == '' && path == '') {
+      return true;
+    }
+    return this.defaultStatus == path;
+  }
+
+  isJustified() {
+    if(this.isFull()) {
+      return 'nav-justified';
+    }
+    return '';
+  }
+
+  isFull() {
+    return this.width >= 800;
   }
 }

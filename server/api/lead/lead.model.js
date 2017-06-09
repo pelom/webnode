@@ -25,7 +25,7 @@ var LeadSchema = new Schema({
   sobrenome: {
     type: String, required: true, minlength: 3, maxlength: 40, trim: true },
   email: {
-    type: String, required: true, maxlength: 60, lowercase: true, trim: true },
+    type: String, required: false, maxlength: 60, lowercase: true, trim: true },
   celular: {
     type: String, required: false, maxlength: 20 },
   telefone: {

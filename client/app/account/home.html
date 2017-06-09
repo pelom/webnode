@@ -1,8 +1,60 @@
 <div class="container">
   <!--h3><i class="fa fa-home" aria-hidden="true"></i> <b>Início</b></h3-->
   <!--hr/-->
-
   <div class="row">
+    <ul class="nav nav-pills" ng-class="ctl.isJustified()">
+      <li ng-class="{ active: ctl.isActive('')}">
+        <a href="#" ng-click="ctl.findEventListStatus('')" uib-tooltip="Todos">
+          <i class="fa fa-calendar" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Eventos<br/></small>
+          <span class="badge">{{ctl.EventoService.getEventoList().length}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Concluído')}">
+        <a href="#" ng-click="ctl.findEventListStatus('Concluído')" uib-tooltip="Concluídos">
+          <i class="fa fa-check" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Concluídos<br/></small>
+          <span class="badge">{{ctl.EventoService.getNumConcluido()}}</span>
+        </a>
+      </li>
+      <!--li ng-class="{ active: ctl.isActive('Concluído')}" class="dropdown" uib-dropdown>
+          <a href="#" uib-dropdown-toggle data-toggle="dropdown"
+            role="button" aria-haspopup="true" aria-expanded="false"
+            ng-click="ctl.findEventListStatus('Concluído')">
+            <small ng-if="ctl.isFull()">Concluídos</small>
+            <span class="caret"/><br/>
+          <span class="badge">{{ctl.EventoService.getNumConcluido()}}</span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="#tab4default" data-toggle="tab">Default 4</a></li>
+            <li><a href="#tab5default" data-toggle="tab">Default 5</a></li>
+        </ul>
+      </li-->
+      <li ng-class="{ active: ctl.isActive('Pendente')}">
+        <a href="#" ng-click="ctl.findEventListStatus('Pendente')" uib-tooltip="Pendentes">
+          <i class="fa fa-clock-o" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Pendentes<br/></small>
+          <span class="badge">{{ctl.EventoService.getNumPendente()}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Em Andamento')}">
+        <a href="#" ng-click="ctl.findEventListStatus('Em Andamento')" uib-tooltip="Em Andamentos">
+          <i class="fa fa-spinner" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Em Andamentos<br/></small>
+          <span class="badge">{{ctl.EventoService.getNumEmAndamento()}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Cancelado')}">
+        <a href="#" ng-click="ctl.findEventListStatus('Cancelado')" uib-tooltip="Cancelados">
+          <i class="fa fa-ban" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Cancelados<br/></small>
+          <span class="badge">{{ctl.EventoService.getNumCancelado()}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <hr/>
+  <!--div class="row">
     <ul class="breadcrumb">
       <li title="Itens no calendário">
         <a href="#" ng-click="ctl.findEventListStatus('');">
@@ -21,7 +73,7 @@
         <a href="" ng-click="ctl.findEventListStatus('Cancelado');" class="cancel">
         <i class="fa fa-ban" aria-hidden="true"></i> <b>{{ctl.EventoService.getNumCancelado()}}</b></a></li>
     </ul>
-  </div>
+  </div-->
 
   <div class="row">
     <span spinner-key="spinner-1" spinner-start-active="true"

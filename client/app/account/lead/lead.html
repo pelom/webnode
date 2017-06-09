@@ -1,13 +1,46 @@
 <div class="container">
   <div>
     <p><a ui-sref="homemenu"><small>Voltar para o início</small></a></p>
-    <h2><i class="fa fa-child" aria-hidden="true"></i> Leads</h2>
-    <p>Leads cadastrados</p>
+    <!--h2><i class="fa fa-child" aria-hidden="true"></i> Leads</h2>
+    <p>Leads cadastrados</p-->
     <hr/>
     <span spinner-key="spinner-1" spinner-start-active="true"
       us-spinner="{radius:24, width:8, length: 16}">
     </span>
 
+    <div class="row">
+      <ul class="nav nav-pills" ng-class="ctl.isJustified()">
+        <li ng-class="{ active: ctl.isActive('')}">
+          <a href="#" ng-click="ctl.findLeadListStatus('')" uib-tooltip="Todos">
+            <i class="fa fa-child" aria-hidden="true"></i>
+            <small ng-if="ctl.isFull()">Leads</small>
+            <span class="badge">{{ ctl.LeadService.getLeadList().length}}</span>
+          </a>
+        </li>
+        <li ng-class="{ active: ctl.isActive('Não Contatado')}">
+          <a href="#" ng-click="ctl.findLeadListStatus('Não Contatado')" uib-tooltip="Não Contatados">
+            <i class="fa fa-bell" aria-hidden="true"></i>
+            <small ng-if="ctl.isFull()">Não Contatados</small>
+            <span class="badge">{{ ctl.LeadService.getNaoContatados()}}</span>
+          </a>
+        </li>
+        <li ng-class="{ active: ctl.isActive('Contatado')}">
+          <a href="#" ng-click="ctl.findLeadListStatus('Contatado')" uib-tooltip="Contatados">
+            <i class="fa fa-comment" aria-hidden="true"></i>
+            <small ng-if="ctl.isFull()">Contatados</small>
+            <span class="badge">{{ ctl.LeadService.getContatados()}}</span>
+          </a>
+        </li>
+        <li ng-class="{ active: ctl.isActive('Convertido')}">
+          <a href="#" ng-click="ctl.findLeadListStatus('Convertido')" uib-tooltip="Convertidos">
+            <i class="fa fa-diamond" aria-hidden="true"></i>
+            <small ng-if="ctl.isFull()">Convertidos</small>
+            <span class="badge">{{ ctl.LeadService.getConvertidos()}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <hr/>
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="row">
@@ -28,7 +61,10 @@
           </div>
         </div>
       </div>
-      <div class="table-responsive">
+      <div class="alert" ng-if="!ctl.leads.length">
+        <code>Nenhum resultado encontrado</code>
+      </div>
+      <div class="table-responsive" ng-if="ctl.leads.length">
         <table class="table table-hover">
           <thead>
             <tr class="active">
@@ -36,14 +72,14 @@
               <th>
                 <a href="#" ui-sref-active="active"
                   ng-click="sortType = 'nome'; sortReverse = !sortReverse">
-                  <strong>Nome<strong>
+                  <small>Nome<small>
                   <div class="pull-right">
                     <span ng-show="sortType == 'nome' && !sortReverse" class="fa fa-sort-amount-asc"></span>
                     <span ng-show="sortType == 'nome' && sortReverse" class="fa fa-sort-amount-desc"></span>
                   </div>
                 </a>
               </th>
-              <th>
+              <!--th>
                 <a href="#" ui-sref-active="active"
                   ng-click="sortType = 'sobrenome'; sortReverse = !sortReverse">
                   <strong>Sobrenome<strong>
@@ -54,8 +90,58 @@
                       class="fa fa-sort-amount-desc"></span>
                   </div>
                 </a>
+              </th-->
+              <th>
+                <a href="#" ui-sref-active="active"
+                  ng-click="sortType = 'status'; sortReverse = !sortReverse">
+                  <small>Status</small>
+                  <div class="pull-right">
+                    <span ng-show="sortType == 'status' && !sortReverse" class="fa fa-sort-amount-asc"></span>
+                    <span ng-show="sortType == 'status' && sortReverse" class="fa fa-sort-amount-desc"></span>
+                  </div>
+                </a>
               </th>
               <th>
+                <a href="#" ui-sref-active="active"
+                  ng-click="sortType = 'celular'; sortReverse = !sortReverse">
+                  <small>Celular</small>
+                  <div class="pull-right">
+                    <span ng-show="sortType == 'celular' && !sortReverse" class="fa fa-sort-amount-asc"></span>
+                    <span ng-show="sortType == 'celular' && sortReverse" class="fa fa-sort-amount-desc"></span>
+                  </div>
+                </a>
+              </th>
+              <th>
+                <a href="#" ui-sref-active="active"
+                  ng-click="sortType = 'telefone'; sortReverse = !sortReverse">
+                  <small>Telefone</small>
+                  <div class="pull-right">
+                    <span ng-show="sortType == 'telefone' && !sortReverse" class="fa fa-sort-amount-asc"></span>
+                    <span ng-show="sortType == 'telefone' && sortReverse" class="fa fa-sort-amount-desc"></span>
+                  </div>
+                </a>
+              </th>
+              <th>
+                <a href="#" ui-sref-active="active"
+                  ng-click="sortType = 'produto'; sortReverse = !sortReverse">
+                  <small>Produto</small>
+                  <div class="pull-right">
+                    <span ng-show="sortType == 'produto' && !sortReverse" class="fa fa-sort-amount-asc"></span>
+                    <span ng-show="sortType == 'produto' && sortReverse" class="fa fa-sort-amount-desc"></span>
+                  </div>
+                </a>
+              </th>
+              <th>
+                <a href="#" ui-sref-active="active"
+                  ng-click="sortType = 'origem'; sortReverse = !sortReverse">
+                  <small>Origem</small>
+                  <div class="pull-right">
+                    <span ng-show="sortType == 'origem' && !sortReverse" class="fa fa-sort-amount-asc"></span>
+                    <span ng-show="sortType == 'origem' && sortReverse" class="fa fa-sort-amount-desc"></span>
+                  </div>
+                </a>
+              </th>
+              <!--th>
                 <a href="#" ui-sref-active="active"
                   ng-click="sortType = 'updatedAt'; sortReverse = !sortReverse">
                   <strong>Modificador</strong>
@@ -64,25 +150,39 @@
                     <span ng-show="sortType == 'updatedAt' && sortReverse" class="fa fa-sort-amount-desc"></span>
                   </div>
                 </a>
-              </th>
+              </th-->
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="lead in  ctl.leads | orderBy:sortType:sortReverse | filter:filtrarResult">
               <td>
-                <a href="#" uib-tooltip="Editar" ui-sref="usuarioedit({id: lead._id})">
+                <a href="#" uib-tooltip="Editar" ui-sref="leadedit({id: lead._id})">
                   <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
               </td>
-              <td><a href="#" ui-sref="usuarioedit({id: lead._id})"
-                  ui-sref-active="active"><small>{{ lead.nome }}</small></a></td>
-              <td><a href="#" ui-sref="usuarioedit({id: lead._id})"
-                  ui-sref-active="active"><small>{{ lead.sobrenome }}</small></a></td>
+              <td><a href="#" ui-sref="leadedit({id: lead._id})"
+                  ui-sref-active="active"><small>{{ lead.nome }} {{ lead.sobrenome }}</small></a></td>
+              <!--td><a href="#" ui-sref="leadedit({id: lead._id})"
+                  ui-sref-active="active"><small>{{ lead.sobrenome }}</small></a></td-->
               <td>
+                <span class="label label-warning" ng-if="lead.status == 'Não Contatado'">
+                  {{ lead.status }}</span>
+                <span class="label label-info" ng-if="lead.status == 'Contatado'">
+                  {{ lead.status }}</span>
+                <span class="label label-success" ng-if="lead.status == 'Convertido'">
+                  {{ lead.status }}</span>
+                <span class="label label-danger" ng-if="lead.status == 'Não Convertido'">
+                  {{ lead.status }}</span>
+              </td>
+              <td><small>{{ lead.celular }}</small></td>
+              <td><small>{{ lead.telefone}}</small></td>
+              <td><small>{{ lead.produto }}</small></td>
+              <td><small>{{ lead.origem }}</small></td>
+              <!--td>
                 <small>{{ lead.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
                   <a href="#" ui-sref="usuarioedit({id: lead.modificador._id})"
                       ui-sref-active="active" uib-tooltip="Ver usuário">
                     {{ lead.modificador.nome}} {{ lead.modificador.sobrenome}}</a></small>
-              </td>
+              </td-->
             </tr>
           </tbody>
         </table>

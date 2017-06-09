@@ -7,5 +7,8 @@ let router = new Router();
 
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/domain', auth.isAuthenticated(), controller.domain);
+router.post('/', auth.isAuthenticated(), controller.create);
+router.get('/:id', auth.isAuthenticated(), controller.show);
+router.put('/:id', auth.isAuthenticated(), controller.update);
 
 module.exports = router;

@@ -40,17 +40,72 @@ export default class LeadEditController {
 
   createLead() {
     return {
-      nome: '',
-      sobrenome: '',
-      email: '',
-      celular: '',
-      telefone: '',
-      empresa: '',
-      website: '',
       status: 'Não Contatado',
-      origem: '',
-      descricao: '',
+      origem: 'Ligação',
       isAtivo: true
+    };
+  }
+
+  save(form) {
+    if(form.$invalid) {
+      return;
+    }
+    console.log(this.lead.email);
+    console.log(this.isEmpty(this.lead.email));
+    if(this.isNotContact()) {
+      this.toastr.error('', 'Informe o Email ou Telefone ou o Celular como uma forma de contato');
+      return;
+    }
+    console.log(this.lead);
+
+    this.usSpinnerService.spin('spinner-1');
+    this.LeadService.saveLead(this.lead)
+      .then(() => {
+        this.toastr.success('Lead salvo com sucesso',
+        `${this.lead.nome} ${this.lead.sobrenome}`);
+        this.$state.go('leads');
+      })
+      .catch(this.callbackError(form))
+      .finally(() => {
+        this.usSpinnerService.stop('spinner-1');
+      });
+  }
+
+  isNotContact() {
+    return this.isEmpty(this.lead.email)
+      && this.isEmpty(this.lead.telefone)
+      && this.isEmpty(this.lead.celular);
+  }
+
+  isEmpty(str) {
+    if(!str) {
+      return true;
+    }
+    return str === '';
+  }
+
+  callbackError(form) {
+    return err => {
+      console.log('Ex:', err);
+
+      this.toastr.error(err.data.message, err.data.name, {
+        autoDismiss: false,
+        closeButton: true,
+        timeOut: 0,
+      });
+      err = err.data;
+      this.errors = {};
+
+      angular.forEach(err.errors, (error, field) => {
+        if(form.hasOwnProperty(field)) {
+          form[field].$setValidity('mongoose', false);
+        } else {
+          this.toastr.error(error.message, field, {
+            closeButton: true,
+          });
+        }
+        this.errors[field] = error.message;
+      });
     };
   }
 }
