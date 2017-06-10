@@ -1,13 +1,17 @@
 'use strict';
 import angular from 'angular';
+import {openModalView} from '../agenda/agenda.model.service';
+import moment from 'moment';
 export default class LeadEditController {
   /*@ngInject*/
-  constructor($stateParams, $timeout, $state, toastr, usSpinnerService, LeadService) {
+  constructor($stateParams, $timeout, $state, toastr, usSpinnerService, LeadService, EventoService, Modal) {
     this.id = $stateParams.id;
     this.$state = $state;
     this.toastr = toastr;
     this.$timeout = $timeout;
     this.usSpinnerService = usSpinnerService;
+    this.Modal = Modal;
+    this.EventoService = EventoService;
     this.LeadService = LeadService;
     this.LeadService.loadDomain().then(domain => {
       this.status = domain.status;
@@ -107,5 +111,37 @@ export default class LeadEditController {
         this.errors[field] = error.message;
       });
     };
+  }
+
+  newTask() {
+    let data = new Date();
+    let name = `Lead (${this.lead.nome} ${this.lead.sobrenome})`;
+    let evento = {
+      title: name,
+      type: 'Task',
+      status: 'Pendente',
+      prioridade: 'Normal',
+      references: [{
+        name,
+        objectId: `${this.lead._id}`,
+        object: 'Lead'
+      }]
+    };
+    let modalCtl = openModalView(evento, this.Modal);
+    modalCtl.redirect = false;
+    this.EventoService.setModalCtl(modalCtl);
+  }
+
+  registerContact() {
+    let data = new Date();
+    let evento = {
+      title: 'Novo ',
+      start: data,
+      status: 'Concluído',
+      prioridade: 'Normal'
+    };
+    let modalCtl = openModalView(evento, this.Modal);
+    modalCtl.redirect = false;
+    this.EventoService.setModalCtl(modalCtl);
   }
 }

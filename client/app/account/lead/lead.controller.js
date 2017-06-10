@@ -1,5 +1,7 @@
 'use strict';
 import angular from 'angular';
+import moment from 'moment';
+moment.locale('pt-br');
 export default class LeadController {
   /*@ngInject*/
   constructor($window, $scope, toastr, LeadService, usSpinnerService) {
@@ -9,6 +11,7 @@ export default class LeadController {
     this.LeadService.loadLeadList()
     .then(leads => {
       this.leads = leads;
+      this.formatMoment();
     })
     .catch(err => {
       console.log('Ex:', err);
@@ -17,6 +20,7 @@ export default class LeadController {
       usSpinnerService.stop('spinner-1');
     });
     this.status = '';
+    this.viewDetails = false;
     this.managerLayout($window, $scope);
   }
 
@@ -46,12 +50,19 @@ export default class LeadController {
     .then(leads => {
       //this.toastr.success('', `Leads ${status} (${leads.length})`);
       this.leads = leads;
+      this.formatMoment();
     })
     .catch(err => {
       console.log('Ex:', err);
     })
     .finally(() => {
       this.usSpinnerService.stop('spinner-1');
+    });
+  }
+
+  formatMoment() {
+    this.leads.forEach(item => {
+      item.createdAt = moment(item.createdAt).fromNow();
     });
   }
 

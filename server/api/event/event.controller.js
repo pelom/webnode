@@ -185,7 +185,8 @@ function requestCreateEvent(req) {
     origin: req.body.origin,
     proprietario: req.user._id,
     criador: req.user._id,
-    modificador: req.user._id
+    modificador: req.user._id,
+    references: req.body.references
   };
 }
 

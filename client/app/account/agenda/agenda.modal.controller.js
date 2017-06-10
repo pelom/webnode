@@ -112,6 +112,10 @@ export default class AgendaModalController {
   }
   close() {
     this.modalCtl.dismiss();
+    console.log(this.modalCtl.redirect);
+    if(this.modalCtl.redirect === false) {
+      return;
+    }
     this.$state.go('home', {
       defaultView: this.modalCtl.defaultView,
       defaultDate: this.modalCtl.defaultDate,

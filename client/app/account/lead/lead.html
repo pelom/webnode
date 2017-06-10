@@ -1,192 +1,342 @@
 <div class="container">
-  <div>
-    <p><a ui-sref="homemenu"><small>Voltar para o início</small></a></p>
-    <!--h2><i class="fa fa-child" aria-hidden="true"></i> Leads</h2>
-    <p>Leads cadastrados</p-->
-    <hr/>
-    <span spinner-key="spinner-1" spinner-start-active="true"
-      us-spinner="{radius:24, width:8, length: 16}">
-    </span>
 
-    <div class="row">
-      <ul class="nav nav-pills" ng-class="ctl.isJustified()">
-        <li ng-class="{ active: ctl.isActive('')}">
-          <a href="#" ng-click="ctl.findLeadListStatus('')" uib-tooltip="Todos">
-            <i class="fa fa-child" aria-hidden="true"></i>
-            <small ng-if="ctl.isFull()">Leads</small>
-            <span class="badge">{{ ctl.LeadService.getLeadList().length}}</span>
-          </a>
-        </li>
-        <li ng-class="{ active: ctl.isActive('Não Contatado')}">
-          <a href="#" ng-click="ctl.findLeadListStatus('Não Contatado')" uib-tooltip="Não Contatados">
-            <i class="fa fa-bell" aria-hidden="true"></i>
-            <small ng-if="ctl.isFull()">Não Contatados</small>
-            <span class="badge">{{ ctl.LeadService.getNaoContatados()}}</span>
-          </a>
-        </li>
-        <li ng-class="{ active: ctl.isActive('Contatado')}">
-          <a href="#" ng-click="ctl.findLeadListStatus('Contatado')" uib-tooltip="Contatados">
-            <i class="fa fa-comment" aria-hidden="true"></i>
-            <small ng-if="ctl.isFull()">Contatados</small>
-            <span class="badge">{{ ctl.LeadService.getContatados()}}</span>
-          </a>
-        </li>
-        <li ng-class="{ active: ctl.isActive('Convertido')}">
-          <a href="#" ng-click="ctl.findLeadListStatus('Convertido')" uib-tooltip="Convertidos">
-            <i class="fa fa-diamond" aria-hidden="true"></i>
-            <small ng-if="ctl.isFull()">Convertidos</small>
-            <span class="badge">{{ ctl.LeadService.getConvertidos()}}</span>
-          </a>
-        </li>
-      </ul>
+  <span spinner-key="spinner-1" spinner-start-active="true"
+    us-spinner="{radius:24, width:8, length: 16}">
+  </span>
+
+  <div class="row">
+    <ul class="nav nav-pills" ng-class="ctl.isJustified()">
+      <li ng-class="{ active: ctl.isActive('')}">
+        <a href="#" ng-click="ctl.findLeadListStatus('')" uib-tooltip="Todos">
+          <i class="fa fa-child" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Leads</small>
+          <span class="badge">{{ ctl.LeadService.getLeadList().length}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Não Contatado')}">
+        <a href="#" ng-click="ctl.findLeadListStatus('Não Contatado')" uib-tooltip="Não Contatados">
+          <i class="fa fa-bell" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Não Contatados</small>
+          <span class="badge">{{ ctl.LeadService.getNaoContatados()}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Contatado')}">
+        <a href="#" ng-click="ctl.findLeadListStatus('Contatado')" uib-tooltip="Contatados">
+          <i class="fa fa-comment" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Contatados</small>
+          <span class="badge">{{ ctl.LeadService.getContatados()}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Convertido')}">
+        <a href="#" ng-click="ctl.findLeadListStatus('Convertido')" uib-tooltip="Convertidos">
+          <i class="fa fa-diamond" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Convertidos</small>
+          <span class="badge">{{ ctl.LeadService.getConvertidos()}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <hr/>
+
+  <div class="row">
+    <div class="col-xs-6">
+      <a class="btn btn-default" ui-sref="leadedit()">
+        <i class="fa fa-plus" aria-hidden="true"></i> <i ng-if="ctl.isFull()">Novo</i></a>
+
+      <div class="btn-group">
+          <label title="Ver detalhes" class="btn btn-default" ng-model="ctl.viewDetails" uib-btn-checkbox>
+            <i class="fa fa-asterisk" aria-hidden="true"></i> <i ng-if="ctl.isFull()">Detalhes</i></label>
+      </div>
+      <!--a ui-sref="homemenu"><small>Voltar para o início</small></a-->
     </div>
-    <hr/>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="row">
-          <div class="col-xs-6">
-            <div class="btn-group">
-              <a class="btn btn-default" ui-sref="leadedit()">
-                <i class="fa fa-plus" aria-hidden="true"></i> Novo</a>
-              <!--a class="btn btn-default"><span> Edit</span></a>
-              <a class="btn btn-default"><span>Delete</span></a-->
-            </div>
-          </div>
-          <div class="col-xs-6 pull-right form-group">
-            <div class="input-group">
-              <div class="input-group-addon"><i class="fa fa-search"></i></div>
-              <input type="text" class="form-control" placeholder="Filtrar resultados"
-               ng-model="filtrarResult">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="alert" ng-if="!ctl.leads.length">
-        <code>Nenhum resultado encontrado</code>
-      </div>
-      <div class="table-responsive" ng-if="ctl.leads.length">
-        <table class="table table-hover">
-          <thead>
-            <tr class="active">
-              <th></th>
-              <th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'nome'; sortReverse = !sortReverse">
-                  <small>Nome<small>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'nome' && !sortReverse" class="fa fa-sort-amount-asc"></span>
-                    <span ng-show="sortType == 'nome' && sortReverse" class="fa fa-sort-amount-desc"></span>
-                  </div>
-                </a>
-              </th>
-              <!--th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'sobrenome'; sortReverse = !sortReverse">
-                  <strong>Sobrenome<strong>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'sobrenome' && !sortReverse"
-                      class="fa fa-sort-amount-asc"></span>
-                    <span ng-show="sortType == 'sobrenome' && sortReverse"
-                      class="fa fa-sort-amount-desc"></span>
-                  </div>
-                </a>
-              </th-->
-              <th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'status'; sortReverse = !sortReverse">
-                  <small>Status</small>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'status' && !sortReverse" class="fa fa-sort-amount-asc"></span>
-                    <span ng-show="sortType == 'status' && sortReverse" class="fa fa-sort-amount-desc"></span>
-                  </div>
-                </a>
-              </th>
-              <th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'celular'; sortReverse = !sortReverse">
-                  <small>Celular</small>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'celular' && !sortReverse" class="fa fa-sort-amount-asc"></span>
-                    <span ng-show="sortType == 'celular' && sortReverse" class="fa fa-sort-amount-desc"></span>
-                  </div>
-                </a>
-              </th>
-              <th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'telefone'; sortReverse = !sortReverse">
-                  <small>Telefone</small>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'telefone' && !sortReverse" class="fa fa-sort-amount-asc"></span>
-                    <span ng-show="sortType == 'telefone' && sortReverse" class="fa fa-sort-amount-desc"></span>
-                  </div>
-                </a>
-              </th>
-              <th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'produto'; sortReverse = !sortReverse">
-                  <small>Produto</small>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'produto' && !sortReverse" class="fa fa-sort-amount-asc"></span>
-                    <span ng-show="sortType == 'produto' && sortReverse" class="fa fa-sort-amount-desc"></span>
-                  </div>
-                </a>
-              </th>
-              <th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'origem'; sortReverse = !sortReverse">
-                  <small>Origem</small>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'origem' && !sortReverse" class="fa fa-sort-amount-asc"></span>
-                    <span ng-show="sortType == 'origem' && sortReverse" class="fa fa-sort-amount-desc"></span>
-                  </div>
-                </a>
-              </th>
-              <!--th>
-                <a href="#" ui-sref-active="active"
-                  ng-click="sortType = 'updatedAt'; sortReverse = !sortReverse">
-                  <strong>Modificador</strong>
-                  <div class="pull-right">
-                    <span ng-show="sortType == 'updatedAt' && !sortReverse" class="fa fa-sort-amount-asc"></span>
-                    <span ng-show="sortType == 'updatedAt' && sortReverse" class="fa fa-sort-amount-desc"></span>
-                  </div>
-                </a>
-              </th-->
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="lead in  ctl.leads | orderBy:sortType:sortReverse | filter:filtrarResult">
-              <td>
-                <a href="#" uib-tooltip="Editar" ui-sref="leadedit({id: lead._id})">
-                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-              </td>
-              <td><a href="#" ui-sref="leadedit({id: lead._id})"
-                  ui-sref-active="active"><small>{{ lead.nome }} {{ lead.sobrenome }}</small></a></td>
-              <!--td><a href="#" ui-sref="leadedit({id: lead._id})"
-                  ui-sref-active="active"><small>{{ lead.sobrenome }}</small></a></td-->
-              <td>
-                <span class="label label-warning" ng-if="lead.status == 'Não Contatado'">
-                  {{ lead.status }}</span>
-                <span class="label label-info" ng-if="lead.status == 'Contatado'">
-                  {{ lead.status }}</span>
-                <span class="label label-success" ng-if="lead.status == 'Convertido'">
-                  {{ lead.status }}</span>
-                <span class="label label-danger" ng-if="lead.status == 'Não Convertido'">
-                  {{ lead.status }}</span>
-              </td>
-              <td><small>{{ lead.celular }}</small></td>
-              <td><small>{{ lead.telefone}}</small></td>
-              <td><small>{{ lead.produto }}</small></td>
-              <td><small>{{ lead.origem }}</small></td>
-              <!--td>
-                <small>{{ lead.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
-                  <a href="#" ui-sref="usuarioedit({id: lead.modificador._id})"
-                      ui-sref-active="active" uib-tooltip="Ver usuário">
-                    {{ lead.modificador.nome}} {{ lead.modificador.sobrenome}}</a></small>
-              </td-->
-            </tr>
-          </tbody>
-        </table>
+    <div class="col-xs-6 pull-right form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <input type="text" class="form-control" placeholder="Filtrar resultados" ng-model="filtrarResult">
       </div>
     </div>
   </div>
+
+  <hr/>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4"
+      ng-repeat="lead in  ctl.leads | orderBy:sortType:sortReverse | filter:filtrarResult">
+      <div class="panel panel-houver">
+
+        <div class="panel-heading text-muted">
+          <b>{{lead.produto}}</b>
+          <p></p>
+          <p><i class="fa fa-child fa-lg"></i> 
+            <a ui-sref="leadedit({id: lead._id})"><i>{{lead.nome}} {{lead.sobrenome}}</i></a>
+              <i class="fa fa-2x pull-right" title="{{ lead.status }}" ng-class="{'fa-bell': lead.status == 'Não Contatado', 'fa-comment': lead.status == 'Contatado', 'fa-diamond': lead.status == 'Convertido'}"></i></p>
+          <p title="Criado por {{lead.criador.nome}} {{lead.criador.sobrenome}} em {{ lead.createdAt | date:'dd/MM/yyyy HH:mm' }}">
+            <i class="fa fa-clock-o" aria-hidden="true"></i> <small>{{ lead.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>  </p>
+          <p>
+            <span class="label label-warning" ng-if="lead.status == 'Não Contatado'">
+            {{ lead.status }}</span>
+            <span class="label label-info" ng-if="lead.status == 'Contatado'">
+            {{ lead.status }}</span>
+            <span class="label label-success" ng-if="lead.status == 'Convertido'">
+            {{ lead.status }}</span>
+            <span class="label label-danger" ng-if="lead.status == 'Não Convertido'">
+            {{ lead.status }}</span><span class="label label-default">{{lead.origem}}</span> </p>
+          <hr/>
+        </div>
+        <div ng-if="ctl.viewDetails" class="panel-body" style="padding-top: 0px;">
+          <!--p class="text-center"><img src="http://psp-loc.mediagen.fr/python-0_00FA009600323183.png"></p-->
+          <p class="text-primary">
+            <small ng-if="lead.celular"><i class="fa fa-mobile" aria-hidden="true"></i>
+              <a href="tel:{{lead.celular}}"><b>{{lead.celular}}</b></a><br/></small>
+
+            <small ng-if="lead.telefone"><i class="fa fa-phone" aria-hidden="true"></i>
+              <a href="tel:{{lead.telefone}}"><b>{{lead.telefone}}</b></a> <br/></small>
+
+            <small ng-if="lead.email"><i class="fa fa-at" aria-hidden="true"></i>
+              <a href="mailto:{{lead.email}}"><b>{{lead.email}}</b></a> <br/></small>
+
+            <small ng-if="!lead.celular"><br/></small>
+            <small ng-if="!lead.telefone"><br/></small>
+            <small ng-if="!lead.email"><br/></small>
+            <!--span title="Rating">
+              <i class="fa fa-star-half-empty fa-lg pull-right"></i>
+              <i class="fa fa-star fa-lg pull-right"></i>
+              <i class="fa fa-star fa-lg pull-right"></i>
+              <i class="fa fa-star fa-lg pull-right"></i>
+              <i class="fa fa-star fa-lg pull-right"></i>
+            </span--></p>
+        </div>
+
+        <!--div class="row"></div>
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-4 col-md-4" title="Receba até 42 de Status">
+              <p class="text-center"><i class="glyphicon glyphicon-stats fa-2x "></i>
+                <span class="badge">42</span></p>
+            </div>
+            <div class="col-xs-4 col-md-4" title="Ganhe até 3 Badges">
+              <p class="text-center"><i class="glyphicon glyphicon-fire fa-2x "></i>
+                <span style class="badge"></span><span class="badge">3</span></p>
+            </div>
+            <div class="col-xs-4 col-md-4" title="Ganhe Certificado">
+              <p class="text-center"><i class="glyphicon glyphicon-file fa-2x"></i>
+              <span class="badge">1</span></p>
+            </div>
+          </div>
+          <p></p>
+          <hr>
+          <p></p>
+          <div title="Você já está inscrito neste curso">
+            <a class="btn btn-block btn3d btn-danger">
+              <i class="fa fa-check-circle fa-4x pull-right fa-fw"></i>
+              <b>   You are already enrolled in this course ;)</b>
+            </a>
+          </div>
+          <p></p><br>
+          <p><span class="label label-success">Tecnologia</span>
+            <span class="label label-warning">Programação</span>
+            <span class="label label-danger">Python</span>
+            <span class="label label-info">Dinâmica</span>
+          </p>
+        </div-->
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" ng-if="!ctl.leads.length">
+    <div class="panel-body">
+      <div class="alert">
+        <h4><code>Nenhum resultado encontrado</code></h4>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+<!--div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <b>Learn to Program with Python</b>
+      <p title="Popularidade Alta"><i class="fa fa-child fa-lg"></i> 
+        <a href="#"><i>Raul Abreu Leite</i></a><i class="fa fa-flash fa-4x pull-right"></i></p>
+      <p></p>
+    </div>
+    <div class="panel-body">
+      <p class="text-center"><img src="http://psp-loc.mediagen.fr/python-0_00FA009600323183.png"></p>
+       <p class="text-warning"><b>574</b> subscribers <span title="Rating"><i class="fa fa-star-half-empty fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i></span></p>
+    </div>
+    <div class="row"></div>
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-4 col-md-4" title="Receba até 42 de Status">
+          <i class="glyphicon glyphicon-stats fa-2x pull-left"></i><span class="badge">42</span>
+        </div>
+        <div class="col-xs-4 col-md-4" title="Ganhe até 3 Badges">
+          <i class="glyphicon glyphicon-fire fa-2x pull-left"></i><span style class="badge"></span><span class="badge">3</span>
+        </div>
+        <div class="col-xs-4 col-md-4" title="Ganhe Certificado">
+          <i class="glyphicon glyphicon-file fa-2x pull-left"></i><span class="badge">1</span>
+        </div>
+      </div><br>
+      <p>Curso voltado para quem ainda não conhece nenhuma linguagem de programação e deseja conhecer uma...</p>
+      <hr>
+      <p></p>
+      <div title="Veja detalhes sobre este curso">
+        <a class="btn btn-block btn3d btn-warning"><b><i class="fa fa-th-list fa-lg fa-fw"></i> View this course</b></a>
+        <p></p>
+      </div>
+      <p></p><br>
+      <p><span class="label label-success">Tecnologia</span><span class="label label-warning">Programação</span><span class="label label-danger">Python</span><span class="label label-info">Dinâmica</span></p>
+    </div>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <b>Learn to Program with Python</b>
+      <p title="Popularidade Alta"><i class="fa fa-child fa-lg"></i> 
+        <a href="#">                  <i>Raul Abreu Leite</i></a><i class="fa fa-tint fa-4x pull-right"></i></p>
+      <p></p>
+    </div>
+    <div class="panel-body">
+      <p class="text-center"><img src="http://psp-loc.mediagen.fr/python-0_00FA009600323183.png"></p>
+       <p class="text-warning"><b>574</b> subscribers <span title="Rating"><i class="fa fa-star-half-empty fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i></span></p>
+    </div>
+    <div class="row"></div>
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-4 col-md-4" title="Receba até 42 de Status">
+          <i class="glyphicon glyphicon-stats fa-2x pull-left"></i><span class="badge">42</span>
+        </div>
+        <div class="col-xs-4 col-md-4" title="Ganhe até 3 Badges">
+          <i class="glyphicon glyphicon-fire fa-2x pull-left"></i><span style class="badge"></span><span class="badge">3</span>
+        </div>
+        <div class="col-xs-4 col-md-4" title="Ganhe Certificado">
+          <i class="glyphicon glyphicon-file fa-2x pull-left"></i><span class="badge">1</span>
+        </div>
+      </div><br>
+      <p>Curso voltado para quem ainda não conhece nenhuma linguagem de programação e deseja conhecer uma...</p>
+      <hr>
+      <p></p>
+      <div title="Veja detalhes sobre este curso">
+          <a class="btn btn-block btn3d btn-primary"><b><i class="fa fa-th-list fa-lg fa-fw"></i> View this course</b></a>
+        <p></p>
+      </div>
+      <p></p><br>
+      <p><span class="label label-success">Tecnologia</span><span class="label label-warning">Programação</span><span class="label label-danger">Python</span><span class="label label-info">Dinâmica</span></p>
+    </div>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <b>Learn to Program with Python</b>
+      <p title="Popularidade Alta"><i class="fa fa-child fa-lg"></i> 
+        <a href="#"><i>Raul Abreu Leite</i></a><i class="fa fa-leaf fa-4x pull-right"></i></p>
+      <p></p>
+    </div>
+    <div class="panel-body">
+      <p class="text-center"><img src="http://psp-loc.mediagen.fr/python-0_00FA009600323183.png"></p>
+      <p class="text-warning"><b>574</b> subscribers <span title="Rating"><i class="fa fa-star-half-empty fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i></span></p>
+    </div>
+    <div class="row"></div>
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-4 col-md-4" title="Receba até 42 de Status">
+          <i class="glyphicon glyphicon-stats fa-2x pull-left"></i><span class="badge">42</span>
+        </div>
+        <div class="col-xs-4 col-md-4" title="Ganhe até 3 Badges">
+          <i class="glyphicon glyphicon-fire fa-2x pull-left"></i><span style class="badge"></span><span class="badge">3</span>
+        </div>
+        <div class="col-xs-4 col-md-4" title="Ganhe Certificado">
+          <i class="glyphicon glyphicon-file fa-2x pull-left"></i><span class="badge">1</span>
+        </div>
+      </div><br>
+      <p>Curso voltado para quem ainda não conhece nenhuma linguagem de programação e deseja conhecer uma...</p>
+      <hr>
+      <p></p>
+      <div title="Veja detalhes sobre este curso">
+          <a class="btn btn-block btn3d btn-success"><b><i class="fa fa-th-list fa-lg fa-fw"></i> View this course</b></a>
+        <p></p>
+      </div>
+      <p></p><br>
+      <p><span class="label label-success">Tecnologia</span><span class="label label-warning">Programação</span><span class="label label-danger">Python</span><span class="label label-info">Dinâmica</span></p>
+    </div>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <b>Learn to Program with Python</b>
+      <p title="Popularidade Alta"><i class="fa fa-child fa-lg"></i> 
+        <a href="#">                  <i>Raul Abreu Leite</i></a><i class="fa fa-tint fa-4x pull-right"></i></p>
+      <p></p>
+    </div>
+    <div class="panel-body">
+      <p class="text-center"><img src="http://psp-loc.mediagen.fr/python-0_00FA009600323183.png"></p>
+       <p class="text-warning"><b>574</b> subscribers <span title="Rating"><i class="fa fa-star-half-empty fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i></span></p>
+    </div>
+    <div class="row"></div>
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-4 col-md-4" title="Receba até 42 de Status">
+          <i class="glyphicon glyphicon-stats fa-2x pull-left"></i><span class="badge">42</span>
+        </div>
+        <div class="col-xs-4 col-md-4" title="Ganhe até 3 Badges">
+          <i class="glyphicon glyphicon-fire fa-2x pull-left"></i><span style class="badge"></span><span class="badge">3</span>
+        </div>
+        <div class="col-xs-4 col-md-4" title="Ganhe Certificado">
+          <i class="glyphicon glyphicon-file fa-2x pull-left"></i><span class="badge">1</span>
+        </div>
+      </div><br>
+      <p>Curso voltado para quem ainda não conhece nenhuma linguagem de programação e deseja conhecer uma...</p>
+      <hr>
+      <p></p>
+      <div title="Veja detalhes sobre este curso">
+          <a class="btn btn-block btn3d btn-primary"><b><i class="fa fa-th-list fa-lg fa-fw"></i> View this course</b></a>
+        <p></p>
+      </div>
+      <p></p><br>
+      <p><span class="label label-success">Tecnologia</span><span class="label label-warning">Programação</span><span class="label label-danger">Python</span><span class="label label-info">Dinâmica</span></p>
+    </div>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <b>Learn to Program with Python</b>
+      <p title="Popularidade Alta"><i class="fa fa-child fa-lg"></i> 
+        <a href="#"><i>Raul Abreu Leite</i></a><i class="fa fa-heart fa-4x pull-right"></i></p>
+      <p></p>
+    </div>
+    <div class="panel-body">
+      <p class="text-center"><img src="http://psp-loc.mediagen.fr/python-0_00FA009600323183.png"></p>
+       <p class="text-warning"><b>574</b> subscribers <span title="Rating"><i class="fa fa-star-half-empty fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i><i class="fa fa-star fa-lg pull-right"></i></span></p>
+    </div>
+    <div class="row"></div>
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-4 col-md-4" title="Receba até 42 de Status">
+          <i class="glyphicon glyphicon-stats fa-2x pull-left"></i><span class="badge">42</span>
+        </div>
+        <div class="col-xs-4 col-md-4" title="Ganhe até 3 Badges">
+          <i class="glyphicon glyphicon-fire fa-2x pull-left"></i><span style class="badge"></span><span class="badge">3</span>
+        </div>
+        <div class="col-xs-4 col-md-4" title="Ganhe Certificado">
+          <i class="glyphicon glyphicon-file fa-2x pull-left"></i><span class="badge">1</span>
+        </div>
+      </div><br>
+      <p>Curso voltado para quem ainda não conhece nenhuma linguagem de programação e deseja conhecer uma...</p>
+      <hr>
+      <p></p>
+      <div title="Veja detalhes sobre este curso">
+        <a class="btn btn-block btn3d btn-danger"><b><i class="fa fa-th-list fa-lg fa-fw"></i> View this course </b></a>
+        <p></p>
+      </div>
+      <p></p><br>
+      <p><span class="label label-success">Tecnologia</span><span class="label label-warning">Programação</span><span class="label label-danger">Python</span><span class="label label-info">Dinâmica</span></p>
+    </div>
+  </div>
+</div-->

@@ -258,3 +258,10 @@ padding-top: 70px;
     font-size: 1.5em;
   }
 }
+
+.panel-houver { padding: 0px; border: 1px solid #EEE }
+.panel-houver:hover  {
+  cursor: pointer;
+  border-color: #CCC;
+  border-size: 20px;
+}

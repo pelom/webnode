@@ -96,7 +96,7 @@ function requestLeadUpdate(req) {
     _id: leadId,
     nome: req.body.nome,
     sobrenome: req.body.sobrenome,
-    email: String(req.body.email),
+    email: req.body.email,
     empresa: req.body.empresa,
     telefone: req.body.telefone,
     celular: req.body.celular,
@@ -113,12 +113,18 @@ function requestLeadUpdate(req) {
 
 const selectShow = '_id nome sobrenome telefone celular'
   + ' email criador modificador proprietario updatedAt createdAt isAtivo'
-  + ' endereco empresa produto descricao status origem';
+  + ' endereco empresa produto descricao status origem tarefas';
+
+const populationTarefas = {
+  path: 'tarefas',
+  select: '_id title start status'
+};
 
 export function show(req, res) {
   return api.findById(req.params.id, {
     model: 'Lead',
     select: selectShow,
-    populate: [api.populationProprietario, api.populationCriador, api.populationModificador],
+    populate: [populationTarefas, api.populationProprietario,
+      api.populationCriador, api.populationModificador],
   }, res);
 }

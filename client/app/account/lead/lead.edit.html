@@ -1,16 +1,17 @@
 <div class="container">
   <div>
-    <p><a ui-sref="leads"><small>Voltar para leads</small></a></p>
-    <!--h4><i class="fa fa-user" aria-hidden="true"></i> Usuário</h4-->
-    <!--p>Um perfil é responsável por agrupar o conjunto de permissões do usuário</p-->
-    <!--hr/-->
+    <p class="text-primary">
+      <a ui-sref="leads"><small>Voltar</small></a>
+      | <a href="#end"><small>Endereço</small></a>
+      | <a href="#atv"><small>Atividades</small></a>
+    </p>
+
     <span spinner-key="spinner-1" spinner-start-active="true"
-      us-spinner="{radius:24, width:8, length: 16}"/>
+      us-spinner="{ radius: 24, width: 8, length: 16 }"/>
 
-      <form class="form" name="form" novalidate
-        ng-submit="ctl.save(form)">
+      <form class="form" name="form" novalidate ng-submit="ctl.save(form)">
 
-        <div class="panel panel-default" >
+        <div class="panel panel-default">
           <div class="panel-body">
             <h4>
               <i class="fa fa-child fa-2x" aria-hidden="true"></i>
@@ -168,9 +169,13 @@
               <button type="button" class="btn btn-link"
                 ui-sref="leads">Voltar</button>
             </div>
+          </div>
+        </div>
 
-            <br/>
-            <h4><label>Endereço</label></h4>
+        <div id="end" class="panel panel-default">
+          <div class="panel-body">
+            <h4><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
+              <label>Endereço</label></h4>
             <hr/>
             <div class="row" uib-collapse="ctl.isCollapsed">
               <div class="col-lg-12">
@@ -302,9 +307,48 @@
               <button type="button" class="btn btn-link"
                 ui-sref="leads">Voltar</button>
             </div>
-
           </div>
         </div>
+
       </form>
+
+      <div id="atv" class="panel panel-default" ng-if="ctl.lead._id">
+        <div class="panel-body">
+          <h4><i class="fa fa-thumb-tack fa-2x" aria-hidden="true"></i>
+             <label>Atividades</label>
+
+            <div class="btn-group pull-right">
+              <button type="button" class="btn btn-default" ng-click="ctl.newTask()">
+                <i class="fa fa-plus" aria-hidden="true"></i> Nova Atividade</button>
+              <button type="button" class="btn btn-default">
+                <i class="fa fa-plus" aria-hidden="true"></i> Registrar Contato</button>
+            </div>
+          </h4>
+          <hr/>
+          <div class="panel panel-default">
+            <h5 ng-if="ctl.lead.tarefas.length == 0" class="text-center">
+              <code>Não há registros de atividades</code></h5>
+            <div class="table-responsive" ng-if="ctl.lead.tarefas.length">
+              <table class="table table-striped table-condensed">
+                <thead>
+                  <tr>
+                    <th><small>Titulo</small></th>
+                    <th><small>Status</small></th>
+                    <th><small>Data</small></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="tar in ctl.lead.tarefas">
+                    <td><a href="#">{{ tar.title }}</a></td>
+                    <td>{{ tar.status }}</td>
+                    <td>{{ tar.start | date:'dd/MM/yyyy HH:mm' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
   </div>
 </div>
