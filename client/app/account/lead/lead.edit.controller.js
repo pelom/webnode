@@ -1,7 +1,7 @@
 'use strict';
 import angular from 'angular';
 import {openModalView} from '../agenda/agenda.model.service';
-import moment from 'moment';
+
 export default class LeadEditController {
   /*@ngInject*/
   constructor($stateParams, $timeout, $state, toastr, usSpinnerService, LeadService, EventoService, Modal) {
@@ -114,34 +114,115 @@ export default class LeadEditController {
   }
 
   newTask() {
-    let data = new Date();
-    let name = `Lead (${this.lead.nome} ${this.lead.sobrenome})`;
-    let evento = {
-      title: name,
-      type: 'Task',
-      status: 'Pendente',
-      prioridade: 'Normal',
-      references: [{
-        name,
-        objectId: `${this.lead._id}`,
-        object: 'Lead'
-      }]
-    };
+    //let data = new Date();
+    let evento = this.createEventReferenceLead(
+      'Task', 'Tarefa', 'Pendente', null);
     let modalCtl = openModalView(evento, this.Modal);
-    modalCtl.redirect = false;
+    modalCtl.onSaveEvent = this.addEventLead(modalCtl);
+    modalCtl.onClose = () => {
+      modalCtl.dismiss();
+    };
+    this.EventoService.setModalCtl(modalCtl);
+  }
+
+  newEvent() {
+    //let data = new Date();
+    let evento = this.createEventReferenceLead(
+      'Event', 'Evento', 'Pendente', null);
+    let modalCtl = openModalView(evento, this.Modal);
+    modalCtl.onSaveEvent = this.addEventLead(modalCtl);
+    modalCtl.onClose = () => {
+      modalCtl.dismiss();
+    };
     this.EventoService.setModalCtl(modalCtl);
   }
 
   registerContact() {
     let data = new Date();
-    let evento = {
-      title: 'Novo ',
-      start: data,
-      status: 'Concluído',
-      prioridade: 'Normal'
-    };
+    let evento = this.createEventReferenceLead(
+      'Activity', 'Contato', 'Concluído', data);
     let modalCtl = openModalView(evento, this.Modal);
-    modalCtl.redirect = false;
+    modalCtl.onSaveEvent = this.addEventLead(modalCtl);
+    modalCtl.onClose = () => {
+      modalCtl.dismiss();
+    };
     this.EventoService.setModalCtl(modalCtl);
+  }
+
+  createEventReferenceLead(type, subject, status, data) {
+    let name = `Lead (${this.lead.nome} ${this.lead.sobrenome})`;
+    return {
+      title: name,
+      type,
+      subject,
+      start: data,
+      status,
+      prioridade: 'Normal',
+      references: [this.createReferenceLead(name)]
+    };
+  }
+
+  createReferenceLead(name) {
+    return {
+      name,
+      description: `${this.lead.descricao}`,
+      link: `/leads/edit/${this.lead._id}`,
+      objectId: `${this.lead._id}`,
+      object: 'Lead'
+    };
+  }
+
+  addEventLead(modalCtl) {
+    return ev => {
+      console.log('addEventLead()', ev);
+      modalCtl.dismiss();
+      let leadEv = angular.copy(this.lead);
+      leadEv.evento = ev;
+      this.LeadService.addActivity(leadEv).then(bol => {
+        console.log(bol);
+        this.init();
+      });
+    };
+  }
+
+  removeEventLead(modalCtl) {
+    return ev => {
+      console.log('removeEventLead()', ev);
+      modalCtl.dismiss();
+      let leadEv = angular.copy(this.lead);
+      leadEv.evento = ev;
+      this.LeadService.removeActivity(leadEv).then(bol => {
+        console.log(bol);
+        this.init();
+      });
+    };
+  }
+
+  openModalEventId(eventId) {
+    this.usSpinnerService.spin('spinner-1');
+    this.EventoService.loadEvento({id: eventId})
+    .then(event => {
+      let modalTaskCtl = openModalView(event, this.Modal);
+      modalTaskCtl.onSaveEvent = ev => {
+        console.log('onSaveEvent()', ev);
+        modalTaskCtl.dismiss();
+        this.init();
+      };
+      modalTaskCtl.onSaveTask = () => {
+        console.log('onSaveTask()');
+      };
+      modalTaskCtl.onDeleteEvent = this.removeEventLead(modalTaskCtl);
+      modalTaskCtl.onClose = () => {
+        modalTaskCtl.dismiss();
+      };
+      this.EventoService.setModalCtl(modalTaskCtl);
+    })
+    .catch(err => {
+      console.log(err);
+      this.toastr.error('Não foi possível abrir o evento');
+    })
+    .finally(() => {
+      this.usSpinnerService.stop('spinner-1');
+    });
   }
 }

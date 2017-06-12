@@ -2,12 +2,15 @@
 /*eslint no-invalid-this:0*/
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
+import {schemaEmit} from './event.events';
 
 var ItemSchema = new Schema({
   name: {
     type: String, required: true, minlength: 3, maxlength: 80, trim: true },
+  description: {
+    type: String, required: false, maxlength: 255 },
   objectId: {
-    type: String, required: true, minlength: 3, maxlength: 80, trim: true },
+    type: String, required: true, trim: true },
   object: {
     type: String, required: true, minlength: 3, maxlength: 80, trim: true },
 });
@@ -26,6 +29,8 @@ var EventSchema = new Schema({
     'Pendente', 'Em Andamento', 'Concluído', 'Cancelado'], default: 'Pendente'},
   type: {
     type: String, required: false, minlength: 3, maxlength: 40, trim: true, default: 'Event' },
+  subject: {
+    type: String, required: false, maxlength: 60, trim: true },
   prioridade: { type: String, enum: ['Alta', 'Normal', 'Baixa'], default: 'Normal'},
   isAtivo: { type: Boolean, required: true, default: true },
   tarefas: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
@@ -37,4 +42,7 @@ var EventSchema = new Schema({
 }, {
   timestamps: true
 });
+
+schemaEmit(EventSchema);
+
 export default mongoose.model('Event', EventSchema);

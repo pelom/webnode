@@ -1,8 +1,13 @@
 <div class="modal-header">
   <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
 
-  <h4 style="color:{{ctl.event.color}}"><i class="fa {{ctl.event.icon}}" aria-hidden="true"></i>
-    <strong><span ng-bind="modal.title" class="modal-title"></span></strong></h4>
+  <h5 style="color:{{ctl.event.color}}"><i class="fa {{ctl.event.icon}}" aria-hidden="true"></i>
+    <strong><span ng-bind="modal.title" class="modal-title"></span></strong>
+    <br/>
+    <span ng-show="ctl.event.subject"title="Assunto ({{ctl.event.subject}})" class="label label-info">
+      {{ctl.event.subject}}</span>
+    <small>{{ctl.event.prioridade}}</small>
+  </h5>
 </div>
 
 <div class="modal-body">
@@ -35,6 +40,25 @@
             </dl>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-xs-6">
+            <dt><small>Assunto</small></dt>
+            <dd>
+              <input type="text" class="form-control" placeholder="Digite o assunto"
+               name="subject" ng-model="ctl.event.subject" ng-disabled="!ctl.isEdit"
+               ng-minlength="3" ng-maxlength="60" />
+            </dd>
+          </div>
+            <div class="col-xs-6">
+              <dt><small>Tipo</small></dt>
+              <dd>
+                <input type="text" class="form-control"
+                 ng-model="ctl.event.type" ng-disabled="true"/>
+              </dd>
+            </div>
+        </div>
+        <br/>
         <div class="row">
           <div class="col-xs-6">
             <dl>
@@ -74,7 +98,8 @@
             </dl>
           </div>
         </div>
-        <div class="row">
+
+        <div class="row" ng-if="ctl.event.type !== 'Activity'">
           <div class="col-xs-6">
             <dl>
               <dt><small>Data Término</small></dt>
@@ -107,6 +132,7 @@
             </dl>
           </div>
         </div>
+
         <div class="row" ng-if="ctl.event._id">
           <div class="col-xs-6">
             <dl>
@@ -170,7 +196,8 @@
             <label>Origem</label>
           </div>
           <div class="col-xs-6">
-            <a href="#" ui-sref="home({eventId: ctl.event.origin._id})">{{ctl.event.origin.title}}</a>
+            <a href="#" ui-sref="home({eventId: ctl.event.origin._id})" target="_blank">
+              {{ctl.event.origin.title}}</a>
           </div>
           <div class="col-sm-3">
             <small>{{ ctl.event.origin.start | date:'dd/MM/yyyy HH:mm' }}</small>
@@ -197,15 +224,60 @@
         </div>
       </uib-tab>
       <uib-tab ng-show="ctl.event.tarefas.length">
-        <uib-tab-heading>Tarefas <span class="badge">{{ctl.event.tarefas.length}}</span></uib-tab-heading>
+        <uib-tab-heading><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Tarefas <span class="badge">{{ctl.event.tarefas.length}}</span></uib-tab-heading>
         <br/>
-        <p>Total de horas: {{ctl.durationTotal}}</p>
-        <hr/>
-        <div ng-repeat="task in ctl.event.tarefas">
+        <div class="col-sm-6">
+          <uib-progressbar  value="ctl.EventoService.caclCents(ctl.event.tarefas)" type="primary">
+            <i>{{ctl.EventoService.caclCents(ctl.event.tarefas) | number : 2 }} %</i></uib-progressbar></div>
+        <p class="text-primary text-right">Horas: <b>{{ctl.durationTotal}}</b></p>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="list-group">
+              <a ui-sref="home({eventId: task._id})"  class="list-group-item" target="_blank"
+                ng-repeat="task in ctl.event.tarefas">
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <span style="color:{{task.color}}">
+                      <i class="fa {{task.icon}}" aria-hidden="true"></i>&nbsp;
+                      {{task.title}}
+                    </span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <span ng-show="task.subject"title="Assunto ({{task.subject}})" class="label label-info">
+                      {{task.subject}}</span>
+                    <small>{{ctl.event.prioridade}}</small>
+                  </div>
+                </div>
+                <div class="row">
+
+                  <div class="col-xs-3">
+                    <small>{{ task.start | date:'dd/MM/yyyy HH:mm' }}</small>
+                  </div>
+                  <div class="col-xs-3">
+                    <small ng-if="task.end">{{ task.end | date:'dd/MM/yyyy HH:mm' }}</small>
+                    <small ng-if="!task.end">-</small>
+                  </div>
+                  <div class="col-xs-6 text-right">
+                    <small ng-if="task.duration">{{ task.duration }}</small>
+                    <small ng-if="!task.duration">-</small>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!--div ng-repeat="task in ctl.event.tarefas">
           <div class="row">
             <div class="col-md-6">
               <i class="fa {{task.icon}}" style="color:{{task.color}}" aria-hidden="true"></i>&nbsp;
-              <a href="#" ui-sref="home({eventId: task._id})">{{task.title}}</a>
+              <a target="_blank" ui-sref="home({eventId: task._id})">{{task.title}}</a>
+              <br/>
+              <span ng-show="task.subject"title="Assunto ({{task.subject}})" class="label label-info">
+                {{task.subject}}</span>
             </div>
             <div class="col-xs-3">
               <small>{{ task.start | date:'dd/MM/yyyy HH:mm' }}</small>
@@ -220,6 +292,20 @@
             </div>
           </div>
           <br/>
+        </div-->
+      </uib-tab>
+      <uib-tab ng-show="ctl.event.references.length">
+        <uib-tab-heading><i class="fa fa-plug" aria-hidden="true"></i> Referente</uib-tab-heading>
+        <br/>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="list-group">
+              <a href="{{ref.link}}" class="list-group-item" target="_blank"
+                ng-repeat="ref in ctl.event.references">
+                <b>{{ref.name}}</b><br/>
+                <small>{{ref.description}}</small></a>
+            </div>
+          </div>
         </div>
       </uib-tab>
     </uib-tabset>

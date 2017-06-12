@@ -1,6 +1,6 @@
 'use strict';
 import Lead from './lead.model';
-import User from '../user/user.model';
+import Event from '../event/event.model';
 import ApiService from '../api.service';
 
 let api = ApiService();
@@ -113,18 +113,45 @@ function requestLeadUpdate(req) {
 
 const selectShow = '_id nome sobrenome telefone celular'
   + ' email criador modificador proprietario updatedAt createdAt isAtivo'
-  + ' endereco empresa produto descricao status origem tarefas';
+  + ' endereco empresa produto descricao status origem atividades';
 
-const populationTarefas = {
-  path: 'tarefas',
-  select: '_id title start status'
+const populationAtividade = {
+  path: 'atividades',
+  select: '_id title start status type subject prioridade',
+  options: {
+    limit: 10,
+    sort: { start: -1 }
+  }
 };
 
 export function show(req, res) {
   return api.findById(req.params.id, {
     model: 'Lead',
     select: selectShow,
-    populate: [populationTarefas, api.populationProprietario,
+    populate: [populationAtividade, api.populationProprietario,
       api.populationCriador, api.populationModificador],
   }, res);
+}
+
+export function addActivity(req, res) {
+  let eventId = req.body.evento;
+  Lead.findByIdAndUpdate(req.params.id,
+    { $push: { atividades: { $each: [eventId], $sort: { start: -1 } } }})
+    .exec()
+    .then(lead => {
+      console.log('Lead addActivity()', lead._id);
+      return res.status(201).json(true);
+    })
+    .catch(handleError(res));
+}
+
+export function removeActivity(req, res) {
+  let eventId = req.body.evento;
+  Lead.findByIdAndUpdate(req.params.id, { $pull: { atividades: { $in: [eventId] } } })
+  .exec()
+  .then(lead => {
+    console.log('Lead removeActivity()', lead._id);
+    return res.status(204).end();
+  })
+  .catch(handleError(res));
 }

@@ -1,6 +1,10 @@
 <div class="container">
   <!--h3><i class="fa fa-home" aria-hidden="true"></i> <b>Início</b></h3-->
   <!--hr/-->
+
+  <span spinner-key="spinner-1" spinner-start-active="true"
+    us-spinner="{radius:24, width:8, length: 16}"/>
+
   <div class="row">
     <ul class="nav nav-pills" ng-class="ctl.isJustified()">
       <li ng-class="{ active: ctl.isActive('')}">
@@ -53,7 +57,15 @@
       </li>
     </ul>
   </div>
+
   <hr/>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <uib-progressbar  value="ctl.checks" type="primary">
+        <i>{{ctl.checks | number : 2 }} %</i></uib-progressbar></div>
+  </div>
+
   <!--div class="row">
     <ul class="breadcrumb">
       <li title="Itens no calendário">
@@ -76,8 +88,6 @@
   </div-->
 
   <div class="row">
-    <span spinner-key="spinner-1" spinner-start-active="true"
-      us-spinner="{radius:24, width:8, length: 16}"/>
     <div class="panel panel-default">
       <div class="panel-body">
         <div ui-calendar="ctl.uiConfig.calendar" ng-model="ctl.eventSources">

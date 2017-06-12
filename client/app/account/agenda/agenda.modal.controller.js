@@ -1,42 +1,23 @@
 'use strict';
-import moment from 'moment';
+import {openModalView} from './agenda.model.service';
+
 export default class AgendaModalController {
   /*@ngInject*/
-  constructor(Auth, EventoService, $state, $scope, toastr, usSpinnerService, Modal) {
-    this.EventoService = EventoService;
-    this.usSpinnerService = usSpinnerService;
+  constructor($state, $scope, toastr, usSpinnerService, Auth, EventoService, Modal) {
     this.Auth = Auth;
     this.toastr = toastr;
     this.$state = $state;
     this.Modal = Modal;
-    this.modalCtl = EventoService.getModalCtl();
-    this.event = this.modalCtl.dataSource;
-    if(this.event.tarefas) {
-      this.EventoService.setEventList(this.event.tarefas);
-      let dur = 0;
-      this.event.tarefas.forEach(item => {
-        //var duration = moment.duration(item.end.diff(item.start));
-        //var hours = duration.asHours();
-        if(item.end) {
-          var ms = moment(item.end).diff(moment(item.start));
-          var d = moment.duration(ms);
-          var h = Math.floor(d.asHours());
-          dur += ms;
-          item.duration = (h < 10 ? '0' + h : h) + moment.utc(ms).format(":mm:ss");
-          //item.duration = moment(moment.duration(diff)).format('HH:mm:ss');
-          //item.duration = `${hourDuration} : ${minuteDuration}`;
-        }
-      });
-      var d = moment.duration(dur);
-      var h = Math.floor(d.asHours());
-      this.durationTotal = (h < 10 ? '0' + h : h) + moment.utc(dur).format(":mm:ss");
-    }
+    this.usSpinnerService = usSpinnerService;
+    this.EventoService = EventoService;
+    this.init(EventoService);
+    this.managerChange($scope);
+    this.managerValidateDates($scope);
+  }
+
+  init(EventoService) {
     this.status = [];
     this.prioridade = [];
-    EventoService.loadDomain().then(domain => {
-      this.status = domain.status;
-      this.prioridade = domain.prioridade;
-    });
     this.hstep = 1;
     this.mstep = 5;
     this.format = 'dd/MM/yyyy';
@@ -49,54 +30,71 @@ export default class AgendaModalController {
       todayHighlight: true,
       showWeeks: false
     };
+    this.isEdit = true;
+
+    EventoService.loadDomain().then(domain => {
+      this.status = domain.status;
+      this.prioridade = domain.prioridade;
+    });
+
+    this.modalCtl = EventoService.getModalCtl();
+    this.event = this.modalCtl.dataSource;
+
+    if(this.event.tarefas) {
+      EventoService.setEventList(this.event.tarefas);
+      this.durationTotal = EventoService.calcDuration(this.event.tarefas);
+    }
+    if(this.event.references) {
+      this.event.references.forEach(item => {
+        if(item.object === 'Lead') {
+          item.link = `/leads/edit/${item.objectId}`;
+        }
+      });
+    }
+  }
+
+  managerChange($scope) {
+    $scope.$watch('ctl.event.status', () => {
+      this.EventoService.setEventStatus(this.event);
+    });
+  }
+  managerValidateDates($scope) {
+    let isDateEndInvalid = () => this.event.end <= this.event.start;
+
+    let validateDates = () => {
+      if(!$scope.form.hasOwnProperty('dateEnd')) {
+        return;
+      }
+      let endBeforeStart = 'endBeforeStart';
+      //let startBeforeNow = 'startBeforeNow';
+      let fieldDateEnd = $scope.form.dateEnd;
+      //let fieldDateStart = $scope.form.dateStart;
+
+      //fieldDateStart.$setValidity(startBeforeNow, !(this.event.start < new Date()));
+      fieldDateEnd.$setValidity(endBeforeStart, true);
+      if(this.event.end !== null) {
+        fieldDateEnd.$setValidity(endBeforeStart, !isDateEndInvalid());
+      }
+    };
+
     $scope.$watch('ctl.event.start', () => {
-      this.validateDates($scope);
+      validateDates($scope);
     });
     $scope.$watch('ctl.event.end', () => {
-      this.validateDates($scope);
+      validateDates($scope);
     });
-
-    this.isEdit = true;
-  }
-  validateDates($scope) {
-    if(!$scope.form.hasOwnProperty('dateEnd')) {
-      return;
-    }
-    let endBeforeStart = 'endBeforeStart';
-    //let startBeforeNow = 'startBeforeNow';
-    let fieldDateEnd = $scope.form.dateEnd;
-    //let fieldDateStart = $scope.form.dateStart;
-
-    //fieldDateStart.$setValidity(startBeforeNow, !(this.event.start < new Date()));
-    fieldDateEnd.$setValidity(endBeforeStart, true);
-    if(this.event.end !== null) {
-      fieldDateEnd.$setValidity(endBeforeStart, !this.isDateEndInvalid());
-    }
   }
 
-  isDateEndInvalid() {
-    return this.event.end <= this.event.start;
-  }
   saveEvent(form) {
     if(form.$invalid) {
       return;
     }
+
     this.usSpinnerService.spin('spinner-1');
     this.EventoService.saveEvent(this.event)
     .then(newEvento => {
       this.toastr.success('Evento salvo com sucesso.', `${newEvento.title}`);
-      this.modalCtl.dismiss();
-      let origin;
-      if(this.event.origin && typeof this.event.origin === 'string') {
-        origin = this.event.origin;
-      } else if(this.event.origin) {
-        origin = this.event.origin._id;
-      }
-      this.$state.go('home', {
-        defaultView: this.modalCtl.defaultView,
-        defaultDate: this.modalCtl.defaultDate,
-        eventId: origin
-      }, {reload: true});
+      this.modalCtl.onSaveEvent(newEvento);
     })
     .catch(err => {
       console.log('Ex:', err);
@@ -110,25 +108,43 @@ export default class AgendaModalController {
       this.usSpinnerService.stop('spinner-1');
     });
   }
+
   close() {
-    this.modalCtl.dismiss();
-    console.log(this.modalCtl.redirect);
-    if(this.modalCtl.redirect === false) {
-      return;
-    }
-    this.$state.go('home', {
-      defaultView: this.modalCtl.defaultView,
-      defaultDate: this.modalCtl.defaultDate,
-      eventId: undefined
-    });
+    this.modalCtl.onClose();
   }
+
   newTask() {
-    this.modalCtl.dismiss();
-    this.$state.go('home', {
-      defaultView: this.modalCtl.defaultView,
-      defaultDate: this.modalCtl.defaultDate,
-      eventId: `task:${this.event._id}`
-    }, { reload: true });
+    let newEv = this.EventoService.createEventTask('Nova tarefa', 'Tarefa');
+    newEv.origin = this.event._id;
+
+    let modalTaskCtl = openModalView(newEv, this.Modal);
+    modalTaskCtl.onSaveEvent = ev => {
+      console.log('onSaveEvent()', ev);
+      modalTaskCtl.dismiss();
+      this.reloadEvent();
+    };
+    modalTaskCtl.onClose = () => {
+      modalTaskCtl.dismiss();
+    };
+    this.EventoService.setModalCtl(modalTaskCtl);
+  }
+
+  reloadEvent() {
+    this.usSpinnerService.spin('spinner-1');
+    this.EventoService.loadEvento({id: this.event._id})
+    .then(event => {
+      this.EventoService.setEventList(event.tarefas);
+      this.event = event;
+
+      this.modalCtl.onSaveTask();
+    })
+    .catch(err => {
+      console.log(err);
+      this.toastr.error('Não foi possível abrir o evento');
+    })
+    .finally(() => {
+      this.usSpinnerService.stop('spinner-1');
+    });
   }
 
   confirmDelete() {
@@ -142,12 +158,7 @@ export default class AgendaModalController {
       this.EventoService.deleteEvent(this.event)
       .then(() => {
         this.toastr.success('Evento excluído com sucesso.');
-        this.modalCtl.dismiss();
-        this.$state.go('home', {
-          defaultView: this.modalCtl.defaultView,
-          defaultDate: this.modalCtl.defaultDate,
-          eventId: undefined
-        }, { reload: true });
+        this.modalCtl.onDeleteEvent(this.event);
       })
       .catch(err => {
         console.log('Ex:', err);
@@ -170,6 +181,7 @@ export default class AgendaModalController {
     let user = this.Auth.getCurrentUserSync();
     return this.event.proprietario._id === user._id;
   }
+
   isDelete() {
     if(!this.event._id) {
       return false;

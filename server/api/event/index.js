@@ -3,8 +3,9 @@
 import {Router} from 'express';
 import * as controller from './event.controller';
 import * as auth from '../../auth/auth.service';
+import {register} from './event.trigger';
+register();
 let router = new Router();
-
 router.get('/pdf', auth.isAuthenticated(), controller.indexPdf);
 
 router.get('/domain', auth.isAuthenticated(), controller.domain);

@@ -11,6 +11,7 @@ import config from './config/environment';
 import http from 'http';
 
 import agendaJobs from './components/agenda';
+
 //import {sendMailNovoConta} from './components/nodemailer';
 // Connect to MongoDB
 mongoose.connect(config.mongo.uri, config.mongo.options);

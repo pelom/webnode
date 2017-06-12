@@ -17,6 +17,18 @@
               <i class="fa fa-child fa-2x" aria-hidden="true"></i>
               &nbsp;<label>{{ctl.lead.nome}} {{ctl.lead.sobrenome}}</label>
               &nbsp;<small>({{ctl.lead.status}})</small>
+
+              <div class="btn-group pull-right">
+                <button type="button" class="btn btn-default"
+                  ng-click="ctl.newEvent()" uib-tooltip="Novo Evento">
+                  <i class="fa fa-calendar" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-default"
+                  ng-click="ctl.newTask()" uib-tooltip="Nova Tarefa">
+                  <i class="fa fa-calendar-check-o" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-default"
+                  ng-click="ctl.registerContact()" uib-tooltip="Novo Contato">
+                  <i class="fa fa-comments-o" aria-hidden="true"></i></button>
+              </div>
             </h4>
             <hr/>
             <div class="row">
@@ -318,29 +330,38 @@
              <label>Atividades</label>
 
             <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default" ng-click="ctl.newTask()">
-                <i class="fa fa-plus" aria-hidden="true"></i> Nova Atividade</button>
-              <button type="button" class="btn btn-default">
-                <i class="fa fa-plus" aria-hidden="true"></i> Registrar Contato</button>
+              <button type="button" class="btn btn-default"
+                ng-click="ctl.newEvent()" uib-tooltip="Novo Evento">
+                <i class="fa fa-calendar" aria-hidden="true"></i></button>
+              <button type="button" class="btn btn-default"
+                ng-click="ctl.newTask()" uib-tooltip="Nova Tarefa">
+                <i class="fa fa-calendar-check-o" aria-hidden="true"></i></button>
+              <button type="button" class="btn btn-default"
+                ng-click="ctl.registerContact()" uib-tooltip="Novo Contato">
+                <i class="fa fa-comments-o" aria-hidden="true"></i></button>
             </div>
           </h4>
           <hr/>
           <div class="panel panel-default">
-            <h5 ng-if="ctl.lead.tarefas.length == 0" class="text-center">
+            <h5 ng-if="ctl.lead.atividades.length == 0" class="text-center">
               <code>Não há registros de atividades</code></h5>
-            <div class="table-responsive" ng-if="ctl.lead.tarefas.length">
+            <div class="table-responsive" ng-if="ctl.lead.atividades.length">
               <table class="table table-striped table-condensed">
                 <thead>
                   <tr>
                     <th><small>Titulo</small></th>
+                    <th><small>Assunto</small></th>
                     <th><small>Status</small></th>
+                    <th><small>Prioridade</small></th>
                     <th><small>Data</small></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ng-repeat="tar in ctl.lead.tarefas">
-                    <td><a href="#">{{ tar.title }}</a></td>
+                  <tr ng-repeat="tar in ctl.lead.atividades">
+                    <td><a href="#" ng-click="ctl.openModalEventId(tar._id)">{{ tar.title }}</a></td>
+                    <td>{{ tar.subject }}</td>
                     <td>{{ tar.status }}</td>
+                    <td>{{ tar.prioridade }}</td>
                     <td>{{ tar.start | date:'dd/MM/yyyy HH:mm' }}</td>
                   </tr>
                 </tbody>

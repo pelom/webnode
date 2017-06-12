@@ -10,5 +10,17 @@ export function LeadResource($resource) {
         id: 'domain'
       }
     },
+    addActivity: {
+      method: 'PUT',
+      params: {
+        controller: 'addactivity'
+      }
+    },
+    removeActivity: {
+      method: 'PUT',
+      params: {
+        controller: 'removeactivity'
+      }
+    },
   });
 }

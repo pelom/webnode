@@ -74,7 +74,8 @@ function createAgendaConfig(user) {
 }
 
 const selectIndex = '_id title start end status prioridade allDay descricao isAtivo'
-  + ' proprietario criador modificador createdAt updatedAt tarefas origin local';
+  + ' proprietario criador modificador createdAt updatedAt'
+  + ' tarefas origin local type subject references';
 
 const populationOrigin = {
   path: 'origin',
@@ -83,7 +84,7 @@ const populationOrigin = {
 
 const populationTarefa = {
   path: 'tarefas',
-  select: '_id title start end status',
+  select: '_id title start end status subject',
   options: {
     sort: { start: -1 }
   }
@@ -140,7 +141,7 @@ export function index(req, res) {
 }
 
 const selectShow = '_id title start end status prioridade allDay descricao isAtivo'
-  + ' proprietario criador modificador createdAt updatedAt tarefas origin local';
+  + ' proprietario criador modificador createdAt updatedAt tarefas origin local type subject references';
 
 export function show(req, res) {
   return Event.find({_id: req.params.id, proprietario: req.user._id}, selectShow, {
@@ -163,9 +164,6 @@ export function create(req, res) {
   var newApp = new Event(eventJson);
   newApp.save()
     .then(function(event) {
-      if(event.origin) {
-        addTask(event);
-      }
       res.status(201).json(event);
       return event;
     })
@@ -182,21 +180,14 @@ function requestCreateEvent(req) {
     local: req.body.local,
     title: req.body.title,
     descricao: req.body.descricao,
+    subject: req.body.subject,
     origin: req.body.origin,
     proprietario: req.user._id,
     criador: req.user._id,
     modificador: req.user._id,
-    references: req.body.references
+    references: req.body.references,
+    type: req.body.type
   };
-}
-
-function addTask(event) {
-  Event.findByIdAndUpdate(event.origin,
-    { $push: { tarefas: { $each: [event._id], $sort: { start: 1 } } }},
-    { safe: true }, function(err, /*model*/) {
-      console.log(err);
-    }
-  );
 }
 
 export function update(req, res) {
@@ -221,6 +212,7 @@ function requestUpdateEvent(req) {
     local: req.body.local,
     title: req.body.title,
     descricao: req.body.descricao,
+    subject: req.body.subject,
     isAtivo: req.body.isAtivo,
     proprietario: req.user._id,
     modificador: req.user._id,
@@ -243,41 +235,11 @@ function callbackDestroy(res) {
     if(events.length == 0) {
       return handleEntityNotFound(res)();
     }
-
-    let eventObject = events[0].toObject();
-
-    if(eventObject.hasOwnProperty('origin')) {
-      removeTask(eventObject);
-    }
-
-    if(eventObject.hasOwnProperty('tarefas')) {
-      eventObject.tarefas.forEach(item => {
-        removeOrigin(item);
-      });
-    }
-
-    return Event.findByIdAndRemove(eventObject._id).exec()
-      .then(function() {
-        return res.status(204).end();
+    return events[0].remove()
+      .then(() => {
+        res.status(204).end();
+        return events[0];
       })
       .catch(handleError(res));
   };
-}
-
-function removeTask(event) {
-  Event.findByIdAndUpdate(event.origin,
-    { $pull: { tarefas: { $in: [event._id] } } },
-    { safe: true }, function(err, /*model*/) {
-      console.log(err);
-    }
-  );
-}
-
-function removeOrigin(event) {
-  Event.findByIdAndUpdate(event._id,
-    { origin: undefined },
-    { safe: true }, function(err, /*model*/) {
-      console.log(event, err);
-    }
-  );
 }
