@@ -14,6 +14,8 @@ import HomeController from './home.controller';
 import HomeMenuController from './home.menu.controller';
 import AgendaModalController from './agenda/agenda.modal.controller';
 import LeadController from './lead/lead.controller';
+import ContaController from './conta/conta.controller';
+import ContatoController from './contato/contato.controller';
 
 export default angular.module('webnodeApp.account',
 [uiRouter, login, settings, signup, perfil, agenda, lead])
@@ -28,6 +30,8 @@ export default angular.module('webnodeApp.account',
     });
   })
   .controller('LeadController', LeadController)
+  .controller('ContaController', ContaController)
+  .controller('ContatoController', ContatoController)
   .controller('AgendaModalController', AgendaModalController)
   .controller('HomeMenuController', HomeMenuController)
   .controller('HomeController', HomeController).name;

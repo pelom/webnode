@@ -72,6 +72,20 @@ export default function routes($stateProvider) {
     controllerAs: 'ctl',
     authenticate: true
   })
+  .state('contas', {
+    url: '/contas',
+    template: require('./conta/conta.html'),
+    controller: 'ContaController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
+  .state('contatos', {
+    url: '/contatos',
+    template: require('./contato/contato.html'),
+    controller: 'ContatoController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
   .state('home', {
     url: '/home?defaultView&defaultDate&eventId',
     template: require('./home.html'),

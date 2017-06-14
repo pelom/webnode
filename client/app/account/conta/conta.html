@@ -1,0 +1,84 @@
+<div class="container">
+
+  <span spinner-key="spinner-1" spinner-start-active="true"
+    us-spinner="{radius:24, width:8, length: 16}">
+  </span>
+
+  {{ ctl.isJustified() }}
+
+  <!--div class="row">
+    <ul class="nav nav-pills" ng-class="ctl.isJustified()">
+      <li ng-class="{ active: ctl.isActive('')}">
+        <a href="#" ng-click="ctl.findLeadListStatus('')" uib-tooltip="Todos">
+          <i class="fa fa-child" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Leads</small>
+          <span class="badge">{{ ctl.LeadService.getLeadList().length}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Não Contatado')}">
+        <a href="#" ng-click="ctl.findLeadListStatus('Não Contatado')" uib-tooltip="Não Contatados">
+          <i class="fa fa-bell" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Não Contatados</small>
+          <span class="badge">{{ ctl.LeadService.getNaoContatados()}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Contatado')}">
+        <a href="#" ng-click="ctl.findLeadListStatus('Contatado')" uib-tooltip="Contatados">
+          <i class="fa fa-comment" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Contatados</small>
+          <span class="badge">{{ ctl.LeadService.getContatados()}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Convertido')}">
+        <a href="#" ng-click="ctl.findLeadListStatus('Convertido')" uib-tooltip="Convertidos">
+          <i class="fa fa-diamond" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Convertidos</small>
+          <span class="badge">{{ ctl.LeadService.getConvertidos()}}</span>
+        </a>
+      </li>
+    </ul>
+  </div-->
+
+  <hr/>
+
+  <div class="row">
+    <div class="col-xs-6">
+      <a class="btn btn-default" ui-sref="leadedit()">
+        <i class="fa fa-plus" aria-hidden="true"></i> <i ng-if="ctl.isFull()">Novo</i></a>
+      <!--a ui-sref="homemenu"><small>Voltar para o início</small></a-->
+    </div>
+    <div class="col-xs-6 pull-right form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <input type="text" class="form-control" placeholder="Filtrar resultados" ng-model="filtrarResult">
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4"
+      ng-repeat="acc in  ctl.contas | orderBy:sortType:sortReverse | filter:filtrarResult">
+      <div class="panel panel-houver">
+
+        <div class="panel-heading text-muted">
+          <b></b>
+          <p></p>
+          <p><i class="fa fa-folder-open-o fa-lg"></i> 
+            <a ui-sref="leadedit({id: acc._id})"><i>{{ acc.nome }}</i></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" ng-if="!ctl.contas.length">
+    <div class="panel-body">
+      <div class="alert">
+        <h4><code>Nenhum resultado encontrado</code></h4>
+      </div>
+    </div>
+  </div>
+
+</div>
