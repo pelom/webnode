@@ -14,6 +14,8 @@ export default function(app, agenda) {
   app.use('/api/profile', require('./api/profile'));
   app.use('/api/event', require('./api/event'));
   app.use('/api/lead', require('./api/lead'));
+  app.use('/api/contact', require('./api/contact'));
+  app.use('/api/account', require('./api/account'));
 
   app.use('/api/job', require('./api/job')(agenda));
 

@@ -32,9 +32,6 @@ export function calendar(req, res) {
       if(!user.agenda) {
         user.agenda = createAgenda();
       }
-      user.agenda.businessHours.forEach(item => {
-        item._id = undefined;
-      });
       let configCalendar = createAgendaConfig(user);
       res.status(200).json(configCalendar);
       return configCalendar;

@@ -32,6 +32,9 @@ export default class HomeController {
       let calendarDefault = this.createCalendar();
       let config = Object.assign(calendarDefault, calendar);
       moment.locale(config.locale);
+      config.businessHours.forEach(item => {
+        item._id = undefined;
+      });
       this.uiConfig = {
         calendar: config
       };

@@ -139,6 +139,8 @@ function criarDados() {
       }
     },
     { nome: 'Leads', funcoes: funcaoList, state: 'leads', icon: 'fa-child' },
+    { nome: 'Contatos', funcoes: funcaoList, state: 'contatos', icon: 'fa-address-book-o' },
+    { nome: 'Contas', funcoes: funcaoList, state: 'contas', icon: 'fa-folder-open-o' },
   ];
 
   let profileMap = new Map();
