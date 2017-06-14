@@ -4,7 +4,7 @@
   <h5 style="color:{{ctl.event.color}}"><i class="fa {{ctl.event.icon}}" aria-hidden="true"></i>
     <strong><span ng-bind="modal.title" class="modal-title"></span></strong>
     <br/>
-    <span ng-show="ctl.event.subject"title="Assunto ({{ctl.event.subject}})" class="label label-info">
+    <span ng-show="ctl.event.subject"title="Assunto ({{ctl.event.subject}})" class="label label-default">
       {{ctl.event.subject}}</span>
     <small>{{ctl.event.prioridade}}</small>
   </h5>
@@ -247,7 +247,7 @@
                 </div>
                 <div class="row">
                   <div class="col-md-12">
-                    <span ng-show="task.subject"title="Assunto ({{task.subject}})" class="label label-info">
+                    <span ng-show="task.subject"title="Assunto ({{task.subject}})" class="label label-default">
                       {{task.subject}}</span>
                     <small>{{ctl.event.prioridade}}</small>
                   </div>

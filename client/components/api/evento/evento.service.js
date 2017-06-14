@@ -8,6 +8,7 @@ export function EventoService(EventoResource, Util) {
   let numChecks = 0;
   let modalCtl;
   let eventoList = [];
+  let eventoLateList = [];
   let evento;
   let pendente = 0;
   let emAndamento = 0;
@@ -20,6 +21,9 @@ export function EventoService(EventoResource, Util) {
   let eventoService = {
     getEvento() {
       return evento;
+    },
+    getEventoAtrasado() {
+      return eventoLateList;
     },
     getEventoList() {
       return eventoList;
@@ -66,6 +70,9 @@ export function EventoService(EventoResource, Util) {
     isCancelado(ev) {
       return ev.status === 'Cancelado';
     },
+    isEventLate(ev) {
+      return new Date(ev.start) < new Date();
+    },
     setEventList(evList) {
       this.resetNumberResult();
       evList.forEach(item => {
@@ -79,6 +86,11 @@ export function EventoService(EventoResource, Util) {
         } else if(this.isCancelado(item)) {
           cancelado++;
         }
+      });
+    },
+    setEventListStatus(evList) {
+      evList.forEach(item => {
+        this.setEventStatus(item);
       });
     },
     setEventStatus(ev) {
@@ -162,7 +174,7 @@ export function EventoService(EventoResource, Util) {
     },
     configEvent(ev) {
       let evList = [ev];
-      this.setEventList(evList);
+      this.setEventStatus(evList);
       return evList[0];
     },
     loadDomain(callback) {
@@ -198,6 +210,17 @@ export function EventoService(EventoResource, Util) {
     loadEventoList(query, callback) {
       return EventoResource.query(query, data => {
         eventoList = data;
+        eventoLateList = [];
+        eventoList.forEach(item => {
+          if(this.isEventLate(item) && !this.isConcluido(item) && !this.isCancelado(item)) {
+            item.formatLate = moment(item.start).fromNow();
+            eventoLateList.push(item);
+          }
+        });
+        eventoLateList.sort(function(a, b) {
+          return new Date(a.start) - new Date(b.start);
+        });
+
         return safeCb(callback)(null, data);
       }, function(err) {
         console.log('Ex:', err);

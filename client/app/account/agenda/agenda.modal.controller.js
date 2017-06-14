@@ -39,9 +39,8 @@ export default class AgendaModalController {
 
     this.modalCtl = EventoService.getModalCtl();
     this.event = this.modalCtl.dataSource;
-
     if(this.event.tarefas) {
-      EventoService.setEventList(this.event.tarefas);
+      EventoService.setEventListStatus(this.event.tarefas);
       this.durationTotal = EventoService.calcDuration(this.event.tarefas);
     }
     if(this.event.references) {
@@ -133,7 +132,7 @@ export default class AgendaModalController {
     this.usSpinnerService.spin('spinner-1');
     this.EventoService.loadEvento({id: this.event._id})
     .then(event => {
-      this.EventoService.setEventList(event.tarefas);
+      this.EventoService.setEventStatus(event.tarefas);
       this.event = event;
 
       this.modalCtl.onSaveTask();

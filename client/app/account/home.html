@@ -58,14 +58,6 @@
     </ul>
   </div>
 
-  <hr/>
-
-  <div class="row">
-    <div class="col-lg-12">
-      <uib-progressbar  value="ctl.checks" type="primary">
-        <i>{{ctl.checks | number : 2 }} %</i></uib-progressbar></div>
-  </div>
-
   <!--div class="row">
     <ul class="breadcrumb">
       <li title="Itens no calendário">
@@ -87,10 +79,70 @@
     </ul>
   </div-->
 
+  <hr/>
+
   <div class="row">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <div ui-calendar="ctl.uiConfig.calendar" ng-model="ctl.eventSources">
+    <div class="col-lg-9">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div ui-calendar="ctl.uiConfig.calendar" ng-model="ctl.eventSources">
+          </div>
+        </div>
+      </div>
+      <hr/>
+    </div>
+
+    <div class="col-lg-3">
+      <div>
+        <h5 class="text-muted">Tarefas Concluídas
+          <span class="badge">{{ctl.EventoService.getNumConcluido()}}
+          / {{ctl.EventoService.getEventoList().length}}</span>
+        </h5>
+        <hr/>
+        <uib-progressbar  value="ctl.checks" type="success">
+          <i>{{ctl.checks | number : 2 }} %</i></uib-progressbar>
+      </div>
+      <div>
+        <h5 class="text-muted">Tarefas Atrasadas
+          <span class="badge">{{ctl.EventoService.getEventoAtrasado().length}}</span>
+        </h5>
+        <hr/>
+        <div class="row">
+          <div class="col-lg-12 col-xs-6"
+            ng-repeat="ev in ctl.EventoService.getEventoAtrasado()">
+            <div class="panel panel-danger panel-houver" ng-click="ctl.openModalEventId(ev._id)">
+
+              <div ng-show="$index < 3" class="panel-heading text-muted">
+                <b></b>
+                <p></p>
+                <p><i class="fa fa-calendar-check-o fa-lg"></i> 
+                  <a href="#"><i>{{ev.title}}</i></a>
+                    <i class="fa fa-2x {{ev.icon}} pull-right" title="{{ ev.status }}">
+                    </i>
+                </p>
+                <p>
+                  <span ng-show="ev.subject"title="Assunto ({{ev.subject}})" class="label label-default">
+                    {{ev.subject}}</span>
+                  <small>{{ ev.formatLate }}</small>
+                </p>
+                <!--p title="Criado por {{lead.criador.nome}} {{lead.criador.sobrenome}} em {{ lead.createdAt | date:'dd/MM/yyyy HH:mm' }}">
+                  <i class="fa fa-clock-o" aria-hidden="true"></i> <small>{{ lead.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>  </p>
+                <p>
+                  <span class="label label-warning" ng-if="lead.status == 'Não Contatado'">
+                  {{ lead.status }}</span>
+                  <span class="label label-info" ng-if="lead.status == 'Contatado'">
+                  {{ lead.status }}</span>
+                  <span class="label label-success" ng-if="lead.status == 'Convertido'">
+                  {{ lead.status }}</span>
+                  <span class="label label-danger" ng-if="lead.status == 'Não Convertido'">
+                  {{ lead.status }}</span><span class="label label-default">{{lead.origem}}</span> </p>
+                <hr/-->
+              </div>
+            </div>
+          </div>
+          <h5 ng-if="ctl.EventoService.getEventoAtrasado() == 0" class="text-center">
+            <code>Não há tarefas atrasadas</code></h5>
+        </div>
       </div>
     </div>
     <!--div class="col-sm-8">

@@ -103,8 +103,8 @@ export default class HomeController {
 
   renderViewListWeek(event, element) {
     let sCell = `<span style="color:${event.color}"><i class="fa ${event.icon}" aria-hidden="true"></i> ${event.title}</span><br/>`;
-    let sCell1 = `<span title="Tarefas (${event.tarefas.length})" class="badge">${event.tarefas.length}</span> <br/>`;
-    let sCell2 = `<span title="Assunto (${event.subject})" class="label label-info">${event.subject}</span>`;
+    let sCell1 = ` <span title="Tarefas (${event.tarefas.length})" class="badge"> ${event.tarefas.length}</span> <br/>`;
+    let sCell2 = `<span title="Assunto (${event.subject})" class="label label-default"> ${event.subject}</span>`;
     let sCell3 = `<small title="Prioridade (${event.prioridade})"> ${event.prioridade}</small>`;
     //let sCell3 = ` / <a target="_black" href="/usuario/edit/${event.proprietario._id}">${event.proprietario.nome} ${event.proprietario.sobrenome}</a>`;
     let cell = sCell
