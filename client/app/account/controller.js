@@ -9,7 +9,6 @@ export default class Controller {
     this.usSpinnerService = usSpinnerService;
     this.toastr = toastr;
     this.managerLayout($window, $scope);
-    this.contas = [];
   }
 
   managerLayout($window, $scope) {
@@ -38,5 +37,30 @@ export default class Controller {
 
   isFull() {
     return this.width >= 800;
+  }
+
+  callbackError(form) {
+    return err => {
+      console.log('Ex:', err);
+
+      this.toastr.error(err.data.message, err.data.name, {
+        autoDismiss: false,
+        closeButton: true,
+        timeOut: 0,
+      });
+      err = err.data;
+      this.errors = {};
+
+      angular.forEach(err.errors, (error, field) => {
+        if(form.hasOwnProperty(field)) {
+          form[field].$setValidity('mongoose', false);
+        } else {
+          this.toastr.error(error.message, field, {
+            closeButton: true,
+          });
+        }
+        this.errors[field] = error.message;
+      });
+    };
   }
 }

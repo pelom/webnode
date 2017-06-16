@@ -1,15 +1,17 @@
 'use strict';
 import angular from 'angular';
+import Controller from '../controller';
 import {openModalView} from '../agenda/agenda.model.service';
 
-export default class LeadEditController {
+export default class LeadEditController extends Controller {
   /*@ngInject*/
-  constructor($stateParams, $timeout, $state, toastr, usSpinnerService, LeadService, EventoService, Modal) {
+  constructor($window, $scope, $stateParams, $timeout, $state, toastr, usSpinnerService,
+    LeadService, EventoService, Modal) {
+    super($window, $scope, toastr, usSpinnerService);
+
     this.id = $stateParams.id;
     this.$state = $state;
-    this.toastr = toastr;
     this.$timeout = $timeout;
-    this.usSpinnerService = usSpinnerService;
     this.Modal = Modal;
     this.EventoService = EventoService;
     this.LeadService = LeadService;

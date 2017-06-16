@@ -9,6 +9,8 @@ import signup from './signup';
 import perfil from './perfil';
 import agenda from './agenda';
 import lead from './lead';
+import conta from './conta';
+import contato from './contato';
 
 import HomeController from './home.controller';
 import HomeMenuController from './home.menu.controller';
@@ -18,7 +20,7 @@ import ContaController from './conta/conta.controller';
 import ContatoController from './contato/contato.controller';
 
 export default angular.module('webnodeApp.account',
-[uiRouter, login, settings, signup, perfil, agenda, lead])
+[uiRouter, login, settings, signup, perfil, agenda, lead, conta, contato])
   .config(routing)
   .run(function($rootScope) {
     'ngInject';

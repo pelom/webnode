@@ -265,3 +265,7 @@ padding-top: 70px;
   border-color: #CCC;
   border-size: 20px;
 }
+
+.fc-list-item:hover {
+  cursor: pointer;
+}

@@ -14,6 +14,13 @@ var EnderecoSchema = new Schema({
   number: String
 });
 
+var setorList = ('Agricultura,Vestuário,Bancário,Biotecnologia,Produtos Quimicos,'
+  + 'Comunicações,Construção,Consultando,Educação,Eletrônicos,Energia,Engenharia,'
+  + 'Entretenimento,Meio Ambiente,Finança,Comida & Bebida,Governo,Cuidados de saúde,'
+  + 'Hospitalidade,Seguro,Máquinas,Fabricação,Meios de comunicação,Sem fins lucrativos,'
+  + 'Lazer,Varejo,Remessa,Tecnologia,Telecomunicações,Transporte,Serviços,Outros').split(',');
+
+var origemList = 'Website,Indicação Cliente,Ligação,WhatsApp,Outros'.split(',');
 var AccountSchema = new Schema({
   nome: {
     type: String, required: true, minlength: 3, maxlength: 100, trim: true },
@@ -27,6 +34,8 @@ var AccountSchema = new Schema({
     type: String, required: false, maxlength: 14 },
   cpf: {
     type: String, required: false, maxlength: 11 },
+  origem: { type: String, enum: origemList },
+  setor: { type: String, enum: setorList },
   endereco: EnderecoSchema,
   isAtivo: { type: Boolean, required: true, default: true },
   contatos: [{ type: Schema.Types.ObjectId, ref: 'Contact' }],

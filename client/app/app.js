@@ -29,9 +29,12 @@ import UsuarioService from '../components/api/usuario/usuario.module';
 import EventoService from '../components/api/evento/evento.module';
 import JobService from '../components/api/job/job.module';
 import LeadService from '../components/api/lead/lead.module';
+import ContaService from '../components/api/conta/conta.module';
+import ContatoService from '../components/api/contato/contato.module';
 
 import account from './account';
 import admin from './admin';
+
 import changePassword from '../components/change-password/change.password.component';
 import navbar from '../components/navbar/navbar.component';
 import footer from '../components/footer/footer.component';
@@ -51,8 +54,10 @@ import checkStrength from '../components/check-strength/checkStrength.directive'
 import '../components/check-strength/check.css';
 
 angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toastr,
-  ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength, googlemaps,
-  uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService, PermissaoService, EventoService, JobService,
+  ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength,
+  googlemaps,
+  uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService,
+  PermissaoService, EventoService, JobService, ContaService, ContatoService,
   LeadService, _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal,
   changePassword, mongooseError, 'angularSpinner', 'ui.calendar'
 ])

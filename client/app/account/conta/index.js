@@ -2,8 +2,11 @@
 
 import angular from 'angular';
 import ContaController from './conta.controller';
-//import LeadEditController from './lead.edit.controller';
+import ContaEditController from './conta.edit.controller';
+import ContatoModalController from '../contato/contato.modal.controller';
+
 export default angular.module('webnodeApp.conta', [])
-  //.controller('LeadEditController', LeadEditController)
+  .controller('ContatoModalController', ContatoModalController)
+  .controller('ContaEditController', ContaEditController)
   .controller('ContaController', ContaController)
   .name;

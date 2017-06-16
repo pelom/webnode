@@ -4,8 +4,6 @@
     us-spinner="{radius:24, width:8, length: 16}">
   </span>
 
-  {{ ctl.isJustified() }}
-
   <!--div class="row">
     <ul class="nav nav-pills" ng-class="ctl.isJustified()">
       <li ng-class="{ active: ctl.isActive('')}">
@@ -39,11 +37,9 @@
     </ul>
   </div-->
 
-  <hr/>
-
   <div class="row">
     <div class="col-xs-6">
-      <a class="btn btn-default" ui-sref="leadedit()">
+      <a class="btn btn-default" ui-sref="contaedit()">
         <i class="fa fa-plus" aria-hidden="true"></i> <i ng-if="ctl.isFull()">Novo</i></a>
       <!--a ui-sref="homemenu"><small>Voltar para o início</small></a-->
     </div>
@@ -66,8 +62,31 @@
           <b></b>
           <p></p>
           <p><i class="fa fa-folder-open-o fa-lg"></i> 
-            <a ui-sref="leadedit({id: acc._id})"><i>{{ acc.nome }}</i></a>
+            <a ui-sref="contaedit({id: acc._id})"><i>{{ acc.nome }}</i></a>
           </p>
+          <hr/>
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>CPF / CNPJ</small></dt>
+                <dd>
+                  <span ng-if="acc.cpf">{{acc.cpf}}</span>
+                  <span ng-if="acc.cnpj">{{acc.cnpj}}</span>
+                  <span ng-if="!acc.cpf && !acc.cnpj">--Nenhum--</span>
+                </dd>
+              </dl>
+
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Telefone</small></dt>
+                <dd>
+                  <span ng-if="acc.telefone">{{acc.telefone}}</span>
+                  <span ng-if="!acc.telefone">--Nenhum--</span>
+                </dd>
+              </dl>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,12 +1,13 @@
 'use strict';
 import angular from 'angular';
+import Controller from '../controller';
 import moment from 'moment';
 moment.locale('pt-br');
-export default class LeadController {
+export default class LeadController extends Controller {
   /*@ngInject*/
   constructor($window, $scope, toastr, LeadService, usSpinnerService) {
-    this.usSpinnerService = usSpinnerService;
-    this.toastr = toastr;
+    super($window, $scope, toastr, usSpinnerService);
+
     this.LeadService = LeadService;
     this.LeadService.loadLeadList()
     .then(leads => {
@@ -21,24 +22,6 @@ export default class LeadController {
     });
     this.status = '';
     this.viewDetails = false;
-    this.managerLayout($window, $scope);
-  }
-
-  managerLayout($window, $scope) {
-    this.width = $window.innerWidth;
-
-    let onResize = () => {
-      //console.log('$window.innerWidth:', $window.innerWidth);
-      this.width = $window.innerWidth;
-      $scope.$digest();
-    };
-
-    angular.element($window).on('resize', onResize);
-
-    $scope.$on('$destroy', () => {
-      console.log('$destroy');
-      angular.element($window).off('resize', onResize);
-    });
   }
 
   findLeadListStatus(status) {
@@ -68,16 +51,5 @@ export default class LeadController {
 
   isActive(status) {
     return status === this.status;
-  }
-
-  isJustified() {
-    if(this.isFull()) {
-      return 'nav-justified';
-    }
-    return '';
-  }
-
-  isFull() {
-    return this.width >= 800;
   }
 }

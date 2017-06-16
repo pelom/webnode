@@ -1,20 +1,25 @@
+/* eslint no-sync: 0 */
+
 'use strict';
 import angular from 'angular';
+import Controller from './controller';
 import {openModalView} from './agenda/agenda.model.service';
 import moment from 'moment';
-/* eslint no-sync: 0 */
-export default class HomeController {
+
+export default class HomeController extends Controller {
   /*@ngInject*/
-  constructor($stateParams, $window, $scope, $location, EventoService, toastr, usSpinnerService, Auth, Modal) {
-    this.toastr = toastr;
+  constructor($window, $scope, $stateParams, $location,
+    EventoService, toastr, usSpinnerService, Auth, Modal) {
+    super($window, $scope, toastr, usSpinnerService);
+    //this.toastr = toastr;
     this.isAdmin = Auth.isAdminSync;
-    this.usSpinnerService = usSpinnerService;
+    //this.usSpinnerService = usSpinnerService;
     this.Modal = Modal;
     this.init($stateParams);
     this.EventoService = EventoService;
     this.EventoService.loadCalendar()
       .then(this.initCalendar($stateParams));
-    this.managerLayout($window, $scope);
+    //this.managerLayout($window, $scope);
   }
 
   init($stateParams) {
@@ -45,7 +50,7 @@ export default class HomeController {
     };
   }
 
-  managerLayout($window, $scope) {
+  /*managerLayout($window, $scope) {
     this.width = $window.innerWidth;
 
     let onResize = () => {
@@ -60,7 +65,7 @@ export default class HomeController {
       console.log('$destroy');
       angular.element($window).off('resize', onResize);
     });
-  }
+  }*/
 
   createCalendar() {
     return {
@@ -241,7 +246,7 @@ export default class HomeController {
     return this.defaultStatus == path;
   }
 
-  isJustified() {
+  /*isJustified() {
     if(this.isFull()) {
       return 'nav-justified';
     }
@@ -250,5 +255,5 @@ export default class HomeController {
 
   isFull() {
     return this.width >= 800;
-  }
+  }*/
 }

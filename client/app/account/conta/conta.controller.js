@@ -7,8 +7,19 @@ moment.locale('pt-br');
 
 export default class ContaController extends Controller {
   /*@ngInject*/
-  constructor($window, $scope, toastr, usSpinnerService) {
+  constructor($window, $scope, toastr, usSpinnerService, ContaService) {
     super($window, $scope, toastr, usSpinnerService);
-    this.contas = [{ nome: 'Nome' }];
+
+    this.ContaService = ContaService;
+    this.ContaService.loadContaList()
+    .then(contas => {
+      this.contas = contas;
+    })
+    .catch(err => {
+      console.log('Ex:', err);
+    })
+    .finally(() => {
+      usSpinnerService.stop('spinner-1');
+    });
   }
 }

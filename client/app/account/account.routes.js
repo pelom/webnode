@@ -79,6 +79,13 @@ export default function routes($stateProvider) {
     controllerAs: 'ctl',
     authenticate: true
   })
+  .state('contaedit', {
+    url: '/contas/edit/:id',
+    template: require('./conta/conta.edit.html'),
+    controller: 'ContaEditController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
   .state('contatos', {
     url: '/contatos',
     template: require('./contato/contato.html'),

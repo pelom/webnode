@@ -1,0 +1,137 @@
+<div class="modal-header">
+  <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
+
+  <h5><i class="fa fa-address-book-o fa-2x" aria-hidden="true"></i>
+    <strong><span class="modal-title">{{ctl.contato.nome}} {{ctl.contato.sobrenome}}</span></strong>
+  </h5>
+</div>
+
+<div class="modal-body">
+  <p ng-if="modal.text" ng-bind="modal.text"></p>
+
+  <form class="form" novalidate name="form" ng-submit="ctl.saveContato(form)">
+
+    <uib-tabset active="active">
+      <uib-tab>
+        <uib-tab-heading><i class="fa fa-info-circle" aria-hidden="true"></i> Contato</uib-tab-heading>
+        <br/>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Nome</small></dt>
+              <dd ng-class="{'has-error': form.nome.$invalid && form.nome.$dirty}">
+                <input type="text" name="nome" class="form-control" placeholder="Nome"
+                 ng-model="ctl.contato.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
+                  nomevalido="false" />
+
+                <p class="help-block"
+                  ng-show="form.nome.$error.required && form.nome.$dirty">
+                  O nome é necessário</p>
+                <p class="help-block" ng-show="form.nome.$error.minlength">
+                  São necessários no minimo 3 letras</p>
+                <p class="help-block" ng-show="form.nome.$error.maxlength">
+                  São permitidos no máximo 30 letras</p>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Sobrenome</small></dt>
+              <dd ng-class="{'has-error': form.sobrenome.$invalid && form.sobrenome.$dirty}">
+                <input type="text" name="sobrenome" class="form-control" placeholder="Sobrenome"
+                 ng-model="ctl.contato.sobrenome" ng-required="true" ng-minlength="3" ng-maxlength="40"
+                  nomevalido="true" />
+
+                <p class="help-block"
+                  ng-show="form.sobrenome.$error.required && form.sobrenome.$dirty">
+                  O sobrenome é necessário</p>
+                <p class="help-block" ng-show="form.sobrenome.$error.minlength">
+                  São necessários no minimo 3 letras</p>
+                <p class="help-block" ng-show="form.sobrenome.$error.maxlength">
+                  São permitidos no máximo 40 letras</p>
+              </dd>
+            </dl>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Email</small></dt>
+              <dd ng-class="{'has-error': (form.email.$invalid && form.email.$dirty) || (form.email.$error.mongoose)}">
+                <input type="email" name="email" class="form-control"
+                  placeholder="email@email.com"
+                  ng-pattern='/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i'
+                  ng-model="ctl.contato.email" mongoose-error/>
+
+                <p class="help-block" ng-show="form.email.$error.required && form.email.$dirty">
+                  Qual é o seu e-mail?</p>
+                <p class="help-block" ng-show="form.email.$error.pattern">
+                  O e-mail não parece válido.</p>
+                <p class="help-block" ng-show="form.email.$error.mongoose">
+                  {{ ctl.errors.email }}</p>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-6">
+            <dt><small>Celular</small></dt>
+            <dd>
+              <input type="text" class="form-control"
+                ng-model="ctl.contato.celular" ui-mask="(99) 9? 9999-9999"/>
+            </dd>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <dl>
+              <dt><small>Data de Nascimento</small></dt>
+              <dd ng-class="{'has-error': form.dataNascimento.$invalid}">
+                <p class="input-group">
+                  <input type="text" class="form-control" name="dataNascimento"
+                    ng-model="ctl.contato.dataNascimento"
+                    uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
+                    is-open="ctl.popup1.opened" datepicker-options="ctl.dateOptions"
+                    show-button-bar="false"/>
+                  <span class="input-group-btn">
+                   <button type="button" class="btn btn-default"
+                   ng-click="ctl.popup1.opened = true;">
+                   <i class="fa fa-calendar" aria-hidden="true"></i></button>
+                  </span>
+                </p>
+               </dd>
+            </dl>
+          </div>
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Telefone</small></dt>
+              <dd>
+                <input type="text" class="form-control"
+                  ng-model="ctl.contato.telefone" ui-mask="(99) 9999-9999"/>
+              </dd>
+            </dl>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <textarea class="form-control" rows="4" placeholder="Descrição"
+              ng-model="ctl.contato.descricao"></textarea>
+          </div>
+        </div>
+      </uib-tab>
+    </uib-tabset>
+
+    <div class="row"><hr/></div>
+    <div class="row">
+      <div class="col-xs-12">
+        <button type="submit" class="btn btn-primary"
+          ng-disabled="form.$invalid">Salvar</button>
+
+        <button type="button" class="btn btn-default"
+          ng-click="ctl.close()">Fechar</button>
+
+      </div>
+    </div>
+
+  </form>
+
+</div>

@@ -4,6 +4,9 @@ import {Router} from 'express';
 import * as controller from './contact.controller';
 import * as auth from '../../auth/auth.service';
 
+import {register} from './contact.trigger';
+register();
+
 let router = new Router();
 
 router.get('/domain', auth.isAuthenticated(), controller.domain);

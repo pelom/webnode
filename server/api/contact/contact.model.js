@@ -2,6 +2,7 @@
 /*eslint no-invalid-this:0*/
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
+import {schemaEmit} from './contact.events';
 
 var EnderecoSchema = new Schema({
   address: String,
@@ -31,7 +32,7 @@ var ContactSchema = new Schema({
   origem: { type: String, enum: origemList, default: 'Ligação' },
   endereco: EnderecoSchema,
   isAtivo: { type: Boolean, required: true, default: true },
-  conta: [{ type: Schema.Types.ObjectId, ref: 'Account' }],
+  conta: { type: Schema.Types.ObjectId, ref: 'Account' },
   atividades: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
   proprietario: { type: Schema.Types.ObjectId, ref: 'User' },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
@@ -39,4 +40,7 @@ var ContactSchema = new Schema({
 }, {
   timestamps: true
 });
+
+schemaEmit(ContactSchema);
+
 export default mongoose.model('Contact', ContactSchema);

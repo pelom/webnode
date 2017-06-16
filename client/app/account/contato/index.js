@@ -2,8 +2,8 @@
 
 import angular from 'angular';
 import ContatoController from './contato.controller';
-//import LeadEditController from './lead.edit.controller';
+//import ContatoEditController from './contato.edit.controller';
 export default angular.module('webnodeApp.contato', [])
-  //.controller('LeadEditController', LeadEditController)
+  //.controller('ContatoEditController', ContatoEditController)
   .controller('ContatoController', ContatoController)
   .name;
