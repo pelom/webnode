@@ -23,15 +23,38 @@
   <hr/>
 
   <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4"
-      ng-repeat="ctt in  ctl.contatos | orderBy:sortType:sortReverse | filter:filtrarResult">
+    <div class="col-xs-12 col-sm-6"
+      ng-repeat="ctt in  ctl.contatos | filter:filtrarResult">
       <div class="panel panel-houver">
 
         <div class="panel-heading text-muted">
-          <b></b>
           <p></p>
-          <p><i class="fa fa-address-book-o fa-lg"></i> 
-            <a ui-sref="leadedit({id: ctt._id})"><i>{{ ctt.nome }}</i></a>
+          <p>
+            <i class="fa fa-address-book-o"></i>
+            <a ui-sref="contatoedit({id: ctt._id})">
+              <span>{{ ctt.nome }} {{ ctt.sobrenome }}</span></a>
+
+            <small ng-if="ctt.conta"><br/><span class="label label-default">{{ctt.conta.nome}}</span></small>
+            <a ng-if="ctt.conta" ui-sref="contaedit({id: ctt.conta._id})" title="Conta: {{ctt.conta.nome}}">
+              <i class="fa fa-folder-open-o fa-2x pull-right"></i></a>
+
+            <small ng-if="!ctt.conta"><br/>Agenda</small>
+            <i ng-if="!ctt.conta" class="fa fa-address-book-o fa-2x pull-right"></i>
+            <hr/>
+          </p>
+          <p>
+            <small ng-if="ctt.celular" title="Celular">
+              <i class="fa fa-mobile" aria-hidden="true"></i>
+              <a href="tel:{{ctt.celular}}"><b>{{ctt.celular}}</b></a>
+            </small>
+            <small ng-if="!ctt.celular && ctt.telefone" title="Telefone">
+              <i class="fa fa-phone" aria-hidden="true"></i>
+              <a  href="tel:{{ctt.telefone}}"><b>{{ctt.telefone}}</b></a>
+            </small>
+            <small ng-if="!ctt.celular && !ctt.telefone"><i class="fa fa-phone" aria-hidden="true"></i></small>
+            <small title="Email"><i class="fa fa-at" aria-hidden="true"></i>
+              <a ng-if="ctt.email" href="mailto:{{ctt.email}}"><b>{{ctt.email}}</b></a>
+            </small>
           </p>
         </div>
       </div>

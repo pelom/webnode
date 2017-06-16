@@ -1,0 +1,271 @@
+<div class="container">
+  <div>
+    <p class="text-primary">
+      <a ui-sref="contas"><small>Voltar</small></a>
+      | <a href="#end"><small>Endereço</small></a>
+    </p>
+
+    <span spinner-key="spinner-1" spinner-start-active="true"
+      us-spinner="{ radius: 24, width: 8, length: 16 }"/>
+
+    <form class="form" name="form" novalidate ng-submit="ctl.save(form)">
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <h4>
+            <i class="fa fa-address-book-o fa-2x" aria-hidden="true"></i>
+            &nbsp;<label>{{ ctl.contato.nome }} {{ ctl.contato.sobrenome }}</label>
+          </h4>
+          <hr/>
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Nome</small></dt>
+                <dd ng-class="{'has-error': form.nome.$invalid && form.nome.$dirty}">
+                  <input type="text" name="nome" class="form-control" placeholder="Nome"
+                   ng-model="ctl.contato.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
+                    nomevalido="false" />
+
+                  <p class="help-block"
+                    ng-show="form.nome.$error.required && form.nome.$dirty">
+                    O nome é necessário</p>
+                  <p class="help-block" ng-show="form.nome.$error.minlength">
+                    São necessários no minimo 3 letras</p>
+                  <p class="help-block" ng-show="form.nome.$error.maxlength">
+                    São permitidos no máximo 30 letras</p>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Sobrenome</small></dt>
+                <dd ng-class="{'has-error': form.sobrenome.$invalid && form.sobrenome.$dirty}">
+                  <input type="text" name="sobrenome" class="form-control" placeholder="Sobrenome"
+                   ng-model="ctl.contato.sobrenome" ng-required="true" ng-minlength="3" ng-maxlength="40"
+                    nomevalido="true" />
+
+                  <p class="help-block"
+                    ng-show="form.sobrenome.$error.required && form.sobrenome.$dirty">
+                    O sobrenome é necessário</p>
+                  <p class="help-block" ng-show="form.sobrenome.$error.minlength">
+                    São necessários no minimo 3 letras</p>
+                  <p class="help-block" ng-show="form.sobrenome.$error.maxlength">
+                    São permitidos no máximo 40 letras</p>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Email</small></dt>
+                <dd ng-class="{'has-error': (form.email.$invalid && form.email.$dirty) || (form.email.$error.mongoose)}">
+                  <input type="email" name="email" class="form-control"
+                    placeholder="email@email.com"
+                    ng-pattern='/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i'
+                    ng-model="ctl.contato.email" mongoose-error/>
+
+                  <p class="help-block" ng-show="form.email.$error.required && form.email.$dirty">
+                    Qual é o seu e-mail?</p>
+                  <p class="help-block" ng-show="form.email.$error.pattern">
+                    O e-mail não parece válido.</p>
+                  <p class="help-block" ng-show="form.email.$error.mongoose">
+                    {{ ctl.errors.email }}</p>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dt><small>Celular</small></dt>
+              <dd>
+                <input type="text" class="form-control"
+                  ng-model="ctl.contato.celular" ui-mask="(99) 9? 9999-9999"/>
+              </dd>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <dl>
+                <dt><small>Data de Nascimento</small></dt>
+                <dd ng-class="{'has-error': form.dataNascimento.$invalid}">
+                  <p class="input-group">
+                    <input type="text" class="form-control" name="dataNascimento"
+                      ng-model="ctl.contato.dataNascimento"
+                      uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
+                      is-open="ctl.popup1.opened" datepicker-options="ctl.dateOptions"
+                      show-button-bar="false"/>
+                    <span class="input-group-btn">
+                     <button type="button" class="btn btn-default"
+                     ng-click="ctl.popup1.opened = true;">
+                     <i class="fa fa-calendar" aria-hidden="true"></i></button>
+                    </span>
+                  </p>
+                 </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Telefone</small></dt>
+                <dd>
+                  <input type="text" class="form-control"
+                    ng-model="ctl.contato.telefone" ui-mask="(99) 9999-9999"/>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <textarea class="form-control" rows="4" placeholder="Descrição"
+                ng-model="ctl.contato.descricao"></textarea>
+            </div>
+          </div>
+
+          <br/>
+          <div class="row" ng-if="ctl.contato._id">
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Criado</small></dt>
+                <dd>
+                  <small>{{ ctl.contato.createdAt | date:'dd/MM/yyyy HH:mm' }} por
+                  <strong>{{ctl.contato.criador.nome}} {{ctl.contato.criador.sobrenome}}</strong>
+                  </small>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Modificado</small></dt>
+                <dd>
+                  <small>{{ ctl.contato.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                  <strong>{{ ctl.contato.modificador.nome}} {{ ctl.contato.modificador.sobrenome}}</strong>
+                  </small>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <div class="row"><hr/></div>
+          <div class="list-group">
+            <button class="btn btn-primary" type="submit"
+              ng-disabled="form.$invalid">Salvar</button>
+            <button type="button" class="btn btn-link"
+              ui-sref="contas">Voltar</button>
+          </div>
+
+        </div>
+      </div>
+
+      <div id="end" class="panel panel-default">
+        <div class="panel-body">
+          <h4><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
+            <label>Endereço</label></h4>
+          <hr/>
+          <div class="row" uib-collapse="ctl.isCollapsed">
+            <div class="col-lg-12">
+              <googlemaps ng-model="ctl.conta.endereco.nome"
+                zip="ctl.conta.endereco.zipcode"
+                country="ctl.conta.endereco.country"
+                state="ctl.conta.endereco.state"
+                city="ctl.conta.endereco.city"
+                suburb="ctl.conta.endereco.suburb"
+                number="ctl.conta.endereco.number"
+                address="ctl.conta.endereco.address">
+              </googlemaps>
+            </div>
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Endereço</small></dt>
+                <dd>
+                  <input class="form-control"
+                   placeholder="Rua, Avenida, Travessa etc"
+                   ng-model="ctl.conta.endereco.address" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>CEP</small></dt>
+                <dd>
+                  <input class="form-control"
+                   ui-mask="99999-999"
+                   ng-model="ctl.conta.endereco.zipcode" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Complemento</small></dt>
+                <dd>
+                  <input class="form-control" placeholder="Casa, Apartamento etc"
+                   ng-model="ctl.conta.endereco.complement" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt><small>Bairro</small></dt>
+                <dd>
+                  <input class="form-control"
+                    placeholder="Bairro"
+                    ng-model="ctl.conta.endereco.suburb" />
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-3">
+              <dl>
+                <dt><small>Número</small></dt>
+                <dd>
+                  <input class="form-control"
+                   placeholder="Número"
+                   ng-model="ctl.conta.endereco.number" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-3">
+              <dl>
+                <dt><small>Cidade</small></dt>
+                <dd>
+                  <input class="form-control"
+                    placeholder="Cidade"
+                    ng-model="ctl.conta.endereco.city" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-3">
+              <dl>
+                <dt><small>Estado</small></dt>
+                <dd>
+                  <input class="form-control"
+                    placeholder="Estado"
+                    ng-model="ctl.conta.endereco.state" />
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-3">
+              <dl>
+                <dt><small>País</small></dt>
+                <dd>
+                  <input class="form-control"
+                   placeholder="País"
+                   ng-model="ctl.conta.endereco.country" />
+                </dd>
+              </dl>
+            </div>
+          </div>
+
+          <div class="row"><hr/></div>
+
+          <div class="list-group">
+            <button class="btn btn-primary" type="submit"
+              ng-disabled="form.$invalid">Salvar</button>
+            <button type="button" class="btn btn-link"
+              ui-sref="contas">Voltar</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

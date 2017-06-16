@@ -7,8 +7,19 @@ moment.locale('pt-br');
 
 export default class ContatoController extends Controller {
   /*@ngInject*/
-  constructor($window, $scope, toastr, usSpinnerService) {
+  constructor($window, $scope, toastr, usSpinnerService, ContatoService) {
     super($window, $scope, toastr, usSpinnerService);
-    this.contatos = [{ nome: 'Nome' }];
+
+    this.ContatoService = ContatoService;
+    this.ContatoService.loadContatoList()
+    .then(contatos => {
+      this.contatos = contatos;
+    })
+    .catch(err => {
+      console.log('Ex:', err);
+    })
+    .finally(() => {
+      usSpinnerService.stop('spinner-1');
+    });
   }
 }

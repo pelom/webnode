@@ -93,6 +93,13 @@ export default function routes($stateProvider) {
     controllerAs: 'ctl',
     authenticate: true
   })
+  .state('contatoedit', {
+    url: '/contatos/edit/:id',
+    template: require('./contato/contato.edit.html'),
+    controller: 'ContatoEditController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
   .state('home', {
     url: '/home?defaultView&defaultDate&eventId',
     template: require('./home.html'),

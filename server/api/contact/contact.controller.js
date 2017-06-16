@@ -14,8 +14,8 @@ export function domain(req, res) {
   });
 }
 
-const selectIndex = '_id nome sobrenome telefone celular '
-  + 'email origem criador modificador updatedAt createdAt';
+const selectIndex = '_id nome sobrenome telefone celular conta'
+  + ' email origem';
 
 export function index(req, res) {
   return api.find({
@@ -24,7 +24,7 @@ export function index(req, res) {
     where: {
       proprietario: req.user._id,
     },
-    populate: [api.populationProprietario, api.populationCriador, api.populationModificador],
+    populate: [populationConta],
     options: { skip: 0, limit: 50,
       sort: {
         createdAt: -1
