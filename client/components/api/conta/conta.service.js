@@ -5,7 +5,14 @@ export function ContaService(ContaResource, Util) {
   let safeCb = Util.safeCb;
   let contaList = [];
   let conta = {};
+  let modalCtl;
   let contaService = {
+    getModalCtl() {
+      return modalCtl;
+    },
+    setModalCtl(modCtl) {
+      modalCtl = modCtl;
+    },
     getContaList() {
       return contaList;
     },
@@ -44,6 +51,7 @@ export function ContaService(ContaResource, Util) {
         telefone: newAccount.telefone,
         descricao: newAccount.descricao,
         origem: newAccount.origem,
+        setor: newAccount.setor,
         endereco: newAccount.endereco,
       };
       if(angular.isUndefined(account._id)) {

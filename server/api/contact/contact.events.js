@@ -9,6 +9,7 @@ ContactEvents.setMaxListeners(0);
 // Model events
 var events = {
   save: 'save',
+  findOneAndUpdate: 'findOneAndUpdate',
   remove: 'remove'
 };
 

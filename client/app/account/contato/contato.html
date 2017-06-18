@@ -8,7 +8,7 @@
 
   <div class="row">
     <div class="col-xs-6">
-      <a class="btn btn-default" ui-sref="leadedit()">
+      <a class="btn btn-default" ui-sref="contatoedit()">
         <i class="fa fa-plus" aria-hidden="true"></i> <i ng-if="ctl.isFull()">Novo</i></a>
       <!--a ui-sref="homemenu"><small>Voltar para o início</small></a-->
     </div>
@@ -34,28 +34,32 @@
             <a ui-sref="contatoedit({id: ctt._id})">
               <span>{{ ctt.nome }} {{ ctt.sobrenome }}</span></a>
 
-            <small ng-if="ctt.conta"><br/><span class="label label-default">{{ctt.conta.nome}}</span></small>
             <a ng-if="ctt.conta" ui-sref="contaedit({id: ctt.conta._id})" title="Conta: {{ctt.conta.nome}}">
               <i class="fa fa-folder-open-o fa-2x pull-right"></i></a>
-
-            <small ng-if="!ctt.conta"><br/>Agenda</small>
             <i ng-if="!ctt.conta" class="fa fa-address-book-o fa-2x pull-right"></i>
+
+            <p>
+              <small ng-if="ctt.celular" title="Celular">
+                <i class="fa fa-mobile" aria-hidden="true"></i>
+                <a href="tel:{{ctt.celular}}"><b>{{ctt.celular}}</b></a>
+              </small>
+              <small ng-if="!ctt.celular && ctt.telefone" title="Telefone">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <a  href="tel:{{ctt.telefone}}"><b>{{ctt.telefone}}</b></a>
+              </small>
+              <small ng-if="!ctt.celular && !ctt.telefone"><i class="fa fa-phone" aria-hidden="true"></i></small>
+              <small title="Email"><i class="fa fa-at" aria-hidden="true"></i>
+                <a ng-if="ctt.email" href="mailto:{{ctt.email}}"><b>{{ctt.email}}</b></a>
+              </small>
+            </p>
+
             <hr/>
+
+            <small ng-if="!ctt.conta">Agenda</small>
+            <p ng-if="ctt.conta">{{ctt.conta.nome}}</p>
+            <!--small ng-if="ctt.cargo"><span class="label label-info">{{ctt.cargo}}</span></small-->
           </p>
-          <p>
-            <small ng-if="ctt.celular" title="Celular">
-              <i class="fa fa-mobile" aria-hidden="true"></i>
-              <a href="tel:{{ctt.celular}}"><b>{{ctt.celular}}</b></a>
-            </small>
-            <small ng-if="!ctt.celular && ctt.telefone" title="Telefone">
-              <i class="fa fa-phone" aria-hidden="true"></i>
-              <a  href="tel:{{ctt.telefone}}"><b>{{ctt.telefone}}</b></a>
-            </small>
-            <small ng-if="!ctt.celular && !ctt.telefone"><i class="fa fa-phone" aria-hidden="true"></i></small>
-            <small title="Email"><i class="fa fa-at" aria-hidden="true"></i>
-              <a ng-if="ctt.email" href="mailto:{{ctt.email}}"><b>{{ctt.email}}</b></a>
-            </small>
-          </p>
+
         </div>
       </div>
     </div>

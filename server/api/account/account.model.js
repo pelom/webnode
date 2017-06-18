@@ -38,7 +38,6 @@ var AccountSchema = new Schema({
   setor: { type: String, enum: setorList },
   endereco: EnderecoSchema,
   isAtivo: { type: Boolean, required: true, default: true },
-  contatos: [{ type: Schema.Types.ObjectId, ref: 'Contact' }],
   atividades: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
   proprietario: { type: Schema.Types.ObjectId, ref: 'User' },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
@@ -46,4 +45,7 @@ var AccountSchema = new Schema({
 }, {
   timestamps: true
 });
+
+AccountSchema.index({ nome: 'text', cpf: 'text', cnpj: 'text', telefone: 'text' });
+
 export default mongoose.model('Account', AccountSchema);

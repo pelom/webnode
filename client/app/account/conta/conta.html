@@ -4,39 +4,32 @@
     us-spinner="{radius:24, width:8, length: 16}">
   </span>
 
-  <!--div class="row">
+  <div class="row">
     <ul class="nav nav-pills" ng-class="ctl.isJustified()">
       <li ng-class="{ active: ctl.isActive('')}">
-        <a href="#" ng-click="ctl.findLeadListStatus('')" uib-tooltip="Todos">
-          <i class="fa fa-child" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()">Leads</small>
-          <span class="badge">{{ ctl.LeadService.getLeadList().length}}</span>
+        <a href="#" ng-click="ctl.findContas('')" uib-tooltip="Todos">
+          <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Contas</small>
+          <span class="badge">{{ ctl.ContaService.getContaList().length}}</span>
         </a>
       </li>
-      <li ng-class="{ active: ctl.isActive('Não Contatado')}">
-        <a href="#" ng-click="ctl.findLeadListStatus('Não Contatado')" uib-tooltip="Não Contatados">
-          <i class="fa fa-bell" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()">Não Contatados</small>
-          <span class="badge">{{ ctl.LeadService.getNaoContatados()}}</span>
+      <li ng-class="{ active: ctl.isActive('fisica')}">
+        <a href="#" ng-click="ctl.findContas('fisica')" uib-tooltip="Pessoa Física">
+          <i class="fa fa-male" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Pessoa Física</small>
+          <span class="badge">{{ ctl.pessoaFisica.length}}</span>
         </a>
       </li>
-      <li ng-class="{ active: ctl.isActive('Contatado')}">
-        <a href="#" ng-click="ctl.findLeadListStatus('Contatado')" uib-tooltip="Contatados">
-          <i class="fa fa-comment" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()">Contatados</small>
-          <span class="badge">{{ ctl.LeadService.getContatados()}}</span>
-        </a>
-      </li>
-      <li ng-class="{ active: ctl.isActive('Convertido')}">
-        <a href="#" ng-click="ctl.findLeadListStatus('Convertido')" uib-tooltip="Convertidos">
-          <i class="fa fa-diamond" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()">Convertidos</small>
-          <span class="badge">{{ ctl.LeadService.getConvertidos()}}</span>
+      <li ng-class="{ active: ctl.isActive('juridica')}">
+        <a href="#" ng-click="ctl.findContas('juridica')" uib-tooltip="Pessoa Jurídica">
+          <i class="fa fa-building-o" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Pessoa Jurídica</small>
+          <span class="badge">{{ ctl.pessoaJuridica.length}}</span>
         </a>
       </li>
     </ul>
-  </div-->
-
+  </div>
+  <hr/>
   <div class="row">
     <div class="col-xs-6">
       <a class="btn btn-default" ui-sref="contaedit()">
@@ -65,28 +58,18 @@
             <a ui-sref="contaedit({id: acc._id})"><i>{{ acc.nome }}</i></a>
           </p>
           <hr/>
-          <div class="row">
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>CPF / CNPJ</small></dt>
-                <dd>
-                  <span ng-if="acc.cpf">{{acc.cpf}}</span>
-                  <span ng-if="acc.cnpj">{{acc.cnpj}}</span>
-                  <span ng-if="!acc.cpf && !acc.cnpj">--Nenhum--</span>
-                </dd>
-              </dl>
-
-            </div>
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>Telefone</small></dt>
-                <dd>
-                  <span ng-if="acc.telefone">{{acc.telefone}}</span>
-                  <span ng-if="!acc.telefone">--Nenhum--</span>
-                </dd>
-              </dl>
-            </div>
-          </div>
+          <p>
+            <small>
+              <i class="fa fa-barcode" aria-hidden="true"></i>
+              <span ng-if="acc.cpf" title="CPF"><b>{{acc.cpf}}</b></span>
+              <span ng-if="acc.cnpj" title="CNPJ"><b>{{acc.cnpj}}</b></span>
+            </small>
+            <small>
+              <i class="fa fa-phone" aria-hidden="true"></i>
+              <a  href="tel:{{acc.telefone}}" ng-if="acc.telefone" title="Telefone">
+                <b>{{acc.telefone}}</b></a>
+            </small>
+          </p>
         </div>
       </div>
     </div>

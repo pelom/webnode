@@ -19,12 +19,12 @@ const selectIndex = '_id nome descricao  telefone cpf cnpj criador modificador p
   + 'updatedAt createdAt';
 
 export function index(req, res) {
+  let where = buildWhere(req);
+  console.log('Where:', where);
   return api.find({
     model: 'Account',
     select: selectIndex,
-    where: {
-      proprietario: req.user._id,
-    },
+    where,
     populate: [api.populationProprietario, api.populationCriador, api.populationModificador],
     options: { skip: 0, limit: 50,
       sort: {
@@ -34,17 +34,47 @@ export function index(req, res) {
   }, res);
 }
 
+function buildWhere(req) {
+  if(req.query.search) {
+    let searchs = req.query.search.split(' ');
+    let regexs = [];
+    searchs.forEach(item => {
+      if(item.trim().length > 2) {
+        var reg = new RegExp(item, 'i');
+        regexs.push(reg);
+      }
+    });
+    return {
+      $or: [
+        { nome: { $in: regexs } },
+        { cpf: { $in: regexs } },
+        { cnpj: { $in: regexs } },
+        { telefone: { $in: regexs } }
+      ],
+      //proprietario: req.user._id
+    };
+  }
+
+  if(req.query.type) {
+    if(req.query.type == 'fisica') {
+      return { cpf: { $nin: ['', null] } };
+    } else if(req.query.type == 'juridica') {
+      return { cnpj: { $nin: ['', null] } };
+    }
+  }
+  return {
+    //proprietario: req.user._id
+  };
+}
+
 const selectShow = '_id nome descricao telefone cpf cnpj criador modificador proprietario'
-  + 'updatedAt createdAt origem endereco contatos';
-const populationContatos = {
-  path: 'contatos',
-  select: '_id nome sobrenome celular telefone email'
-};
+  + 'updatedAt createdAt origem endereco setor';
+
 export function show(req, res) {
   return api.findById(req.params.id, {
     model: 'Account',
     select: selectShow,
-    populate: [populationContatos, api.populationProprietario,
+    populate: [api.populationProprietario,
       api.populationCriador, api.populationModificador],
   }, res);
 }
@@ -93,6 +123,7 @@ function requestUpdateAccount(req) {
     telefone: req.body.telefone,
     origem: req.body.origem,
     endereco: req.body.endereco,
+    setor: req.body.setor,
     isAtivo: req.body.isAtivo,
     proprietario: req.user._id,
     modificador: req.user._id,

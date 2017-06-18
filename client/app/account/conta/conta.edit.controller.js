@@ -20,6 +20,7 @@ export default class ContaEditController extends Controller {
     this.ContaService.loadDomain().then(domain => {
       this.origem = domain.origem;
       this.setor = domain.setor;
+      this.setor.sort();
       this.init();
     });
   }
@@ -27,10 +28,10 @@ export default class ContaEditController extends Controller {
   init() {
     if(this.id) {
       this.ContaService.loadConta({ id: this.id })
-        .then(this.callbackLoadConta())
-        .finally(() => {
-          this.usSpinnerService.stop('spinner-1');
-        });
+        .then(this.callbackLoadConta());
+        // .finally(() => {
+        //   this.usSpinnerService.stop('spinner-1');
+        // });
     } else {
       this.conta = this.createConta();
       this.setMask();
@@ -46,6 +47,15 @@ export default class ContaEditController extends Controller {
       this.conta = conta;
       this.setMask();
       this.updateMask();
+
+      this.ContatoService.loadContatoList({
+        conta: this.conta._id
+      }).then(contatos => {
+        this.conta.contatos = contatos;
+      })
+      .finally(() => {
+        this.usSpinnerService.stop('spinner-1');
+      });
     };
   }
 
@@ -116,7 +126,7 @@ export default class ContaEditController extends Controller {
     modalCtl.onSaveEvent = ev => {
       console.log('onSaveEvent()', ev);
       modalCtl.dismiss();
-      this.reloadEvent();
+      this.init();
     };
     modalCtl.onClose = () => {
       modalCtl.dismiss();

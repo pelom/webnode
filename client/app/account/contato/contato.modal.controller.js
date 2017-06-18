@@ -29,9 +29,9 @@ export default class ContatoModalController {
 
     this.usSpinnerService.spin('spinner-1');
     this.ContatoService.saveContato(this.contato)
-    .then(newContato => {
-      this.toastr.success('Contato salvo com sucesso.', `${newContato.nome} ${newContato.sobrenome}`);
-      this.ContatoService.getModalCtl().onSaveEvent(newContato);
+    .then(() => {
+      this.toastr.success('Contato salvo com sucesso.', `${this.contato.nome} ${this.contato.sobrenome}`);
+      this.ContatoService.getModalCtl().onSaveEvent(this.contato);
     })
     .catch(err => {
       console.log('Ex:', err);

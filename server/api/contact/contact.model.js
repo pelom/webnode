@@ -27,6 +27,10 @@ var ContactSchema = new Schema({
   telefone: {
     type: String, required: false, maxlength: 20 },
   dataNascimento: { type: Date, required: false },
+  titulo: {
+    type: String, required: false, maxlength: 100 },
+  cargo: {
+    type: String, required: false, maxlength: 100 },
   descricao: {
     type: String, required: false, maxlength: 255 },
   origem: { type: String, enum: origemList, default: 'Ligação' },

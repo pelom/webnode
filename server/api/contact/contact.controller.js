@@ -15,15 +15,13 @@ export function domain(req, res) {
 }
 
 const selectIndex = '_id nome sobrenome telefone celular conta'
-  + ' email origem';
+  + ' email origem titulo cargo';
 
 export function index(req, res) {
   return api.find({
     model: 'Contact',
     select: selectIndex,
-    where: {
-      proprietario: req.user._id,
-    },
+    where: buildWhere(req),
     populate: [populationConta],
     options: { skip: 0, limit: 50,
       sort: {
@@ -33,8 +31,19 @@ export function index(req, res) {
   }, res);
 }
 
-const selectShow = '_id nome sobrenome telefone celular endereco conta'
-  + 'email origem criador modificador updatedAt createdAt';
+function buildWhere(req) {
+  if(req.query.conta) {
+    return {
+      conta: { $in: req.query.conta }
+    };
+  }
+  return {
+    proprietario: req.user._id
+  };
+}
+
+const selectShow = '_id nome sobrenome telefone celular endereco conta titulo cargo'
+  + ' dataNascimento email origem criador modificador updatedAt createdAt';
 
 const populationConta = {
   path: 'conta',
@@ -51,23 +60,23 @@ export function show(req, res) {
 }
 
 export function create(req, res) {
-  let account = requestContactCreate(req);
-  console.log('Contact:', account);
-  account.save()
+  let contact = requestContactCreate(req);
+  console.log('Contact:', contact);
+  contact.save()
     .then(callbackCreateContact(req, res))
     .catch(handleValidationError(res));
 }
 
 function requestContactCreate(req) {
-  var account = new Contact(req.body);
-  account.criador = req.user._id;
-  account.modificador = req.user._id;
-  account.proprietario = req.user._id;
+  var contact = new Contact(req.body);
+  contact.criador = req.user._id;
+  contact.modificador = req.user._id;
+  contact.proprietario = req.user._id;
 
   if(req.body.conta && req.body.conta._id) {
-    account.conta = req.body.conta._id;
+    contact.conta = req.body.conta._id;
   }
-  return account;
+  return contact;
 }
 
 function callbackCreateContact(req, res) {
@@ -79,10 +88,13 @@ function callbackCreateContact(req, res) {
 
 export function update(req, res) {
   let contactJson = requestUpdateContact(req);
+  if(req.body.conta && req.body.conta._id) {
+    contactJson.conta = req.body.conta._id;
+  }
   Contact.findByIdAndUpdate(req.params.id, contactJson)
     .then(handleEntityNotFound(res))
-    .then(event => {
-      req.params.id = event._id;
+    .then(contact => {
+      req.params.id = contact._id;
       return show(req, res);
     })
     .catch(handleError(res));
@@ -99,10 +111,14 @@ function requestUpdateContact(req) {
     email: req.body.email,
     dataNascimento: req.body.dataNascimento,
     origem: req.body.origem,
+    conta: req.body.conta,
+    titulo: req.body.titulo,
+    cargo: req.body.cargo,
     endereco: req.body.endereco,
     isAtivo: req.body.isAtivo,
     proprietario: req.user._id,
     modificador: req.user._id,
   };
 }
+
 export function destroy(req, res) {}

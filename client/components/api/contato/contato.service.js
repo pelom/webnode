@@ -26,6 +26,9 @@ export function ContatoService(ContatoResource, Util) {
     },
     loadContato(acc, callback) {
       return ContatoResource.get(acc, data => {
+        if(data.dataNascimento) {
+          data.dataNascimento = new Date(data.dataNascimento);
+        }
         contato = data;
         return safeCb(callback)(null, data);
       }, function(err) {
@@ -55,6 +58,8 @@ export function ContatoService(ContatoResource, Util) {
         origem: newContact.origem,
         endereco: newContact.endereco,
         conta: newContact.conta,
+        titulo: newContact.titulo,
+        cargo: newContact.cargo,
       };
       if(angular.isUndefined(contact._id)) {
         return ContatoResource.save(contact, function(data) {
