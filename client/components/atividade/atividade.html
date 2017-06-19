@@ -1,0 +1,51 @@
+<div>
+  <h4><i class="fa fa-thumb-tack fa-2x" aria-hidden="true"></i>
+     <label>Atividades</label>
+
+     <div class="btn-group pull-right">
+       <button type="button" class="btn btn-default btn-sm"
+         ng-click="eventController.newEvent(eventController.EventoService)" uib-tooltip="Novo Evento">
+         <i class="fa fa-calendar" aria-hidden="true"></i>
+         <i ng-if="eventController.isFull()">Novo Evento</i></button>
+       <button type="button" class="btn btn-default btn-sm"
+         ng-click="eventController.newTask(eventController.EventoService)" uib-tooltip="Nova Tarefa">
+         <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+         <i ng-if="eventController.isFull()">Novo Tarefa</i></button>
+       <button type="button" class="btn btn-default btn-sm"
+         ng-click="eventController.registerContact(eventController.EventoService)" uib-tooltip="Novo Contato">
+         <i class="fa fa-comments-o" aria-hidden="true"></i>
+         <i ng-if="eventController.isFull()">Novo Contato</i></button>
+     </div>
+  </h4>
+  <hr/>
+  <div class="panel panel-default">
+    <h5 ng-if="ngModel.length == 0" class="text-center">
+      <code>Não há registros de atividades</code></h5>
+    <div class="table-responsive" ng-if="ngModel.length">
+      <table class="table table-striped table-condensed">
+        <thead>
+          <tr class="text-muted">
+            <th><small>Titulo</small></th>
+            <th><small>Assunto</small></th>
+            <th><small>Status</small></th>
+            <th><small>Prioridade</small></th>
+            <th><small>Data</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="tar in ngModel">
+            <td>
+              <i class="fa" ng-class="{ 'fa-calendar': tar.type === 'Event', 'fa-comments-o': tar.type === 'Activity', 'fa-calendar-check-o': tar.type === 'Task',}"></i>
+              <a href="#" ng-click="eventController.openModalEventId(tar._id, eventController.EventoService)">
+                {{ tar.title }}</a>
+            </td>
+            <td><small>{{ tar.subject }}</small></td>
+            <td><small>{{ tar.status }}</small></td>
+            <td><small>{{ tar.prioridade }}</small></td>
+            <td><small>{{ tar.start | date:'dd/MM/yyyy HH:mm' }}</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

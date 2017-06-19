@@ -1,7 +1,7 @@
 'use strict';
 import angular from 'angular';
 import Controller from '../controller';
-import {openModalView} from '../agenda/agenda.model.service';
+//import {openModalView} from '../agenda/agenda.model.service';
 
 export default class LeadEditController extends Controller {
   /*@ngInject*/
@@ -19,6 +19,8 @@ export default class LeadEditController extends Controller {
       this.status = domain.status;
       this.origem = domain.origem;
       this.produto = domain.produto;
+      this.setor = domain.setor;
+      this.setor.sort();
       this.init();
     });
   }
@@ -32,6 +34,7 @@ export default class LeadEditController extends Controller {
         });
     } else {
       this.lead = this.createLead();
+      this.updateMask();
       this.$timeout(() => {
         this.usSpinnerService.stop('spinner-1');
       }, 100);
@@ -41,28 +44,49 @@ export default class LeadEditController extends Controller {
   callbackLoadLead() {
     return lead => {
       this.lead = lead;
+      this.lead.iden = 'cpf';
+
+      if(this.lead.cpfCnpj && this.lead.cpfCnpj.length == 14) {
+        this.lead.iden = 'cnpj';
+      }
+      this.updateMask();
+      this.loadAtividades();
     };
+  }
+
+  loadAtividades() {
+    this.EventoService.loadEventoList({ idref: this.lead._id })
+    .then(eventos => {
+      this.lead.atividades = eventos;
+    });
   }
 
   createLead() {
     return {
       status: 'Não Contatado',
       origem: 'Ligação',
+      iden: 'cpf',
       isAtivo: true
     };
+  }
+
+  updateMask() {
+    if(this.lead.iden == 'cpf') {
+      this.mask = '999.999.999-99';
+    } else if(this.lead.iden == 'cnpj') {
+      this.mask = '99.999.999.9999-99';
+    }
   }
 
   save(form) {
     if(form.$invalid) {
       return;
     }
-    console.log(this.lead.email);
-    console.log(this.isEmpty(this.lead.email));
+
     if(this.isNotContact()) {
       this.toastr.error('', 'Informe o Email ou Telefone ou o Celular como uma forma de contato');
       return;
     }
-    console.log(this.lead);
 
     this.usSpinnerService.spin('spinner-1');
     this.LeadService.saveLead(this.lead)
@@ -115,43 +139,7 @@ export default class LeadEditController extends Controller {
     };
   }
 
-  newTask() {
-    //let data = new Date();
-    let evento = this.createEventReferenceLead(
-      'Task', 'Tarefa', 'Pendente', null);
-    let modalCtl = openModalView(evento, this.Modal);
-    modalCtl.onSaveEvent = this.addEventLead(modalCtl);
-    modalCtl.onClose = () => {
-      modalCtl.dismiss();
-    };
-    this.EventoService.setModalCtl(modalCtl);
-  }
-
-  newEvent() {
-    //let data = new Date();
-    let evento = this.createEventReferenceLead(
-      'Event', 'Evento', 'Pendente', null);
-    let modalCtl = openModalView(evento, this.Modal);
-    modalCtl.onSaveEvent = this.addEventLead(modalCtl);
-    modalCtl.onClose = () => {
-      modalCtl.dismiss();
-    };
-    this.EventoService.setModalCtl(modalCtl);
-  }
-
-  registerContact() {
-    let data = new Date();
-    let evento = this.createEventReferenceLead(
-      'Activity', 'Contato', 'Concluído', data);
-    let modalCtl = openModalView(evento, this.Modal);
-    modalCtl.onSaveEvent = this.addEventLead(modalCtl);
-    modalCtl.onClose = () => {
-      modalCtl.dismiss();
-    };
-    this.EventoService.setModalCtl(modalCtl);
-  }
-
-  createEventReferenceLead(type, subject, status, data) {
+  createEventReference(type, subject, status, data) {
     let name = `Lead (${this.lead.nome} ${this.lead.sobrenome})`;
     return {
       title: name,
@@ -167,64 +155,17 @@ export default class LeadEditController extends Controller {
   createReferenceLead(name) {
     return {
       name,
-      description: `${this.lead.descricao}`,
+      description: this.lead.descricao ? `${this.lead.descricao}` : '',
       link: `/leads/edit/${this.lead._id}`,
       objectId: `${this.lead._id}`,
       object: 'Lead'
     };
   }
 
-  addEventLead(modalCtl) {
-    return ev => {
-      console.log('addEventLead()', ev);
-      modalCtl.dismiss();
-      let leadEv = angular.copy(this.lead);
-      leadEv.evento = ev;
-      this.LeadService.addActivity(leadEv).then(bol => {
-        console.log(bol);
-        this.init();
-      });
-    };
-  }
-
-  removeEventLead(modalCtl) {
-    return ev => {
-      console.log('removeEventLead()', ev);
-      modalCtl.dismiss();
-      let leadEv = angular.copy(this.lead);
-      leadEv.evento = ev;
-      this.LeadService.removeActivity(leadEv).then(bol => {
-        console.log(bol);
-        this.init();
-      });
-    };
-  }
-
-  openModalEventId(eventId) {
-    this.usSpinnerService.spin('spinner-1');
-    this.EventoService.loadEvento({id: eventId})
-    .then(event => {
-      let modalTaskCtl = openModalView(event, this.Modal);
-      modalTaskCtl.onSaveEvent = ev => {
-        console.log('onSaveEvent()', ev);
-        modalTaskCtl.dismiss();
-        this.init();
-      };
-      modalTaskCtl.onSaveTask = () => {
-        console.log('onSaveTask()');
-      };
-      modalTaskCtl.onDeleteEvent = this.removeEventLead(modalTaskCtl);
-      modalTaskCtl.onClose = () => {
-        modalTaskCtl.dismiss();
-      };
-      this.EventoService.setModalCtl(modalTaskCtl);
-    })
-    .catch(err => {
-      console.log(err);
-      this.toastr.error('Não foi possível abrir o evento');
-    })
-    .finally(() => {
-      this.usSpinnerService.stop('spinner-1');
-    });
+  isEdit() {
+    if(!this.lead) {
+      return false;
+    }
+    return !(this.lead.status === 'Convertido' && this.lead.isConvertido);
   }
 }

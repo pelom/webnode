@@ -4,6 +4,7 @@
       <a ui-sref="contas"><small>Voltar</small></a>
       | <a href="#end"><small>Endereço</small></a>
       | <a href="#ctt" ng-if="ctl.conta._id"><small>Contatos</small></a>
+      | <a href="#atv" ng-if="ctl.conta.atividades"><small>Atividades</small></a>
     </p>
 
     <span spinner-key="spinner-1" spinner-start-active="true"
@@ -40,13 +41,13 @@
             <div class="col-sm-6">
               <dl>
                 <dt>
-                    <label class="radio-inline">
-                      <input type="radio" ng-model="ctl.conta.iden" ng-click="ctl.updateMask()"
-                        value="cpf" name="optradio" ng-disabled="ctl.conta.numIden">CPF</label>
+                  <label class="radio-inline">
+                    <input type="radio" ng-model="ctl.conta.iden" ng-click="ctl.updateMask()"
+                      value="cpf" name="optradio" ng-disabled="ctl.conta.numIden">CPF</label>
 
-                    <label class="radio-inline">
-                      <input type="radio" ng-model="ctl.conta.iden" ng-click="ctl.updateMask()"
-                        value="cnpj" name="optradio" ng-disabled="ctl.conta.numIden">CNPJ</label>
+                  <label class="radio-inline">
+                    <input type="radio" ng-model="ctl.conta.iden" ng-click="ctl.updateMask()"
+                      value="cnpj" name="optradio" ng-disabled="ctl.conta.numIden">CNPJ</label>
                 </dt>
                 <dd>
                   <input type="text" class="form-control"
@@ -94,7 +95,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <textarea class="form-control" rows="4" placeholder="Descrição"
+              <textarea class="form-control" rows="3" placeholder="Descrição"
                 ng-model="ctl.conta.descricao"></textarea>
             </div>
           </div>
@@ -134,107 +135,7 @@
 
       <div id="end" class="panel panel-default">
         <div class="panel-body">
-          <h4><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
-            <label>Endereço</label></h4>
-          <hr/>
-          <div class="row" uib-collapse="ctl.isCollapsed">
-            <div class="col-lg-12">
-              <googlemaps ng-model="ctl.conta.endereco.nome"
-                zip="ctl.conta.endereco.zipcode"
-                country="ctl.conta.endereco.country"
-                state="ctl.conta.endereco.state"
-                city="ctl.conta.endereco.city"
-                suburb="ctl.conta.endereco.suburb"
-                number="ctl.conta.endereco.number"
-                address="ctl.conta.endereco.address">
-              </googlemaps>
-            </div>
-          </div>
-          <br/>
-          <div class="row">
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>Endereço</small></dt>
-                <dd>
-                  <input class="form-control"
-                   placeholder="Rua, Avenida, Travessa etc"
-                   ng-model="ctl.conta.endereco.address" />
-                </dd>
-              </dl>
-            </div>
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>CEP</small></dt>
-                <dd>
-                  <input class="form-control"
-                   ui-mask="99999-999"
-                   ng-model="ctl.conta.endereco.zipcode" />
-                </dd>
-              </dl>
-            </div>
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>Complemento</small></dt>
-                <dd>
-                  <input class="form-control" placeholder="Casa, Apartamento etc"
-                   ng-model="ctl.conta.endereco.complement" />
-                </dd>
-              </dl>
-            </div>
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>Bairro</small></dt>
-                <dd>
-                  <input class="form-control"
-                    placeholder="Bairro"
-                    ng-model="ctl.conta.endereco.suburb" />
-                </dd>
-              </dl>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-3">
-              <dl>
-                <dt><small>Número</small></dt>
-                <dd>
-                  <input class="form-control"
-                   placeholder="Número"
-                   ng-model="ctl.conta.endereco.number" />
-                </dd>
-              </dl>
-            </div>
-            <div class="col-sm-3">
-              <dl>
-                <dt><small>Cidade</small></dt>
-                <dd>
-                  <input class="form-control"
-                    placeholder="Cidade"
-                    ng-model="ctl.conta.endereco.city" />
-                </dd>
-              </dl>
-            </div>
-            <div class="col-sm-3">
-              <dl>
-                <dt><small>Estado</small></dt>
-                <dd>
-                  <input class="form-control"
-                    placeholder="Estado"
-                    ng-model="ctl.conta.endereco.state" />
-                </dd>
-              </dl>
-            </div>
-            <div class="col-sm-3">
-              <dl>
-                <dt><small>País</small></dt>
-                <dd>
-                  <input class="form-control"
-                   placeholder="País"
-                   ng-model="ctl.conta.endereco.country" />
-                </dd>
-              </dl>
-            </div>
-          </div>
-
+          <endereco ng-model="ctl.conta.endereco"></endereco>
           <div class="row"><hr/></div>
 
           <div class="list-group">
@@ -251,7 +152,7 @@
           <h4><i class="fa fa-address-book-o fa-2x" aria-hidden="true"></i>
             <label>Contatos</label>
             <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default"
+              <button type="button" class="btn btn-default btn-sm"
                 ng-click="ctl.newContact()" uib-tooltip="Novo Contato">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <i ng-if="ctl.isFull()">Novo Contato</i></button>
@@ -263,7 +164,9 @@
             <table class="table table-striped table-condensed">
               <thead class="text-muted">
                 <tr>
-                  <th><small>Nome</small></th>
+                  <th></th>
+                  <th><small>Nome do contato</small></th>
+                  <th><small>Cargo</small></th>
                   <th><small>Celular</small></th>
                   <th><small>Telefone</small></th>
                   <th><small>Email</small></th>
@@ -271,15 +174,24 @@
               </thead>
               <tbody>
                 <tr ng-repeat="ctt in ctl.conta.contatos">
-                  <td><a href="#">{{ ctt.nome }} {{ ctt.sobrenome }}</a></td>
+                  <td><a ui-sref="contatoedit({id: ctt._id})">Detalhes</a></td>
+                  <td><a href="#" ng-click="ctl.openContact(ctt._id)">
+                    {{ ctt.nome }} {{ ctt.sobrenome }}</a></td>
+                  <td><small>{{ ctt.cargo }}</small></td>
                   <td><small>{{ ctt.celular }}</small></td>
                   <td><small>{{ ctt.telefone }}</small></td>
-                  <td><small>{{ ctt.email }}</small>{{ ctt.email }}</td>
+                  <td><small>{{ ctt.email }}</small></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
+        </div>
+      </div>
+
+      <div id="atv" class="panel panel-default" ng-if="ctl.conta._id">
+        <div class="panel-body">
+          <atividade ng-model="ctl.conta.atividades" event-controller="ctl"></atividade>
         </div>
       </div>
     </form>

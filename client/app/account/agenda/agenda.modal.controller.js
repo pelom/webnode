@@ -46,7 +46,14 @@ export default class AgendaModalController {
     if(this.event.references) {
       this.event.references.forEach(item => {
         if(item.object === 'Lead') {
+          item.icon = 'fa-child';
           item.link = `/leads/edit/${item.objectId}`;
+        } else if(item.object === 'Account') {
+          item.icon = 'fa-folder-open-o';
+          item.link = `/contas/edit/${item.objectId}`;
+        } else if(item.object === 'Contact') {
+          item.icon = 'fa-address-book-o';
+          item.link = `/contatos/edit/${item.objectId}`;
         }
       });
     }

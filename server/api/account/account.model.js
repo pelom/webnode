@@ -38,7 +38,6 @@ var AccountSchema = new Schema({
   setor: { type: String, enum: setorList },
   endereco: EnderecoSchema,
   isAtivo: { type: Boolean, required: true, default: true },
-  atividades: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
   proprietario: { type: Schema.Types.ObjectId, ref: 'User' },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
   modificador: { type: Schema.Types.ObjectId, ref: 'User'}

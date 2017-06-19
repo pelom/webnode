@@ -9,14 +9,15 @@ let respondWithResult = api.respondWithResult;
 let handleEntityNotFound = api.handleEntityNotFound;
 let handleValidationError = api.handleValidationError;
 
-const selectIndex = '_id nome sobrenome telefone celular '
-  + 'email status origem produto criador modificador updatedAt createdAt';
+const selectIndex = '_id nome sobrenome telefone celular cpfCnpj empresa'
+  + ' email status origem produto criador modificador updatedAt createdAt';
 
 export function domain(req, res) {
   res.status(200).json({
     status: Lead.schema.path('status').enumValues,
     origem: Lead.schema.path('origem').enumValues,
     produto: Lead.schema.path('produto').enumValues,
+    setor: Lead.schema.path('setor').enumValues,
   });
 }
 
@@ -63,9 +64,9 @@ function callbackCreateLead(req, res) {
   };
 }
 
-const selectUpdate = '_id nome sobrenome telefone celular '
-  + 'email criador modificador proprietario updatedAt createdAt '
-  + 'endereco empresa produto descricao status origem';
+const selectUpdate = '_id nome sobrenome telefone celular cpfCnpj'
+  + ' email criador modificador proprietario updatedAt createdAt'
+  + ' endereco empresa produto descricao status origem isConvertido titulo setor';
 
 export function update(req, res) {
   Lead.findOne({ _id: req.params.id }, selectUpdate)
@@ -78,8 +79,6 @@ export function update(req, res) {
 function callbackUpdateLead(req, res) {
   return function(lead) {
     let leadJson = requestLeadUpdate(req);
-    console.log(leadJson);
-    console.log(lead);
     Object.assign(lead, leadJson);
     return lead.save()
       .then(newLead => {
@@ -104,6 +103,9 @@ function requestLeadUpdate(req) {
     produto: req.body.produto,
     status: req.body.status,
     origem: req.body.origem,
+    cpfCnpj: req.body.cpfCnpj,
+    titulo: req.body.titulo,
+    setor: req.body.setor,
     endereco: req.body.endereco,
     isAtivo: req.body.isAtivo,
     modificador: req.user._id,
@@ -111,29 +113,20 @@ function requestLeadUpdate(req) {
   return leadUpdate;
 }
 
-const selectShow = '_id nome sobrenome telefone celular'
+const selectShow = '_id nome sobrenome telefone celular cpfCnpj'
   + ' email criador modificador proprietario updatedAt createdAt isAtivo'
-  + ' endereco empresa produto descricao status origem atividades';
-
-const populationAtividade = {
-  path: 'atividades',
-  select: '_id title start status type subject prioridade',
-  options: {
-    limit: 10,
-    sort: { start: -1 }
-  }
-};
+  + ' endereco empresa produto descricao status origem titulo setor isConvertido';
 
 export function show(req, res) {
   return api.findById(req.params.id, {
     model: 'Lead',
     select: selectShow,
-    populate: [populationAtividade, api.populationProprietario,
+    populate: [api.populationProprietario,
       api.populationCriador, api.populationModificador],
   }, res);
 }
 
-export function addActivity(req, res) {
+/*export function addActivity(req, res) {
   let eventId = req.body.evento;
   Lead.findByIdAndUpdate(req.params.id,
     { $push: { atividades: { $each: [eventId], $sort: { start: -1 } } }})
@@ -154,4 +147,4 @@ export function removeActivity(req, res) {
     return res.status(204).end();
   })
   .catch(handleError(res));
-}
+}*/

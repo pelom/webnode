@@ -3,6 +3,7 @@
 
   <h5><i class="fa fa-address-book-o fa-2x" aria-hidden="true"></i>
     <strong><span class="modal-title">{{ctl.contato.nome}} {{ctl.contato.sobrenome}}</span></strong>
+    <p class="text-muted"><small>{{ctl.contato.conta.nome}}</small></p>
   </h5>
 </div>
 
@@ -13,7 +14,7 @@
 
     <uib-tabset active="active">
       <uib-tab>
-        <uib-tab-heading><i class="fa fa-info-circle" aria-hidden="true"></i> Contato</uib-tab-heading>
+        <uib-tab-heading><i class="fa fa-address-book-o" aria-hidden="true"></i> Contato</uib-tab-heading>
         <br/>
 
         <div class="row">
@@ -111,13 +112,184 @@
             </dl>
           </div>
         </div>
+      </uib-tab>
+
+      <uib-tab>
+        <uib-tab-heading><i class="fa fa-info-circle" aria-hidden="true"></i>
+          Informações</uib-tab-heading>
+        <br/>
+        <div class="row">
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Titulo</small></dt>
+              <dd>
+                <input type="text" class="form-control"
+                  ng-model="ctl.contato.titulo"/>
+              </dd>
+            </dl>
+          </div>
+
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Cargo</small></dt>
+              <dd>
+                <input type="text" class="form-control"
+                  ng-model="ctl.contato.cargo"/>
+              </dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Conta <i ng-show="ctl.contato.conta._id">*</i></small></dt>
+              <dd>
+                <p class="input-group">
+
+                  <input type="text" ng-model="ctl.contato.conta" placeholder="Nome da conta"
+                      uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue)"
+                      typeahead-loading="loadingAcc" typeahead-no-results="noResults" class="form-control">
+
+                  <span class="input-group-btn">
+                   <button type="button" class="btn btn-default">
+                   <i class="fa fa-search" aria-hidden="true"></i></button>
+                  </span>
+
+                  <div ng-show="loadingAcc">
+                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                  </div>
+                  <div ng-show="noResults">
+                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Nenhuma conta encontrada
+                  </div>
+                </p>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Origem</small></dt>
+              <dd>
+                <select class="form-control" name="origem" ng-model="ctl.contato.origem"
+                   ng-options="item as item for item in ctl.origem">
+                   <option value="" ng-if="!ctl.contato.origem">-- Nenhum --</option>
+                </select>
+              </dd>
+            </dl>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-md-12">
-            <textarea class="form-control" rows="4" placeholder="Descrição"
+            <textarea class="form-control" rows="3" placeholder="Descrição do contato"
               ng-model="ctl.contato.descricao"></textarea>
           </div>
         </div>
       </uib-tab>
+
+      <uib-tab>
+        <uib-tab-heading><i class="fa fa-map-marker" aria-hidden="true"></i>
+          Endereço</uib-tab-heading>
+        <br/>
+        <div class="row">
+          <div class="col-lg-12">
+            <googlemaps ng-model="ctl.contato.endereco.nome"
+              zip="ctl.contato.endereco.zipcode"
+              country="ctl.contato.endereco.country"
+              state="ctl.contato.endereco.state"
+              city="ctl.contato.endereco.city"
+              suburb="ctl.contato.endereco.suburb"
+              number="ctl.contato.endereco.number"
+              address="ctl.contato.endereco.address">
+            </googlemaps>
+          </div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Endereço</small></dt>
+              <dd>
+                <input class="form-control"
+                 placeholder="Rua, Avenida, Travessa etc"
+                 ng-model="ctl.contato.endereco.address" />
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>CEP</small></dt>
+              <dd>
+                <input class="form-control"
+                 ui-mask="99999-999"
+                 ng-model="ctl.contato.endereco.zipcode" />
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Complemento</small></dt>
+              <dd>
+                <input class="form-control" placeholder="Casa, Apartamento etc"
+                 ng-model="ctl.contato.endereco.complement" />
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-6">
+            <dl>
+              <dt><small>Bairro</small></dt>
+              <dd>
+                <input class="form-control"
+                  placeholder="Bairro"
+                  ng-model="ctl.contato.endereco.suburb" />
+              </dd>
+            </dl>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <dl>
+              <dt><small>Número</small></dt>
+              <dd>
+                <input class="form-control"
+                 placeholder="Número"
+                 ng-model="ctl.contato.endereco.number" />
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-3">
+            <dl>
+              <dt><small>Cidade</small></dt>
+              <dd>
+                <input class="form-control"
+                  placeholder="Cidade"
+                  ng-model="ctl.contato.endereco.city" />
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-3">
+            <dl>
+              <dt><small>Estado</small></dt>
+              <dd>
+                <input class="form-control"
+                  placeholder="Estado"
+                  ng-model="ctl.contato.endereco.state" />
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-3">
+            <dl>
+              <dt><small>País</small></dt>
+              <dd>
+                <input class="form-control"
+                 placeholder="País"
+                 ng-model="ctl.contato.endereco.country" />
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </uib-tab>
+
     </uib-tabset>
 
     <div class="row"><hr/></div>

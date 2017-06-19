@@ -9,18 +9,6 @@ export function LeadResource($resource) {
       params: {
         id: 'domain'
       }
-    },
-    addActivity: {
-      method: 'PUT',
-      params: {
-        controller: 'addactivity'
-      }
-    },
-    removeActivity: {
-      method: 'PUT',
-      params: {
-        controller: 'removeactivity'
-      }
-    },
+    }
   });
 }

@@ -1,0 +1,114 @@
+<div>
+
+  <h4><i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
+    <label>Endereço</label>
+    <div class="btn-group pull-right">
+      <button type="button" class="btn btn-sm btn-default" ng-disabled="active"
+        ng-click="ngModel.isSearchEnd = !ngModel.isSearchEnd" uib-tooltip="Pesquisar por endereço">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        Pesquisar</button>
+    </div>
+  </h4>
+
+  <hr/>
+
+  <div class="row" uib-collapse="!ngModel.isSearchEnd">
+    <div class="col-lg-12">
+      <googlemaps ng-model="ngModel.nome"
+        zip="ngModel.zipcode"
+        country="ngModel.country"
+        state="ngModel.state"
+        city="ngModel.city"
+        suburb="ngModel.suburb"
+        number="ngModel.number"
+        address="ngModel.address">
+      </googlemaps>
+    </div>
+  </div>
+
+  <br/>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <dl>
+        <dt><small>Endereço</small></dt>
+        <dd>
+          <input class="form-control" ng-disabled="active"
+           placeholder="Rua, Avenida, Travessa etc"
+           ng-model="ngModel.address" />
+        </dd>
+      </dl>
+    </div>
+    <div class="col-sm-6">
+      <dl>
+        <dt><small>CEP</small></dt>
+        <dd>
+          <input class="form-control"
+           ui-mask="99999-999" ng-disabled="active"
+           ng-model="ngModel.zipcode" />
+        </dd>
+      </dl>
+    </div>
+    <div class="col-sm-6">
+      <dl>
+        <dt><small>Complemento</small></dt>
+        <dd>
+          <input class="form-control" placeholder="Casa, Apartamento etc"
+           ng-model="ngModel.complement" ng-disabled="active"/>
+        </dd>
+      </dl>
+    </div>
+    <div class="col-sm-6">
+      <dl>
+        <dt><small>Bairro</small></dt>
+        <dd>
+          <input class="form-control"
+            placeholder="Bairro"
+            ng-model="ngModel.suburb" ng-disabled="active"/>
+        </dd>
+      </dl>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <dl>
+        <dt><small>Número</small></dt>
+        <dd>
+          <input class="form-control"
+           placeholder="Número"
+           ng-model="ngModel.number" ng-disabled="active"/>
+        </dd>
+      </dl>
+    </div>
+    <div class="col-sm-3">
+      <dl>
+        <dt><small>Cidade</small></dt>
+        <dd>
+          <input class="form-control"
+            placeholder="Cidade"
+            ng-model="ngModel.city" ng-disabled="active"/>
+        </dd>
+      </dl>
+    </div>
+    <div class="col-sm-3">
+      <dl>
+        <dt><small>Estado</small></dt>
+        <dd>
+          <input class="form-control"
+            placeholder="Estado"
+            ng-model="ngModel.state" ng-disabled="active"/>
+        </dd>
+      </dl>
+    </div>
+    <div class="col-sm-3">
+      <dl>
+        <dt><small>País</small></dt>
+        <dd>
+          <input class="form-control"
+           placeholder="País"
+           ng-model="ngModel.country" ng-disabled="active"/>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</div>

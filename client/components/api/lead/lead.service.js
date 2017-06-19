@@ -77,22 +77,6 @@ export function LeadService(LeadResource, Util) {
         return safeCb(callback)(err);
       }).$promise;
     },
-    addActivity(lead, callback) {
-      return LeadResource.addActivity(lead, function(data) {
-        return safeCb(callback)(data);
-      }, function(err) {
-        console.log('Ex:', err);
-        return safeCb(callback)(err);
-      }).$promise;
-    },
-    removeActivity(lead, callback) {
-      return LeadResource.removeActivity(lead, function(data) {
-        return safeCb(callback)(data);
-      }, function(err) {
-        console.log('Ex:', err);
-        return safeCb(callback)(err);
-      }).$promise;
-    }
   };
   return eventoService;
 }

@@ -48,6 +48,8 @@ import mongooseError from '../components/mongoose-error/mongoose-error.directive
 import loadingDirec from '../components/directive/loading/loading.directive';
 import nomeValidoDirec from '../components/directive/nome-valido/nomevalido.directive';
 import googlemaps from '../components/googlemaps/googlemaps.directive';
+import endereco from '../components/endereco/endereco.directive';
+import atividade from '../components/atividade/atividade.directive';
 import './app.css';
 
 import checkStrength from '../components/check-strength/checkStrength.directive';
@@ -55,7 +57,7 @@ import '../components/check-strength/check.css';
 
 angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toastr,
   ngValidationMatch, 'btford.socket-io', loadingDirec, nomeValidoDirec, checkStrength,
-  googlemaps,
+  googlemaps, endereco, atividade,
   uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService,
   PermissaoService, EventoService, JobService, ContaService, ContatoService,
   LeadService, _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal,

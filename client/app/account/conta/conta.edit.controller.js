@@ -9,12 +9,13 @@ moment.locale('pt-br');
 export default class ContaEditController extends Controller {
   /*@ngInject*/
   constructor($window, $scope, $state, $timeout, $stateParams,
-    toastr, usSpinnerService, ContaService, ContatoService, Modal) {
-    super($window, $scope, toastr, usSpinnerService);
+    toastr, usSpinnerService, EventoService, ContaService, ContatoService, Modal) {
+    super($window, $scope, toastr, usSpinnerService, Modal);
     this.id = $stateParams.id;
     this.$timeout = $timeout;
     this.$state = $state;
     this.Modal = Modal;
+    this.EventoService = EventoService;
     this.ContatoService = ContatoService;
     this.ContaService = ContaService;
     this.ContaService.loadDomain().then(domain => {
@@ -47,7 +48,7 @@ export default class ContaEditController extends Controller {
       this.conta = conta;
       this.setMask();
       this.updateMask();
-
+      this.loadAtividades();
       this.ContatoService.loadContatoList({
         conta: this.conta._id
       }).then(contatos => {
@@ -57,6 +58,13 @@ export default class ContaEditController extends Controller {
         this.usSpinnerService.stop('spinner-1');
       });
     };
+  }
+
+  loadAtividades() {
+    this.EventoService.loadEventoList({ idref: this.conta._id })
+    .then(eventos => {
+      this.conta.atividades = eventos;
+    });
   }
 
   createConta() {
@@ -122,6 +130,10 @@ export default class ContaEditController extends Controller {
         nome: this.conta.nome,
       }
     };
+    this.openModalContact(contato);
+  }
+
+  openModalContact(contato) {
     let modalCtl = openModalView(contato, this.Modal);
     modalCtl.onSaveEvent = ev => {
       console.log('onSaveEvent()', ev);
@@ -132,5 +144,43 @@ export default class ContaEditController extends Controller {
       modalCtl.dismiss();
     };
     this.ContatoService.setModalCtl(modalCtl);
+  }
+
+  openContact(contactId) {
+    this.usSpinnerService.spin('spinner-1');
+    this.ContatoService.loadContato({id: contactId })
+      .then(contact => {
+        this.openModalContact(contact);
+      })
+      .catch(err => {
+        console.log('Ex:', err);
+        this.toastr.error(err.data.message, err.data.name);
+      })
+      .finally(() => {
+        this.usSpinnerService.stop('spinner-1');
+      });
+  }
+
+  createEventReference(type, subject, status, data) {
+    let name = `Conta (${this.conta.nome})`;
+    return {
+      title: name,
+      type,
+      subject,
+      start: data,
+      status,
+      prioridade: 'Normal',
+      references: [this.createReferenceConta(name)]
+    };
+  }
+
+  createReferenceConta(name) {
+    return {
+      name,
+      description: this.conta.descricao ? `${this.conta.descricao}` : '',
+      link: `/contas/edit/${this.conta._id}`,
+      objectId: `${this.conta._id}`,
+      object: 'Account'
+    };
   }
 }

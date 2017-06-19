@@ -15,7 +15,7 @@ export function domain(req, res) {
 }
 
 const selectIndex = '_id nome sobrenome telefone celular conta'
-  + ' email origem titulo cargo';
+  + ' email origem titulo cargo criador modificador createdAt updatedAt';
 
 export function index(req, res) {
   return api.find({
@@ -43,11 +43,11 @@ function buildWhere(req) {
 }
 
 const selectShow = '_id nome sobrenome telefone celular endereco conta titulo cargo'
-  + ' dataNascimento email origem criador modificador updatedAt createdAt';
+  + ' dataNascimento email origem criador modificador updatedAt createdAt descricao';
 
 const populationConta = {
   path: 'conta',
-  select: '_id nome cpf cnpj'
+  select: '_id nome cpf cnpj descricao'
 };
 
 export function show(req, res) {
@@ -88,7 +88,10 @@ function callbackCreateContact(req, res) {
 
 export function update(req, res) {
   let contactJson = requestUpdateContact(req);
-  if(req.body.conta && req.body.conta._id) {
+
+  if(contactJson.conta.length == 0) {
+    contactJson.conta = null;
+  } else if(contactJson.conta._id) {
     contactJson.conta = req.body.conta._id;
   }
   Contact.findByIdAndUpdate(req.params.id, contactJson)

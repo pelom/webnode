@@ -37,7 +37,6 @@ var ContactSchema = new Schema({
   endereco: EnderecoSchema,
   isAtivo: { type: Boolean, required: true, default: true },
   conta: { type: Schema.Types.ObjectId, ref: 'Account' },
-  atividades: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
   proprietario: { type: Schema.Types.ObjectId, ref: 'User' },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
   modificador: { type: Schema.Types.ObjectId, ref: 'User'}

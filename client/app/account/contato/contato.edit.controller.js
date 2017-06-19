@@ -9,12 +9,13 @@ moment.locale('pt-br');
 export default class ContatoEditController extends Controller {
   /*@ngInject*/
   constructor($window, $scope, $state, $timeout, $stateParams,
-    toastr, usSpinnerService, ContaService, ContatoService, Modal) {
+    toastr, usSpinnerService, EventoService, ContaService, ContatoService, Modal) {
     super($window, $scope, toastr, usSpinnerService);
     this.id = $stateParams.id;
     this.$timeout = $timeout;
     this.$state = $state;
     this.Modal = Modal;
+    this.EventoService = EventoService;
     this.ContaService = ContaService;
     this.ContatoService = ContatoService;
     this.ContatoService.loadDomain().then(domain => {
@@ -42,7 +43,15 @@ export default class ContatoEditController extends Controller {
   callbackLoadContato() {
     return contato => {
       this.contato = contato;
+      this.loadAtividades();
     };
+  }
+
+  loadAtividades() {
+    this.EventoService.loadEventoList({ idref: this.contato._id })
+    .then(eventos => {
+      this.contato.atividades = eventos;
+    });
   }
 
   createContato() {
@@ -112,4 +121,41 @@ export default class ContatoEditController extends Controller {
       });
   }
 
+  createEventReference(type, subject, status, data) {
+    let name = `Contato (${this.contato.nome} ${this.contato.sobrenome})`;
+    let references = [this.createReferenceContato(name)];
+    if(this.contato.conta) {
+      references.push(this.createReferenceConta(this.contato.conta));
+    }
+    return {
+      title: name,
+      type,
+      subject,
+      start: data,
+      status,
+      prioridade: 'Normal',
+      references,
+    };
+  }
+
+  createReferenceContato(name) {
+    return {
+      name,
+      description: this.contato.descricao ? `${this.contato.descricao}` : '',
+      link: `/contatos/edit/${this.contato._id}`,
+      objectId: `${this.contato._id}`,
+      object: 'Contact'
+    };
+  }
+
+  createReferenceConta(acc) {
+    let name = `Conta (${acc.nome})`;
+    return {
+      name,
+      description: acc.descricao ? `${acc.descricao}` : '',
+      link: `/contas/edit/${acc._id}`,
+      objectId: `${acc._id}`,
+      object: 'Account'
+    };
+  }
 }

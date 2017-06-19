@@ -54,9 +54,13 @@
         <div class="panel-heading text-muted">
           <b></b>
           <p></p>
-          <p><i class="fa fa-folder-open-o fa-lg"></i> 
-            <a ui-sref="contaedit({id: acc._id})"><i>{{ acc.nome }}</i></a>
+          <p> 
+            <a ui-sref="contaedit({id: acc._id})">
+              <i class="fa fa-folder-open-o fa-lg"></i> <i>{{ acc.nome }}</i></a>
           </p>
+          <p title="Criado por {{acc.criador.nome}} {{acc.criador.sobrenome}} em {{ acc.createdAt | date:'dd/MM/yyyy HH:mm' }}">
+            <i class="fa fa-clock-o" aria-hidden="true"></i> <small>{{ acc.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>  </p>
+          <p>
           <hr/>
           <p>
             <small>

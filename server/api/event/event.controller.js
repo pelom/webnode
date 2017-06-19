@@ -117,24 +117,40 @@ export function index(req, res) {
   let firstDay = new Date(req.query.start);
   let lastDay = new Date(req.query.end);
   let status = req.query.status || statusDefaultList.split(',');
-  console.log('firstDay', firstDay);
-  console.log('lastDay', lastDay);
   return api.find({
     model: 'Event',
     select: selectIndex,
     populate: [populationTarefa, populationOrigin, api.populationProprietario,
       api.populationCriador, api.populationModificador],
-    where: {
-      start: { $gte: firstDay, $lte: lastDay },
-      proprietario: req.user._id,
-      status: { $in: status }
-    },
+    where: buildWhere(req),
     options: { skip: 0, limit: 50,
       sort: {
         createdAt: -1
       }
     }
   }, res);
+}
+
+
+function buildWhere(req) {
+  if(req.query.idref) {
+    return {
+      references: { $elemMatch: { objectId: req.query.idref } }
+    };
+  }
+
+  let firstDay = new Date(req.query.start);
+  let lastDay = new Date(req.query.end);
+  let status = req.query.status || statusDefaultList.split(',');
+
+  let where = {
+    start: { $gte: firstDay, $lte: lastDay },
+    proprietario: req.user._id,
+    status: { $in: status },
+    type: { $nin: ['Activity'] }
+  };
+
+  return where;
 }
 
 const selectShow = '_id title start end status prioridade allDay descricao isAtivo'

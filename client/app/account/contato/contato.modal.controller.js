@@ -30,16 +30,13 @@ export default class ContatoModalController {
     this.usSpinnerService.spin('spinner-1');
     this.ContatoService.saveContato(this.contato)
     .then(() => {
-      this.toastr.success('Contato salvo com sucesso.', `${this.contato.nome} ${this.contato.sobrenome}`);
+      this.toastr.success('Contato salvo com sucesso.',
+        `${this.contato.nome} ${this.contato.sobrenome}`);
       this.ContatoService.getModalCtl().onSaveEvent(this.contato);
     })
     .catch(err => {
       console.log('Ex:', err);
-      this.toastr.error(err.data.message, err.data.name, {
-        autoDismiss: false,
-        closeButton: true,
-        timeOut: 0,
-      });
+      this.toastr.error(err.data.message, err.data.name);
     })
     .finally(() => {
       this.usSpinnerService.stop('spinner-1');

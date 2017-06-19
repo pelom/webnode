@@ -4,6 +4,17 @@
     us-spinner="{radius:24, width:8, length: 16}">
   </span>
 
+  <div class="row">
+    <ul class="nav nav-pills">
+      <li class="active">
+        <a href="#" ng-click="ctl.findContas('')" uib-tooltip="Todos">
+          <i class="fa fa-address-book-o" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Contatos</small>
+          <span class="badge">{{ ctl.ContatoService.getContatoList().length}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
   <hr/>
 
   <div class="row">
@@ -34,10 +45,6 @@
             <a ui-sref="contatoedit({id: ctt._id})">
               <span>{{ ctt.nome }} {{ ctt.sobrenome }}</span></a>
 
-            <a ng-if="ctt.conta" ui-sref="contaedit({id: ctt.conta._id})" title="Conta: {{ctt.conta.nome}}">
-              <i class="fa fa-folder-open-o fa-2x pull-right"></i></a>
-            <i ng-if="!ctt.conta" class="fa fa-address-book-o fa-2x pull-right"></i>
-
             <p>
               <small ng-if="ctt.celular" title="Celular">
                 <i class="fa fa-mobile" aria-hidden="true"></i>
@@ -53,11 +60,19 @@
               </small>
             </p>
 
+            <a ng-if="ctt.conta" ui-sref="contaedit({id: ctt.conta._id})" title="Conta: {{ctt.conta.nome}}">
+              <i class="fa fa-folder-open-o fa-2x pull-right"></i></a>
+
+            <i ng-if="!ctt.conta" class="fa fa-address-book-o fa-2x pull-right"></i>
+
             <hr/>
 
-            <small ng-if="!ctt.conta">Agenda</small>
-            <p ng-if="ctt.conta">{{ctt.conta.nome}}</p>
-            <!--small ng-if="ctt.cargo"><span class="label label-info">{{ctt.cargo}}</span></small-->
+            <p ng-if="!ctt.conta"><small class="pull-right">Agenda</small></p>
+            <p ng-if="ctt.conta"><small class="pull-right">{{ctt.conta.nome}}</small></p>
+
+            <p title="Criado por {{ctt.criador.nome}} {{ctt.criador.sobrenome}} em {{ ctt.createdAt | date:'dd/MM/yyyy HH:mm' }}">
+              <i class="fa fa-clock-o" aria-hidden="true"></i> <small>{{ ctt.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>  </p>
+            <p>
           </p>
 
         </div>

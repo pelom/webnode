@@ -1,13 +1,15 @@
 /*eslint no-useless-constructor: 0*/
 'use strict';
 import angular from 'angular';
+import {openModalView} from './agenda/agenda.model.service';
 import moment from 'moment';
 moment.locale('pt-br');
 
 export default class Controller {
-  constructor($window, $scope, toastr, usSpinnerService) {
+  constructor($window, $scope, toastr, usSpinnerService, Modal) {
     this.usSpinnerService = usSpinnerService;
     this.toastr = toastr;
+    this.Modal = Modal;
     this.managerLayout($window, $scope);
   }
 
@@ -61,6 +63,85 @@ export default class Controller {
         }
         this.errors[field] = error.message;
       });
+    };
+  }
+
+  newTask(EventoService) {
+    //let data = new Date();
+    let evento = this.createEventReference(
+      'Task', 'Tarefa', 'Pendente', null);
+    let modalCtl = this.openEventModal(evento, this.Modal);
+    modalCtl.onSaveEvent = this.callbackSaveEvent(modalCtl);
+    modalCtl.onClose = this.callbackClose(modalCtl);
+    EventoService.setModalCtl(modalCtl);
+  }
+
+  newEvent(EventoService) {
+    //let data = new Date();
+    let evento = this.createEventReference(
+      'Event', 'Evento', 'Pendente', null);
+    let modalCtl = this.openEventModal(evento, this.Modal);
+    modalCtl.onSaveEvent = this.callbackSaveEvent(modalCtl);
+    modalCtl.onClose = this.callbackClose(modalCtl);
+    EventoService.setModalCtl(modalCtl);
+  }
+
+  registerContact(EventoService) {
+    let data = new Date();
+    let evento = this.createEventReference(
+      'Activity', 'Contato', 'Concluído', data);
+    let modalCtl = this.openEventModal(evento, this.Modal);
+    modalCtl.onSaveEvent = this.callbackSaveEvent(modalCtl);
+    modalCtl.onClose = this.callbackClose(modalCtl);
+    EventoService.setModalCtl(modalCtl);
+  }
+
+  openEventModal(event) {
+    return openModalView(event, this.Modal);
+  }
+
+  openModalEventId(eventId, EventoService) {
+    this.usSpinnerService.spin('spinner-1');
+    EventoService.loadEvento({id: eventId})
+    .then(event => {
+      this.activityEdit(event, EventoService);
+    })
+    .catch(err => {
+      console.log(err);
+      this.toastr.error('Não foi possível abrir o evento');
+    })
+    .finally(() => {
+      this.usSpinnerService.stop('spinner-1');
+    });
+  }
+
+  activityEdit(activity, EventoService) {
+    let modalActivity = this.openEventModal(activity);
+
+    modalActivity.onSaveEvent = this.callbackSaveEvent(modalActivity);
+    modalActivity.onDeleteEvent = this.callbackDeleteEvent(modalActivity);
+    modalActivity.onSaveTask = () => {};
+    modalActivity.onClose = this.callbackClose(modalActivity);
+    EventoService.setModalCtl(modalActivity);
+  }
+
+  callbackSaveEvent(modalCtl) {
+    return () => {
+      modalCtl.dismiss();
+      this.loadAtividades();
+    };
+  }
+
+  callbackDeleteEvent(modalCtl) {
+    return () => {
+      modalCtl.dismiss();
+      this.loadAtividades();
+    };
+  }
+
+  callbackClose(modalCtl) {
+    return () => {
+      modalCtl.dismiss();
     };
   }
 }

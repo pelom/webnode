@@ -25,7 +25,7 @@ export default class ContaFindModalController {
     this.select = -1;
     this.search = this.ContaService.getModalCtl().params;
 
-    let isToken = () => this.search.length > 2;
+    let isToken = () => this.search && this.search.length > 2;
     let findAcc = () => {
       this.ContaService.loadContaList({
         search: this.search

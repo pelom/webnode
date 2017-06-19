@@ -17,7 +17,9 @@
 
     <uib-tabset active="active">
       <uib-tab>
-        <uib-tab-heading><i class="fa fa-calendar" aria-hidden="true"></i> Evento</uib-tab-heading>
+        <uib-tab-heading><i class="fa"
+           ng-class="{ 'fa-calendar': ctl.event.type === 'Event', 'fa-comments-o': ctl.event.type === 'Activity', 'fa-calendar-check-o': ctl.event.type === 'Task',}"
+           aria-hidden="true"></i> Evento</uib-tab-heading>
         <br/>
         <div class="row">
           <div class="col-md-12">
@@ -63,12 +65,11 @@
           <div class="col-xs-6">
             <dl>
               <dt><small>Data</small></dt>
-              {{ctl.form.dateStart.$error}}
-              <dd ng-class="{'has-error': form.dateStart.$invalid}">
+              <dd ng-class="{'has-error': form.dateStart.$invalid && form.dateStart.$dirty}">
                 <p class="input-group">
                   <input type="text" class="form-control" name="dateStart"
                     ng-model="ctl.event.start" ng-disabled="!ctl.isEdit"
-                    uib-datepicker-popup="{{ctl.format}}"
+                    uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
                     is-open="ctl.popup1.opened" datepicker-options="ctl.dateOptions"
                     ng-required="true" show-button-bar="false"/>
                   <span class="input-group-btn">
@@ -107,7 +108,7 @@
                 <p class="input-group">
                   <input type="text" class="form-control" name="dateEnd"
                     ng-model="ctl.event.end" ng-disabled="!ctl.isEdit"
-                    uib-datepicker-popup="{{ctl.format}}"
+                    uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
                     is-open="ctl.popup2.opened" datepicker-options="ctl.dateOptions"
                     show-button-bar="false"/>
                   <span class="input-group-btn">
@@ -302,8 +303,10 @@
             <div class="list-group">
               <a href="{{ref.link}}" class="list-group-item" target="_blank"
                 ng-repeat="ref in ctl.event.references">
-                <b>{{ref.name}}</b><br/>
-                <small>{{ref.description}}</small></a>
+                <i class="fa {{ref.icon}}" aria-hidden="true"></i> <b>{{ref.name}}</b><br/>
+                <small ng-if="ref.description">{{ref.description}}</small>
+                <small ng-if="!ref.description">-- Nenhuma --</small>
+              </a>
             </div>
           </div>
         </div>

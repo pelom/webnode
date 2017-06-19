@@ -10,7 +10,7 @@ var ItemSchema = new Schema({
   description: {
     type: String, required: false, maxlength: 255 },
   objectId: {
-    type: String, required: true, trim: true },
+    type: String, required: true, trim: true, index: true },
   object: {
     type: String, required: true, minlength: 3, maxlength: 80, trim: true },
 });
