@@ -10,5 +10,12 @@ export function ProdutoResource($resource) {
         id: 'domain'
       }
     },
+    catalogo: {
+      method: 'GET',
+      isArray: true,
+      params: {
+        id: 'catalog'
+      }
+    },
   });
 }

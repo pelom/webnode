@@ -100,6 +100,13 @@ export default function routes($stateProvider) {
     controllerAs: 'ctl',
     authenticate: true
   })
+  .state('catalogo', {
+    url: '/catalogo',
+    template: require('./produto/produtocatalog.html'),
+    controller: 'ProdutoCatalogController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
   .state('produtos', {
     url: '/produtos',
     template: require('./produto/produto.html'),

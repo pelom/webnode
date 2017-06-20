@@ -52,9 +52,17 @@ export function ProdutoService(ProdutoResource, Util) {
         codigo: newProduct.codigo,
         categoria: newProduct.categoria,
         subcategoria: newProduct.subcategoria,
+        subproduto: newProduct.subproduto,
         uso: newProduct.uso,
         unidade: newProduct.unidade,
       };
+
+      if(product.subproduto) {
+        product.subproduto.forEach(item => {
+          item.produto = item.produto._id;
+        });
+      }
+
       if(angular.isUndefined(product._id)) {
         return ProdutoResource.save(product, function(data) {
           return safeCb(callback)(data);
@@ -65,6 +73,14 @@ export function ProdutoService(ProdutoResource, Util) {
       }
       return ProdutoResource.update(product, function(data) {
         return safeCb(callback)(data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
+    },
+    loadCatalogoList(query, callback) {
+      return ProdutoResource.catalogo(query, function(data) {
+        return safeCb(callback)(null, data);
       }, function(err) {
         console.log('Ex:', err);
         return safeCb(callback)(err);

@@ -18,7 +18,11 @@ export default class ProdutoEditController extends Controller {
     this.ProdutoService = ProdutoService;
     this.ProdutoService.loadDomain().then(domain => {
       this.uso = domain.uso;
-      this.unidade = domain.unidade;
+      this.unidade = [];
+      domain.unidade.forEach(item => {
+        let arr = item.split('-');
+        this.unidade.push(arr[1].trim());
+      });
       this.unidade.sort();
       this.init();
     });
@@ -93,5 +97,11 @@ export default class ProdutoEditController extends Controller {
       .finally(() => {
         this.usSpinnerService.stop('spinner-1');
       });
+  }
+
+  excluirSub(id) {
+    let newSub = this.produto.subproduto
+      .filter(item => item._id !== id);
+    this.produto.subproduto = newSub;
   }
 }

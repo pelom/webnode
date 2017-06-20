@@ -9,8 +9,8 @@
       <li class="active">
         <a href="#" ng-click="ctl.findContas('')" uib-tooltip="Todos">
           <i class="fa fa-gift" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()">Produtos</small>
-          <span class="badge">{{ ctl.ProdutoService.getProdutoList().length}}</span>
+          <small ng-if="ctl.isFull()">Catalogo</small>
+          <span class="badge">{{ ctl.produtos.length}}</span>
         </a>
       </li>
     </ul>
@@ -40,6 +40,7 @@
               <th><small>Código</small></th>
               <th><small>Categoria</small></th>
               <th><small>Modelo</small></th>
+              <th class="text-right"><small>Valor</small></th>
             </tr>
           </thead>
           <tbody>
@@ -52,6 +53,9 @@
               <td><small>{{ pdt.codigo }}</small></td>
               <td><small>{{ pdt.categoria }}</small></td>
               <td><small>{{ pdt.modelo }}</small></td>
+              <td class="col-xs-3 text-right">
+                <small>{{pdt.precos | number: 4}}</small>
+              </td>
             </tr>
           </tbody>
         </table>

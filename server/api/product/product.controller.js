@@ -45,13 +45,18 @@ function buildWhere(req) {
 }
 
 const selectShow = '_id nome codigo descricao categoria marcar modelo subcategoria'
-  + ' uso unidade criador modificador createdAt updatedAt';
+  + ' uso unidade criador modificador createdAt updatedAt subproduto';
+
+const populationSubproduto = {
+  path: 'subproduto.produto',
+  select: '_id nome categoria unidade'
+};
 
 export function show(req, res) {
   return Product.find({_id: req.params.id}, selectShow, {
     limit: 1
   })
-    .populate([api.populationCriador, api.populationModificador])
+    .populate([populationSubproduto, api.populationCriador, api.populationModificador])
     .exec()
     .then(produtos => {
       if(produtos.length == 0) {
@@ -90,6 +95,9 @@ export function update(req, res) {
   Product.findByIdAndUpdate(req.params.id, productJson)
     .then(handleEntityNotFound(res))
     .then(produto => {
+      produto.subproduto = req.body.subproduto;
+      produto.save();
+
       req.params.id = produto._id;
       return show(req, res);
     })
@@ -113,3 +121,30 @@ function requestUpdateProduct(req) {
   };
 }
 export function destroy(req, res) {}
+
+const selectCatalog = '_id nome codigo categoria';
+
+const populationPrice = {
+  path: 'precos',
+  select: '_id valor data',
+  options: {
+    sort: { data: -1 },
+    limit: 1
+  }
+};
+
+export function indexCatalog(req, res) {
+  return api.find({
+    model: 'Product',
+    select: selectCatalog,
+    where: {
+      uso: { $in: ['00 - Mercadoria para Revenda', '09 - Serviços;'] },
+    },
+    populate: [populationPrice, api.populationCriador, api.populationModificador],
+    options: { skip: 0, limit: 50,
+      sort: {
+        createdAt: -1
+      }
+    }
+  }, res);
+}

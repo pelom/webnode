@@ -29,8 +29,12 @@ var ProductItemSchema = new Schema({
 var ProductSubSchema = new Schema({
   quantidade: { type: Number, required: true },
   produto: { type: Schema.Types.ObjectId, ref: 'Product' },
-  descricao: {
-    type: String, required: false, maxlength: 255 },
+});
+
+var ProductPriceSchema = new Schema({
+  valor: { type: Number, required: true },
+  data: { type: Date, required: true },
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 var ProductSchema = new Schema({
@@ -55,6 +59,7 @@ var ProductSchema = new Schema({
 
   estoque: [ProductItemSchema],
   subproduto: [ProductSubSchema],
+  precos: [ProductPriceSchema],
 
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
   modificador: { type: Schema.Types.ObjectId, ref: 'User'}
