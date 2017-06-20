@@ -11,6 +11,7 @@ import agenda from './agenda';
 import lead from './lead';
 import conta from './conta';
 import contato from './contato';
+import produto from './produto';
 
 import HomeController from './home.controller';
 import HomeMenuController from './home.menu.controller';
@@ -18,9 +19,10 @@ import AgendaModalController from './agenda/agenda.modal.controller';
 import LeadController from './lead/lead.controller';
 import ContaController from './conta/conta.controller';
 import ContatoController from './contato/contato.controller';
+import ProdutoController from './produto/produto.controller';
 
 export default angular.module('webnodeApp.account',
-[uiRouter, login, settings, signup, perfil, agenda, lead, conta, contato])
+[uiRouter, login, settings, signup, perfil, agenda, lead, conta, contato, produto])
   .config(routing)
   .run(function($rootScope) {
     'ngInject';
@@ -34,6 +36,7 @@ export default angular.module('webnodeApp.account',
   .controller('LeadController', LeadController)
   .controller('ContaController', ContaController)
   .controller('ContatoController', ContatoController)
+  .controller('ProdutoController', ProdutoController)
   .controller('AgendaModalController', AgendaModalController)
   .controller('HomeMenuController', HomeMenuController)
   .controller('HomeController', HomeController).name;

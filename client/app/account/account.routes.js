@@ -100,6 +100,20 @@ export default function routes($stateProvider) {
     controllerAs: 'ctl',
     authenticate: true
   })
+  .state('produtos', {
+    url: '/produtos',
+    template: require('./produto/produto.html'),
+    controller: 'ProdutoController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
+  .state('produtoedit', {
+    url: '/produtos/edit/:id',
+    template: require('./produto/produto.edit.html'),
+    controller: 'ProdutoEditController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
   .state('home', {
     url: '/home?defaultView&defaultDate&eventId',
     template: require('./home.html'),

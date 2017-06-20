@@ -114,9 +114,6 @@ export function indexPdf(req, res) {
 
 const statusDefaultList = 'Pendente,Em Andamento,Concluído,Cancelado';
 export function index(req, res) {
-  let firstDay = new Date(req.query.start);
-  let lastDay = new Date(req.query.end);
-  let status = req.query.status || statusDefaultList.split(',');
   return api.find({
     model: 'Event',
     select: selectIndex,

@@ -20,6 +20,7 @@ function createListenerSave(event) {
 }
 
 function addTask(doc) {
+  console.log('addTask()');
   Event.findByIdAndUpdate(doc.origin,
     { $push: { tarefas: { $each: [doc._id], $sort: { start: 1 } } }},
     { safe: true }, function(err, /*model*/) {
@@ -51,6 +52,7 @@ function createListenerRemove(event) {
 }
 
 function removeTask(doc) {
+  console.log('removeTask()');
   Event.findByIdAndUpdate(doc.origin._id,
     { $pull: { tarefas: { $in: [doc._id] } } },
     { safe: true }, function(err, /*model*/) {
@@ -64,6 +66,7 @@ function removeTask(doc) {
 }
 
 function removeOrigin(doc) {
+  console.log('removeOrigin()');
   Event.findByIdAndUpdate(doc._id,
     { origin: undefined },
     { safe: true }, function(err, /*model*/) {

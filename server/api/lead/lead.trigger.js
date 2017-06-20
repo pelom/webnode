@@ -56,6 +56,8 @@ function callbackConvertLead() {
 
 function callbackSaveAcc(eventos, lead) {
   return accDb => {
+    console.log('callbackSaveAcc()');
+
     let contact = createContact(lead);
     console.log('Contact:', contact);
 
@@ -73,6 +75,8 @@ function callbackSaveAcc(eventos, lead) {
 
 function callbackSaveCtt(eventos, lead, accDb) {
   return cttDb => {
+    console.log('callbackSaveCtt()');
+
     let accRef = createReferenceAcc(accDb);
     console.log('accRef:', accRef);
     let cttRef = createReferenceCtt(cttDb);
@@ -91,6 +95,7 @@ function callbackSaveCtt(eventos, lead, accDb) {
               console.log('Event references ', e._id);
             });
         });
+
         return leadConvertido;
       })
       .catch(err => {
