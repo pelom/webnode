@@ -36,15 +36,25 @@ export function index(req, res) {
 }
 
 function buildWhere(req) {
+  let where = {
+  };
+
+  if(req.query.search) {
+    var reg = new RegExp(`^${req.query.search}`, 'i');
+    where.$or = [
+      { nome: { $in: reg } },
+    ];
+  }
+
+  if(req.query.categoria) {
+    where.categoria = { $in: [req.query.categoria]};
+  }
+
   if(req.query.uso) {
     let usoList = req.query.uso;
-    console.log(usoList[0]);
-    return {
-      uso: { $in: usoList },
-    };
+    where.uso = { $in: usoList };
   }
-  return {
-  };
+  return where;
 }
 
 const selectShow = '_id nome codigo descricao categoria marcar modelo subcategoria'

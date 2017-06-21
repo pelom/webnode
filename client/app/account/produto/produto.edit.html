@@ -172,7 +172,7 @@
                   <td><a ui-sref="produtoedit({id: pdt.produto._id})">
                     {{ pdt.produto.nome }}</a>
                     <p>
-                      <small>{{pdt.produto.categoria}}</small>
+                      <small class="text-muted">{{pdt.produto.categoria}}</small>
                     </p>
                   </td>
                   <td><small>{{ pdt.produto.codigo }}</small></td>
@@ -180,7 +180,7 @@
                     <input type="text" class="form-control text-right"
                       ng-model="pdt.quantidade"  ui-number-mask="3"/>
                   </td>
-                  <td><small>{{ pdt.produto.unidade }}</small></td>
+                  <td><small class="text-muted">{{ pdt.produto.unidade }}</small></td>
                 </tr>
               </tbody>
             </table>

@@ -7,7 +7,7 @@
   <div class="row">
     <ul class="nav nav-pills">
       <li class="active">
-        <a href="#" ng-click="ctl.findContas('')" uib-tooltip="Todos">
+        <a href="#" ng-click="ctl.filterProduto('')" uib-tooltip="Todos">
           <i class="fa fa-gift" aria-hidden="true"></i>
           <small ng-if="ctl.isFull()">Produtos</small>
           <span class="badge">{{ ctl.ProdutoService.getProdutoList().length}}</span>
@@ -17,12 +17,17 @@
   </div>
   <hr/>
   <div class="row">
-    <div class="col-xs-6">
+    <div class="col-xs-3">
       <a class="btn btn-default" ui-sref="produtoedit()">
         <i class="fa fa-plus" aria-hidden="true"></i> <i ng-if="ctl.isFull()">Novo</i></a>
-      <!--a ui-sref="homemenu"><small>Voltar para o início</small></a-->
     </div>
-    <div class="col-xs-6 pull-right form-group">
+    <div class="col-xs-4">
+      <select class="form-control" name="unidade" ng-model="ctl.selectCat"
+         ng-options="item as item for item in ctl.categorias">
+         <option value="">-- Categoria --</option>
+      </select>
+    </div>
+    <div class="col-xs-5 pull-right form-group">
       <div class="input-group">
         <div class="input-group-addon"><i class="fa fa-search"></i></div>
         <input type="text" class="form-control" placeholder="Filtrar resultados" ng-model="filtrarResult">
@@ -32,37 +37,89 @@
 
   <div class="panel panel-default">
     <div class="panel-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <p class="pull-right">
+            <a href="#" ng-click="ctl.filterProduto(item)"
+              ng-repeat="item in ctl.filterAz"><small>{{ item }}</small> </a>
+          </p>
+        </div>
+        <br/>
+        <br/>
+      </div>
+      <div class="alert" ng-if="!ctl.produtos.length">
+        <hr/>
+        <h4><code>Nenhum resultado encontrado</code></h4>
+      </div>
       <div class="table-responsive" ng-if="ctl.produtos.length">
         <table class="table table-striped table-condensed">
           <thead class="text-muted">
             <tr>
-              <th><small>Nome do produto</small></th>
-              <th><small>Código</small></th>
-              <th><small>Categoria</small></th>
-              <th><small>Modelo</small></th>
+              <th></th>
+              <th>
+                <a href="#" ng-click="ctl.sortType = 'nome'; ctl.sortReverse = !ctl.sortReverse"
+                  ui-sref-active="active">
+                  <small>Nome do produto<small>
+                  <div class="pull-right">
+                    <i ng-show="ctl.sortType == 'nome' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'nome' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
+              <th ng-if="ctl.isFull()">
+                <a href="#" ng-click="ctl.sortType = 'codigo'; ctl.sortReverse = !ctl.sortReverse"
+                    ui-sref-active="active">
+                  <small>Código<small>
+                  <div class="pull-right">
+                    <i ng-show="ctl.sortType == 'codigo' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'codigo' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
+              <th ng-if="ctl.isFull()">
+                <a href="#" ng-click="ctl.sortType = 'categoria'; ctl.sortReverse = !ctl.sortReverse">
+                  <small>Categoria<small>
+                  <div class="pull-right">
+                    <i ng-show="ctl.sortType == 'categoria' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'categoria' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
+              <th ng-if="ctl.isFull()">
+                <a href="#" ng-click="ctl.sortType = 'modelo'; ctl.sortReverse = !ctl.sortReverse"
+                  ui-sref-active="active">
+                  <small>Modelo<small>
+                  <div class="pull-right">
+                    <i ng-show="ctl.sortType == 'modelo' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'modelo' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="pdt in ctl.produtos | orderBy:sortType:sortReverse | filter:filtrarResult">
+            <tr ng-repeat="pdt in ctl.produtos | orderBy:ctl.sortType:ctl.sortReverse | filter:filtrarResult">
+              <td><a href="#" ui-sref="produtoedit({id: pdt._id})">
+                <i class="fa fa-gift" aria-hidden="true"></i></a></td>
               <td>
                 <a ui-sref="produtoedit({id: pdt._id})">
                 {{ pdt.nome }}</a>
-                <p><small>{{pdt.uso}}</small></p>
+                <p><small class="text-muted">{{pdt.uso}}</small></p>
               </td>
-              <td><small>{{ pdt.codigo }}</small></td>
-              <td><small>{{ pdt.categoria }}</small></td>
-              <td><small>{{ pdt.modelo }}</small></td>
+              <td><small class="text-muted">{{ pdt.codigo }}</small></td>
+              <td><small class="text-muted">{{ pdt.categoria }}</small></td>
+              <td><small class="text-muted">{{ pdt.modelo }}</small></td>
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel" ng-if="!ctl.produtos.length">
-    <div class="panel-body">
-      <div class="alert">
-        <h4><code>Nenhum resultado encontrado</code></h4>
       </div>
     </div>
   </div>

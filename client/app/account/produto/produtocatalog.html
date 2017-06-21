@@ -9,7 +9,7 @@
       <li class="active">
         <a href="#" ng-click="ctl.filterCatalogo('')" uib-tooltip="Todos">
           <i class="fa fa-book" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()">Catalogo</small>
+          <small ng-if="ctl.isFull()">Catálogo</small>
           <span class="badge">{{ ctl.produtos.length}}</span>
         </a>
       </li>
@@ -54,56 +54,56 @@
             <tr>
               <th></th>
               <th>
-                <a href="#" ng-click="sortType = 'nome'; sortReverse = !sortReverse">
-                  <small>Nome do produto<small>
+                <a href="#" ng-click="ctl.sortType = 'nome'; ctl.sortReverse = !ctl.sortReverse">
+                  <small>Produto do catálogo<small>
                   <div class="pull-right">
-                    <i ng-show="sortType == 'nome' && !sortReverse"
+                    <i ng-show="ctl.sortType == 'nome' && !ctl.sortReverse"
                       class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="sortType == 'nome' && sortReverse"
+                    <i ng-show="ctl.sortType == 'nome' && ctl.sortReverse"
                       class="fa fa-sort-amount-desc"></i>
                   </div>
                 </a>
               </th>
               <th ng-if="ctl.isFull()">
-                <a href="#" ng-click="sortType = 'codigo'; sortReverse = !sortReverse">
+                <a href="#" ng-click="ctl.sortType='codigo'; ctl.sortReverse = !ctl.sortReverse">
                   <small>Código<small>
                   <div class="pull-right">
-                    <i ng-show="sortType == 'codigo' && !sortReverse"
+                    <i ng-show="ctl.sortType == 'codigo' && !ctl.sortReverse"
                       class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="sortType == 'codigo' && sortReverse"
+                    <i ng-show="ctl.sortType == 'codigo' && ctl.sortReverse"
                       class="fa fa-sort-amount-desc"></i>
                   </div>
                 </a>
               </th>
               <th ng-if="ctl.isFull()">
-                <a href="#" ng-click="sortType = 'categoria'; sortReverse = !sortReverse">
+                <a href="#" ng-click="ctl.sortType = 'categoria'; ctl.sortReverse = !ctl.sortReverse">
                   <small>Categoria<small>
                   <div class="pull-right">
-                    <i ng-show="sortType == 'categoria' && !sortReverse"
+                    <i ng-show="ctl.sortType == 'categoria' && !ctl.sortReverse"
                       class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="sortType == 'categoria' && sortReverse"
+                    <i ng-show="ctl.sortType == 'categoria' && ctl.sortReverse"
                       class="fa fa-sort-amount-desc"></i>
                   </div>
                 </a>
               </th>
               <th ng-if="ctl.isFull()">
-                <a href="#" ng-click="sortType = 'modelo'; sortReverse = !sortReverse">
+                <a href="#" ng-click="ctl.sortType = 'modelo'; ctl.sortReverse = !ctl.sortReverse">
                   <small>Modelo<small>
                   <div class="pull-right">
-                    <i ng-show="sortType == 'modelo' && !sortReverse"
+                    <i ng-show="ctl.sortType == 'modelo' && !ctl.sortReverse"
                       class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="sortType == 'modelo' && sortReverse"
+                    <i ng-show="ctl.sortType == 'modelo' && ctl.sortReverse"
                       class="fa fa-sort-amount-desc"></i>
                   </div>
                 </a>
               </th>
               <th class="text-right">
-                <a href="#" ng-click="sortType = 'valor'; sortReverse = !sortReverse">
+                <a href="#" ng-click="ctl.sortType = 'valor'; ctl.sortReverse = !ctl.sortReverse">
                   <small>Valor<small>
                   <div class="pull-left">
-                    <i ng-show="sortType == 'valor' && !sortReverse"
+                    <i ng-show="ctl.sortType == 'valor' && !ctl.sortReverse"
                       class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="sortType == 'valor' && sortReverse"
+                    <i ng-show="ctl.sortType == 'valor' && ctl.sortReverse"
                       class="fa fa-sort-amount-desc"></i>
                   </div>
                 </a>
@@ -111,7 +111,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="pdt in ctl.produtos | orderBy:sortType:sortReverse | filter:filtrarResult">
+            <tr ng-repeat="pdt in ctl.produtos | orderBy:ctl.sortType:ctl.sortReverse | filter:filtrarResult">
               <td><a href="#" ng-click="ctl.openCatalogModal(pdt)">
                 <i class="fa fa-book" aria-hidden="true"></i></a></td>
               <td>
