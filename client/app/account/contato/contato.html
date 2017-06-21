@@ -48,11 +48,11 @@
             <p>
               <small ng-if="ctt.celular" title="Celular">
                 <i class="fa fa-mobile" aria-hidden="true"></i>
-                <a href="tel:{{ctt.celular}}"><b>{{ctt.celular}}</b></a>
+                <a href="tel:{{ctt.celular}}"><b>{{ctt.celular | brPhoneNumber}}</b></a>
               </small>
               <small ng-if="!ctt.celular && ctt.telefone" title="Telefone">
                 <i class="fa fa-phone" aria-hidden="true"></i>
-                <a  href="tel:{{ctt.telefone}}"><b>{{ctt.telefone}}</b></a>
+                <a  href="tel:{{ctt.telefone}}"><b>{{ctt.telefone | brPhoneNumber}}</b></a>
               </small>
               <small ng-if="!ctt.celular && !ctt.telefone"><i class="fa fa-phone" aria-hidden="true"></i></small>
               <small title="Email"><i class="fa fa-at" aria-hidden="true"></i>

@@ -43,7 +43,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="pdt in ctl.produtos">
+            <tr ng-repeat="pdt in ctl.produtos | orderBy:sortType:sortReverse | filter:filtrarResult">
               <td>
                 <a ui-sref="produtoedit({id: pdt._id})">
                 {{ pdt.nome }}</a>

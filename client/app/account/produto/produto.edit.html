@@ -72,8 +72,9 @@
               <dl>
                 <dt><small>Categoria</small></dt>
                 <dd>
-                  <input type="text" class="form-control" placeholder="Categoria do produto"
-                    ng-model="ctl.produto.categoria"/>
+                  <input type="text" class="form-control" ng-model="ctl.produto.categoria"
+                   placeholder="Categoria do produto"
+                   uib-typeahead="item for item in ctl.categorias | filter:$viewValue | limitTo:8">
                 </dd>
               </dl>
             </div>
@@ -160,8 +161,8 @@
                   <th></th>
                   <th><small>Nome do produto</small></th>
                   <th><small>Código</small></th>
-                  <th><small>Unidade</small></th>
                   <th class="text-right"><small>Quantidade</small></th>
+                  <th><small>Unidade</small></th>
                 </tr>
               </thead>
               <tbody>
@@ -175,12 +176,11 @@
                     </p>
                   </td>
                   <td><small>{{ pdt.produto.codigo }}</small></td>
-                  <td><small>{{ pdt.produto.unidade }}</small></td>
                   <td class="col-xs-3">
-                    <input type="number" class="form-control text-right"
-                      ng-model="pdt.quantidade" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.001" />
+                    <input type="text" class="form-control text-right"
+                      ng-model="pdt.quantidade"  ui-number-mask="3"/>
                   </td>
-
+                  <td><small>{{ pdt.produto.unidade }}</small></td>
                 </tr>
               </tbody>
             </table>

@@ -19,6 +19,8 @@ import 'angular-spinner';
 import 'fullcalendar/dist/locale-all';
 import 'angular-i18n/angular-locale_pt-br';
 import 'angular-ui-calendar';
+import 'angular-br-filters';
+import 'angular-input-masks';
 
 import {routeConfig} from './app.config';
 
@@ -62,7 +64,7 @@ angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toas
   uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService,
   PermissaoService, EventoService, JobService, ContaService, ContatoService, ProdutoService,
   LeadService, _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal,
-  changePassword, mongooseError, 'angularSpinner', 'ui.calendar'
+  changePassword, mongooseError, 'angularSpinner', 'ui.calendar', 'idf.br-filters', 'ui.utils.masks'
 ])
   .config(routeConfig)
   .config(function(uiSelectConfig) {

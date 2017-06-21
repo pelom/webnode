@@ -33,7 +33,7 @@ var ProductSubSchema = new Schema({
 
 var ProductPriceSchema = new Schema({
   valor: { type: Number, required: true },
-  data: { type: Date, required: true },
+  data: { type: Date, required: true, default: Date.now },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 

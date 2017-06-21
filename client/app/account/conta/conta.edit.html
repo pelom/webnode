@@ -30,11 +30,11 @@
 
                   <p class="help-block"
                     ng-show="form.nome.$error.required && form.nome.$dirty">
-                    O nome da conta é necessário</p>
+                    <small>O nome da conta é necessário</small></p>
                   <p class="help-block" ng-show="form.nome.$error.minlength">
-                    São necessários no minimo 3 letras</p>
+                    <small>São necessários no minimo 3 letras</small></p>
                   <p class="help-block" ng-show="form.nome.$error.maxlength">
-                    São permitidos no máximo 100 letras</p>
+                    <small>São permitidos no máximo 100 letras</small></p>
                 </dd>
               </dl>
             </div>
@@ -49,9 +49,13 @@
                     <input type="radio" ng-model="ctl.conta.iden" ng-click="ctl.updateMask()"
                       value="cnpj" name="optradio" ng-disabled="ctl.conta.numIden">CNPJ</label>
                 </dt>
-                <dd>
-                  <input type="text" class="form-control"
-                    ng-model="ctl.conta.numIden" ui-mask="{{ctl.mask}}"/>
+                <dd ng-class="{'has-error': (form.numIden.$error.mask || form.numIden.$error.cnpj || form.numIden.$error.cpf)}">
+                  <input type="text" class="form-control" name="numIden"
+                    ng-model="ctl.conta.numIden" ui-mask="{{ctl.mask}}" ui-br-cpfcnpj-mask/>
+
+                  <p class="help-block"
+                    ng-show="form.numIden.$error.mask || form.numIden.$error.cnpj || form.numIden.$error.cpf">
+                    <small>Número Inválido</small></p>
                 </dd>
               </dl>
             </div>

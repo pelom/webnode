@@ -17,5 +17,11 @@ export function ProdutoResource($resource) {
         id: 'catalog'
       }
     },
+    addprice: {
+      method: 'PUT',
+      params: {
+        controller: 'addprice'
+      }
+    },
   });
 }

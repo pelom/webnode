@@ -86,6 +86,14 @@ export function ProdutoService(ProdutoResource, Util) {
         return safeCb(callback)(err);
       }).$promise;
     },
+    addPrice(catalogo, callback) {
+      return ProdutoResource.addprice(catalogo, function(data) {
+        return safeCb(callback)(null, data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
+    },
   };
   return produtoService;
 }

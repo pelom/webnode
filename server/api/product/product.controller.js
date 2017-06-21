@@ -9,9 +9,12 @@ let handleEntityNotFound = api.handleEntityNotFound;
 let handleValidationError = api.handleValidationError;
 
 export function domain(req, res) {
-  res.status(200).json({
-    unidade: Product.schema.path('unidade').enumValues,
-    uso: Product.schema.path('uso').enumValues,
+  Product.find().distinct('categoria', function(error, cats) {
+    res.status(200).json({
+      unidade: Product.schema.path('unidade').enumValues,
+      uso: Product.schema.path('uso').enumValues,
+      categorias: cats
+    });
   });
 }
 
@@ -122,29 +125,70 @@ function requestUpdateProduct(req) {
 }
 export function destroy(req, res) {}
 
-const selectCatalog = '_id nome codigo categoria';
+const selectCatalog = '_id nome codigo categoria subcategoria descricao'
+  + ' marca modelo uso unidade precos subproduto';
 
 const populationPrice = {
   path: 'precos',
   select: '_id valor data',
   options: {
-    sort: { data: -1 },
-    limit: 1
+    limit: 10
   }
 };
 
+const populationPriceUser = {
+  path: 'precos.user',
+  select: '_id nome sobrenome',
+};
+
 export function indexCatalog(req, res) {
+  let where = {
+    uso: { $in: ['00 - Mercadoria para Revenda', '09 - Serviços'] }
+  };
+
+  if(req.query.search) {
+    var reg = new RegExp(`^${req.query.search}`, 'i');
+    where.$or = [
+      { nome: { $in: reg } },
+    ];
+  }
+
+  if(req.query.categoria) {
+    where.categoria = { $in: [req.query.categoria]};
+  }
+  console.log('WHERE', where);
   return api.find({
     model: 'Product',
     select: selectCatalog,
-    where: {
-      uso: { $in: ['00 - Mercadoria para Revenda', '09 - Serviços;'] },
-    },
-    populate: [populationPrice, api.populationCriador, api.populationModificador],
+    where,
+    populate: [populationSubproduto, populationPrice, populationPriceUser,
+      api.populationCriador, api.populationModificador],
     options: { skip: 0, limit: 50,
       sort: {
         createdAt: -1
       }
     }
   }, res);
+}
+
+export function addprice(req, res) {
+  console.log('req.params.id', req.params.id);
+  console.log('req.body', req.body);
+
+  let productPrice = {
+    valor: req.body.valor,
+    user: req.user._id,
+  };
+  Product.findByIdAndUpdate(req.params.id,
+    { $push: { precos: { $each: [productPrice], $sort: { data: -1 } } }},
+    { new: true })
+    .then(callbackAddPrice(res))
+    .catch(handleError(res));
+}
+
+function callbackAddPrice(res) {
+  return product => {
+    res.status(201).json(true);
+    return product;
+  };
 }

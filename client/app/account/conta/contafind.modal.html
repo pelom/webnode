@@ -39,8 +39,8 @@
               <label><input type="radio" name="acc" ng-model="ctl.select" value="{{$index}}"></label>
             </td>
             <td><a ui-sref="contaedit({id: acc._id})" target="_blank">{{ acc.nome }}</a></td>
-            <td><small>{{ acc.cpf }} {{ acc.cnpj}}</small></td>
-            <td><small>{{ acc.telefone }}</small></td>
+            <td><small>{{ acc.cpf | brCpf }} {{ acc.cnpj | brCnpj }}</small></td>
+            <td><small>{{ acc.telefone | brPhoneNumber}}</small></td>
           </tr>
         </tbody>
       </table>

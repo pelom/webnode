@@ -18,6 +18,7 @@ export default class ProdutoEditController extends Controller {
     this.ProdutoService = ProdutoService;
     this.ProdutoService.loadDomain().then(domain => {
       this.uso = domain.uso;
+      this.categorias = domain.categorias;
       this.unidade = [];
       domain.unidade.forEach(item => {
         let arr = item.split('-');

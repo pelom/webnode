@@ -65,13 +65,13 @@
           <p>
             <small>
               <i class="fa fa-barcode" aria-hidden="true"></i>
-              <span ng-if="acc.cpf" title="CPF"><b>{{acc.cpf}}</b></span>
-              <span ng-if="acc.cnpj" title="CNPJ"><b>{{acc.cnpj}}</b></span>
+              <span ng-if="acc.cpf" title="CPF"><b>{{acc.cpf | brCpf}}</b></span>
+              <span ng-if="acc.cnpj" title="CNPJ"><b>{{acc.cnpj | brCnpj}}</b></span>
             </small>
             <small>
               <i class="fa fa-phone" aria-hidden="true"></i>
               <a  href="tel:{{acc.telefone}}" ng-if="acc.telefone" title="Telefone">
-                <b>{{acc.telefone}}</b></a>
+                <b>{{acc.telefone | brPhoneNumber}}</b></a>
             </small>
           </p>
         </div>
