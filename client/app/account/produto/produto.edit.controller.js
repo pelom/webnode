@@ -19,11 +19,7 @@ export default class ProdutoEditController extends Controller {
     this.ProdutoService.loadDomain().then(domain => {
       this.uso = domain.uso;
       this.categorias = domain.categorias;
-      this.unidade = [];
-      domain.unidade.forEach(item => {
-        let arr = item.split('-');
-        this.unidade.push(arr[1].trim());
-      });
+      this.unidade = domain.unidade;
       this.unidade.sort();
       this.init();
     });

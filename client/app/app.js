@@ -34,6 +34,7 @@ import LeadService from '../components/api/lead/lead.module';
 import ContaService from '../components/api/conta/conta.module';
 import ContatoService from '../components/api/contato/contato.module';
 import ProdutoService from '../components/api/produto/produto.module';
+import OrcamentoService from '../components/api/orcamento/orcamento.module';
 
 import account from './account';
 import admin from './admin';
@@ -63,6 +64,7 @@ angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toas
   googlemaps, endereco, atividade,
   uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService,
   PermissaoService, EventoService, JobService, ContaService, ContatoService, ProdutoService,
+  OrcamentoService,
   LeadService, _Auth, account, admin, navbar, footer, main, constants, socket, util, Modal,
   changePassword, mongooseError, 'angularSpinner', 'ui.calendar', 'idf.br-filters', 'ui.utils.masks'
 ])

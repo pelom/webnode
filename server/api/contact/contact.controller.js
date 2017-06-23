@@ -32,6 +32,25 @@ export function index(req, res) {
 }
 
 function buildWhere(req) {
+  if(req.query.search) {
+    let searchs = req.query.search.split(' ');
+    let regexs = [];
+    searchs.forEach(item => {
+      if(item.trim().length > 2) {
+        var reg = new RegExp(item, 'i');
+        regexs.push(reg);
+      }
+    });
+    return {
+      $or: [
+        { nome: { $in: regexs } },
+        { sobrenome: { $in: regexs } },
+        { celular: { $in: regexs } },
+        { telefone: { $in: regexs } }
+      ],
+      //proprietario: req.user._id
+    };
+  }
   if(req.query.conta) {
     return {
       conta: { $in: req.query.conta }

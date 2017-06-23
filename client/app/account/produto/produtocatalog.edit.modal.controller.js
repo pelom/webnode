@@ -12,6 +12,16 @@ export default class ProdutoCatalogEditModalController {
 
   init() {
     this.catalogo = this.ProdutoService.getModalCtl().params;
+    if(this.catalogo.subproduto && this.catalogo.subproduto.length > 0) {
+      this.catalogo.custo = 0;
+      this.catalogo.subproduto.forEach(item => {
+        if(item.produto.precos && item.produto.precos.length > 0) {
+          item.valor = item.produto.precos[0].valor;
+          item.valorTotal = item.quantidade * item.valor;
+          this.catalogo.custo += item.valorTotal;
+        }
+      });
+    }
     console.log(this.ProdutoService.getModalCtl().params);
   }
 

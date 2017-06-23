@@ -1,0 +1,93 @@
+<div class="container">
+
+  <span spinner-key="spinner-1" spinner-start-active="true"
+    us-spinner="{radius:24, width:8, length: 16}">
+  </span>
+
+  <div class="row">
+    <ul class="nav nav-pills" ng-class="ctl.isJustified()">
+      <li ng-class="{ active: ctl.isActive('')}">
+        <a href="#" ng-click="ctl.findOrcamentoListStatus('')" uib-tooltip="Todos">
+          <i class="fa fa-usd" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Orçamentos</small>
+          <span class="badge">{{ ctl.orcamentos.length}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Rascunho')}">
+        <a href="#" ng-click="ctl.findOrcamentoListStatus('Rascunho')" uib-tooltip="Rascunho">
+          <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Rascunho</small>
+          <span class="badge">{{ ctl.OrcamentoService.getRascunhos().length}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Aprovado')}">
+        <a href="#" ng-click="ctl.findOrcamentoListStatus('Aprovado')" uib-tooltip="Aprovado">
+          <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Aprovado</small>
+          <span class="badge">{{ ctl.OrcamentoService.getAprovados().length}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Rejeitado')}">
+        <a href="#" ng-click="ctl.findOrcamentoListStatus('Rejeitado')" uib-tooltip="Rejeitado">
+          <i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Rejeitado</small>
+          <span class="badge">{{ ctl.OrcamentoService.getRejeitados().length}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-xs-6">
+      <a class="btn btn-default" ui-sref="orcamentoedit()">
+        <i class="fa fa-plus" aria-hidden="true"></i> <i ng-if="ctl.isFull()">Novo</i></a>
+    </div>
+    <div class="col-xs-6 pull-right form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <input type="text" class="form-control" placeholder="Filtrar resultados" ng-model="filtrarResult">
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="row">
+
+    <div class="alert" ng-if="!ctl.orcamentos.length">
+      <h4><code>Nenhum resultado encontrado</code></h4>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4"
+      ng-repeat="orc in  ctl.orcamentos | orderBy:sortType:sortReverse | filter:filtrarResult">
+      <div class="panel panel-houver">
+
+        <div class="panel-heading text-muted">
+          <b></b>
+          <p><h4 class="text-muted pull-right">{{orc.valorTotal | finance:true:2 }}</h4></p>
+          <p> 
+            <a ui-sref="orcamentoedit({id: orc._id})">
+              <i class="fa fa-usd fa-lg"></i> <i>{{ orc.nome }}</i>
+            </a>
+          </p>
+          <hr/>
+          <p class="pull-right"><i class="fa fa-2x" ng-class="ctl.getIcon(orc)"></i></p>
+          <p title="Contato: {{orc.contato.nome}} {{orc.contato.sobrenome}}">
+            <i class="fa fa-address-book-o" aria-hidden="true" ng-if="!orc.contato._id"></i>
+            <a ui-sref="contatoedit({id: orc.contato._id})" ng-if="orc.contato._id">
+              <i class="fa fa-address-book-o" aria-hidden="true"></i>
+              <small>{{ orc.contato.nome }} {{ orc.contato.sobrenome }}</small>
+            </a>
+          </p>
+          <p title="Conta: {{orc.conta.nome}}">
+            <i class="fa fa-folder-open-o" aria-hidden="true" ng-if="!orc.conta._id"></i>
+            <a ui-sref="contaedit({id: orc.conta._id})" ng-if="orc.conta._id">
+              <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+              <small>{{ orc.conta.nome }}</small>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 'use strict';
 
-export default class ProdutoFindModalController {
+export default class ProdutoCatalogFindModalController {
   /*@ngInject*/
   constructor($state, $scope, toastr, usSpinnerService, Auth, ProdutoService) {
     this.Auth = Auth;
@@ -8,7 +8,7 @@ export default class ProdutoFindModalController {
     this.$state = $state;
     this.usSpinnerService = usSpinnerService;
     this.ProdutoService = ProdutoService;
-    this.ProdutoService.loadProdutoList(ProdutoService.getModalCtl().params)
+    this.ProdutoService.loadCatalogoList(ProdutoService.getModalCtl().params)
       .then(produtos => {
         this.produtos = produtos;
         this.produtosAll = produtos;
@@ -27,8 +27,9 @@ export default class ProdutoFindModalController {
 
     let isToken = () => this.search && this.search.length > 2;
     let findAcc = () => {
-      this.ProdutoService.loadContaList({
-        search: this.search
+      this.ProdutoService.loadCatalogoList({
+        searchFull: this.search,
+        price: true,
       })
       .then(produtos => {
         this.produtos = produtos;

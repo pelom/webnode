@@ -1,0 +1,61 @@
+<div class="modal-header">
+  <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
+
+  <h5><i class="fa fa-puzzle-piece fa-2x" aria-hidden="true"></i>
+    <strong><span class="modal-title">{{ctl.orcamentoItem.produto.nome}}</span></strong>
+    <div class="pull-right">
+      <h4 class="text-info">{{ ctl.orcamentoItem.valorTotal | finance:true:2 }} (=)</h4>
+    </div>
+  </h5>
+</div>
+<div class="modal-body">
+  <form class="form" novalidate name="form" ng-submit="ctl.selectAcc(form)">
+    <div class="row">
+      <div class="col-xs-12 col-md-3">
+        <dl>
+          <dt class="text-muted"><small>Preço Venda</small></dt>
+          <dd>
+            <p></p>
+            <p class="text-info">{{ctl.orcamentoItem.valorCatalogo | finance:true:2 }} / {{ ctl.orcamentoItem.produto.unidade }}</p>
+          </dd>
+        </dl>
+      </div>
+      <div class="col-xs-4 col-md-3">
+        <dl>
+          <dt class="text-muted text-right"><small>Valor Vende</small></dt>
+          <dd>
+            <input type="text" class="form-control text-right" ng-required="true"
+              ng-model="ctl.orcamentoItem.valor" ui-money-mask/>
+          </dd>
+        </dl>
+      </div>
+      <div class="col-xs-4 col-md-3">
+        <dl>
+          <dt class="text-muted text-right"><small>Quantidade</small></dt>
+          <dd>
+            <input type="text" class="form-control text-right" ng-required="true"
+              ng-model="ctl.orcamentoItem.quantidade" ui-number-mask="2"/>
+          </dd>
+        </dl>
+      </div>
+      <div class="col-xs-4 col-md-3">
+        <dl>
+          <dt class="text-muted text-right"><small>Desconto</small></dt>
+          <dd>
+            <input type="text" class="form-control text-right" ng-required="true"
+              ng-model="ctl.orcamentoItem.desconto" ui-percentage-mask="1"/>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="row"><hr/></div>
+    <div class="row">
+      <div class="col-xs-12">
+        <button type="button" class="btn btn-default"
+          ng-click="ctl.close()">Fechar</button>
+      </div>
+    </div>
+
+  </form>
+</div>

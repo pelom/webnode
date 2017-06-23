@@ -5,9 +5,11 @@ import ProdutoController from './produto.controller';
 import ProdutoEditController from './produto.edit.controller';
 import ProdutoCatalogController from './produtocatalog.controller';
 import ProdutoCatalogEditModalController from './produtocatalog.edit.modal.controller';
+import ProdutoCatalogFindModalController from './produtocatalogfind.modal.controller';
 import ProdutoFindModalController from './produtofind.modal.controller';
 
 export default angular.module('webnodeApp.produto', [])
+  .controller('ProdutoCatalogFindModalController', ProdutoCatalogFindModalController)
   .controller('ProdutoCatalogEditModalController', ProdutoCatalogEditModalController)
   .controller('ProdutoCatalogController', ProdutoCatalogController)
   .controller('ProdutoFindModalController', ProdutoFindModalController)

@@ -62,14 +62,15 @@ const selectShow = '_id nome codigo descricao categoria marcar modelo subcategor
 
 const populationSubproduto = {
   path: 'subproduto.produto',
-  select: '_id nome categoria unidade'
+  select: '_id nome categoria unidade precos'
 };
 
 export function show(req, res) {
   return Product.find({_id: req.params.id}, selectShow, {
     limit: 1
   })
-    .populate([populationSubproduto, api.populationCriador, api.populationModificador])
+    .populate([populationSubproduto,
+      api.populationCriador, api.populationModificador])
     .exec()
     .then(produtos => {
       if(produtos.length == 0) {
@@ -161,6 +162,14 @@ export function indexCatalog(req, res) {
     where.$or = [
       { nome: { $in: reg } },
     ];
+  } else if(req.query.searchFull) {
+    where.$or = [
+      { nome: { $in: new RegExp(`${req.query.searchFull}`, 'i') } },
+    ];
+  }
+
+  if(req.query.price) {
+    where.precos = { $exists: true, $not: { $size: 0 } };
   }
 
   if(req.query.categoria) {
@@ -171,7 +180,8 @@ export function indexCatalog(req, res) {
     model: 'Product',
     select: selectCatalog,
     where,
-    populate: [populationSubproduto, populationPrice, populationPriceUser,
+    populate: [populationSubproduto,
+      populationPrice, populationPriceUser,
       api.populationCriador, api.populationModificador],
     options: { skip: 0, limit: 50,
       sort: {

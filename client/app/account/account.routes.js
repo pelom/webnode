@@ -121,6 +121,20 @@ export default function routes($stateProvider) {
     controllerAs: 'ctl',
     authenticate: true
   })
+  .state('orcamentos', {
+    url: '/orcamentos',
+    template: require('./orcamento/orcamento.html'),
+    controller: 'OrcamentoController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
+  .state('orcamentoedit', {
+    url: '/orcamentos/edit/:id',
+    template: require('./orcamento/orcamento.edit.html'),
+    controller: 'OrcamentoEditController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
   .state('home', {
     url: '/home?defaultView&defaultDate&eventId',
     template: require('./home.html'),

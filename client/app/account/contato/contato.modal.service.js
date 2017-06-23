@@ -21,3 +21,25 @@ export function createModalView(title) {
     html: require('./contato.modal.html')
   };
 }
+
+export function openModalContatoFind(Modal, params) {
+  let modalView = createModalContatoFind('');
+  let showOpen = Modal.show.open();
+  let modalCtl = showOpen(modalView);
+  if(params !== null) {
+    modalCtl.params = params;
+  }
+  return modalCtl;
+}
+
+export function createModalContatoFind(title) {
+  return {
+    controller: 'ContatoFindModalController',
+    controllerAs: 'ctl',
+    dismissable: false,
+    backdrop: 'static',
+    keyboard: false,
+    title,
+    html: require('./contatofind.modal.html')
+  };
+}

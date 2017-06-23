@@ -12,6 +12,7 @@ import lead from './lead';
 import conta from './conta';
 import contato from './contato';
 import produto from './produto';
+import orcamento from './orcamento';
 
 import HomeController from './home.controller';
 import HomeMenuController from './home.menu.controller';
@@ -20,9 +21,10 @@ import LeadController from './lead/lead.controller';
 import ContaController from './conta/conta.controller';
 import ContatoController from './contato/contato.controller';
 import ProdutoController from './produto/produto.controller';
+import OrcamentoController from './orcamento/orcamento.controller';
 
 export default angular.module('webnodeApp.account',
-[uiRouter, login, settings, signup, perfil, agenda, lead, conta, contato, produto])
+[uiRouter, login, settings, signup, perfil, agenda, lead, conta, contato, produto, orcamento])
   .config(routing)
   .run(function($rootScope) {
     'ngInject';
@@ -33,6 +35,7 @@ export default angular.module('webnodeApp.account',
       }
     });
   })
+  .controller('OrcamentoController', OrcamentoController)
   .controller('LeadController', LeadController)
   .controller('ContaController', ContaController)
   .controller('ContatoController', ContatoController)

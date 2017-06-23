@@ -108,6 +108,17 @@
                   </div>
                 </a>
               </th>
+              <th>
+                <a href="#" ng-click="ctl.sortType = 'unidade'; ctl.sortReverse = !ctl.sortReverse">
+                  <small><small>
+                  <div class="pull-left">
+                    <i ng-show="ctl.sortType == 'unidade' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'unidade' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -125,6 +136,7 @@
               <td class="col-xs-3 text-right">
                 <h4 class="text-info">{{ pdt.valor | finance:true:2}}</h4>
               </td>
+              <td><small class="text-muted">{{ pdt.unidade }}</small></td>
             </tr>
           </tbody>
         </table>
