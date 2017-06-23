@@ -19,7 +19,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Nome do produto</small></dt>
+                <dt class="text-muted"><small>Nome do produto</small></dt>
                 <dd ng-class="{'has-error': form.nome.$invalid && form.nome.$dirty}">
                   <input type="text" name="nome" class="form-control" placeholder="Nome do produto"
                    ng-model="ctl.produto.nome" ng-required="true"
@@ -37,7 +37,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Código</small></dt>
+                <dt class="text-muted"><small>Código</small></dt>
                 <dd>
                   <input type="text" class="form-control" placeholder="Código do produto"
                     ng-model="ctl.produto.codigo"/>
@@ -49,7 +49,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Marca</small></dt>
+                <dt class="text-muted"><small>Marca</small></dt>
                 <dd>
                   <input type="text" class="form-control" placeholder="Marca do produto"
                     ng-model="ctl.produto.marcar"/>
@@ -58,7 +58,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Modelo</small></dt>
+                <dt class="text-muted"><small>Modelo</small></dt>
                 <dd>
                   <input type="text" class="form-control" placeholder="Modelo do produto"
                     ng-model="ctl.produto.modelo"/>
@@ -70,7 +70,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Categoria</small></dt>
+                <dt class="text-muted"><small>Categoria</small></dt>
                 <dd>
                   <input type="text" class="form-control" ng-model="ctl.produto.categoria"
                    placeholder="Categoria do produto"
@@ -80,7 +80,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Subcategoria</small></dt>
+                <dt class="text-muted"><small>Subcategoria</small></dt>
                 <dd>
                   <input type="text" class="form-control" placeholder="Subcategoria do produto"
                     ng-model="ctl.produto.subcategoria"/>
@@ -92,7 +92,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Unidade</small></dt>
+                <dt class="text-muted"><small>Unidade</small></dt>
                 <dd ng-class="{'has-error': form.unidade.$invalid}">
                   <select class="form-control" name="unidade" ng-model="ctl.produto.unidade"
                      ng-options="item as item for item in ctl.unidade" ng-required="true">
@@ -107,7 +107,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Utilizado</small></dt>
+                <dt class="text-muted"><small>Utilizado</small></dt>
                 <dd ng-class="{'has-error': form.uso.$invalid}">
                   <select class="form-control" name="uso" ng-model="ctl.produto.uso"
                      ng-options="item as item for item in ctl.uso" ng-required="true">

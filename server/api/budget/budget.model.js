@@ -25,9 +25,13 @@ var BudgetSchema = new Schema({
   dataValidade: { type: Date, required: false },
   descricao: {
     type: String, required: false, maxlength: 255 },
-  status: { type: String, enum: statusList, default: 'Rascunho' },
+  status: { type: String, required: true, enum: statusList, default: 'Rascunho' },
   valorTotal: {
     type: Number, required: true, default: 0 },
+  valorVenda: {
+    type: Number, required: true, default: 0 },
+  desconto: {
+    type: Number, required: true, default: 0, min: 0, max: 100 },
   conta: { type: Schema.Types.ObjectId, ref: 'Account' },
   contato: { type: Schema.Types.ObjectId, ref: 'Contact' },
   itens: [BudgetItemSchema],

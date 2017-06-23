@@ -18,6 +18,51 @@
         <uib-tab-heading><i class="fa fa-book" aria-hidden="true"></i> Catalogo</uib-tab-heading>
         <br/>
         <div class="row">
+          <div class="col-xs-5">
+            <dl>
+              <dt class="text-muted text-right"><small>Valor do produto</small></dt>
+              <dd>
+                <input type="text" class="form-control text-right" ng-required="true"
+                  ng-model="ctl.catalogo.valor" ui-money-mask/>
+              </dd>
+            </dl>
+          </div>
+
+          <div class="col-xs-3">
+            <dl>
+              <dt class="text-muted"><small>Medida</small></dt>
+              <dd>
+                <p ng-show="ctl.catalogo.unidade">{{ ctl.catalogo.unidadeFull }}</p>
+                <p ng-show="!ctl.catalogo.unidade">-</p>
+              </dd>
+            </dl>
+            <hr/>
+          </div>
+
+          <div class="col-xs-4">
+            <dl>
+              <dt class="text-muted text-right"><small>Total Preço Venda Itens</small></dt>
+              <dd class="text-right">
+                <label class="text-info">{{ ctl.catalogo.custo | finance:true:2 }}</label>
+              </dd>
+            </dl>
+            <hr/>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <textarea class="form-control" rows="2" placeholder="Descrição"
+              ng-model="ctl.catalogo.descricaoPreco"></textarea>
+          </div>
+        </div>
+      </uib-tab>
+
+      <uib-tab>
+        <uib-tab-heading><i class="fa fa-info-circle" aria-hidden="true"></i> Produto</uib-tab-heading>
+        <br/>
+        <div class="row">
           <div class="col-xs-6">
             <dl>
               <dt class="text-muted"><small>Código</small></dt>
@@ -30,18 +75,6 @@
           </div>
           <div class="col-xs-6">
             <dl>
-              <dt class="text-muted"><small>Valor do produto</small></dt>
-              <dd>
-                <input type="text" class="form-control text-right" ng-required="true"
-                  ng-model="ctl.catalogo.valor" ui-money-mask/>
-              </dd>
-            </dl>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-6">
-            <dl>
               <dt class="text-muted"><small>Categoria</small></dt>
               <dd>
                 <p ng-show="ctl.catalogo.categoria">{{ ctl.catalogo.categoria }}</p>
@@ -50,40 +83,7 @@
             </dl>
             <hr/>
           </div>
-          <div class="col-xs-6">
-            <dl>
-              <dt class="text-muted"><small>Preço Custo</small></dt>
-              <dd class="text-right">
-                <label class="text-info">{{ ctl.catalogo.custo | finance:true:2 }}</label>
-              </dd>
-            </dl>
-            <hr/>
-          </div>
         </div>
-
-        <div class="row">
-          <div class="col-xs-6">
-            <dl>
-              <dt class="text-muted"><small>Subcategoria</small></dt>
-              <dd>
-                <p ng-show="ctl.catalogo.subcategoria">{{ ctl.catalogo.subcategoria }}</p>
-                <p ng-show="!ctl.catalogo.subcategoria">-</p>
-              </dd>
-            </dl>
-            <hr/>
-          </div>
-          <div class="col-xs-6">
-            <dl>
-              <dt class="text-muted"><small>Unidade</small></dt>
-              <dd>
-                <p ng-show="ctl.catalogo.unidade">{{ ctl.catalogo.unidade }}</p>
-                <p ng-show="!ctl.catalogo.unidade">-</p>
-              </dd>
-            </dl>
-            <hr/>
-          </div>
-        </div>
-
         <div class="row">
           <div class="col-xs-6">
             <dl>
@@ -96,13 +96,17 @@
             </dl>
             <hr/>
           </div>
+          <div class="col-xs-6">
+            <dl>
+              <dt class="text-muted"><small>Subcategoria</small></dt>
+              <dd>
+                <p ng-show="ctl.catalogo.subcategoria">{{ ctl.catalogo.subcategoria }}</p>
+                <p ng-show="!ctl.catalogo.subcategoria">-</p>
+              </dd>
+            </dl>
+            <hr/>
+          </div>
         </div>
-
-      </uib-tab>
-
-      <uib-tab>
-        <uib-tab-heading><i class="fa fa-info-circle" aria-hidden="true"></i> Informações</uib-tab-heading>
-        <br/>
         <div class="row">
           <div class="col-xs-6">
             <dl>

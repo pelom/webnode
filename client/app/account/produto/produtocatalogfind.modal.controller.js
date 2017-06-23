@@ -22,11 +22,10 @@ export default class ProdutoCatalogFindModalController {
   int($scope) {
     this.produtos = [];
     this.produtosAll = [];
-    this.select = -1;
     this.search = '';
 
     let isToken = () => this.search && this.search.length > 2;
-    let findAcc = () => {
+    let findCatalog = () => {
       this.ProdutoService.loadCatalogoList({
         searchFull: this.search,
         price: true,
@@ -40,10 +39,8 @@ export default class ProdutoCatalogFindModalController {
     };
 
     $scope.$watch('ctl.search', () => {
-      this.select = -1;
-
       if(isToken()) {
-        findAcc();
+        findCatalog();
       } else {
         this.produtos = this.produtosAll;
       }
@@ -51,15 +48,21 @@ export default class ProdutoCatalogFindModalController {
   }
 
   selectProduct() {
-    if(this.select == -1) {
+    let selectList = this.getSelect();
+    if(selectList.length == 0) {
       return;
     }
 
-    let prd = this.produtos[this.select];
-    this.toastr.success('Produto selecionada', `${prd.nome}`);
-    this.ProdutoService.getModalCtl().onSelectProduct(prd);
+    this.toastr.success('Produto selecionado', `Total de ${selectList.length} produtos`);
+    this.ProdutoService.getModalCtl().onSelectProduct(selectList);
   }
 
+  isSelect() {
+    return this.getSelect().length != 0;
+  }
+  getSelect() {
+    return this.produtos.filter(item => item.check === true);
+  }
   close() {
     this.ProdutoService.getModalCtl().onClose();
   }

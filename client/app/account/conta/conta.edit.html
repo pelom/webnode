@@ -22,7 +22,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Nome da conta</small></dt>
+                <dt class="text-muted"><small>Nome da conta</small></dt>
                 <dd ng-class="{'has-error': form.nome.$invalid && form.nome.$dirty}">
                   <input type="text" name="nome" class="form-control" placeholder="Nome da conta"
                    ng-model="ctl.conta.nome" ng-required="true"
@@ -40,14 +40,12 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt>
-                  <label class="radio-inline">
+                <dt class="text-muted"><label class="radio-inline">
                     <input type="radio" ng-model="ctl.conta.iden" ng-click="ctl.updateMask()"
                       value="cpf" name="optradio" ng-disabled="ctl.conta.numIden">CPF</label>
-
-                  <label class="radio-inline">
-                    <input type="radio" ng-model="ctl.conta.iden" ng-click="ctl.updateMask()"
-                      value="cnpj" name="optradio" ng-disabled="ctl.conta.numIden">CNPJ</label>
+                    <label class="radio-inline">
+                      <input type="radio" ng-model="ctl.conta.iden" ng-click="ctl.updateMask()"
+                        value="cnpj" name="optradio" ng-disabled="ctl.conta.numIden">CNPJ</label>
                 </dt>
                 <dd ng-class="{'has-error': (form.numIden.$error.mask || form.numIden.$error.cnpj || form.numIden.$error.cpf)}">
                   <input type="text" class="form-control" name="numIden"
@@ -63,7 +61,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Telefone</small></dt>
+                <dt class="text-muted"><small>Telefone</small></dt>
                 <dd>
                   <input type="text" class="form-control"
                     ng-model="ctl.conta.telefone" ui-mask="(99) 9999-9999"/>
@@ -72,7 +70,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Origem</small></dt>
+                <dt class="text-muted"><small>Origem</small></dt>
                 <dd ng-class="{'has-error': form.origem.$invalid}">
                   <select class="form-control" name="origem" ng-model="ctl.conta.origem"
                      ng-options="item as item for item in ctl.origem">
@@ -87,7 +85,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Setor</small></dt>
+                <dt class="text-muted"><small>Setor</small></dt>
                 <dd ng-class="{'has-error': form.setor.$invalid}">
                   <select class="form-control" name="setor" ng-model="ctl.conta.setor"
                      ng-options="item as item for item in ctl.setor">
@@ -108,7 +106,7 @@
           <div class="row" ng-if="ctl.conta._id">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Criado</small></dt>
+                <dt class="text-muted"><small>Criado</small></dt>
                 <dd>
                   <small>{{ ctl.conta.createdAt | date:'dd/MM/yyyy HH:mm' }} por
                   <strong>{{ctl.conta.criador.nome}} {{ctl.conta.criador.sobrenome}}</strong>
@@ -118,7 +116,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Modificado</small></dt>
+                <dt class="text-muted"><small>Modificado</small></dt>
                 <dd>
                   <small>{{ ctl.conta.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
                   <strong>{{ ctl.conta.modificador.nome}} {{ ctl.conta.modificador.sobrenome}}</strong>

@@ -22,7 +22,7 @@
             <div class="row">
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Status</small></dt>
+                  <dt class="text-muted"><small>Status</small></dt>
                   <dd ng-class="{'has-error': form.status.$invalid}">
                     <select class="form-control" name="status" ng-model="ctl.lead.status"
                        ng-options="item as item for item in ctl.status"
@@ -37,7 +37,7 @@
               </div>
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Origem</small></dt>
+                  <dt class="text-muted"><small>Origem</small></dt>
                   <dd ng-class="{'has-error': form.origem.$invalid}">
                     <select class="form-control" name="origem" ng-model="ctl.lead.origem"
                        ng-options="item as item for item in ctl.origem"
@@ -54,7 +54,7 @@
             <div class="row">
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Nome</small></dt>
+                  <dt class="text-muted"><small>Nome</small></dt>
                   <dd ng-class="{'has-error': form.nome.$invalid && form.nome.$dirty}">
                     <input type="text" name="nome" class="form-control" placeholder="Nome"
                      ng-model="ctl.lead.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
@@ -72,7 +72,7 @@
               </div>
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Sobrenome</small></dt>
+                  <dt class="text-muted"><small>Sobrenome</small></dt>
                   <dd ng-class="{'has-error': form.sobrenome.$invalid && form.sobrenome.$dirty}">
                     <input type="text" name="sobrenome" class="form-control" placeholder="Sobrenome"
                      ng-model="ctl.lead.sobrenome" ng-required="true" ng-minlength="3" ng-maxlength="40"
@@ -93,7 +93,7 @@
             <div class="row">
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Email</small></dt>
+                  <dt class="text-muted"><small>Email</small></dt>
                   <dd ng-class="{'has-error': (form.email.$invalid && form.email.$dirty) || (form.email.$error.mongoose)}">
                     <input type="email" name="email" class="form-control"
                       placeholder="email@email.com" ng-disabled="!ctl.isEdit()"
@@ -110,7 +110,7 @@
                 </dl>
               </div>
               <div class="col-sm-6">
-                <dt><small>Celular</small></dt>
+                <dt class="text-muted"><small>Celular</small></dt>
                 <dd>
                   <input type="text" class="form-control" ng-disabled="!ctl.isEdit()"
                     ng-model="ctl.lead.celular" ui-mask="(99) 9? 9999-9999"/>
@@ -120,7 +120,7 @@
             <div class="row">
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Empresa</small></dt>
+                  <dt class="text-muted"><small>Empresa</small></dt>
                   <dd>
                     <input type="text" class="form-control"
                       placeholder="Nome da empresa" ng-disabled="!ctl.isEdit()"
@@ -130,7 +130,7 @@
               </div>
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Telefone</small></dt>
+                  <dt class="text-muted"><small>Telefone</small></dt>
                   <dd>
                     <input type="text" class="form-control" ng-disabled="!ctl.isEdit()"
                       ng-model="ctl.lead.telefone" ui-mask="(99) 9999-9999"/>
@@ -142,7 +142,7 @@
             <div class="row">
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Produto Interresse</small></dt>
+                  <dt class="text-muted"><small>Produto Interresse</small></dt>
                   <dd ng-class="{'has-error': form.produto.$invalid}">
                     <select class="form-control" name="produto" ng-model="ctl.lead.produto"
                        ng-options="item as item for item in ctl.produto" ng-disabled="!ctl.isEdit()">
@@ -153,7 +153,7 @@
               </div>
               <div class="col-sm-6">
                 <dl>
-                  <dt>
+                  <dt class="text-muted">
                     <label class="radio-inline">
                       <input type="radio" ng-model="ctl.lead.iden" ng-click="ctl.updateMask()"
                         value="cpf" name="optradio" ng-disabled="ctl.lead.cpfCnpj && !ctl.isEdit()">CPF</label>
@@ -173,7 +173,7 @@
             <div class="row">
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Titulo</small></dt>
+                  <dt class="text-muted"><small>Titulo</small></dt>
                   <dd>
                     <input type="text" class="form-control"
                       ng-model="ctl.lead.titulo" ng-disabled="!ctl.isEdit()"/>
@@ -182,7 +182,7 @@
               </div>
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Setor</small></dt>
+                  <dt class="text-muted"><small>Setor</small></dt>
                   <dd ng-class="{'has-error': form.setor.$invalid}">
                     <select class="form-control" name="setor" ng-model="ctl.lead.setor"
                        ng-options="item as item for item in ctl.setor" ng-disabled="!ctl.isEdit()">
@@ -205,7 +205,7 @@
             <div class="row" ng-if="ctl.lead._id">
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Criado</small></dt>
+                  <dt class="text-muted"><small>Criado</small></dt>
                   <dd>
                     <small>{{ ctl.lead.createdAt | date:'dd/MM/yyyy HH:mm' }} por
                     <strong>{{ctl.lead.criador.nome}} {{ctl.lead.criador.sobrenome}}</strong>
@@ -215,7 +215,7 @@
               </div>
               <div class="col-sm-6">
                 <dl>
-                  <dt><small>Modificado</small></dt>
+                  <dt class="text-muted"><small>Modificado</small></dt>
                   <dd>
                     <small>{{ ctl.lead.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
                     <strong>{{ ctl.lead.modificador.nome}} {{ ctl.lead.modificador.sobrenome}}</strong>

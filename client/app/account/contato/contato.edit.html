@@ -21,7 +21,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Nome</small></dt>
+                <dt class="text-muted"><small>Nome</small></dt>
                 <dd ng-class="{'has-error': form.nome.$invalid && form.nome.$dirty}">
                   <input type="text" name="nome" class="form-control" placeholder="Nome"
                    ng-model="ctl.contato.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
@@ -39,7 +39,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Sobrenome</small></dt>
+                <dt class="text-muted"><small>Sobrenome</small></dt>
                 <dd ng-class="{'has-error': form.sobrenome.$invalid && form.sobrenome.$dirty}">
                   <input type="text" name="sobrenome" class="form-control" placeholder="Sobrenome"
                    ng-model="ctl.contato.sobrenome" ng-required="true" ng-minlength="3" ng-maxlength="40"
@@ -59,7 +59,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Email</small></dt>
+                <dt class="text-muted"><small>Email</small></dt>
                 <dd ng-class="{'has-error': (form.email.$invalid && form.email.$dirty) || (form.email.$error.mongoose)}">
                   <input type="email" name="email" class="form-control"
                     placeholder="email@email.com"
@@ -76,7 +76,7 @@
               </dl>
             </div>
             <div class="col-sm-6">
-              <dt><small>Celular</small></dt>
+              <dt class="text-muted"><small>Celular</small></dt>
               <dd>
                 <input type="text" class="form-control"
                   ng-model="ctl.contato.celular" ui-mask="(99) 9? 9999-9999"/>
@@ -87,7 +87,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Data de Nascimento</small></dt>
+                <dt class="text-muted"><small>Data de Nascimento</small></dt>
                 <dd ng-class="{'has-error': form.dataNascimento.$invalid}">
                   <p class="input-group">
                     <input type="text" class="form-control" name="dataNascimento"
@@ -107,7 +107,7 @@
 
             <div class="col-sm-6">
               <dl>
-                <dt><small>Telefone</small></dt>
+                <dt class="text-muted"><small>Telefone</small></dt>
                 <dd>
                   <input type="text" class="form-control"
                     ng-model="ctl.contato.telefone" ui-mask="(99) 9999-9999"/>
@@ -119,7 +119,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Titulo</small></dt>
+                <dt class="text-muted"><small>Titulo</small></dt>
                 <dd>
                   <input type="text" class="form-control"
                     ng-model="ctl.contato.titulo"/>
@@ -129,7 +129,7 @@
 
             <div class="col-sm-6">
               <dl>
-                <dt><small>Cargo</small></dt>
+                <dt class="text-muted"><small>Cargo</small></dt>
                 <dd>
                   <input type="text" class="form-control"
                     ng-model="ctl.contato.cargo"/>
@@ -140,7 +140,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Conta <i ng-show="ctl.contato.conta._id">*</i></small></dt>
+                <dt class="text-muted"><small>Conta <i ng-show="ctl.contato.conta._id">*</i></small></dt>
                 <dd>
                   <p class="input-group">
 
@@ -169,7 +169,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Origem</small></dt>
+                <dt class="text-muted"><small>Origem</small></dt>
                 <dd>
                   <select class="form-control" name="origem" ng-model="ctl.contato.origem"
                      ng-options="item as item for item in ctl.origem">
@@ -191,7 +191,7 @@
           <div class="row" ng-if="ctl.contato._id">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Criado</small></dt>
+                <dt class="text-muted"><small>Criado</small></dt>
                 <dd>
                   <small>{{ ctl.contato.createdAt | date:'dd/MM/yyyy HH:mm' }} por
                   <strong>{{ctl.contato.criador.nome}} {{ctl.contato.criador.sobrenome}}</strong>
@@ -201,7 +201,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Modificado</small></dt>
+                <dt class="text-muted"><small>Modificado</small></dt>
                 <dd>
                   <small>{{ ctl.contato.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
                   <strong>{{ ctl.contato.modificador.nome}} {{ ctl.contato.modificador.sobrenome}}</strong>

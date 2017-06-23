@@ -41,16 +41,19 @@ export function OrcamentoService(OrcamentoResource, Util) {
         return safeCb(callback)(err);
       }).$promise;
     },
-    saveProduto(newOrcamento, callback) {
+    saveOrcamento(newOrcamento, callback) {
       let orcamento = {
         _id: newOrcamento._id,
         nome: newOrcamento.nome,
         descricao: newOrcamento.descricao,
+        status: newOrcamento.status,
         contato: newOrcamento.contato,
         conta: newOrcamento.conta,
         itens: newOrcamento.itens,
         dataValidade: newOrcamento.dataValidade,
         valorTotal: newOrcamento.valorTotal,
+        valorVenda: newOrcamento.valorVenda,
+        desconto: newOrcamento.desconto,
       };
 
       if(angular.isUndefined(orcamento._id)) {

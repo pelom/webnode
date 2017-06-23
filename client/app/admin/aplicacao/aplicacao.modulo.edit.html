@@ -16,7 +16,7 @@
         <div class="row">
           <div class="col-md-12">
             <dl>
-              <dt><small>Nome do modulo</small></dt>
+              <dt class="text-muted"><small>Nome do modulo</small></dt>
               <dd ng-class="{'has-error': form.nomeMod.$invalid && form.nomeMod.$dirty}">
                 <input type="text" class="form-control" placeholder="Digite um nome"
                  name="nomeMod" ng-model="ctl.modulo.nome"
@@ -75,7 +75,7 @@
         <div class="row">
           <div class="col-sm-6">
             <dl>
-              <dt><small>Situação</small></dt>
+              <dt class="text-muted"><small>Situação</small></dt>
               <dd>
                 <select class="form-control" ng-model="ctl.modulo.isAtivo"
                  ng-options="item.value as item.name for item in ctl.itemAtivo"></select>
@@ -90,7 +90,7 @@
         <div class="row">
           <div class="col-sm-6" ng-repeat='(key, value) in ctl.modulo.property'>
             <dl>
-              <dt><small>{{key}}</small></dt>
+              <dt class="text-muted"><small>{{key}}</small></dt>
               <dd ng-if="key != 'password'">
                 <input type="text" class="form-control" placeholder="Digite um nome"
                  name="{{key}}" ng-model="ctl.modulo.property[key]"/>
@@ -108,14 +108,14 @@
     <div class="row" ng-if="ctl.modulo._id">
       <div class="col-xs-6">
         <dl>
-          <dt><small>Criado</small></dt>
+          <dt class="text-muted"><small>Criado</small></dt>
           <dd><small>{{ ctl.modulo.createdAt | date:'dd/MM/yyyy HH:mm' }} por
             <strong>{{ctl.modulo.criador.nome}} {{ctl.modulo.criador.sobrenome}}</strong></small></dd>
         </dl>
       </div>
       <div class="col-xs-6">
         <dl>
-          <dt><small>Modificado</small></dt>
+          <dt class="text-muted"><small>Modificado</small></dt>
           <dd><small>{{ ctl.modulo.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
             <strong>{{ctl.modulo.modificador.nome}} {{ctl.modulo.modificador.sobrenome}}</strong></small></dd>
         </dl>

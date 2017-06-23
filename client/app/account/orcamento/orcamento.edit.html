@@ -7,7 +7,7 @@
     <span spinner-key="spinner-1" spinner-start-active="true"
       us-spinner="{ radius: 24, width: 8, length: 16 }"/>
 
-    <form class="form" name="form" novalidate ng-submit="ctl.save(form)">
+    <form class="form" name="form" novalidate ng-submit="ctl.saveOrcamento(form)">
 
       <div class="panel panel-default">
         <div class="panel-body">
@@ -17,40 +17,14 @@
             &nbsp;<small>({{ctl.orcamento.status}})</small>
           </h4>
           <hr/>
+
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Status</small></dt>
-                <dd ng-class="{'has-error': form.status.$invalid}">
-                  <select class="form-control" name="status" ng-model="ctl.orcamento.status"
-                     ng-options="item as item for item in ctl.status"
-                     ng-required="true">
-                     <option value="" ng-if="!ctl.orcamento.status">-- Nenhum --</option>
-                  </select>
-                  <p class="help-block"
-                    ng-show="form.status.$error.required">
-                    O status é necessário</p>
-                </dd>
-              </dl>
-            </div>
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>Valor</small></dt>
-                <dd>
-                  <input type="text" class="form-control text-right"
-                    ng-model="ctl.orcamento.valorTotal" ui-money-mask/>
-                </dd>
-              </dl>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-6">
-              <dl>
-                <dt><small>Nome do orçamento</small></dt>
+                <dt class="text-muted"><small>Nome do orçamento</small></dt>
                 <dd ng-class="{'has-error': form.nome.$invalid && form.nome.$dirty}">
                   <input type="text" name="nome" class="form-control" placeholder="Nome"
-                   ng-model="ctl.orcamento.nome" ng-required="true" ng-minlength="3" ng-maxlength="100"
-                    nomevalido="false"/>
+                   ng-model="ctl.orcamento.nome" ng-required="true" ng-minlength="3" ng-maxlength="100"/>
 
                   <p class="help-block"
                     ng-show="form.nome.$error.required && form.nome.$dirty">
@@ -64,7 +38,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Data de Validade</small></dt>
+                <dt class="text-muted"><small>Data de Validade</small></dt>
                 <dd ng-class="{'has-error': form.dataValidade.$invalid}">
                   <p class="input-group">
                     <input type="text" class="form-control" name="dataValidade"
@@ -86,7 +60,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Conta <i ng-show="ctl.orcamento.conta._id">*</i></small></dt>
+                <dt class="text-muted"><small>Conta <i ng-show="ctl.orcamento.conta._id">*</i></small></dt>
                 <dd>
                   <p class="input-group">
 
@@ -116,7 +90,7 @@
 
             <div class="col-sm-6">
               <dl>
-                <dt><small>Contato <i ng-show="ctl.orcamento.contato._id">*</i></small></dt>
+                <dt class="text-muted"><small>Contato <i ng-show="ctl.orcamento.contato._id">*</i></small></dt>
                 <dd>
                   <p class="input-group">
 
@@ -145,17 +119,65 @@
             </div>
 
           </div>
-
           <div class="row">
-            <div class="col-md-12">
-              <textarea class="form-control" rows="3" placeholder="Descrição"
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Status</small></dt>
+                <dd ng-class="{'has-error': form.status.$invalid}">
+                  <select class="form-control" name="status" ng-model="ctl.orcamento.status"
+                     ng-options="item as item for item in ctl.status"
+                     ng-required="true">
+                     <option value="" ng-if="!ctl.orcamento.status">-- Nenhum --</option>
+                  </select>
+                  <p class="help-block"
+                    ng-show="form.status.$error.required">
+                    O status é necessário</p>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <textarea class="form-control" rows="2" placeholder="Descrição"
                 ng-model="ctl.orcamento.descricao"></textarea>
             </div>
           </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Valor Venda</small></dt>
+                <dd>
+                  <input type="text" class="form-control text-right" ng-disabled="true"
+                    style="background-color: #FFF;"
+                    ng-model="ctl.orcamento.valorVenda" ui-money-mask/>
+                </dd>
+              </dl>
+            </div>
+          </div>
 
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Desconto</small></dt>
+                <dd>
+                  <input type="text" class="form-control text-right" ng-disabled="true"
+                    style="background-color: #FFF;"
+                    ng-model="ctl.orcamento.desconto" ui-percentage-mask/>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Valor Total</small></dt>
+                <dd class="text-right">
+                  <input type="text" class="form-control text-right" ng-disabled="true"
+                    style="background-color: #FFF;"
+                    ng-model="ctl.orcamento.valorTotal" ui-money-mask/>
+                </dd>
+              </dl>
+            </div>
+          </div>
           <br/>
-          <br/>
-
           <h4>
             <i class="fa fa-puzzle-piece fa-2x" aria-hidden="true"></i>
             &nbsp;<label>Itens do orçamento</label>
@@ -176,9 +198,9 @@
                 <tr>
                   <th></th>
                   <th><small>Nome do produto</small></th>
-                  <th class="text-right"><small>Preço Vende</small></th>
+                  <th class="text-right"><small>Preço Venda</small></th>
                   <th><small></small></th>
-                  <th class="text-right"><small>Valor Vende</small></th>
+                  <th class="text-right"><small>Valor Venda</small></th>
                   <th class="text-right"><small>Quantidade</small></th>
                   <th class="text-right"><small>Desconto</small></th>
                   <th class="text-right"><small>Valor Total</small></th>
@@ -186,7 +208,8 @@
               </thead>
               <tbody>
                 <tr ng-repeat="pdt in ctl.orcamento.itens">
-                  <td><a href="#" ng-click="ctl.excluirSub(pdt._id)" title="Excluír item">
+
+                  <td><a href="#" ng-click="ctl.removeOrcamentoItem(pdt.produto._id)" title="Excluír item">
                     <i class="fa fa-trash" aria-hidden="true"></i></a></td>
                   <td><a href="#" ng-click="ctl.openModalOrcamentoItem(pdt)">
                     <small>{{ pdt.produto.nome }}</small></a>

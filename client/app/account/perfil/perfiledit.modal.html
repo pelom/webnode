@@ -19,7 +19,7 @@
         <div class="row">
           <div class="col-xs-6">
             <dl>
-              <dt><small>Nome</small></dt>
+              <dt class="text-muted"><small>Nome</small></dt>
               <dd ng-class="{'has-error': form.dateStart.$invalid}">
                 <input type="text" class="form-control" name="nome"
                   ng-model="ctl.meProfile.nome"/>
@@ -28,7 +28,7 @@
           </div>
           <div class="col-xs-6">
             <dl ng-show="!ctl.event.allDay">
-              <dt><small>Sobrenome</small></dt>
+              <dt class="text-muted"><small>Sobrenome</small></dt>
               <dd>
                 <input type="text" class="form-control" name="sobrenome"
                   ng-model="ctl.meProfile.sobrenome"/>
@@ -39,7 +39,7 @@
         <div class="row">
           <div class="col-sm-6">
             <dl>
-              <dt><small>Email</small></dt>
+              <dt class="text-muted"><small>Email</small></dt>
               <dd ng-class="{'has-error': (form.email.$invalid && form.email.$dirty) || (form.email.$error.mongoose)}">
                 <input type="email" name="email" class="form-control"
                   placeholder="email@email.com"
@@ -56,7 +56,7 @@
             </dl>
           </div>
           <div class="col-xs-6">
-            <dt><small>Celular</small></dt>
+            <dt class="text-muted"><small>Celular</small></dt>
             <dd>
               <input type="text" class="form-control"
                 ng-model="ctl.meProfile.celular" ui-mask="(99) 9? 9999-9999"/>
@@ -66,7 +66,7 @@
         <div class="row">
           <div class="col-sm-6">
             <dl>
-              <dt><small>Empresa</small></dt>
+              <dt class="text-muted"><small>Empresa</small></dt>
               <dd>
                 <input type="text" class="form-control"
                   ng-model="ctl.meProfile.empresa"/>
@@ -81,7 +81,7 @@
         <div class="row">
           <div class="col-sm-6">
             <dl>
-              <dt><small>Endereço</small></dt>
+              <dt class="text-muted"><small>Endereço</small></dt>
               <dd>
                 <input class="form-control"
                  placeholder="Rua, Avenida, Travessa etc"
@@ -91,7 +91,7 @@
           </div>
           <div class="col-sm-6">
             <dl>
-              <dt><small>CEP</small></dt>
+              <dt class="text-muted"><small>CEP</small></dt>
               <dd>
                 <input class="form-control"
                  ui-mask="99999-999"
@@ -101,7 +101,7 @@
           </div>
           <div class="col-sm-6">
             <dl>
-              <dt><small>Complemento</small></dt>
+              <dt class="text-muted"><small>Complemento</small></dt>
               <dd>
                 <input class="form-control" placeholder="Casa, Apartamento etc"
                  ng-model="ctl.meProfile.endereco.complement" />
@@ -110,7 +110,7 @@
           </div>
           <div class="col-sm-6">
             <dl>
-              <dt><small>Bairro</small></dt>
+              <dt class="text-muted"><small>Bairro</small></dt>
               <dd>
                 <input class="form-control"
                  ng-model="ctl.meProfile.endereco.suburb" />
@@ -121,7 +121,7 @@
         <div class="row">
           <div class="col-sm-3">
             <dl>
-              <dt><small>Número</small></dt>
+              <dt class="text-muted"><small>Número</small></dt>
               <dd>
                 <input class="form-control"
                  placeholder="Número"
@@ -131,7 +131,7 @@
           </div>
           <div class="col-sm-3">
             <dl>
-              <dt><small>Cidade</small></dt>
+              <dt class="text-muted"><small>Cidade</small></dt>
               <dd>
                 <input class="form-control"
                  ng-model="ctl.meProfile.endereco.city" />
@@ -140,7 +140,7 @@
           </div>
           <div class="col-sm-3">
             <dl>
-              <dt><small>Estado</small></dt>
+              <dt class="text-muted"><small>Estado</small></dt>
               <dd>
                 <input class="form-control"
                  ng-model="ctl.meProfile.endereco.state" />
@@ -149,7 +149,7 @@
           </div>
           <div class="col-sm-3">
             <dl>
-              <dt><small>País</small></dt>
+              <dt class="text-muted"><small>País</small></dt>
               <dd>
                 <input class="form-control"
                  placeholder="País"

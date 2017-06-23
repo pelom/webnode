@@ -35,6 +35,8 @@ var ProductPriceSchema = new Schema({
   valor: { type: Number, required: true },
   data: { type: Date, required: true, default: Date.now },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  descricao: {
+    type: String, required: false, maxlength: 255 },
 });
 
 var ProductSchema = new Schema({

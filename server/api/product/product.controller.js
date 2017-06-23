@@ -141,7 +141,7 @@ const selectCatalog = '_id nome codigo categoria subcategoria descricao'
 
 const populationPrice = {
   path: 'precos',
-  select: '_id valor data',
+  select: '_id valor data descricao',
   options: {
     limit: 10
   }
@@ -163,8 +163,16 @@ export function indexCatalog(req, res) {
       { nome: { $in: reg } },
     ];
   } else if(req.query.searchFull) {
+    let regexs = [];
+    let searchs = req.query.searchFull.split(' ');
+    searchs.forEach(item => {
+      if(item.trim().length > 2) {
+        var regFull = new RegExp(item, 'i');
+        regexs.push(regFull);
+      }
+    });
     where.$or = [
-      { nome: { $in: new RegExp(`${req.query.searchFull}`, 'i') } },
+      { nome: { $in: regexs } },
     ];
   }
 
@@ -198,6 +206,7 @@ export function addprice(req, res) {
   let productPrice = {
     valor: req.body.valor,
     user: req.user._id,
+    descricao: req.body.descricao,
   };
   Product.findByIdAndUpdate(req.params.id,
     { $push: { precos: { $each: [productPrice], $sort: { data: -1 } } }},

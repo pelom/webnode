@@ -28,20 +28,6 @@ const populationContato = {
 };
 
 export function index(req, res) {
-  // let orca = new Budget({
-  //   nome: 'Nome do orçamento',
-  //   dataValidade: new Date(),
-  //   descricao: 'Descriao do prçamento',
-  //   conta: '5946f3263e44a8376ec36857',
-  //   contato: '5946f3263e44a8376ec36859',
-  //   itens: [{
-  //     produto: '594872cfd426ca013b7b7ddc',
-  //     valor: 3.1415,
-  //     valorTotal: 3.1415,
-  //     valorCatalogo: 5.9,
-  //   }],
-  // });
-  // orca.save();
   return api.find({
     model: 'Budget',
     select: selectIndex,
@@ -67,8 +53,8 @@ function buildWhere(req) {
   };
 }
 
-const selectShow = '_id nome dataValidade descricao status valorTotal'
-  + ' conta contato criador modificador createdAt updatedAt itens';
+const selectShow = '_id nome dataValidade descricao status valorTotal valorVenda'
+  + ' desconto conta contato criador modificador createdAt updatedAt itens';
 
 const populationProduto = {
   path: 'itens.produto',
@@ -116,18 +102,19 @@ function callbackCreateBudget(req, res) {
 
 export function update(req, res) {
   let budgetJson = requestUpdateBudget(req);
-
-  if(budgetJson.conta.length == 0) {
+  console.log(budgetJson);
+  if(budgetJson.conta && budgetJson.conta.length == 0) {
     budgetJson.conta = null;
-  } else if(budgetJson.conta._id) {
+  } else if(budgetJson.conta && budgetJson.conta._id) {
     budgetJson.conta = req.body.conta._id;
   }
 
-  if(budgetJson.contato.length == 0) {
+  if(budgetJson.contato && budgetJson.contato.length == 0) {
     budgetJson.contato = null;
-  } else if(budgetJson.contato._id) {
+  } else if(budgetJson.contato && budgetJson.contato._id) {
     budgetJson.contato = req.body.contato._id;
   }
+
   Budget.findByIdAndUpdate(req.params.id, budgetJson)
     .then(handleEntityNotFound(res))
     .then(budget => {
@@ -145,6 +132,8 @@ function requestUpdateBudget(req) {
     dataValidade: req.body.dataValidade,
     status: req.body.status,
     valorTotal: req.body.valorTotal,
+    valorVenda: req.body.valorVenda,
+    desconto: req.body.desconto,
     itens: req.body.itens,
     conta: req.body.conta,
     contato: req.body.contato,

@@ -24,7 +24,7 @@
         <div class="row">
           <div class="col-md-12">
             <dl>
-              <dt><small>Título</small></dt>
+              <dt class="text-muted"><small>Título</small></dt>
               <dd ng-class="{'has-error': form.nomeMod.$invalid}">
                 <input type="text" class="form-control" placeholder="Digite um nome"
                  name="nomeMod" ng-model="ctl.event.title" ng-disabled="!ctl.isEdit"
@@ -45,7 +45,7 @@
 
         <div class="row">
           <div class="col-xs-6">
-            <dt><small>Assunto</small></dt>
+            <dt class="text-muted"><small>Assunto</small></dt>
             <dd>
               <input type="text" class="form-control" placeholder="Digite o assunto"
                name="subject" ng-model="ctl.event.subject" ng-disabled="!ctl.isEdit"
@@ -53,7 +53,7 @@
             </dd>
           </div>
             <div class="col-xs-6">
-              <dt><small>Tipo</small></dt>
+              <dt class="text-muted"><small>Tipo</small></dt>
               <dd>
                 <input type="text" class="form-control"
                  ng-model="ctl.event.type" ng-disabled="true"/>
@@ -64,7 +64,7 @@
         <div class="row">
           <div class="col-xs-6">
             <dl>
-              <dt><small>Data</small></dt>
+              <dt class="text-muted"><small>Data</small></dt>
               <dd ng-class="{'has-error': form.dateStart.$invalid && form.dateStart.$dirty}">
                 <p class="input-group">
                   <input type="text" class="form-control" name="dateStart"
@@ -91,7 +91,7 @@
           </div>
           <div class="col-xs-6">
             <dl ng-show="!ctl.event.allDay">
-              <dt><small>Horário</small></dt>
+              <dt class="text-muted"><small>Horário</small></dt>
               <dd>
                 <div uib-timepicker ng-model="ctl.event.start" readonly-input="!ctl.isEdit"
                   hour-step="ctl.hstep" minute-step="ctl.mstep" show-meridian="false" show-spinners="false"></div>
@@ -103,7 +103,7 @@
         <div class="row" ng-if="ctl.event.type !== 'Activity'">
           <div class="col-xs-6">
             <dl>
-              <dt><small>Data Término</small></dt>
+              <dt class="text-muted"><small>Data Término</small></dt>
               <dd ng-class="{'has-error': form.dateEnd.$invalid}">
                 <p class="input-group">
                   <input type="text" class="form-control" name="dateEnd"
@@ -124,7 +124,7 @@
           </div>
           <div class="col-xs-6">
             <dl ng-show="!ctl.event.allDay">
-              <dt><small>Horário Término</small></dt>
+              <dt class="text-muted"><small>Horário Término</small></dt>
               <dd>
                 <div uib-timepicker ng-model="ctl.event.end" readonly-input="!ctl.isEdit"
                   hour-step="ctl.hstep" minute-step="ctl.mstep"
@@ -137,14 +137,14 @@
         <div class="row" ng-if="ctl.event._id">
           <div class="col-xs-6">
             <dl>
-              <dt><small>Criado</small></dt>
+              <dt class="text-muted"><small>Criado</small></dt>
               <dd><small>{{ ctl.event.createdAt | date:'dd/MM/yyyy HH:mm' }} por
                 <strong>{{ctl.event.criador.nome}} {{ctl.event.criador.sobrenome}}</strong></small></dd>
             </dl>
           </div>
           <div class="col-xs-6">
             <dl>
-              <dt><small>Modificado</small></dt>
+              <dt class="text-muted"><small>Modificado</small></dt>
               <dd><small>{{ ctl.event.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
                 <strong>{{ctl.event.modificador.nome}} {{ctl.event.modificador.sobrenome}}</strong></small></dd>
             </dl>
@@ -157,7 +157,7 @@
         <div class="row">
           <div class="col-sm-6">
             <dl>
-              <dt><small>Status</small></dt>
+              <dt class="text-muted"><small>Status</small></dt>
               <dd>
                 <select class="form-control" ng-model="ctl.event.status" ng-disabled="!ctl.isEdit"
                  ng-options="item as item for item in ctl.status"></select>
@@ -166,7 +166,7 @@
           </div>
           <div class="col-sm-6">
             <dl>
-              <dt><small>Prioridade</small></dt>
+              <dt class="text-muted"><small>Prioridade</small></dt>
               <dd>
                 <select class="form-control" ng-model="ctl.event.prioridade" ng-disabled="!ctl.isEdit"
                  ng-options="item as item for item in ctl.prioridade"></select>
@@ -184,7 +184,7 @@
         <div class="row">
           <div class="col-md-12">
             <dl>
-              <dt><small>Local</small></dt>
+              <dt class="text-muted"><small>Local</small></dt>
               <dd>
                 <input type="text" class="form-control" name="local"
                   ng-model="ctl.event.local" ng-disabled="!ctl.isEdit"/>
@@ -211,7 +211,7 @@
         <div class="row">
           <div class="col-xs-6">
             <dl>
-              <dt><small>Proprietário</small></dt>
+              <dt class="text-muted"><small>Proprietário</small></dt>
               <dd><small>{{ctl.event.proprietario.nome}} {{ctl.event.proprietario.sobrenome}}</small></dd>
             </dl>
           </div>

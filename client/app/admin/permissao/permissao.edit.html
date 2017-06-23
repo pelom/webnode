@@ -21,7 +21,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Nome do perfil</small></dt>
+                <dt class="text-muted"><small>Nome do perfil</small></dt>
                 <dd ng-class="{'has-error': formProfile.profileNome.$invalid && formProfile.profileNome.$dirty}">
                   <input type="text" name="profileNome" class="form-control" placeholder="Nome perfil"
                    ng-model="ctl.profile.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
@@ -39,7 +39,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Papel do perfil</small></dt>
+                <dt class="text-muted"><small>Papel do perfil</small></dt>
                 <dd>
                   <select class="form-control" ng-model="ctl.profile.role"
                     ng-disabled="ctl.profile._id"
@@ -65,7 +65,7 @@
           <div class="row" ng-if="ctl.profile._id">
             <div class="col-sm-6">
               <dl >
-                <dt><small>Situação</small></dt>
+                <dt class="text-muted"><small>Situação</small></dt>
                 <dd>
                   <select class="form-control" ng-model="ctl.profile.isAtivo"
                    ng-options="item.value as item.name for item in ctl.situacao"></select>
@@ -74,7 +74,7 @@
             </div>
             <div class="col-sm-6">
               <!--dl>
-                <dt><small>Descrição</small></dt>
+                <dt class="text-muted"><small>Descrição</small></dt>
                 <dd>
                   <textarea class="form-control" rows="3" placeholder="Descrição"
                     ng-model="ctl.profile.descricao"></textarea>
@@ -86,7 +86,7 @@
           <div class="row" ng-if="ctl.profile._id">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Criado</small></dt>
+                <dt class="text-muted"><small>Criado</small></dt>
                 <dd>
                   <small>{{ ctl.profile.createdAt | date:'dd/MM/yyyy HH:mm' }} por
                   <strong>{{ctl.profile.criador.nome}} {{ctl.profile.criador.sobrenome}}</strong>
@@ -96,7 +96,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Modificado</small></dt>
+                <dt class="text-muted"><small>Modificado</small></dt>
                 <dd>
                   <small>{{ ctl.profile.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
                   <strong>{{ ctl.profile.modificador.nome}} {{ ctl.profile.modificador.sobrenome}}</strong>
@@ -111,7 +111,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Sessão expira após</small></dt>
+                <dt class="text-muted"><small>Sessão expira após</small></dt>
                 <dd>
                   <select class="form-control" ng-model="ctl.profile.tempoSessao"
                      ng-options="item.value as item.label for item in ctl.itemSessao">

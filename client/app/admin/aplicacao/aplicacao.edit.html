@@ -15,7 +15,7 @@
         <div class="row">
           <div class="col-sm-6">
             <dl ng-class="{'has-error': form1.nome.$invalid && form1.nome.$dirty}">
-              <dt><small>Nome da aplicação</small></dt>
+              <dt class="text-muted"><small>Nome da aplicação</small></dt>
               <dd>
                 <input type="text" name="nome" class="form-control" placeholder="Digite um nome"
                  ng-model="ctl.app.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
@@ -32,7 +32,7 @@
           </div>
           <div class="col-sm-6">
             <dl>
-              <dt><small>Situação</small></dt>
+              <dt class="text-muted"><small>Situação</small></dt>
               <dd>
                 <select class="form-control" ng-model="ctl.app.isAtivo"
                  ng-options="item.value as item.name for item in ctl.situacao"></select>
@@ -51,7 +51,7 @@
         <div class="row" ng-if="ctl.app._id">
           <div class="col-sm-6">
             <dl>
-              <dt><small>Criado</small></dt>
+              <dt class="text-muted"><small>Criado</small></dt>
               <dd><small>{{ ctl.app.createdAt | date:'dd/MM/yyyy HH:mm' }} por
                 <strong>{{ctl.app.criador.nome}} {{ctl.app.criador.sobrenome}}</strong>
               </small></dd>
@@ -59,7 +59,7 @@
           </div>
           <div class="col-sm-6">
             <dl>
-              <dt><small>Modificado</small></dt>
+              <dt class="text-muted"><small>Modificado</small></dt>
               <dd><small>{{ ctl.app.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
                 <strong>{{ctl.app.modificador.nome}} {{ctl.app.modificador.sobrenome}}</strong>
               </small></dd>
@@ -123,7 +123,7 @@
             <div class="row">
               <div class="col-sm-3">
                 <dl>
-                  <dt><small>Situação</small></dt>
+                  <dt class="text-muted"><small>Situação</small></dt>
                   <dd>
                     <p>
                       <small ng-if="md.isAtivo == true">
@@ -136,7 +136,7 @@
               </div>
               <div class="col-sm-3" ng-if="md.createdAt">
                 <dl>
-                  <dt><small>Criador</small></dt>
+                  <dt class="text-muted"><small>Criador</small></dt>
                   <dd>
                     <small>{{ md.createdAt | date:'dd/MM/yyyy HH:mm' }} por
                       <strong>{{md.criador.nome}} {{md.criador.sobrenome}}</strong></small>
@@ -145,7 +145,7 @@
               </div>
               <div class="col-sm-3" ng-if="md.updatedAt">
                 <dl>
-                  <dt><small>Modificador</small></dt>
+                  <dt class="text-muted"><small>Modificador</small></dt>
                   <dd>
                     <small>{{ md.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
                       <strong>{{md.modificador.nome}} {{md.modificador.sobrenome}}</strong></small>

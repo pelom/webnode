@@ -22,7 +22,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Nome</small></dt>
+                <dt class="text-muted"><small>Nome</small></dt>
                 <dd ng-class="{'has-error': formUser.userNome.$invalid && formUser.userNome.$dirty}">
                   <input type="text" name="userNome" class="form-control" placeholder="Nome"
                    ng-model="ctl.user.nome" ng-required="true" ng-minlength="3" ng-maxlength="30"
@@ -40,7 +40,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Sobrenome</small></dt>
+                <dt class="text-muted"><small>Sobrenome</small></dt>
                 <dd ng-class="{'has-error': formUser.userSobrenome.$invalid && formUser.userSobrenome.$dirty}">
                   <input type="text" name="userSobrenome" class="form-control" placeholder="Sobrenome"
                    ng-model="ctl.user.sobrenome" ng-required="true" ng-minlength="3" ng-maxlength="40"
@@ -61,7 +61,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Email</small></dt>
+                <dt class="text-muted"><small>Email</small></dt>
                 <dd ng-class="{'has-error': (formUser.email.$invalid && formUser.email.$dirty) || (formUser.email.$error.mongoose)}">
                   <input type="email" name="email" class="form-control"
                     placeholder="email@email.com"
@@ -79,7 +79,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Nome de usuário</small></dt>
+                <dt class="text-muted"><small>Nome de usuário</small></dt>
                 <dd ng-class="{'has-error': (formUser.username.$invalid && formUser.username.$dirty) || (formUser.username.$error.mongoose)}">
                   <input type="email" name="username" class="form-control"
                    placeholder="nome@email.com"
@@ -99,7 +99,7 @@
           <div class="row">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Perfil do usuário</small></dt>
+                <dt class="text-muted"><small>Perfil do usuário</small></dt>
                 <dd ng-class="{'has-error': formUser.userProfile.$invalid}">
                   <select class="form-control" name="userProfile" ng-model="ctl.user.profileId"
                      ng-options="item._id as item.nome for item in ctl.selectOptionProfile()"
@@ -114,7 +114,7 @@
             </div>
             <div class="col-sm-6" >
               <dl ng-if="ctl.user._id">
-                <dt><small>Situação</small></dt>
+                <dt class="text-muted"><small>Situação</small></dt>
                 <dd>
                   <select class="form-control" ng-model="ctl.user.isAtivo"
                    ng-options="item.value as item.name for item in ctl.situacao"></select>
@@ -125,7 +125,7 @@
           <div class="row" ng-if="ctl.user._id">
             <div class="col-sm-6">
               <dl>
-                <dt><small>Criado</small></dt>
+                <dt class="text-muted"><small>Criado</small></dt>
                 <dd>
                   <small>{{ ctl.user.createdAt | date:'dd/MM/yyyy HH:mm' }} por
                   <strong>{{ctl.user.criador.nome}} {{ctl.user.criador.sobrenome}}</strong>
@@ -135,7 +135,7 @@
             </div>
             <div class="col-sm-6">
               <dl>
-                <dt><small>Modificado</small></dt>
+                <dt class="text-muted"><small>Modificado</small></dt>
                 <dd>
                   <small>{{ ctl.user.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
                   <strong>{{ ctl.user.modificador.nome}} {{ ctl.user.modificador.sobrenome}}</strong>
@@ -172,7 +172,7 @@
               <div class="row">
                 <div class="col-sm-6">
                   <dl>
-                    <dt><small>Empresa</small></dt>
+                    <dt class="text-muted"><small>Empresa</small></dt>
                     <dd>
                       <input type="text" class="form-control"
                         ng-model="ctl.user.empresa"/>
@@ -183,7 +183,7 @@
               <div class="row">
                 <div class="col-xs-6">
                   <dl>
-                    <dt><small>Telefone</small></dt>
+                    <dt class="text-muted"><small>Telefone</small></dt>
                     <dd>
                       <input type="text" class="form-control"
                         ng-model="ctl.user.telefone" ui-mask="(99) 9999-9999"/>
@@ -191,7 +191,7 @@
                   </dl>
                 </div>
                 <div class="col-xs-6">
-                  <dt><small>Celular</small></dt>
+                  <dt class="text-muted"><small>Celular</small></dt>
                   <dd>
                     <input type="text" class="form-control"
                       ng-model="ctl.user.celular" ui-mask="(99) 9? 9999-9999"/>
@@ -226,7 +226,7 @@
             <div class="row">
               <div class="col-sm-6" >
                 <dl ng-if="ctl.user._id">
-                  <dt><small>Duração da linha do evento</small></dt>
+                  <dt class="text-muted"><small>Duração da linha do evento</small></dt>
                   <dd>
                     <select class="form-control" ng-model="ctl.user.agenda.slotDuration"
                      ng-options="item as item for item in ctl.itemSlotDuration"></select>

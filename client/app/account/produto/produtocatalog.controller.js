@@ -56,9 +56,11 @@ export default class ProdutoCatalogController extends Controller {
 
   configPrice() {
     this.produtos.forEach(item => {
-      console.log(item);
+      item.unidadeFull = item.unidade;
+      item.unidade = item.unidade.split('-')[0].trim();
       if(item.precos && item.precos.length != 0) {
         item.valor = item.precos[0].valor;
+        item.descricaoPreco = item.precos[0].descricao;
       } else {
         item.valor = 0.0;
       }
@@ -75,6 +77,7 @@ export default class ProdutoCatalogController extends Controller {
     modalCtl.onClose = () => {
       modalCtl.dismiss();
     };
+    console.log(produto);
     modalCtl.params = produto;
     this.ProdutoService.setModalCtl(modalCtl);
     return modalCtl;

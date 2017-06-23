@@ -44,7 +44,12 @@ export default class OrcamentoEditController extends Controller {
 
   createOrcamento() {
     return {
-      nome: ''
+      nome: 'Novo orçamento',
+      valorTotal: 0,
+      desconto: 0,
+      valorVenda: 0,
+      status: 'Rascunho',
+      itens: [],
     };
   }
 
@@ -159,35 +164,32 @@ export default class OrcamentoEditController extends Controller {
     });
   }
 
+  calcProdutoItens() {
+    this.orcamento.valorTotal = 0;
+    this.orcamento.valorVenda = 0;
+    this.orcamento.itens.forEach(item => {
+      this.orcamento.valorTotal += item.valorTotal;
+      this.orcamento.valorVenda += item.valor * item.quantidade;
+    });
+    this.orcamento.desconto = (this.orcamento.valorVenda - this.orcamento.valorTotal)
+      / this.orcamento.valorVenda;
+  }
+
   addProduto() {
-    let getParam = () => {
+    let getParam = function() {
       return {
         price: true,
-        searchFull: '',
+        searchFull: ''
       };
     };
     let modalCtl = openModalProdutoCatalogFind(this.Modal, getParam());
-    modalCtl.onSelectProduct = produto => {
-      console.log(produto);
+    modalCtl.onSelectProduct = produtos => {
+      produtos.forEach(produto => {
+        this.addOrcamentoItem(produto);
+      });
 
-      let valorProduct = produto.precos[0].valor;
-      let foundItem = this.orcamento.itens.filter(item => item.produto._id === produto._id);
-
-      if(foundItem.length == 1) {
-        let prd = foundItem[0];
-        prd.quantidade++;
-        prd.valorTotal += valorProduct;
-      } else {
-        this.orcamento.itens.push({
-          produto,
-          quantidade: 1,
-          desconto: 0,
-          valorCatalogo: valorProduct,
-          valor: valorProduct,
-          valorTotal: valorProduct,
-        });
-      }
       this.configOrcamento();
+      this.calcProdutoItens();
       modalCtl.dismiss();
     };
     modalCtl.onClose = () => {
@@ -196,12 +198,34 @@ export default class OrcamentoEditController extends Controller {
     this.ProdutoService.setModalCtl(modalCtl);
   }
 
+  addOrcamentoItem(produto) {
+    let valorProduct = produto.precos[0].valor;
+    let foundItem = this.orcamento.itens.filter(
+      item => item.produto._id === produto._id);
+
+    if(foundItem.length == 1) {
+      let prd = foundItem[0];
+      prd.quantidade++;
+      prd.valorTotal += valorProduct;
+    } else {
+      this.orcamento.itens.push({
+        produto,
+        quantidade: 1,
+        desconto: 0,
+        valorCatalogo: valorProduct,
+        valor: valorProduct,
+        valorTotal: valorProduct,
+      });
+    }
+  }
+
   openModalOrcamentoItem(orcamentoItem) {
     let modalView = this.createModalOrcamentoItem(`${orcamentoItem.produto.nome}`);
     let showOpen = this.Modal.show.open();
     let modalCtl = showOpen(modalView);
     modalCtl.params = orcamentoItem;
     modalCtl.onClose = () => {
+      this.calcProdutoItens();
       modalCtl.dismiss();
     };
     this.OrcamentoService.setModalCtl(modalCtl);
@@ -220,8 +244,26 @@ export default class OrcamentoEditController extends Controller {
     };
   }
 
-  excluirSub(id) {
-    let newSub = this.orcamento.itens.filter(item => item._id !== id);
+  removeOrcamentoItem(id) {
+    let newSub = this.orcamento.itens.filter(item => item.produto._id !== id);
     this.orcamento.itens = newSub;
+    this.calcProdutoItens();
+    this.toastr.success('Produto removido', 'Produto removido do itens do orçamento');
+  }
+
+  saveOrcamento(form) {
+    if(form.$invalid) {
+      return;
+    }
+    this.usSpinnerService.spin('spinner-1');
+    this.OrcamentoService.saveOrcamento(this.orcamento)
+      .then(() => {
+        this.toastr.success('Orcamento salva com sucesso', `${this.orcamento.nome}`);
+        this.$state.go('orcamentos');
+      })
+      .catch(this.callbackError(form))
+      .finally(() => {
+        this.usSpinnerService.stop('spinner-1');
+      });
   }
 }
