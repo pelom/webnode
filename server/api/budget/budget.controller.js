@@ -14,7 +14,7 @@ export function domain(req, res) {
   });
 }
 
-const selectIndex = '_id nome dataValidade descricao status valorTotal'
+const selectIndex = '_id nome dataValidade descricao status valorTotal valorVenda'
   + ' conta contato criador modificador createdAt updatedAt';
 
 const populationConta = {
@@ -48,24 +48,36 @@ function buildWhere(req) {
       status: { $in: req.query.status }
     };
   }
+  if(req.query.oportunidade) {
+    return {
+      oportunidade: { $in: req.query.oportunidade }
+    };
+  }
   return {
     //proprietario: req.user._id
   };
 }
 
 const selectShow = '_id nome dataValidade descricao status valorTotal valorVenda'
-  + ' desconto conta contato criador modificador createdAt updatedAt itens';
+  + ' desconto conta contato criador modificador createdAt updatedAt itens'
+  + ' oportunidade';
 
 const populationProduto = {
   path: 'itens.produto',
   select: '_id nome unidade'
 };
 
+const populationOportunidade = {
+  path: 'oportunidade',
+  select: '_id nome'
+};
+
 export function show(req, res) {
   return api.findById(req.params.id, {
     model: 'Budget',
     select: selectShow,
-    populate: [populationConta, populationContato, populationProduto,
+    populate: [populationConta, populationContato,
+      populationProduto, populationOportunidade,
       api.populationCriador, api.populationModificador],
   }, res);
 }
@@ -102,7 +114,7 @@ function callbackCreateBudget(req, res) {
 
 export function update(req, res) {
   let budgetJson = requestUpdateBudget(req);
-  console.log(budgetJson);
+
   if(budgetJson.conta && budgetJson.conta.length == 0) {
     budgetJson.conta = null;
   } else if(budgetJson.conta && budgetJson.conta._id) {
@@ -113,6 +125,10 @@ export function update(req, res) {
     budgetJson.contato = null;
   } else if(budgetJson.contato && budgetJson.contato._id) {
     budgetJson.contato = req.body.contato._id;
+  }
+
+  if(budgetJson.oportunidade && budgetJson.oportunidade._id) {
+    budgetJson.oportunidade = req.body.oportunidade._id;
   }
 
   Budget.findByIdAndUpdate(req.params.id, budgetJson)
@@ -136,6 +152,7 @@ function requestUpdateBudget(req) {
     desconto: req.body.desconto,
     itens: req.body.itens,
     conta: req.body.conta,
+    oportunidade: req.body.oportunidade,
     contato: req.body.contato,
     modificador: req.user._id,
   };

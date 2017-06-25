@@ -38,7 +38,7 @@
           <tr ng-repeat="pdt in ctl.produtos">
             <td>
               <div class="checkbox">
-                <label><input type="checkbox" ng-model="pdt.check" value="{{$index}}"> {{pdt.check}}</label>
+                <label><input type="checkbox" ng-model="pdt.check" value="{{$index}}"></label>
               </div>
             </td>
             <td><a ui-sref="produtoedit({id: pdt._id})" target="_blank">

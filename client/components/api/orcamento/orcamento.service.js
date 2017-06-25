@@ -54,6 +54,7 @@ export function OrcamentoService(OrcamentoResource, Util) {
         valorTotal: newOrcamento.valorTotal,
         valorVenda: newOrcamento.valorVenda,
         desconto: newOrcamento.desconto,
+        oportunidade: newOrcamento.oportunidade,
       };
 
       if(angular.isUndefined(orcamento._id)) {

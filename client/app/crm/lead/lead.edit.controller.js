@@ -1,6 +1,6 @@
 'use strict';
 import angular from 'angular';
-import Controller from '../controller';
+import Controller from '../../account/controller';
 //import {openModalView} from '../agenda/agenda.model.service';
 
 export default class LeadEditController extends Controller {

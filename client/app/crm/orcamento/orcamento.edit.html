@@ -66,13 +66,17 @@
 
                     <input type="text" ng-model="ctl.orcamento.conta" placeholder="Nome da conta"
                         uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue)"
+                        ng-disabled="ctl.orcamento.oportunidade._id" style="background-color: #FFF;"
                         typeahead-loading="loadingAcc" typeahead-no-results="noResults" class="form-control">
 
                     <span class="input-group-btn">
                      <button type="button" class="btn btn-default"
+                        ng-disabled="ctl.orcamento.oportunidade._id"
                         ng-click="ctl.openFindConta()">
                      <i class="fa fa-search" aria-hidden="true"></i></button>
-                     <button type="button" class="btn btn-default" ng-if="ctl.orcamento.conta._id"
+
+                     <button type="button" class="btn btn-default"
+                        ng-if="ctl.orcamento.conta._id"
                         ui-sref="contaedit({id: ctl.orcamento.conta._id})">
                      <i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
                     </span>
@@ -102,7 +106,9 @@
                      <button type="button" class="btn btn-default"
                         ng-click="ctl.openFindContato()">
                      <i class="fa fa-search" aria-hidden="true"></i></button>
-                     <button type="button" class="btn btn-default" ng-if="ctl.orcamento.contato._id"
+
+                     <button type="button" class="btn btn-default"
+                        ng-if="ctl.orcamento.contato._id"
                         ui-sref="contatoedit({id: ctl.orcamento.contato._id})">
                      <i class="fa fa-address-book-o" aria-hidden="true"></i></button>
                     </span>
@@ -119,7 +125,29 @@
             </div>
 
           </div>
+
           <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Oportunidade
+                  <i ng-show="ctl.orcamento.oportunidade._id">*</i></small></dt>
+                <dd>
+                  <p class="input-group">
+
+                    <input type="text" ng-model="ctl.orcamento.oportunidade.nome"
+                      placeholder="Nome da oportunidade" ng-disabled="true"
+                      style="background-color: #FFF;"
+                        class="form-control">
+
+                    <span class="input-group-btn">
+                     <button type="button" class="btn btn-default" ng-disabled="!ctl.orcamento.oportunidade._id"
+                        ui-sref="oportunidadeedit({id: ctl.orcamento.oportunidade._id})">
+                     <i class="fa fa-bolt" aria-hidden="true"></i></button>
+                    </span>
+                  </p>
+                </dd>
+              </dl>
+            </div>
             <div class="col-sm-6">
               <dl>
                 <dt class="text-muted"><small>Status</small></dt>
@@ -135,11 +163,18 @@
                 </dd>
               </dl>
             </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+
+            </div>
             <div class="col-sm-6">
               <textarea class="form-control" rows="2" placeholder="Descrição"
                 ng-model="ctl.orcamento.descricao"></textarea>
             </div>
           </div>
+
           <div class="row">
             <div class="col-sm-6">
               <dl>
@@ -179,8 +214,8 @@
           </div>
           <br/>
           <h4>
-            <i class="fa fa-puzzle-piece fa-2x" aria-hidden="true"></i>
-            &nbsp;<label>Itens do orçamento</label>
+            <i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>
+            &nbsp;<label>Produtos Orçamento</label>
             <div class="btn-group pull-right">
               <button type="button" class="btn btn-default btn-sm"
                 ng-click="ctl.addProduto()" uib-tooltip="Adicionar produto">
@@ -224,7 +259,7 @@
                   <td class="text-right">
                     <small class="text-muted">{{ pdt.valor | finance:true:3 }}</small></td>
                   <td class="text-right">
-                    <small class="text-muted">{{ pdt.quantidade | number:1 }}</small></td>
+                    <small class="text-muted">{{ pdt.quantidade | number:2 }}</small></td>
                   <td class="text-right">
                     <small class="text-muted">{{ pdt.desconto | percentage:1 }}</small></td>
                   <td class="text-right">

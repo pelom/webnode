@@ -54,6 +54,9 @@ export default class AgendaModalController {
         } else if(item.object === 'Contact') {
           item.icon = 'fa-address-book-o';
           item.link = `/contatos/edit/${item.objectId}`;
+        } else if(item.object === 'Opportunity') {
+          item.icon = 'fa-bolt';
+          item.link = `/oportunidades/edit/${item.objectId}`;
         }
       });
     }

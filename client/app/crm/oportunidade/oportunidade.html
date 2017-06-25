@@ -1,0 +1,100 @@
+<div class="container">
+
+  <span spinner-key="spinner-1" spinner-start-active="true"
+    us-spinner="{radius:24, width:8, length: 16}">
+  </span>
+
+  <div class="row">
+    <ul class="nav nav-pills" ng-class="ctl.isJustified()">
+      <li ng-class="{ active: ctl.isActive('')}">
+        <a href="#" ng-click="ctl.findOppListStatus('')" uib-tooltip="Todas Oportunidades">
+          <i class="fa fa-bolt" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Oportunidades</small>
+          <span class="badge">{{ ctl.opps.length}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Qualificação')}">
+        <a href="#" ng-click="ctl.findOppListStatus('Qualificação')" uib-tooltip="Fase: Qualificação">
+          <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Qualificação</small>
+          <span class="badge">{{ ctl.OportunidadeService.getQualificadas()}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Negociação')}">
+        <a href="#" ng-click="ctl.findOppListStatus('Negociação')" uib-tooltip="Fase: Negociação">
+          <i class="fa fa-briefcase" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Negociação</small>
+          <span class="badge">{{ ctl.OportunidadeService.getNegociadas()}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Orçamento')}">
+        <a href="#" ng-click="ctl.findOppListStatus('Orçamento')" uib-tooltip="Fase: Orçamento">
+          <i class="fa fa-calculator" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Orçamento</small>
+          <span class="badge">{{ ctl.OportunidadeService.getOrcamentos()}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Faturamento')}">
+        <a href="#" ng-click="ctl.findOppListStatus('Faturamento')" uib-tooltip="Fase: Faturamento">
+          <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Faturamento</small>
+          <span class="badge">{{ ctl.OportunidadeService.getFaturadas()}}</span>
+        </a>
+      </li>
+      <li ng-class="{ active: ctl.isActive('Perdida')}">
+        <a href="#" ng-click="ctl.findOppListStatus('Perdida')" uib-tooltip="Fase: Perdida">
+          <i class="fa fa-arrow-circle-down" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Perdida</small>
+          <span class="badge">{{ ctl.OportunidadeService.getPerdidas()}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-xs-6">
+      <a class="btn btn-default" ui-sref="oportunidadeedit()">
+        <i class="fa fa-plus" aria-hidden="true"></i> <i ng-if="ctl.isFull()">Novo</i></a>
+    </div>
+    <div class="col-xs-6 pull-right form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <input type="text" class="form-control" placeholder="Filtrar resultados" ng-model="filtrarResult">
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="row">
+
+    <div class="alert" ng-if="!ctl.opps.length">
+      <h4><code>Nenhum resultado encontrado</code></h4>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4"
+      ng-repeat="opp in  ctl.opps | orderBy:sortType:sortReverse | filter:filtrarResult">
+      <div class="panel panel-houver">
+
+        <div class="panel-heading text-muted">
+          <b></b>
+          <p><h4 class="text-muted pull-right">{{opp.valor | finance:true:2 }}</h4></p>
+          <p> 
+            <a ui-sref="oportunidadeedit({id: opp._id})">
+              <i class="fa fa-bolt fa-lg"></i> <i>{{ opp.nome }}</i>
+            </a>
+          </p>
+          <hr/>
+          <p class="pull-right"><i class="fa fa-2x" ng-class="ctl.getIcon(opp)"></i></p>
+          <p title="Conta: {{opp.conta.nome}}">
+            <i class="fa fa-folder-open-o" aria-hidden="true" ng-if="!opp.conta._id"></i>
+            <a ui-sref="contaedit({id: opp.conta._id})" ng-if="opp.conta._id">
+              <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+              <small>{{ opp.conta.nome }}</small>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

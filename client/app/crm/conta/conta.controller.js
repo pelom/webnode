@@ -1,7 +1,7 @@
 /*eslint no-useless-constructor: 0*/
 'use strict';
 import angular from 'angular';
-import Controller from '../controller';
+import Controller from '../../account/controller';
 import moment from 'moment';
 moment.locale('pt-br');
 

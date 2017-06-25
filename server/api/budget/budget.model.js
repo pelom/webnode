@@ -34,6 +34,7 @@ var BudgetSchema = new Schema({
     type: Number, required: true, default: 0, min: 0, max: 100 },
   conta: { type: Schema.Types.ObjectId, ref: 'Account' },
   contato: { type: Schema.Types.ObjectId, ref: 'Contact' },
+  oportunidade: { type: Schema.Types.ObjectId, ref: 'Opportunity' },
   itens: [BudgetItemSchema],
   proprietario: { type: Schema.Types.ObjectId, ref: 'User' },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },

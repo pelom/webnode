@@ -2,7 +2,7 @@
 'use strict';
 import angular from 'angular';
 import {openModalView} from '../contato/contato.modal.service';
-import Controller from '../controller';
+import Controller from '../../account/controller';
 import moment from 'moment';
 moment.locale('pt-br');
 

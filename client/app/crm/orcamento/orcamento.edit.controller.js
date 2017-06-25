@@ -1,6 +1,6 @@
 'use strict';
 import angular from 'angular';
-import Controller from '../controller';
+import Controller from '../../account/controller';
 import {openModalView} from '../conta/conta.modal.service';
 import {openModalContatoFind} from '../contato/contato.modal.service';
 import {openModalProdutoCatalogFind} from '../produto/produto.modal.service'
@@ -8,14 +8,17 @@ import {openModalProdutoCatalogFind} from '../produto/produto.modal.service'
 export default class OrcamentoEditController extends Controller {
   /*@ngInject*/
   constructor($window, $scope, $stateParams, $timeout, $state, toastr, usSpinnerService,
-    OrcamentoService, ContaService, ContatoService, ProdutoService, Modal) {
+    OrcamentoService, ContaService, ContatoService,
+    ProdutoService, OportunidadeService, Modal) {
     super($window, $scope, toastr, usSpinnerService);
 
     this.id = $stateParams.id;
+    this.oppId = $stateParams.oppId;
     this.$state = $state;
     this.$timeout = $timeout;
     this.Modal = Modal;
 
+    this.OportunidadeService = OportunidadeService;
     this.ProdutoService = ProdutoService;
     this.ContaService = ContaService;
     this.ContatoService = ContatoService;
@@ -36,6 +39,15 @@ export default class OrcamentoEditController extends Controller {
         });
     } else {
       this.orcamento = this.createOrcamento();
+      console.log(this.oppId);
+      if(this.oppId) {
+        this.OportunidadeService.loadOportunidade({id: this.oppId})
+          .then(opp => {
+            this.orcamento.oportunidade = opp;
+            this.orcamento.conta = opp.conta;
+            this.orcamento.nome = `Orçamento ${opp.nome}`;
+          });
+      }
       this.$timeout(() => {
         this.usSpinnerService.stop('spinner-1');
       }, 100);
@@ -259,7 +271,12 @@ export default class OrcamentoEditController extends Controller {
     this.OrcamentoService.saveOrcamento(this.orcamento)
       .then(() => {
         this.toastr.success('Orcamento salva com sucesso', `${this.orcamento.nome}`);
-        this.$state.go('orcamentos');
+
+        if(this.oppId) {
+          this.$state.go('oportunidadeedit', { id: this.oppId });
+        } else {
+          this.$state.go('orcamentos');
+        }
       })
       .catch(this.callbackError(form))
       .finally(() => {
