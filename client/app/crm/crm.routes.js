@@ -89,7 +89,7 @@ export default function routes($stateProvider) {
     authenticate: true
   })
   .state('oportunidadeedit', {
-    url: '/oportunidades/edit/:id',
+    url: '/oportunidades/edit/:id?accId',
     template: require('./oportunidade/oportunidade.edit.html'),
     controller: 'OportunidadeEditController',
     controllerAs: 'ctl',

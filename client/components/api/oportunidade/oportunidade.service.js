@@ -50,15 +50,15 @@ export function OportunidadeService(OportunidadeResource, Util) {
           pedidas = 0;
 
           opps.forEach(item => {
-            if(item.status === 'Qualificação') {
+            if(item.fase === 'Qualificação') {
               qualificadas++;
-            } else if(item.status === 'Orçamento') {
+            } else if(item.fase === 'Orçamento') {
               orcamentos++;
-            } else if(item.status === 'Negociação') {
+            } else if(item.fase === 'Negociação') {
               negociadas++;
-            } else if(item.status === 'Faturamento') {
+            } else if(item.fase === 'Faturamento') {
               faturadas++;
-            } else if(item.status === 'Perdida') {
+            } else if(item.fase === 'Perdida') {
               pedidas++;
             }
           });
@@ -66,7 +66,7 @@ export function OportunidadeService(OportunidadeResource, Util) {
 
         countStatus(oppList);
 
-        return safeCb(callback)(null, data);
+        return safeCb(callback)(null, oppList);
       }, function(err) {
         console.log('Ex:', err);
         return safeCb(callback)(err);

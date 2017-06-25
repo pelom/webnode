@@ -8,13 +8,16 @@ moment.locale('pt-br');
 
 export default class ContaEditController extends Controller {
   /*@ngInject*/
-  constructor($window, $scope, $state, $timeout, $stateParams,
-    toastr, usSpinnerService, EventoService, ContaService, ContatoService, Modal) {
+  constructor($window, $scope, $state, $timeout, $stateParams, toastr,
+    usSpinnerService, EventoService, ContaService, ContatoService,
+    OportunidadeService, Modal) {
     super($window, $scope, toastr, usSpinnerService, Modal);
     this.id = $stateParams.id;
     this.$timeout = $timeout;
     this.$state = $state;
     this.Modal = Modal;
+
+    this.OportunidadeService = OportunidadeService;
     this.EventoService = EventoService;
     this.ContatoService = ContatoService;
     this.ContaService = ContaService;
@@ -49,10 +52,20 @@ export default class ContaEditController extends Controller {
       this.setMask();
       this.updateMask();
       this.loadAtividades();
+
       this.ContatoService.loadContatoList({
         conta: this.conta._id
       }).then(contatos => {
         this.conta.contatos = contatos;
+      })
+      .finally(() => {
+        this.usSpinnerService.stop('spinner-1');
+      });
+
+      this.OportunidadeService.loadOportunidadeList({
+        conta: this.conta._id
+      }).then(opps => {
+        this.conta.opps = opps;
       })
       .finally(() => {
         this.usSpinnerService.stop('spinner-1');

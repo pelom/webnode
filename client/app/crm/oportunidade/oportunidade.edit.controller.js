@@ -11,6 +11,8 @@ export default class OportunidadeEditController extends Controller {
     super($window, $scope, toastr, usSpinnerService);
 
     this.id = $stateParams.id;
+    this.accId = $stateParams.accId;
+
     this.$state = $state;
     this.$timeout = $timeout;
     this.Modal = Modal;
@@ -37,6 +39,14 @@ export default class OportunidadeEditController extends Controller {
         });
     } else {
       this.opp = this.createOportunidade();
+
+      if(this.accId) {
+        this.ContaService.loadConta({ id: this.accId})
+          .then(acc => {
+            this.opp.conta = acc;
+            this.opp.nome = `${acc.nome}`;
+          });
+      }
       this.$timeout(() => {
         this.usSpinnerService.stop('spinner-1');
       }, 100);
@@ -151,6 +161,12 @@ export default class OportunidadeEditController extends Controller {
       .then(() => {
         this.toastr.success('Oportunidade salva com sucesso', `${this.opp.nome}`);
         this.$state.go('oportunidades');
+
+        if(this.accId) {
+          this.$state.go('contaedit', { id: this.accId });
+        } else {
+          this.$state.go('oportunidades');
+        }
       })
       .catch(this.callbackError(form))
       .finally(() => {

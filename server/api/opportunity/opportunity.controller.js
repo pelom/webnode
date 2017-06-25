@@ -8,8 +8,8 @@ let respondWithResult = api.respondWithResult;
 let handleEntityNotFound = api.handleEntityNotFound;
 let handleValidationError = api.handleValidationError;
 
-const selectIndex = '_id nome fase valor conta'
-  + ' origem criador modificador updatedAt createdAt';
+const selectIndex = '_id nome fase valor conta dataFechamento'
+  + ' criador modificador updatedAt createdAt';
 
 export function domain(req, res) {
   res.status(200).json({
@@ -19,12 +19,13 @@ export function domain(req, res) {
 }
 
 export function index(req, res) {
+  let where = buildWhere(req);
+  console.log('where:', where);
+
   return api.find({
     model: 'Opportunity',
     select: selectIndex,
-    where: {
-      proprietario: req.user._id,
-    },
+    where,
     populate: [api.populationProprietario, populationConta,
       api.populationCriador, api.populationModificador],
     options: { skip: 0, limit: 50,
@@ -33,6 +34,37 @@ export function index(req, res) {
       }
     }
   }, res);
+}
+
+function buildWhere(req) {
+  let where = {
+    proprietario: req.user._id
+  };
+
+  if(req.query.search) {
+    let searchs = req.query.search.split(' ');
+    let regexs = [];
+    searchs.forEach(item => {
+      if(item.trim().length > 2) {
+        var reg = new RegExp(item, 'i');
+        regexs.push(reg);
+      }
+    });
+    where.$or = [
+      { nome: { $in: regexs } },
+    ];
+  }
+
+  if(req.query.conta) {
+    return {
+      conta: { $in: req.query.conta }
+    };
+  }
+
+  if(req.query.status) {
+    where.fase = { $in: req.query.status };
+  }
+  return where;
 }
 
 const selectShow = '_id nome descricao fase valor dataFechamento conta'

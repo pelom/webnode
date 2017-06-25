@@ -66,7 +66,8 @@
       <div class="panel panel-houver">
 
         <div class="panel-heading text-muted">
-          <b>{{lead.produto}}</b>
+          <b ng-if="lead.produto">{{lead.produto}}</b>
+          <b ng-if="!lead.produto">-</b>
           <p></p>
           <p><i class="fa fa-child fa-lg"></i> 
             <a ui-sref="leadedit({id: lead._id})"><i>{{lead.nome}} {{lead.sobrenome}}</i></a>
