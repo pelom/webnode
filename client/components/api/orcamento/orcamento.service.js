@@ -55,6 +55,8 @@ export function OrcamentoService(OrcamentoResource, Util) {
         valorVenda: newOrcamento.valorVenda,
         desconto: newOrcamento.desconto,
         oportunidade: newOrcamento.oportunidade,
+        pagamento: newOrcamento.pagamento,
+        parcela: newOrcamento.parcela,
       };
 
       if(angular.isUndefined(orcamento._id)) {
@@ -72,6 +74,14 @@ export function OrcamentoService(OrcamentoResource, Util) {
         return safeCb(callback)(err);
       }).$promise;
     },
+    pdf(orcamento, callback) {
+      return OrcamentoResource.pdf({id: orcamento._id}, function(data) {
+        return safeCb(callback)(data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
+    }
   };
   return orcamentoService;
 }

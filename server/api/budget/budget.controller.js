@@ -1,6 +1,8 @@
 'use strict';
 import Budget from './budget.model';
+import User from '../user//user.model';
 import ApiService from '../api.service';
+import BudgetPdf from '../../components/genarate-pdf/budget.pdf';
 
 let api = ApiService();
 let handleError = api.handleError;
@@ -11,11 +13,13 @@ let handleValidationError = api.handleValidationError;
 export function domain(req, res) {
   res.status(200).json({
     status: Budget.schema.path('status').enumValues,
+    pagamento: Budget.schema.path('pagamento').enumValues,
+    parcela: Budget.schema.path('parcela').enumValues,
   });
 }
 
 const selectIndex = '_id nome dataValidade descricao status valorTotal valorVenda'
-  + ' conta contato criador modificador createdAt updatedAt';
+  + ' conta contato criador modificador createdAt updatedAt numero';
 
 const populationConta = {
   path: 'conta',
@@ -43,24 +47,19 @@ export function index(req, res) {
 }
 
 function buildWhere(req) {
+  let where = {};
   if(req.query.status) {
-    return {
-      status: { $in: req.query.status }
-    };
+    where.status = { $in: req.query.status };
   }
   if(req.query.oportunidade) {
-    return {
-      oportunidade: { $in: req.query.oportunidade }
-    };
+    where.oportunidade = { $in: req.query.oportunidade };
   }
-  return {
-    //proprietario: req.user._id
-  };
+  return where;
 }
 
 const selectShow = '_id nome dataValidade descricao status valorTotal valorVenda'
-  + ' desconto conta contato criador modificador createdAt updatedAt itens'
-  + ' oportunidade';
+  + ' desconto conta contato criador modificador createdAt updatedAt itens numero'
+  + ' oportunidade pagamento parcela';
 
 const populationProduto = {
   path: 'itens.produto',
@@ -154,8 +153,54 @@ function requestUpdateBudget(req) {
     conta: req.body.conta,
     oportunidade: req.body.oportunidade,
     contato: req.body.contato,
+    parcela: req.body.parcela,
+    pagamento: req.body.pagamento,
     modificador: req.user._id,
   };
 }
 
 export function destroy(req, res) { }
+
+const selectShowPdf = '_id nome dataValidade descricao status valorTotal valorVenda'
+  + ' desconto conta contato criador modificador createdAt updatedAt itens numero'
+  + ' oportunidade pagamento parcela';
+
+const populationContaPdf = {
+  path: 'conta',
+  select: '_id nome endereco'
+};
+
+const populationContatoPdf = {
+  path: 'contato',
+  select: '_id nome sobrenome email celular telefone'
+};
+
+const populationProdutoPdf = {
+  path: 'itens.produto',
+  select: '_id nome unidade'
+};
+
+const populationOportunidadePdf = {
+  path: 'oportunidade',
+  select: '_id nome'
+};
+
+export function showPdf(req, res) {
+  Budget.findById(req.params.id)
+    .select(selectShowPdf)
+    .populate([populationContaPdf, populationContatoPdf,
+      populationProdutoPdf, populationOportunidadePdf,
+      api.populationCriador, api.populationModificador])
+    .exec()
+    .then(budget => {
+      User.findById(req.user._id)
+        .select('_id nome sobrenome email telefone celular empresa endereco')
+        .exec()
+        .then(user => {
+          console.log(user);
+          //let user = api.getUserRequest(req);
+          BudgetPdf().generateBudgetPdf(user, budget, res);
+        });
+    })
+  .catch(handleError(res));
+}

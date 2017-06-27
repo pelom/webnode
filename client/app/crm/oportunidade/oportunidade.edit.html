@@ -258,6 +258,7 @@
               <thead class="text-muted">
                 <tr>
                   <th></th>
+                  <th><small>Nº</small></th>
                   <th><small>Nome do orçamento</small></th>
                   <th><small>Status</small></th>
                   <th><small>Data Validade</small></th>
@@ -276,6 +277,8 @@
                     <i class="fa fa-star" aria-hidden="true" ng-if="orc._id === ctl.opp.orcamento._id"
                       title="Orçamento da oportunidade"></i>
                   </td>
+                  <td><a ui-sref="orcamentoedit({id: orc._id})">
+                    <small>{{ orc.numero }}</small></a></td>
                   <td><a ui-sref="orcamentoedit({id: orc._id})">
                     <small>{{ orc.nome }}</small></a></td>
                   <td><small class="text-muted">{{ orc.status }}</small></td>

@@ -15,6 +15,17 @@
             <i class="fa fa-usd fa-2x" aria-hidden="true"></i>
             &nbsp;<label>{{ctl.orcamento.nome}}</label>
             &nbsp;<small>({{ctl.orcamento.status}})</small>
+
+            <div class="btn-group pull-right">
+              <button type="button" class="btn btn-default btn-sm"
+                ng-click="ctl.relat()" title="Criar PDF">
+                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                  <small ng-if="ctl.isFull()">Criar PDF</small></button>
+              <button type="button" class="btn btn-default btn-sm"
+                ng-click="ctl.downloadPdf()" title="Download PDF">
+                <i class="fa fa-download" aria-hidden="true"></i>
+                <small ng-if="ctl.isFull()">Download PDF</small></button>
+            </div>
           </h4>
           <hr/>
 
@@ -167,14 +178,45 @@
 
           <div class="row">
             <div class="col-sm-6">
-
+              <dt class="text-muted"><small>Número</small></dt>
+              <dd ng-class="{'has-error': form.status.$invalid}">
+                <input type="text" ng-model="ctl.orcamento.numero"
+                  ng-disabled="true" style="background-color: #FFF;"
+                  class="form-control">
+              </dd>
+              <br/>
             </div>
+
             <div class="col-sm-6">
               <textarea class="form-control" rows="2" placeholder="Descrição"
                 ng-model="ctl.orcamento.descricao"></textarea>
             </div>
           </div>
 
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Pagamento</small></dt>
+                <dd>
+                  <select class="form-control" name="pagamento" ng-model="ctl.orcamento.pagamento"
+                     ng-options="item as item for item in ctl.pagamento">
+                     <option value="" ng-if="!ctl.orcamento.pagamento">-- Nenhum --</option>
+                  </select>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Parcela</small></dt>
+                <dd>
+                  <select class="form-control" name="parcela" ng-model="ctl.orcamento.parcela"
+                     ng-options="item as item for item in ctl.parcela">
+                     <option value="" ng-if="!ctl.orcamento.parcela">-- Nenhum --</option>
+                  </select>
+                </dd>
+              </dl>
+            </div>
+          </div>
           <div class="row">
             <div class="col-sm-6">
               <dl>

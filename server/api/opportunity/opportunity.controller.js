@@ -38,7 +38,7 @@ export function index(req, res) {
 
 function buildWhere(req) {
   let where = {
-    proprietario: req.user._id
+    //proprietario: req.user._id
   };
 
   if(req.query.search) {
@@ -56,9 +56,7 @@ function buildWhere(req) {
   }
 
   if(req.query.conta) {
-    return {
-      conta: { $in: req.query.conta }
-    };
+    where.conta = { $in: req.query.conta };
   }
 
   if(req.query.status) {

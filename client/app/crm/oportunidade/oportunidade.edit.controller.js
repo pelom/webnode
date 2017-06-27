@@ -2,6 +2,7 @@
 import angular from 'angular';
 import Controller from '../../account/controller';
 import {openModalView} from '../conta/conta.modal.service';
+import addZero from 'add-zero';
 
 export default class OportunidadeEditController extends Controller {
   /*@ngInject*/
@@ -76,6 +77,11 @@ export default class OportunidadeEditController extends Controller {
       this.OrcamentoService.loadOrcamentoList({
         oportunidade: this.opp._id
       }).then(orcamentos => {
+        orcamentos.forEach(item => {
+          if(item.numero) {
+            item.numero = addZero(item.numero, 8);
+          }
+        });
         this.opp.orcamentos = orcamentos;
       })
       .finally(() => {

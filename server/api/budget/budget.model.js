@@ -2,6 +2,7 @@
 /*eslint no-invalid-this:0*/
 mongoose.Promise = require('bluebird');
 import mongoose, { Schema } from 'mongoose';
+import autoIncrement from 'mongoose-easy-auto-increment';
 
 var statusList = 'Rascunho,Aprovado,Rejeitado'.split(',');
 
@@ -19,6 +20,8 @@ var BudgetItemSchema = new Schema({
   produto: { type: Schema.Types.ObjectId, ref: 'Product' },
 });
 
+var pagamentoList = 'Dinheiro,Cartão Débito,Cartão Crédito,Cheque à vista,Cheque à prazo,Depósito,Transferência'.split(',');
+var parcelaList = '1 vez,2 vezes, 3 vezes'.split(',');
 var BudgetSchema = new Schema({
   nome: {
     type: String, required: true, minlength: 3, maxlength: 100, trim: true },
@@ -26,6 +29,8 @@ var BudgetSchema = new Schema({
   descricao: {
     type: String, required: false, maxlength: 255 },
   status: { type: String, required: true, enum: statusList, default: 'Rascunho' },
+  pagamento: { type: String, required: false, enum: pagamentoList, default: 'Dinheiro' },
+  parcela: { type: String, required: false, enum: parcelaList, default: '1 vez' },
   valorTotal: {
     type: Number, required: true, default: 0 },
   valorVenda: {
@@ -43,5 +48,7 @@ var BudgetSchema = new Schema({
 }, {
   timestamps: true
 });
+
+BudgetSchema.plugin(autoIncrement, { field: 'numero' });
 
 export default mongoose.model('Budget', BudgetSchema);

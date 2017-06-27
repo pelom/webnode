@@ -1,5 +1,6 @@
 'use strict';
 import angular from 'angular';
+import addZero from 'add-zero';
 import Controller from '../../account/controller';
 import {openModalView} from '../conta/conta.modal.service';
 import {openModalContatoFind} from '../contato/contato.modal.service';
@@ -25,6 +26,8 @@ export default class OrcamentoEditController extends Controller {
     this.OrcamentoService = OrcamentoService;
     this.OrcamentoService.loadDomain().then(domain => {
       this.status = domain.status;
+      this.pagamento = domain.pagamento;
+      this.parcela = domain.parcela;
       this.init();
     });
   }
@@ -80,6 +83,9 @@ export default class OrcamentoEditController extends Controller {
       this.orcamento.itens.forEach(item => {
         item.produto.unidade = item.produto.unidade.split('-')[0].trim();
       });
+    }
+    if(this.orcamento.numero) {
+      this.orcamento.numero = addZero(this.orcamento.numero, 8);
     }
     this.configContato(this.orcamento.contato);
   }
@@ -282,5 +288,26 @@ export default class OrcamentoEditController extends Controller {
       .finally(() => {
         this.usSpinnerService.stop('spinner-1');
       });
+  }
+
+  relat() {
+    let urlPath = `/api/budget/${this.orcamento._id}/pdf?`;
+    this.$window.open(urlPath);
+  }
+
+  downloadPdf() {
+    this.OrcamentoService.pdf(this.orcamento).then(result => {
+      console.log(result);
+      let url = this.$window.URL || this.$window.webkitURL;
+
+      var fileURL = url.createObjectURL(result.response);
+
+      var a = document.createElement('a');
+      document.body.appendChild(a);
+      a.style = 'display: none';
+      a.href = fileURL;
+      a.download = `orcamento-${this.orcamento.nome.replace(' ', '-').trim()}.pdf`;
+      a.click();
+    });
   }
 }

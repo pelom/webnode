@@ -196,6 +196,9 @@ function createBudget(lead, acc, ctt, opp) {
 
 function callbackSaveBudget(eventos, lead, acc, ctt, opp) {
   return budget => {
+    opp.orcamento = budget._id;
+    opp.save();
+
     let accRef = createReferenceAcc(acc);
     console.log('accRef:', accRef);
     let cttRef = createReferenceCtt(ctt);

@@ -15,6 +15,7 @@ export default class Controller {
 
   managerLayout($window, $scope) {
     this.width = $window.innerWidth;
+    this.$window = $window;
 
     let onResize = () => {
       //console.log('$window.innerWidth:', $window.innerWidth);

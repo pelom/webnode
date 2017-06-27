@@ -63,7 +63,7 @@ function buildWhere(req) {
     }
   }
   return {
-    //proprietario: req.user._id
+    proprietario: req.user._id
   };
 }
 

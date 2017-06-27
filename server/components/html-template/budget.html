@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+{{head}}
+<body class="">
+  <h1>
+    <img src="{{url}}assets/images/arl-logo.png" alt="I'm Yeoman"
+     style="vertical-align: bottom;45px; height:45px;"/> &nbsp;&nbsp;{{ title }}
+    <span style="float: right;font-size:12px; color: #777"></span>
+   </h1>
+   <p></p>
+   <p style="font-size: 11px;">{{headerSubtitle}}</p>
+  <hr/>
+  <br></br>
+
+  <div class="line">
+    <div style="width: 50%;float: left;">
+      <p><small style="font-weight: bold;">Número: </small>{{numero}}</p>
+    </div>
+    <div style="width: 50%;float: left;">
+      <p><small style="font-weight: bold;">Data Válida: </small>{{dataValidade}}</p>
+    </div>
+  </div>
+
+  <br></br><br></br>
+
+  <div class="line">
+    <div style="width: 50%;float: left;">
+      <p><small style="font-weight: bold;">Preparado por: </small> {{ preparado }}</p>
+    </div>
+    <div style="width: 50%;float: left;">
+      <p><small style="font-weight: bold;">Nome do contato: </small> {{ contato }}</p>
+    </div>
+  </div>
+  <div class="line">
+    <div style="width: 50%;float: left;">
+      <p><small style="font-weight: bold;">Email: </small> {{ preparadoEmail }}</p>
+    </div>
+    <div style="width: 50%;float: left;">
+      <p><small style="font-weight: bold;">Email: </small> {{ contatoEmail }}</p>
+    </div>
+  </div>
+  <div class="line">
+    <div style="width: 50%;float: left;">
+      <p><small style="font-weight: bold;">Telefone: </small> {{ preparadoTelefone }}</p>
+    </div>
+    <div style="width: 50%;float: left;">
+      <p><small style="font-weight: bold;">Telefone: </small> {{ contatoTelefone }}</p>
+    </div>
+  </div>
+
+  <br></br>
+  <br></br>
+  <br></br>
+  <br></br>
+
+  <div class="line">
+    <p><small style="font-weight: bold;">Nome da referência: </small> {{ conta }}</p>
+  </div>
+  <div class="line">
+      <p><small style="font-weight: bold;">Endereço da referência: </small>
+        {{ contaendereco }}</p>
+  </div>
+
+  <br></br>
+  <h2>{{message}}</h2>
+  <hr/>
+
+  <table cellpadding="4" cellspacing="3" class="body">
+    <tr>
+      <th><small>Nº</small></th>
+      <th><small>Nome do produto</small></th>
+      <th><small>Medida</small></th>
+      <th style="text-align: right"><small>Valor</small></th>
+      <th style="text-align: right"><small>Quantidade</small></th>
+      <th style="text-align: right"><small>Desconto</small></th>
+      <th style="text-align: right"><small>Valor Total</small></th>
+    </tr>
+    <% _.forEach(itens, function(item, index) { %>
+      <tr>
+        <td><%- (index+1) %></td>
+        <td><%- item.nome %></td>
+        <td><%- item.medida %></td>
+        <td style="text-align: right"><%- item.valor %></td>
+        <td style="text-align: right"><%- item.quantidade %></td>
+        <td style="text-align: right"><%- item.desconto %></td>
+        <td style="text-align: right"><%- item.valorTotal %></td>
+      </tr>
+    <% }); %>
+  </table>
+  <br></br>
+  <br></br>
+  <div class="line">
+    <div style="width: 50%;float: left;">
+      <p><small style="font-weight: bold;">Pagamento: </small> {{ pagamento }}</p>
+    </div>
+    <div style="width: 50%;float: left;">
+      <p><small style="font-weight: bold;">Parcela: </small> {{ parcela }}</p>
+    </div>
+  </div>
+  <br></br>
+  <br></br>
+  <br></br>
+  <br></br>
+  <div class="line">
+    <div style="width: 50%;float: left;">
+      &nbsp;
+    </div>
+    <div style="width: 50%;float: left;">
+      <p>Valor Venda (+)</p>
+      <p style="text-align: right">{{valor}}</p>
+    </div>
+  </div>
+  <div class="line">
+    <div style="width: 50%;float: left;">
+      &nbsp;
+    </div>
+    <div style="width: 50%;float: left;">
+      <p>Desconto (-)</p>
+      <p style="text-align: right">{{desconto}}</p>
+    </div>
+  </div>
+  <div class="line">
+    <div style="width: 50%;float: left;">
+      <p>Assinatura:</p>
+      <p>Data:</p>
+    </div>
+    <div style="width: 50%;float: left;">
+      <p>Valor Total (=)</p>
+      <h2 style="text-align: right">{{valorTotal}}</h2>
+    </div>
+  </div>
+
+</body>
+</html>

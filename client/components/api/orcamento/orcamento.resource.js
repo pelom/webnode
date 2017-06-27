@@ -9,6 +9,29 @@ export function OrcamentoResource($resource) {
       params: {
         id: 'domain'
       }
+    },
+    pdf: {
+      method: 'GET',
+      params: {
+        controller: 'pdf'
+      },
+      headers: {
+        accept: 'application/pdf'
+      },
+      responseType: 'arraybuffer',
+      cache: true,
+      transformResponse(data) {
+        var pdf;
+        if(data) {
+          pdf = new Blob([data], {
+            type: 'application/pdf',
+            lastModified: Date.now()
+          });
+        }
+        return {
+          response: pdf
+        };
+      }
     }
   });
 }

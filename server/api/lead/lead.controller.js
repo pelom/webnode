@@ -29,7 +29,7 @@ export function index(req, res) {
     model: 'Lead',
     select: selectIndex,
     where: {
-      proprietario: req.user._id,
+      //proprietario: req.user._id,
       status: { $in: status }
     },
     populate: [api.populationProprietario, api.populationCriador, api.populationModificador],
