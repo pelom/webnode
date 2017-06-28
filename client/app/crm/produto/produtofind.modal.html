@@ -36,7 +36,10 @@
         <tbody>
           <tr ng-repeat="pdt in ctl.produtos">
             <td>
-              <label><input type="radio" name="pdt" ng-model="ctl.select" value="{{$index}}"></label>
+              <!--label><input type="radio" name="pdt" ng-model="ctl.select" value="{{$index}}"></label-->
+              <div class="checkbox">
+                <label><input type="checkbox" ng-model="pdt.check" value="{{$index}}"></label>
+              </div>
             </td>
             <td><a ui-sref="produtoedit({id: pdt._id})" target="_blank">
                 <small>{{ pdt.nome }}</small></a></td>
@@ -55,7 +58,7 @@
     <div class="row">
       <div class="col-xs-12">
         <button type="submit" class="btn btn-primary"
-          ng-disabled="ctl.select < 0">Selecionar</button>
+          ng-disabled="!ctl.isSelect()">Selecionar</button>
         <button type="button" class="btn btn-default"
           ng-click="ctl.close()">Fechar</button>
 

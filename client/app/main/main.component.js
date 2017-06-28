@@ -5,6 +5,7 @@ import routing from './main.routes';
 export class MainController {
   awesomeThings = [];
   newThing = '';
+  slide = [];
 
   /*@ngInject*/
   constructor($http, $scope, socket) {
@@ -14,6 +15,14 @@ export class MainController {
     $scope.$on('$destroy', function() {
       socket.unsyncUpdates('thing');
     });
+
+    this.myInterval = 5000;
+    this.noWrapSlides = false;
+    this.slide = [{
+      image: 'assets/images/banner.png',
+      text: 'A ArLife tem o compromisso de prestar com eficiencia e qualidade o seriviço de instalação de ar condicionado SPLIT, auxilia na compra, manutenção preventiva e corretiva de condicionadores de ar, atuando nas seguintes capacidade de equipamento (7.000 a 60.000 btus ).',
+      id: 0
+    }];
   }
 
   $onInit() {

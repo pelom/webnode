@@ -57,7 +57,7 @@ function buildWhere(req) {
   return where;
 }
 
-const selectShow = '_id nome codigo descricao categoria marcar modelo subcategoria'
+const selectShow = '_id nome codigo descricao categoria marca modelo subcategoria'
   + ' uso unidade criador modificador createdAt updatedAt subproduto';
 
 const populationSubproduto = {
@@ -123,7 +123,7 @@ function requestUpdateProduct(req) {
     _id: req.body._id,
     nome: req.body.nome,
     descricao: req.body.descricao,
-    marcar: req.body.marcar,
+    marca: req.body.marca,
     modelo: req.body.modelo,
     codigo: req.body.codigo,
     categoria: req.body.categoria,

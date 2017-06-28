@@ -7,7 +7,7 @@ import moment from 'moment';
 import EventHourHtml from '../html-template/event.hours';
 
 export default function EventPdf() {
-  wkhtmltopdf.command = '/home/andreleite/Downloads/wkhtmltox/bin/wkhtmltopdf';
+  //wkhtmltopdf.command = '/home/andreleite/Downloads/wkhtmltox/bin/wkhtmltopdf';
   let eventPdf = {
     generateEventHour
   };

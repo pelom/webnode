@@ -27,7 +27,7 @@ export default class ProdutoFindModalController {
 
     let isToken = () => this.search && this.search.length > 2;
     let findAcc = () => {
-      this.ProdutoService.loadContaList({
+      this.ProdutoService.loadProdutoList({
         search: this.search
       })
       .then(produtos => {
@@ -50,13 +50,20 @@ export default class ProdutoFindModalController {
   }
 
   selectProduct() {
-    if(this.select == -1) {
+    let selectList = this.getSelect();
+    if(selectList.length == 0) {
       return;
     }
 
-    let prd = this.produtos[this.select];
-    this.toastr.success('Produto selecionada', `${prd.nome}`);
-    this.ProdutoService.getModalCtl().onSelectProduct(prd);
+    this.toastr.success('Produto selecionado', `Total de ${selectList.length} produtos`);
+    this.ProdutoService.getModalCtl().onSelectProduct(selectList);
+  }
+
+  isSelect() {
+    return this.getSelect().length != 0;
+  }
+  getSelect() {
+    return this.produtos.filter(item => item.check === true);
   }
 
   close() {

@@ -51,7 +51,8 @@ export default class ProdutoEditController extends Controller {
 
   createProduto() {
     return {
-
+      nome: '',
+      subproduto: [],
     };
   }
 
@@ -59,17 +60,20 @@ export default class ProdutoEditController extends Controller {
     let modalCtl = openModalView(this.Modal, {
       uso: ['01 - Matéria-Prima', '00 - Mercadoria para Revenda']
     });
-    modalCtl.onSelectProduct = produto => {
-      console.log('onSelectProduct()', produto);
+    modalCtl.onSelectProduct = prod => {
+      console.log('onSelectProduct()', prod);
 
-      let result = this.produto.subproduto.filter(item => item.produto._id == produto._id);
-      if(result.length == 0) {
-        this.produto.subproduto.push({
-          produto,
-          quantidade: 1,
-          descricao: '',
-        });
-      }
+      prod.forEach(produto => {
+        let result = this.produto.subproduto.filter(item => item.produto._id === produto._id);
+        if(result.length == 0) {
+          this.produto.subproduto.push({
+            produto,
+            quantidade: 1,
+            descricao: '',
+          });
+        }
+      });
+
       modalCtl.dismiss();
     };
     modalCtl.onClose = () => {
@@ -100,5 +104,14 @@ export default class ProdutoEditController extends Controller {
     let newSub = this.produto.subproduto
       .filter(item => item._id !== id);
     this.produto.subproduto = newSub;
+  }
+
+  clonar() {
+    this.produto = angular.copy(this.produto);
+    Reflect.deleteProperty(this.produto, '_id');
+    this.produto.subproduto.forEach(item => {
+      Reflect.deleteProperty(item, '_id');
+    });
+    this.toastr.info('Produto clonado com sucesso', `${this.produto.nome}`);
   }
 }

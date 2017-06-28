@@ -47,7 +47,7 @@ export function ProdutoService(ProdutoResource, Util) {
         _id: newProduct._id,
         nome: newProduct.nome,
         descricao: newProduct.descricao,
-        marcar: newProduct.marcar,
+        marca: newProduct.marca,
         modelo: newProduct.modelo,
         codigo: newProduct.codigo,
         categoria: newProduct.categoria,

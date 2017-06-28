@@ -52,7 +52,7 @@
                 <dt class="text-muted"><small>Marca</small></dt>
                 <dd>
                   <input type="text" class="form-control" placeholder="Marca do produto"
-                    ng-model="ctl.produto.marcar"/>
+                    ng-model="ctl.produto.marca"/>
                 </dd>
               </dl>
             </div>
@@ -133,6 +133,8 @@
           <div class="list-group">
             <button class="btn btn-primary" type="submit"
               ng-disabled="form.$invalid">Salvar</button>
+            <button type="button" class="btn btn-default" ng-click="ctl.clonar();"
+              ng-if="ctl.produto._id">Clonar</button>
             <button type="button" class="btn btn-link"
               ui-sref="produtos">Voltar</button>
           </div>

@@ -41,20 +41,20 @@ var ProductPriceSchema = new Schema({
 
 var ProductSchema = new Schema({
   nome: {
-    type: String, required: true, minlength: 3, maxlength: 100, trim: true },
+    type: String, required: true, minlength: 3, maxlength: 120, trim: true },
   descricao: {
-    type: String, required: false, maxlength: 255 },
+    type: String, required: false, maxlength: 512 },
   codigo: {
     type: String, required: false, maxlength: 80 },
 
   marca: {
-    type: String, required: false, maxlength: 100, trim: true },
+    type: String, required: false, maxlength: 120, trim: true },
   modelo: {
-    type: String, required: false, maxlength: 100, trim: true },
+    type: String, required: false, maxlength: 120, trim: true },
   categoria: {
-    type: String, required: false, maxlength: 100, trim: true },
+    type: String, required: false, maxlength: 120, trim: true },
   subcategoria: {
-    type: String, required: false, maxlength: 100, trim: true },
+    type: String, required: false, maxlength: 120, trim: true },
 
   unidade: { type: String, enum: medidaList },
   uso: { type: String, enum: usoList },
