@@ -13,7 +13,7 @@ var medidaList = ('m2 - Metro quadrado;cm2 - Centímetro quadrado;'
   + 'm - Metro;cm - Centímetro;UN - Unidade;CT - Cartela (1);CX - Caixa (1);'
   + 'DZ - Duzia (12);GZ - Groza (144);PA - Par (2);PÇ - Peça (1);'
   + 'PT - Pacote (1);RL - Rolo (1);kg - Kilograma;g - Grama;SC60 - Saca 60Kg (60);'
-  + 'l - Litro;m3 - Metro cúbico').split(';');
+  + 'l - Litro;m3 - Metro cúbico; % - Porcentagem').split(';');
 
 var ProductItemSchema = new Schema({
   status: { type: String, enum: ['Disponível', 'Indisponível', 'Reservado'], default: 'Disponível' },
@@ -28,6 +28,7 @@ var ProductItemSchema = new Schema({
 
 var ProductSubSchema = new Schema({
   quantidade: { type: Number, required: true },
+  unidade: { type: String, enum: medidaList },
   produto: { type: Schema.Types.ObjectId, ref: 'Product' },
 });
 

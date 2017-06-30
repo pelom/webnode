@@ -1,63 +1,62 @@
-<header class="hero-unit" id="banner">
+<header class="hero-unit" id="banner" style="background: url('/assets/images/bg_sobre.png');">
   <!--div class="container">
     <h1>'Allo, 'Allo!</h1>
     <p class="lead">Kick-start your next web app with Angular Fullstack</p>
     <img src="assets/images/yeoman.png" alt="I'm Yeoman">
   </div-->
 
+  <div class="container">
+    <div uib-carousel active="$ctrl.active" interval="$ctrl.myInterval" no-wrap="$ctrl.noWrapSlides">
+      <div index="0">
+        <div style="height: 250px">
 
-  <div uib-carousel active="$ctrl.active" interval="$ctrl.myInterval" no-wrap="$ctrl.noWrapSlides">
-    <div uib-slide ng-repeat="slide in $ctrl.slide track by slide.id" index="slide.id">
-      <div style="height: 300px">
+            <br/>
+            <br/>
+            <div class="row">
+              <div class="col-md-12">
 
-        <div class="container">
-          <br/>
-          <br/>
-          <div class="row">
-            <div class="col-md-12">
-
-              <h2><p><i class="fa fa-snowflake-o" aria-hidden="true"/>
-                ARL - Ar Condicionado e Aquecedor Aguá Gás <i class="fa fa-fire" aria-hidden="true"></i> </p></h2>
-              <hr/>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-xs-6 col-sm-3">
-              <span><i class="fa fa-map-o fa-2x" aria-hidden="true"/></span>
-              <p></p>
-              <p><b>Projeto Climatização</b></p>
-              <br/>
+                <h2><p><i class="fa fa-snowflake-o" aria-hidden="true"/>
+                  ARL - Ar Condicionado e Aquecedor Aguá Gás
+                  <i class="fa fa-fire" aria-hidden="true"></i> </p></h2>
+                <hr/>
+              </div>
             </div>
 
-            <div class="col-xs-6 col-sm-3">
-              <span><i class="fa fa-wrench fa-2x" aria-hidden="true"/></span>
-              <p></p>
-              <p><b>Instalação</b></p>
-              <br/>
+            <div class="row">
+              <div class="col-xs-6 col-sm-3">
+                <span><i class="fa fa-map-o fa-2x" aria-hidden="true"/></span>
+                <p></p>
+                <p><b>Projeto Climatização</b></p>
+                <br/>
+              </div>
+
+              <div class="col-xs-6 col-sm-3">
+                <span><i class="fa fa-wrench fa-2x" aria-hidden="true"/></span>
+                <p></p>
+                <p><b>Instalação</b></p>
+                <br/>
+              </div>
+
+              <div class="col-xs-6 col-sm-3">
+                <span><i class="fa fa-cogs fa-2x" aria-hidden="true"/></span>
+                <p></p>
+                <p><b>Manutenção Preventiva</b></p>
+                <br/>
+              </div>
+
+              <div class="col-xs-6 col-sm-3">
+                <span><i class="fa fa-shower fa-2x" aria-hidden="true"/></span>
+                <p></p>
+                <p><b>Higienização</b></p>
+                <br/>
+              </div>
             </div>
 
-            <div class="col-xs-6 col-sm-3">
-              <span><i class="fa fa-cogs fa-2x" aria-hidden="true"/></span>
-              <p></p>
-              <p><b>Manutenção Preventiva</b></p>
-              <br/>
-            </div>
-
-            <div class="col-xs-6 col-sm-3">
-              <span><i class="fa fa-shower fa-2x" aria-hidden="true"/></span>
-              <p></p>
-              <p><b>Higienização</b></p>
-              <br/>
-            </div>
-          </div>
-
+          <!--img ng-src="{{slide.image}}" style="margin:auto;"-->
         </div>
-        <!--img ng-src="{{slide.image}}" style="margin:auto;"-->
       </div>
     </div>
   </div>
-
 </header>
 
 <!--div class="container">
@@ -89,51 +88,43 @@
   </form>
 </div-->
 
-<div class="row footer">
-  <hr/>
-  <div class="col-lg-12">
-    <div class="footer-above">
-      <div class="container">
-        <div class="row">
-          <div class="footer-col col-md-4">
-            <h3><i class="fa fa-phone-square" aria-hidden="true"></i> Atendimento</h3>
-            <p>(11) 9-7118 3363<br>
-              Segunda à Sábado<br>9h00 ás 19h:00 <br/>
-              <a href="mailto:nowhere@mozilla.org" target="_blank">arliferefrigeracao@gmail.com</a><br>
-            </p>
-          </div>
-
-          <div class="footer-col col-md-4">
-            <h3><i class="fa fa-usd" aria-hidden="true"></i> Pague no cartão</h3>
-            <ul class="list-inline">
-              <li><i class="fa fa-2x fa-cc-mastercard"></i></li>
-              <li><i class="fa fa-2x fa-cc-visa"></i></li>
-            </ul>
-            <p>Parcele sua compra</p>
-          </div>
-
-          <div class="footer-col col-md-4">
-            <h3><i class="fa fa-map-marker" aria-hidden="true"></i> Localização</h3>
-            <address>
-              <p>Rua Salvado Dali, 95
-              <br>04470-185 - Jardim Apurá<br>
-               SP - São Paulo
+<div class="container footer">
+  <div class="row ">
+    <hr/>
+    <div class="col-lg-12">
+      <div class="footer-above">
+        <div class="container">
+          <div class="row">
+            <div class="footer-col col-md-4">
+              <h3><i class="fa fa-phone-square" aria-hidden="true"></i> Atendimento</h3>
+              <p>(11) 9-7118 3363<br>
+                Segunda à Sábado<br>9h00 ás 19h:00 <br/>
+                <a href="mailto:nowhere@mozilla.org" target="_blank">arliferefrigeracao@gmail.com</a><br>
               </p>
-            </address>
-          </div>
-        </div>
-      </div>
-    </div>
+            </div>
 
-    <div class="footer-below">
-      <div class="container">
-        <div class="row">
-          <hr/>
-          <div class="col-lg-12">
-            &copy; <small>ARL Refrigeração 2017 - CNPJ 15.505.941/0001-54 - Todos os direitos reservados</small>
+            <div class="footer-col col-md-4">
+              <h3><i class="fa fa-usd" aria-hidden="true"></i> Pague no cartão</h3>
+              <ul class="list-inline">
+                <li><i class="fa fa-2x fa-cc-mastercard"></i></li>
+                <li><i class="fa fa-2x fa-cc-visa"></i></li>
+              </ul>
+              <p>Parcele sua compra</p>
+            </div>
+
+            <div class="footer-col col-md-4">
+              <h3><i class="fa fa-map-marker" aria-hidden="true"></i> Localização</h3>
+              <address>
+                <p>Rua Salvado Dali, 95
+                <br>04470-185 - Jardim Apurá<br>
+                 SP - São Paulo
+                </p>
+              </address>
+            </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>

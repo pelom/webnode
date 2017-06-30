@@ -69,6 +69,7 @@ export default class ProdutoEditController extends Controller {
           this.produto.subproduto.push({
             produto,
             quantidade: 1,
+            unidade: produto.unidade,
             descricao: '',
           });
         }

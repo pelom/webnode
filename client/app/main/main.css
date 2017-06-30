@@ -30,17 +30,12 @@ padding-top: 70px;
 .hero-unit {
   position: relative;
   padding: 30px 15px;
-  color: #F5F5F5;
+  color: #FFF;
   text-align: center;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  background: url("/assets/images/bg_sobre.png");
-  /* Full height */
   height: 100%;
-
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
 }
 
 .navbar-text {

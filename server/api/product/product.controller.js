@@ -154,7 +154,8 @@ const populationPriceUser = {
 
 export function indexCatalog(req, res) {
   let where = {
-    uso: { $in: ['00 - Mercadoria para Revenda', '09 - Serviços'] }
+    uso: { $in: ['00 - Mercadoria para Revenda', '09 - Serviços', '10 - Outros insumos'] },
+    unidade: { $ne: '% - Porcentagem' }
   };
 
   if(req.query.search) {

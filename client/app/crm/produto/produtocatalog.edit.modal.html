@@ -43,12 +43,73 @@
             <dl>
               <dt class="text-muted text-right"><small>Total Preço Venda Itens</small></dt>
               <dd class="text-right">
-                <label class="text-info">{{ ctl.catalogo.custo | finance:true:2 }}</label>
+                <label class="text-info">{{ ctl.catalogo.valorFinal | finance:true:2 }}</label>
               </dd>
             </dl>
             <hr/>
           </div>
 
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <dl>
+              <dt class="text-muted text-right"><small>Indice Markup</small></dt>
+              <dd>
+                <input type="text" class="form-control text-right" ng-disabled="true"
+                  ng-model="ctl.catalogo.markup" ui-number-mask="5"/>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-6">
+            <dl>
+              <dt class="text-muted text-right"><small>Custos</small></dt>
+              <dd>
+                <input type="text" class="form-control text-right" ng-blur="ctl.calc()"
+                  ng-model="ctl.catalogo.custo" ui-number-mask="3"/>
+              </dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <dl>
+              <dt class="text-muted text-right"><small>Diferença</small></dt>
+              <dd>
+                <input type="text" class="form-control text-right" ng-disabled="true"
+                  ng-model="ctl.catalogo.diff" ui-number-mask="5"/>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-6">
+            <dl>
+              <dt class="text-muted text-right"><small>Indice Total</small></dt>
+              <dd>
+                <input type="text" class="form-control text-right" ng-disabled="true"
+                  ng-model="ctl.catalogo.indiceTotal" ui-number-mask="5"/>
+              </dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-striped table-condensed">
+            <thead class="text-muted">
+              <tr>
+                <th><small>Indice</small></th>
+                <th class="text-right"><small>Valor</small></th>
+                <th class="text-right"><small>Total</small></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="ind in ctl.catalogo.indices">
+                <td>{{ind.produto.nome}}</td>
+                <td class="text-right">{{ ind.quantidade | number:1 }}</td>
+                <td class="text-right">{{ ind.valor | finance:true:2 }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div class="row">

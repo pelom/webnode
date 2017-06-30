@@ -182,7 +182,12 @@
                     <input type="text" class="form-control text-right"
                       ng-model="pdt.quantidade"  ui-number-mask="3"/>
                   </td>
-                  <td><small class="text-muted">{{ pdt.produto.unidade }}</small></td>
+                  <td>
+                    <select class="form-control" name="unidade" ng-model="pdt.unidade"
+                       ng-options="item as item for item in ctl.unidade">
+                       <option value="" ng-if="!pdt.unidade">-- Nenhum --</option>
+                    </select>
+                  </td>
                 </tr>
               </tbody>
             </table>
