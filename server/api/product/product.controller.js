@@ -1,6 +1,7 @@
 'use strict';
 import Product from './product.model';
 import ApiService from '../api.service';
+import ProductPdf from '../../components/genarate-pdf/product.pdf';
 
 let api = ApiService();
 let handleError = api.handleError;
@@ -29,7 +30,7 @@ export function index(req, res) {
     populate: [api.populationCriador, api.populationModificador],
     options: { skip: 0, limit: 50,
       sort: {
-        createdAt: -1
+        nome: 1
       }
     }
   }, res);
@@ -141,7 +142,7 @@ const selectCatalog = '_id nome codigo categoria subcategoria descricao'
 
 const populationPrice = {
   path: 'precos',
-  select: '_id valor data descricao',
+  select: '_id valor data descricao custo',
   options: {
     limit: 10
   }
@@ -155,7 +156,7 @@ const populationPriceUser = {
 export function indexCatalog(req, res) {
   let where = {
     uso: { $in: ['00 - Mercadoria para Revenda', '09 - Serviços', '10 - Outros insumos'] },
-    unidade: { $ne: '% - Porcentagem' }
+    //unidade: { $ne: '% - Porcentagem' }
   };
 
   if(req.query.search) {
@@ -194,7 +195,7 @@ export function indexCatalog(req, res) {
       api.populationCriador, api.populationModificador],
     options: { skip: 0, limit: 50,
       sort: {
-        createdAt: -1
+        nome: 1
       }
     }
   }, res);
@@ -206,6 +207,7 @@ export function addprice(req, res) {
 
   let productPrice = {
     valor: req.body.valor,
+    custo: req.body.custo,
     user: req.user._id,
     descricao: req.body.descricao,
   };
@@ -221,4 +223,18 @@ function callbackAddPrice(res) {
     res.status(201).json(true);
     return product;
   };
+}
+
+export function showPdf(req, res) {
+  let productMap = new Map();
+  Product.findById(req.params.id)
+    .select(selectCatalog)
+    .populate([populationSubproduto,
+      populationPrice, populationPriceUser,
+      api.populationCriador, api.populationModificador])
+    .exec()
+    .then(product => {
+      return res.status(201).json(true);
+    })
+  .catch(handleError(res));
 }

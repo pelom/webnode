@@ -1,11 +1,11 @@
 'use strict';
-
 import {Router} from 'express';
 import * as controller from './product.controller';
 import * as auth from '../../auth/auth.service';
 
 let router = new Router();
 
+router.get('/:id/pdf', auth.isAuthenticated(), controller.showPdf);
 router.get('/domain', auth.isAuthenticated(), controller.domain);
 router.get('/catalog', auth.isAuthenticated(), controller.indexCatalog);
 router.get('/', auth.isAuthenticated(), controller.index);

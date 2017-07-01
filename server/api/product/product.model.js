@@ -13,7 +13,7 @@ var medidaList = ('m2 - Metro quadrado;cm2 - Centímetro quadrado;'
   + 'm - Metro;cm - Centímetro;UN - Unidade;CT - Cartela (1);CX - Caixa (1);'
   + 'DZ - Duzia (12);GZ - Groza (144);PA - Par (2);PÇ - Peça (1);'
   + 'PT - Pacote (1);RL - Rolo (1);kg - Kilograma;g - Grama;SC60 - Saca 60Kg (60);'
-  + 'l - Litro;m3 - Metro cúbico; % - Porcentagem').split(';');
+  + 'l - Litro;m3 - Metro cúbico;% - Porcentagem;H - Hora').split(';');
 
 var ProductItemSchema = new Schema({
   status: { type: String, enum: ['Disponível', 'Indisponível', 'Reservado'], default: 'Disponível' },
@@ -34,6 +34,7 @@ var ProductSubSchema = new Schema({
 
 var ProductPriceSchema = new Schema({
   valor: { type: Number, required: true },
+  custo: { type: Number, required: true, default: 0 },
   data: { type: Date, required: true, default: Date.now },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   descricao: {
@@ -69,5 +70,7 @@ var ProductSchema = new Schema({
 }, {
   timestamps: true
 });
+
+ProductSchema.index({ nome: 'text', marca: 'text', modelo: 'text', categoria: 'text' });
 
 export default mongoose.model('Product', ProductSchema);

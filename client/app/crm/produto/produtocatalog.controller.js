@@ -60,6 +60,7 @@ export default class ProdutoCatalogController extends Controller {
       item.unidade = item.unidade.split('-')[0].trim();
       if(item.precos && item.precos.length != 0) {
         item.valor = item.precos[0].valor;
+        item.custo = item.precos[0].custo;
         item.descricaoPreco = item.precos[0].descricao;
       } else {
         item.valor = 0.0;
@@ -72,7 +73,7 @@ export default class ProdutoCatalogController extends Controller {
     let modalCtl = showOpen(modalView);
     modalCtl.onSaveCatalogo = () => {
       modalCtl.dismiss();
-      this.filterCatalogo('');
+      //this.filterCatalogo('');
     };
     modalCtl.onClose = () => {
       modalCtl.dismiss();

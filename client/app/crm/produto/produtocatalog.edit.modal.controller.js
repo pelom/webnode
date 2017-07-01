@@ -13,6 +13,7 @@ export default class ProdutoCatalogEditModalController {
   init() {
     console.log('init()');
     this.catalogo = this.ProdutoService.getModalCtl().params;
+    //let custo = this.catalogo.custo;
     if(this.isSubProduct()) {
       this.calcCustoSubproduto();
       this.catalogo.markup = this.calcMarkup();
@@ -20,6 +21,12 @@ export default class ProdutoCatalogEditModalController {
       console.log(this.catalogo.markup);
       this.calc();
     }
+
+    // if(custo && custo > 0) {
+    //   this.catalogo.custo = custo;
+    //   this.calc();
+    // }
+
     console.log(this.ProdutoService.getModalCtl().params);
   }
 
@@ -38,19 +45,37 @@ export default class ProdutoCatalogEditModalController {
   }
 
   calcCustoSubproduto() {
-    this.catalogo.custo = 0;
+    this.catalogo.custoItens = 0;
+    this.catalogo.vendaItens = 0;
+    this.catalogo.quantidade = 0;
     this.catalogo.indices = [];
 
     this.catalogo.subproduto.forEach(item => {
       item.produto.unidade = item.produto.unidade.split('-')[0].trim();
 
-      if(item.produto.precos && item.produto.precos.length > 0) {
-        item.valor = item.produto.precos[0].valor;
-        item.valorTotal = item.quantidade * item.valor;
-        this.catalogo.custo += item.valorTotal;
+      if(item.unidade) {
+        item.unidade = item.unidade.split('-')[0].trim();
       }
 
-      if(item.produto.unidade === '%') {
+      if(this.isProductPrice(item.produto)) {
+        let lastPrice = item.produto.precos[0];
+        item.valor = lastPrice.valor;
+        item.valorTotal = item.quantidade * lastPrice.valor;
+
+        item.custo = lastPrice.custo;
+        item.custoTotal = item.quantidade * lastPrice.custo;
+
+        this.catalogo.custoItens += item.custoTotal;
+        this.catalogo.vendaItens += item.valorTotal;
+      }
+
+      if(this.isIndice(item.produto)) {
+        if(item.valor) {
+          item.quantidade = item.valor;
+        }
+        if(item.quantidade) {
+          this.catalogo.quantidade += item.quantidade;
+        }
         this.catalogo.indices.push(item);
       }
     });
@@ -64,8 +89,16 @@ export default class ProdutoCatalogEditModalController {
       ind.valor = this.catalogo.valorFinal * ind.quantidade / 100;
       this.catalogo.indiceTotal += ind.valor;
     });
-    this.catalogo.diff = this.catalogo.valorFinal - this.catalogo.indiceTotal;
   }
+
+  isProductPrice(produto) {
+    return produto.precos && produto.precos.length > 0;
+  }
+
+  isIndice(produto) {
+    return produto.unidade === '%';
+  }
+
   saveCatalogo(form) {
     if(form.$invalid) {
       return;
@@ -75,14 +108,22 @@ export default class ProdutoCatalogEditModalController {
       this.toastr.error('Valor inválido', 'O valor deve ser maior que 0');
     }
 
+    this.usSpinnerService.spin('spinner-1');
     this.ProdutoService.addPrice({
       _id: this.catalogo._id,
       produto: 'produto',
+      custo: this.catalogo.custo,
       valor: this.catalogo.valor,
       descricao: this.catalogo.descricaoPreco
     })
       .then(result => {
         this.ProdutoService.getModalCtl().onSaveCatalogo(result);
+      })
+      .catch(err => {
+        console.log('Ex:', err);
+      })
+      .finally(() => {
+        this.usSpinnerService.stop('spinner-1');
       });
   }
 

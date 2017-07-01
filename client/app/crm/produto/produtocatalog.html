@@ -134,7 +134,8 @@
               <td ng-if="ctl.isFull()"><small class="text-muted">{{ pdt.categoria }}</small></td>
               <td ng-if="ctl.isFull()"><small class="text-muted">{{ pdt.modelo }}</small></td>
               <td class="col-xs-3 text-right">
-                <h4 class="text-info">{{ pdt.valor | finance:true:2}}</h4>
+                <h4 class="text-info" ng-if="pdt.unidade === '%'">{{ pdt.valor | number:4}}</h4>
+                <h4 class="text-info" ng-if="pdt.unidade !== '%'">{{ pdt.valor | finance:true:2}}</h4>
               </td>
               <td><small class="text-muted">{{ pdt.unidade }}</small></td>
             </tr>
