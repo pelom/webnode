@@ -59,7 +59,7 @@ function buildWhere(req) {
 }
 
 const selectShow = '_id nome codigo descricao categoria marca modelo subcategoria'
-  + ' uso unidade criador modificador createdAt updatedAt subproduto';
+  + ' uso unidade criador modificador createdAt updatedAt subproduto precificacao';
 
 const populationSubproduto = {
   path: 'subproduto.produto',
@@ -107,11 +107,13 @@ function callbackCreateProduct(req, res) {
 
 export function update(req, res) {
   let productJson = requestUpdateProduct(req);
+  productJson.subproduto = req.body.subproduto;
   Product.findByIdAndUpdate(req.params.id, productJson)
+    .populate([populationPrice])
     .then(handleEntityNotFound(res))
     .then(produto => {
-      produto.subproduto = req.body.subproduto;
-      produto.save();
+      //produto.subproduto = req.body.subproduto;
+      //produto.save();
 
       req.params.id = produto._id;
       return show(req, res);
@@ -133,16 +135,17 @@ function requestUpdateProduct(req) {
     unidade: req.body.unidade,
     proprietario: req.user._id,
     modificador: req.user._id,
+    precificacao: req.body.precificacao
   };
 }
 export function destroy(req, res) {}
 
 const selectCatalog = '_id nome codigo categoria subcategoria descricao'
-  + ' marca modelo uso unidade precos subproduto';
+  + ' marca modelo uso unidade precos subproduto precificacao';
 
 const populationPrice = {
   path: 'precos',
-  select: '_id valor data descricao custo',
+  select: '_id valor data descricao custo markup',
   options: {
     limit: 10
   }
@@ -153,7 +156,29 @@ const populationPriceUser = {
   select: '_id nome sobrenome',
 };
 
+//import fs from 'fs';
+//import csv from 'fast-csv';
 export function indexCatalog(req, res) {
+  // var stream = fs.createReadStream(
+  //   '/home/andreleite/Downloads/NFSe_E_38334208_20170301_20170401.csv',
+  // { encoding: 'latin1'});
+  // let elements = [];
+  // var csvStream = csv({delimiter: ';'})
+  //   .on('data', data => {
+  //     elements.push(data);
+  //   })
+  //   .on('end', function() {
+  //     console.log('done');
+  //     elements.forEach(arr => {
+  //       console.log(arr);
+  //       // arr.forEach(item => {
+  //       //   console.log(item);
+  //       // });
+  //     });
+  //   });
+  //
+  // stream.pipe(csvStream);
+
   let where = {
     uso: { $in: ['00 - Mercadoria para Revenda', '09 - Serviços', '10 - Outros insumos'] },
     //unidade: { $ne: '% - Porcentagem' }
@@ -180,6 +205,8 @@ export function indexCatalog(req, res) {
 
   if(req.query.price) {
     where.precos = { $exists: true, $not: { $size: 0 } };
+    where.unidade = { $ne: '% - Porcentagem' };
+    where.categoria = { $nin: ['Despesa Fixa'] };
   }
 
   if(req.query.categoria) {
@@ -212,8 +239,9 @@ export function addprice(req, res) {
     descricao: req.body.descricao,
   };
   Product.findByIdAndUpdate(req.params.id,
-    { $push: { precos: { $each: [productPrice], $sort: { data: -1 } } }},
+    { $push: { precos: { $each: [productPrice], $sort: { data: -1 } } } },
     { new: true })
+    .populate([populationPrice])
     .then(callbackAddPrice(res))
     .catch(handleError(res));
 }
@@ -226,15 +254,17 @@ function callbackAddPrice(res) {
 }
 
 export function showPdf(req, res) {
-  let productMap = new Map();
-  Product.findById(req.params.id)
-    .select(selectCatalog)
-    .populate([populationSubproduto,
-      populationPrice, populationPriceUser,
-      api.populationCriador, api.populationModificador])
-    .exec()
-    .then(product => {
-      return res.status(201).json(true);
-    })
-  .catch(handleError(res));
+  return res.status(201).json(true);
+
+  // let productMap = new Map();
+  // Product.findById(req.params.id)
+  //   .select(selectCatalog)
+  //   .populate([populationSubproduto,
+  //     populationPrice, populationPriceUser,
+  //     api.populationCriador, api.populationModificador])
+  //   .exec()
+  //   .then(product => {
+  //
+  //   })
+  // .catch(handleError(res));
 }

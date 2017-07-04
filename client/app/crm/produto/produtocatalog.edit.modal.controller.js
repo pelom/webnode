@@ -13,35 +13,16 @@ export default class ProdutoCatalogEditModalController {
   init() {
     console.log('init()');
     this.catalogo = this.ProdutoService.getModalCtl().params;
-    //let custo = this.catalogo.custo;
+
     if(this.isSubProduct()) {
       this.calcCustoSubproduto();
       this.catalogo.markup = this.calcMarkup();
-
-      console.log(this.catalogo.markup);
       this.calc();
     }
-
-    // if(custo && custo > 0) {
-    //   this.catalogo.custo = custo;
-    //   this.calc();
-    // }
-
-    console.log(this.ProdutoService.getModalCtl().params);
   }
 
   isSubProduct() {
     return this.catalogo.subproduto && this.catalogo.subproduto.length > 0;
-  }
-
-  calcMarkup() {
-    console.log('Markup', this.catalogo.indices);
-    let markup = 1.000;
-    this.catalogo.indices.forEach(ind => {
-      console.log(ind.produto.nome, ind.quantidade / 100);
-      markup -= ind.quantidade / 100;
-    });
-    return 1.000 / markup;
   }
 
   calcCustoSubproduto() {
@@ -81,6 +62,22 @@ export default class ProdutoCatalogEditModalController {
     });
   }
 
+  isProductPrice(produto) {
+    return produto.precos && produto.precos.length > 0;
+  }
+
+  isIndice(produto) {
+    return produto.unidade === '%';
+  }
+
+  calcMarkup() {
+    let markup = 1.0000;
+    this.catalogo.indices.forEach(ind => {
+      markup -= ind.quantidade / 100;
+    });
+    return 1.0000 / markup;
+  }
+
   calc() {
     this.catalogo.valorFinal = this.catalogo.custo * this.catalogo.markup;
 
@@ -89,14 +86,6 @@ export default class ProdutoCatalogEditModalController {
       ind.valor = this.catalogo.valorFinal * ind.quantidade / 100;
       this.catalogo.indiceTotal += ind.valor;
     });
-  }
-
-  isProductPrice(produto) {
-    return produto.precos && produto.precos.length > 0;
-  }
-
-  isIndice(produto) {
-    return produto.unidade === '%';
   }
 
   saveCatalogo(form) {
@@ -116,15 +105,15 @@ export default class ProdutoCatalogEditModalController {
       valor: this.catalogo.valor,
       descricao: this.catalogo.descricaoPreco
     })
-      .then(result => {
-        this.ProdutoService.getModalCtl().onSaveCatalogo(result);
-      })
-      .catch(err => {
-        console.log('Ex:', err);
-      })
-      .finally(() => {
-        this.usSpinnerService.stop('spinner-1');
-      });
+    .then(result => {
+      this.ProdutoService.getModalCtl().onSaveCatalogo(result);
+    })
+    .catch(err => {
+      console.log('Ex:', err);
+    })
+    .finally(() => {
+      this.usSpinnerService.stop('spinner-1');
+    });
   }
 
   close() {

@@ -3,6 +3,9 @@ import {Router} from 'express';
 import * as controller from './product.controller';
 import * as auth from '../../auth/auth.service';
 
+import {register} from './product.trigger';
+register();
+
 let router = new Router();
 
 router.get('/:id/pdf', auth.isAuthenticated(), controller.showPdf);

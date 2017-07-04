@@ -2,6 +2,7 @@
 /*eslint no-invalid-this:0*/
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
+import {schemaEmit} from './product.events';
 
 var usoList = ('00 - Mercadoria para Revenda;01 - Matéria-Prima;'
   + '02 - Embalagem;03 - Produto em Processo;04 - Produto Acabado;'
@@ -35,6 +36,7 @@ var ProductSubSchema = new Schema({
 var ProductPriceSchema = new Schema({
   valor: { type: Number, required: true },
   custo: { type: Number, required: true, default: 0 },
+  markup: { type: Number, required: false, default: 0 },
   data: { type: Date, required: true, default: Date.now },
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   descricao: {
@@ -64,7 +66,7 @@ var ProductSchema = new Schema({
   estoque: [ProductItemSchema],
   subproduto: [ProductSubSchema],
   precos: [ProductPriceSchema],
-
+  precificacao: { type: Boolean, required: false, default: false },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
   modificador: { type: Schema.Types.ObjectId, ref: 'User'}
 }, {
@@ -72,5 +74,7 @@ var ProductSchema = new Schema({
 });
 
 ProductSchema.index({ nome: 'text', marca: 'text', modelo: 'text', categoria: 'text' });
+
+schemaEmit(ProductSchema);
 
 export default mongoose.model('Product', ProductSchema);

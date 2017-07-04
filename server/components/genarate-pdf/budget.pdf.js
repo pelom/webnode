@@ -9,7 +9,7 @@ import BudgetHtmlTemplate from '../html-template/budget';
 import BrM from 'br-masks';
 
 export default function BudgetPdf() {
-  //wkhtmltopdf.command = '/home/andreleite/Downloads/wkhtmltox/bin/wkhtmltopdf';
+  wkhtmltopdf.command = '/home/andreleite/Downloads/wkhtmltox/bin/wkhtmltopdf';
   let budgetPdf = {
     generateBudgetPdf
   };

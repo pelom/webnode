@@ -89,7 +89,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-xs-4">
             <dl>
               <dt class="text-muted text-right"><small>Venda Subprodutos</small></dt>
               <dd class="text-right text-info">
@@ -97,7 +97,7 @@
               </dd>
             </dl>
           </div>
-          <div class="col-md-4">
+          <div class="col-xs-4">
             <dl>
               <dt class="text-muted text-right"><small>Total %</small></dt>
               <dd class="text-right">
@@ -105,7 +105,7 @@
               </dd>
             </dl>
           </div>
-          <div class="col-md-4">
+          <div class="col-xs-4">
             <dl>
               <dt class="text-muted text-right"><small>Índice Valor Total</small></dt>
               <dd class="text-right">
@@ -318,14 +318,16 @@
               <tr>
                 <th><small>Usuário</small></th>
                 <th><small>Data</small></th>
+                <th class="text-right"><small>Markup</small></th>
                 <th class="text-right"><small>Custo</small></th>
                 <th class="text-right"><small>Valor</small></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="text-muted">
               <tr ng-repeat="pp in ctl.catalogo.precos | orderBy:sortType:sortReverse | filter:filtrarResult">
                 <td><small>{{ pp.user.nome }} {{ pp.user.sobrenome }}</small></td>
                 <td><small>{{ pp.data | date:'dd/MM/yyyy HH:mm' }}</small></td>
+                <td class="text-right"><small>{{ pp.markup | number:6 }}</small></td>
                 <td class="text-right"><small>{{ pp.custo | finance:true:4}}</small></td>
                 <td class="text-right"><small>{{ pp.valor | finance:true:4}}</small></td>
               </tr>
