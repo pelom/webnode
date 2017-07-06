@@ -13,6 +13,7 @@ import uiSelect from 'ui-select';
 import uiMask from 'angular-ui-mask';
 // import ngMessages from 'angular-messages';
 import ngValidationMatch from 'angular-validation-match';
+import 'angular-file-model';
 
 import toastr from 'angular-toastr';
 import 'angular-spinner';
@@ -36,6 +37,7 @@ import ContatoService from '../components/api/contato/contato.module';
 import ProdutoService from '../components/api/produto/produto.module';
 import OrcamentoService from '../components/api/orcamento/orcamento.module';
 import OportunidadeService from '../components/api/oportunidade/oportunidade.module';
+import NfService from '../components/api/nf/nf.module';
 
 import account from './account';
 import admin from './admin';
@@ -66,9 +68,10 @@ angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toas
   googlemaps, endereco, atividade,
   uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService,
   PermissaoService, EventoService, JobService, ContaService, ContatoService, ProdutoService,
-  OrcamentoService, OportunidadeService,
+  OrcamentoService, OportunidadeService, NfService,
   LeadService, _Auth, account, admin, crm, navbar, footer, main, constants, socket, util, Modal,
-  changePassword, mongooseError, 'angularSpinner', 'ui.calendar', 'idf.br-filters', 'ui.utils.masks'
+  changePassword, mongooseError, 'angularSpinner', 'ui.calendar',
+  'idf.br-filters', 'ui.utils.masks', 'file-model'
 ])
   .config(routeConfig)
   .config(function(uiSelectConfig) {

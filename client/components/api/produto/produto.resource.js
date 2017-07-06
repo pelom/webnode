@@ -22,6 +22,6 @@ export function ProdutoResource($resource) {
       params: {
         controller: 'addprice'
       }
-    },
+    }
   });
 }

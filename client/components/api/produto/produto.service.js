@@ -95,6 +95,14 @@ export function ProdutoService(ProdutoResource, Util) {
         return safeCb(callback)(err);
       }).$promise;
     },
+    uploadFile(file, callback) {
+      return ProdutoResource.upload(file, function(data) {
+        return safeCb(callback)(null, data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
+    }
   };
   return produtoService;
 }
