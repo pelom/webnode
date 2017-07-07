@@ -94,5 +94,19 @@ export default function routes($stateProvider) {
     controller: 'OportunidadeEditController',
     controllerAs: 'ctl',
     authenticate: true
+  })
+  .state('nfs', {
+    url: '/nfs',
+    template: require('./nf/nf.html'),
+    controller: 'NfController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
+  .state('nfedit', {
+    url: '/nfs/edit/:id',
+    template: require('./nf/nf.edit.html'),
+    controller: 'NfEditController',
+    controllerAs: 'ctl',
+    authenticate: true
   });
 }

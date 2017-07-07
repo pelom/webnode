@@ -39,10 +39,12 @@ function createNotaFiscal(xQuery) {
   let ide = xQuery.find('ide');
 
   let invoice = {
+    tipoNota: 'NFe',
     numero: ide.find('nNF').text(),
     dataEmissao: new Date(ide.find('dhEmi').text()),
     serie: ide.find('serie').text(),
     chave: xQuery.find('infNFe').attr('Id'),
+    descricao: xQuery.find('infCpl').text(),
   };
 
   let tot = xQuery.find('total').find('ICMSTot');

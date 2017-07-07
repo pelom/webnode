@@ -1,5 +1,6 @@
 'use strict';
 import {parseXml} from './invoice.parsexml';
+import {parseCsv} from './invoice.parsecsv';
 import Account from '../account/account.model';
 import Invoice from './invoice.model';
 import ApiService from '../api.service';
@@ -13,19 +14,30 @@ let handleValidationError = api.handleValidationError;
 
 export function domain(req, res) {
   res.status(200).json({
-    unidade: Invoice.schema.path('unidade').enumValues,
+    tipoNota: Invoice.schema.path('tipoNota').enumValues,
+    status: Invoice.schema.path('status').enumValues,
   });
 }
 
-const selectIndex = '_id numero serie dataEmissao chave'
-  + ' criador modificador createdAt updatedAt';
+const selectIndex = '_id numero serie dataEmissao chave valorTotal tipoNota'
+  + ' emitente destinatario criador modificador createdAt updatedAt';
+
+const populationEmit = {
+  path: 'emitente',
+  select: '_id nome cpf cnpj telefone endereco'
+};
+const populationDest = {
+  path: 'destinatario',
+  select: '_id nome cpf cnpj telefone endereco'
+};
 
 export function index(req, res) {
   return api.find({
     model: 'Invoice',
     select: selectIndex,
     where: buildWhere(req),
-    populate: [api.populationCriador, api.populationModificador],
+    populate: [populationEmit, populationDest,
+      api.populationCriador, api.populationModificador],
     options: { skip: 0, limit: 50,
       sort: {
         nome: 1
@@ -47,17 +59,14 @@ function buildWhere(req) {
   return where;
 }
 
-const selectShow = '_id numero serie dataEmissao chave'
-  + ' criador modificador createdAt updatedAt';
-
-// const populationSubproduto = {
-//   path: 'subproduto.produto',
-//   select: '_id nome categoria unidade precos'
-// };
+const selectShow = '_id numero serie dataEmissao chave valorTotal tipoNota'
+  + ' emitente destinatario criador modificador createdAt updatedAt'
+  + ' descricao produtos valorIcms valorCofins valorIpi valorPis '
+  + ' valorFrente valorOutro valorSeguro valorVenda valorDesconto codigoServico';
 
 export function show(req, res) {
   return Invoice.findById(req.params.id, selectShow)
-    .populate([
+    .populate([populationEmit, populationDest,
       api.populationCriador, api.populationModificador])
     .exec()
     .then(handleEntityNotFound(res))
@@ -124,31 +133,47 @@ function requestUpdateInvoice(req) {
 }
 export function destroy(req, res) {}
 
-export function uploadInvoiceXml(req, res) {
-  var busboy = new Busboy({ headers: req.headers });
+var Iconv = require('iconv').Iconv;
 
-  busboy.on('file', function(fieldname, file, /*filename, encoding, mimetype*/) {
-    file.on('data', function(data) {
-      //console.log(parseXml(data.toString()));
-      //console.log(createInvoice(req, data));
-      importInvoiceXml(req, res, data);
+export function uploadInvoice(req, res) {
+  const busboy = new Busboy({ headers: req.headers });
+
+  busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+    file.on('data', data => {
+      if(mimetype === 'text/csv') {
+        var dec = new Iconv('CP1252', 'utf8');
+        let textCsv = dec.convert(data);
+
+        importInvoiceCsv(req, textCsv);
+      } else if(mimetype === 'text/xml') {
+        importInvoiceXml(req, data);
+      }
     });
-    file.on('end', function() {
+    file.on('end', () => {
       console.log(`File [${fieldname}] Finished`);
     });
   });
-  busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+  busboy.on('field', (fieldname, val, fieldnameTruncated, valTruncated) => {
     console.log(`Field [${fieldname}]: value: ${val}`, valTruncated);
   });
-  busboy.on('finish', function() {
+  busboy.on('finish', () => {
     console.log('Done parsing form!');
-    // res.writeHead(303, { Connection: 'close', Location: '/' });
-    // res.end();
+    res.writeHead(303, { Connection: 'close', Location: '/' });
+    res.end();
   });
   req.pipe(busboy);
 }
 
-function importInvoiceXml(req, res, data) {
+function importInvoiceCsv(req, data) {
+  parseCsv(data, invoices => {
+    invoices.forEach(invoice => {
+      console.log(invoice);
+      importSaveInvoice(req, invoice);
+    });
+  });
+}
+
+function importInvoiceXml(req, data) {
   let invoiceJson = parseXml(data.toString());
   invoiceJson.xml = data;
   findAccount(invoiceJson.emitente.cnpj, accEmit => {
@@ -159,11 +184,11 @@ function importInvoiceXml(req, res, data) {
       accEmit.save().then(accNewEmit => {
         console.log('Conta Emitente criada', accNewEmit);
         invoiceJson.emitente = accNewEmit._id;
-        findDestinatario(req, res, invoiceJson);
+        findDestinatario(req, invoiceJson);
       });
     } else {
       invoiceJson.emitente = accEmit[0]._id;
-      findDestinatario(req, res, invoiceJson);
+      findDestinatario(req, invoiceJson);
     }
   });
 }
@@ -190,7 +215,25 @@ function notExistAccount(acc) {
   return acc && acc.length == 0;
 }
 
-function findDestinatario(req, res, invoiceJson) {
+function importSaveInvoice(req, invoice) {
+  findAccount(invoice.emitente.cnpj, accEmit => {
+    console.log('AccEmit', accEmit);
+
+    if(notExistAccount(accEmit)) {
+      accEmit = createAccount(req, invoice.emitente);
+      accEmit.save().then(accNewEmit => {
+        console.log('Conta Emitente criada', accNewEmit);
+        invoice.emitente = accNewEmit._id;
+        findDestinatario(req, invoice);
+      });
+    } else {
+      invoice.emitente = accEmit[0]._id;
+      findDestinatario(req, invoice);
+    }
+  });
+}
+
+function findDestinatario(req, invoiceJson) {
   let cnpjCpf = invoiceJson.destinatario.cpf ? invoiceJson.destinatario.cpf
     : invoiceJson.destinatario.cnpj;
   findAccount(cnpjCpf, accDest => {
@@ -199,21 +242,19 @@ function findDestinatario(req, res, invoiceJson) {
       accDest.save().then(accNewDest => {
         console.log('Conta Destinatario criada', accNewDest);
         invoiceJson.destinatario = accNewDest._id;
-        saveInvoice(req, res, invoiceJson);
+        saveInvoice(req, invoiceJson);
       });
     } else {
       invoiceJson.destinatario = accDest[0]._id;
-      saveInvoice(req, res, invoiceJson);
+      saveInvoice(req, invoiceJson);
     }
   });
 }
 
-function saveInvoice(req, res, invoiceJson) {
+function saveInvoice(req, invoiceJson) {
   let invoice = createInvoice(req, invoiceJson);
   invoice.save().then(invoiceDb => {
     console.log('Nota fiscal importada com sucesso', invoiceDb.numero);
-    res.writeHead(303, { Connection: 'close', Location: '/' });
-    res.end();
   });
 }
 function createInvoice(req, invoiceJson) {

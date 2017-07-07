@@ -1,0 +1,579 @@
+<div class="container">
+  <div>
+    <p class="text-primary">
+      <a ui-sref="nfs"><small>Voltar</small></a>
+    </p>
+
+    <span spinner-key="spinner-1" spinner-start-active="true"
+      us-spinner="{ radius: 24, width: 8, length: 16 }"/>
+
+    <form class="form" name="form" novalidate ng-submit="ctl.saveOpp(form)">
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <h4 ng-click="ctl.obj.isCollapsed = !ctl.obj.isCollapsed">
+            <i class="fa fa-newspaper-o fa-2x" aria-hidden="true"></i>
+            &nbsp;<label>{{ctl.nf.tipoNota}} - Nº: {{ctl.nf.numero}}</label>
+            &nbsp;<small>Série: {{ctl.nf.serie}} Data Emissão: {{ ctl.nf.dataEmissao | date:'dd/MM/yyyy'}}</small>
+          </h4>
+          <hr/>
+
+          <uib-tabset active="active">
+            <uib-tab>
+              <uib-tab-heading>Nota Fiscal</uib-tab-heading>
+              <br/>
+
+              <div class="row">
+                <div class="col-xs-2 col-sm-2">
+                  <dt class="text-muted"><small>Série</small></dt>
+                  <dd>
+                    <input type="text" class="form-control" placeholder="000"
+                      style="background-color: #FFF;"
+                      name="subject" ng-model="ctl.nf.serie" ng-disabled="!ctl.isEdit"/>
+                  </dd>
+                </div>
+                <div class="col-xs-3 col-sm-3">
+                  <dt class="text-muted"><small>Número</small></dt>
+                  <dd>
+                    <input type="text" class="form-control"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.numero" ng-disabled="!ctl.isEdit"/>
+                  </dd>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                  <dt class="text-muted"><small>Data Emissão</small></dt>
+                  <dd>
+                    <p class="input-group">
+                      <input type="text" class="form-control" name="dataEmissao"
+                        ng-model="ctl.nf.dataEmissao" datepicker-options="ctl.dateOptions"
+                        uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
+                        is-open="ctl.popup1.opened" ng-disabled="!ctl.isEdit"
+                        ng-required="true" show-button-bar="false"
+                        style="background-color: #FFF;"/>
+
+                      <span class="input-group-btn">
+                       <button type="button" class="btn btn-default"
+                        ng-click="ctl.popup1.opened = true;" ng-disabled="!ctl.isEdit">
+                       <i class="fa fa-calendar" aria-hidden="true"></i></button>
+                      </span>
+                    </p>
+                  </dd>
+                </div>
+                <div class="col-md-4 col-sm-4 text-right">
+                  <dt class="text-muted"><small>Valor Total</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorTotal" ui-money-mask/>
+                  </dd>
+                </div>
+              </div>
+              <br/>
+              <!--h5 class="text-primary"><label>Emitente</label></h5-->
+              <div class="row">
+                <div class="col-xs-4">
+                  <dl>
+                    <dt class="text-muted"><small>CNPJ</small></dt>
+                    <dd>
+                      <input type="text" class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.emitente.cnpj"  ui-br-cpfcnpj-mask/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-xs-8">
+                  <dl>
+                    <dt class="text-muted"><small>Nome / Razão Social</small></dt>
+                    <dd>
+                      <input type="text" class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.emitente.nome"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <!--h5 class="text-primary"><label>Destinatário</label></h5-->
+              <div class="row">
+                <div class="col-xs-4">
+                  <dl>
+                    <dt class="text-muted">
+                      <small ng-if="ctl.nf.destinatario.cnpj">CNPJ</small>
+                      <small ng-if="ctl.nf.destinatario.cpf">CPF</small></dt>
+                    <dd>
+                      <input ng-if="ctl.nf.destinatario.cnpj" type="text"
+                        class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.cnpj"  ui-br-cpfcnpj-mask/>
+                      <input ng-if="ctl.nf.destinatario.cpf" type="text"
+                        class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.cpf"  ui-br-cpfcnpj-mask/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-xs-8">
+                  <dl>
+                    <dt class="text-muted"><small>Nome / Razão Social</small></dt>
+                    <dd>
+                      <input type="text" class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.nome"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+
+              <div class="row" ng-if="ctl.nf.chave">
+                <div class="col-md-6">
+                  <dl>
+                    <dt class="text-muted">
+                      <label>Chave </label>
+                    </dt>
+                    <dd>
+                      <p ng-if="ctl.nf.chave && ctl.nf.chave.length >= 44">
+                        <small>{{ ctl.nf.chave.substring(3) | nfeAccessKey }}</small>
+                      </p>
+                      <p ng-if="ctl.nf.chave && ctl.nf.chave.length < 44">
+                        <small>{{ ctl.nf.chave  }}</small>
+                      </p>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-xs-6" ng-if="ctl.nf.codigoServico">
+                  <dl>
+                    <dt class="text-muted">
+                      <label>Código Serviço</label>
+                    </dt>
+                    <dd>
+                      <small>{{ ctl.nf.codigoServico  }}</small>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+
+              <!--h5 class="text-primary"><label>Descrição da nota fiscal</label></h5-->
+              <div class="row">
+                <div class="col-xs-12">
+                  <textarea class="form-control" rows="4" placeholder="Descrição"
+                    ng-disabled="!ctl.isEdit" style="background-color: #FFF;"
+                    ng-model="ctl.nf.descricao"></textarea>
+                </div>
+              </div>
+              <br/>
+              <div class="row" ng-if="ctl.nf._id">
+                <div class="col-xs-6">
+                  <dl>
+                    <dt class="text-muted"><small>Criado</small></dt>
+                    <dd><small>{{ ctl.nf.createdAt | date:'dd/MM/yyyy HH:mm' }} por
+                      <strong>{{ctl.nf.criador.nome}} {{ctl.nf.criador.sobrenome}}</strong></small></dd>
+                  </dl>
+                </div>
+                <div class="col-xs-6">
+                  <dl>
+                    <dt class="text-muted"><small>Modificado</small></dt>
+                    <dd><small>{{ ctl.nf.updatedAt | date:'dd/MM/yyyy HH:mm' }} por
+                      <strong>{{ctl.nf.modificador.nome}} {{ctl.nf.modificador.sobrenome}}</strong></small></dd>
+                  </dl>
+                </div>
+              </div>
+
+            </uib-tab>
+
+            <uib-tab>
+              <uib-tab-heading>Emitente</uib-tab-heading>
+              <br/>
+              <div class="row">
+                <div class="col-md-12">
+                  <dl>
+                    <dt class="text-muted"><small>Nome / Razão Social</small></dt>
+                    <dd>
+                      <input type="text" class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.emitente.nome"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-xs-6">
+                  <dl>
+                    <dt class="text-muted"><small>CNPJ</small></dt>
+                    <dd>
+                      <input type="text" class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.emitente.cnpj" ui-br-cpfcnpj-mask/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-xs-6">
+                  <dl>
+                    <dt class="text-muted"><small>Telefone</small></dt>
+                    <dd>
+                      <input type="text" class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.emitente.telefone" ui-mask="(99) 9999-9999"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Endereço</small></dt>
+                    <dd>
+                      <input class="form-control" ng-disabled="!ctl.isEdit"
+                       placeholder="Rua, Avenida, Travessa etc"
+                       style="background-color: #FFF;"
+                       ng-model="ctl.nf.emitente.endereco.address" />
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>CEP</small></dt>
+                    <dd>
+                      <input class="form-control"
+                       ui-mask="99999-999" ng-disabled="!ctl.isEdit"
+                       style="background-color: #FFF;"
+                       ng-model="ctl.nf.emitente.endereco.zipcode" />
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Complemento</small></dt>
+                    <dd>
+                      <input class="form-control" placeholder="Casa, Apartamento etc"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.emitente.endereco.complement" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Bairro</small></dt>
+                    <dd>
+                      <input class="form-control"
+                        placeholder="Bairro" style="background-color: #FFF;"
+                        ng-model="ctl.nf.emitente.endereco.suburb" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <dl>
+                    <dt class="text-muted"><small>Número</small></dt>
+                    <dd>
+                      <input class="form-control"
+                       placeholder="Número" style="background-color: #FFF;"
+                       ng-model="ctl.nf.emitente.endereco.number" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-3">
+                  <dl>
+                    <dt class="text-muted"><small>Cidade</small></dt>
+                    <dd>
+                      <input class="form-control"
+                        placeholder="Cidade" style="background-color: #FFF;"
+                        ng-model="ctl.nf.emitente.endereco.city" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-3">
+                  <dl>
+                    <dt class="text-muted"><small>Estado</small></dt>
+                    <dd>
+                      <input class="form-control"
+                        placeholder="Estado" style="background-color: #FFF;"
+                        ng-model="ctl.nf.emitente.endereco.state" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-3">
+                  <dl>
+                    <dt class="text-muted"><small>País</small></dt>
+                    <dd>
+                      <input class="form-control"
+                       placeholder="País" style="background-color: #FFF;"
+                       ng-model="ctl.nf.emitente.endereco.country" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </uib-tab>
+
+            <uib-tab>
+              <uib-tab-heading>Destinatário</uib-tab-heading>
+              <br/>
+              <div class="row">
+                <div class="col-md-12">
+                  <dl>
+                    <dt class="text-muted"><small>Nome / Razão Social</small></dt>
+                    <dd>
+                      <input type="text" class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.nome"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-xs-6">
+                  <dl>
+                    <dt class="text-muted">
+                      <small ng-if="ctl.nf.destinatario.cnpj">CNPJ</small>
+                      <small ng-if="ctl.nf.destinatario.cpf">CPF</small></dt>
+                    <dd>
+                      <input ng-if="ctl.nf.destinatario.cnpj" type="text"
+                        class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.cnpj"  ui-br-cpfcnpj-mask/>
+                      <input ng-if="ctl.nf.destinatario.cpf" type="text"
+                        class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.cpf"  ui-br-cpfcnpj-mask/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-xs-6">
+                  <dl>
+                    <dt class="text-muted"><small>Telefone</small></dt>
+                    <dd>
+                      <input type="text" class="form-control" ng-disabled="!ctl.isEdit"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.telefone" ui-mask="(99) 9999-9999"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Endereço</small></dt>
+                    <dd>
+                      <input class="form-control" ng-disabled="!ctl.isEdit"
+                       placeholder="Rua, Avenida, Travessa etc"
+                       style="background-color: #FFF;"
+                       ng-model="ctl.nf.destinatario.endereco.address" />
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>CEP</small></dt>
+                    <dd>
+                      <input class="form-control"
+                       ui-mask="99999-999" ng-disabled="!ctl.isEdit"
+                       style="background-color: #FFF;"
+                       ng-model="ctl.nf.destinatario.endereco.zipcode" />
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Complemento</small></dt>
+                    <dd>
+                      <input class="form-control" placeholder="Casa, Apartamento etc"
+                        style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.endereco.complement" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Bairro</small></dt>
+                    <dd>
+                      <input class="form-control"
+                        placeholder="Bairro" style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.endereco.suburb" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <dl>
+                    <dt class="text-muted"><small>Número</small></dt>
+                    <dd>
+                      <input class="form-control"
+                       placeholder="Número" style="background-color: #FFF;"
+                       ng-model="ctl.nf.destinatario.endereco.number" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-3">
+                  <dl>
+                    <dt class="text-muted"><small>Cidade</small></dt>
+                    <dd>
+                      <input class="form-control"
+                        placeholder="Cidade" style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.endereco.city" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-3">
+                  <dl>
+                    <dt class="text-muted"><small>Estado</small></dt>
+                    <dd>
+                      <input class="form-control"
+                        placeholder="Estado" style="background-color: #FFF;"
+                        ng-model="ctl.nf.destinatario.endereco.state" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-3">
+                  <dl>
+                    <dt class="text-muted"><small>País</small></dt>
+                    <dd>
+                      <input class="form-control"
+                       placeholder="País" style="background-color: #FFF;"
+                       ng-model="ctl.nf.emitente.endereco.country" ng-disabled="!ctl.isEdit"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </uib-tab>
+
+            <uib-tab>
+              <uib-tab-heading>Produtos</uib-tab-heading>
+              <div class="alert" ng-if="!ctl.nf.produtos.length">
+                <br/>
+                <h4><code>Nota fiscal não contém produtos</code></h4>
+              </div>
+              <div class="table-responsive" ng-if="ctl.nf.produtos && ctl.nf.produtos.length">
+                <table class="table table-striped table-condensed">
+                  <thead class="text-muted">
+                    <tr>
+                      <th></th>
+                      <th><small>Código</small></th>
+                      <th><small>NCM</small></th>
+                      <th><small>Nome do produto</small></th>
+                      <th class="text-right"><small>Quantidade</small></th>
+                      <th><small></small></th>
+                      <th class="text-right"><small>Valor Unidade</small></th>
+                      <th class="text-right"><small>Valor Total</small></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="pdt in ctl.nf.produtos">
+                      <td>
+                        <small class="text-muted"><i class="fa fa-gift" aria-hidden="true"></i> {{$index+1}}</small>
+                      </td>
+                      <td><small class="text-muted">{{ pdt.codigo }}</small></td>
+                      <td><small class="text-muted">{{ pdt.ncm }}</small></td>
+                      <td><small class="text-muted">{{ pdt.nome }}</small></td>
+                      <td class="text-right">
+                        <small class="text-muted">{{ pdt.quantidade | number:4}}</small></td>
+                      <td><small class="text-muted">{{ pdt.unidade }}</small></td>
+                      <td class="text-right">
+                        <small class="text-muted">{{ pdt.valor | finance:true:2 }}</small></td>
+                      <td class="text-right">
+                        <small class="text-muted">{{ pdt.valorTotal | finance:true:2 }}</small></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </uib-tab>
+            <uib-tab>
+              <uib-tab-heading>Total</uib-tab-heading>
+              <br/>
+              <div class="row">
+                <div class="col-xs-6 text-right">
+                  <dt class="text-muted"><small>Valor Produtos</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorVenda" ui-money-mask/>
+                  </dd>
+                </div>
+                <div class="col-xs-6 text-right">
+                  <dt class="text-muted"><small>Valor Total</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorTotal" ui-money-mask/>
+                  </dd>
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-xs-6 text-right">
+                  <dt class="text-muted"><small>Valor Desconto</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorDesconto" ui-money-mask/>
+                  </dd>
+                </div>
+                <div class="col-xs-6 text-right">
+                  <dt class="text-muted"><small>Valor Outro</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorOutro" ui-money-mask/>
+                  </dd>
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-xs-6 text-right">
+                  <dt class="text-muted"><small>Valor Seguro</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorSeguro" ui-money-mask/>
+                  </dd>
+                </div>
+                <div class="col-xs-6 text-right">
+                  <dt class="text-muted"><small>Valor Frente</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorFrente" ui-money-mask/>
+                  </dd>
+                </div>
+              </div>
+              <br/>
+              <br/>
+              <div class="row">
+                <div class="col-xs-6 text-right">
+                  <dt class="text-muted"><small>Valor ICMS</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorIcms" ui-money-mask/>
+                  </dd>
+                </div>
+                <div class="col-xs-6 text-right">
+                  <dt class="text-muted"><small>Valor IPI</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorIpi" ui-money-mask/>
+                  </dd>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6 text-right">
+                  <dt class="text-muted"><small>Valor PIS</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorPis" ui-money-mask/>
+                  </dd>
+                </div>
+                <div class="col-xs-6 text-right">
+                  <dt class="text-muted"><small>Valor COFINS</small></dt>
+                  <dd>
+                    <input type="text" class="form-control text-right" ng-disabled="!ctl.isEdit"
+                      style="background-color: #FFF;"
+                      ng-model="ctl.nf.valorCofins" ui-money-mask/>
+                  </dd>
+                </div>
+              </div>
+            </uib-tab>
+
+          </uib-tabset>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -4,6 +4,7 @@ mongoose.Promise = require('bluebird');
 import mongoose, { Schema } from 'mongoose';
 
 var statusList = 'Rascunho,Aprovado,Rejeitado'.split(',');
+var tipoNotaList = 'NFe,NFSe,NFCe,Manual'.split(',');
 
 var InvoiceItemSchema = new Schema({
   codigo: { type: String, required: false },
@@ -19,17 +20,22 @@ var InvoiceSchema = new Schema({
   titulo: {
     type: String, required: false, maxlength: 100, trim: true },
   numero: {
-    type: String, required: false, minlength: 3, maxlength: 100, trim: true },
+    type: String, required: false, maxlength: 10, trim: true },
   serie: {
     type: String, required: false, maxlength: 10, trim: true },
   chave: {
     type: String, required: false, maxlength: 100, trim: true },
+  codigoServico: {
+    type: String, required: false, maxlength: 5, trim: true },
+  descricao: {
+    type: String, required: false, maxlength: 1000, trim: false },
   dataEmissao: { type: Date, required: true },
 
   emitente: { type: Schema.Types.ObjectId, ref: 'Account' },
   destinatario: { type: Schema.Types.ObjectId, ref: 'Account' },
 
   status: { type: String, required: true, enum: statusList, default: 'Rascunho' },
+  tipoNota: { type: String, required: true, enum: tipoNotaList, default: 'Manual' },
 
   valorTotal: {
     type: Number, required: true, default: 0 },
@@ -51,7 +57,7 @@ var InvoiceSchema = new Schema({
     type: Number, required: true, default: 0 },
   valorPis: {
     type: Number, required: true, default: 0 },
-  ValorCofins: {
+  valorCofins: {
     type: Number, required: true, default: 0 },
 
   desconto: {

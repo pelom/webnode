@@ -1,0 +1,148 @@
+<div class="container">
+
+  <span spinner-key="spinner-1" spinner-start-active="true"
+    us-spinner="{radius:24, width:8, length: 16}">
+  </span>
+
+  <div class="row">
+    <ul class="nav nav-pills">
+      <li class="active">
+        <a href="#" ng-click="ctl.findNfStatus('')" uib-tooltip="Todos">
+          <i class="fa fa-newspaper-o" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()">Notas Fiscais</small>
+          <span class="badge">{{ ctl.notas.length}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-xs-3">
+      <form>
+        <span id="fileselector">
+            <label class="btn btn-default" for="upload-file-selector">
+              <input id="upload-file-selector" type="file" file-model="ctl.buffer" required="true">
+              <i class="fa fa-upload margin-correction"></i>Arquivo
+            </label>
+        </span>
+    </form>
+    </div>
+    <div class="col-xs-4">
+      <!--select class="form-control" name="unidade" ng-model="ctl.selectCat"
+         ng-options="item as item for item in ctl.categorias">
+         <option value="">-- Categoria --</option>
+      </select-->
+    </div>
+    <div class="col-xs-5 pull-right form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <input type="text" class="form-control" placeholder="Filtrar resultados" ng-model="filtrarResult">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="alert" ng-if="!ctl.notas.length">
+        <hr/>
+        <h4><code>Nenhum resultado encontrado</code></h4>
+      </div>
+      <div class="table-responsive" ng-if="ctl.notas.length">
+        <table class="table table-striped table-condensed">
+          <thead class="text-muted">
+            <tr>
+              <th></th>
+              <th>
+                <a href="#" ng-click="ctl.sortType = 'numero'; ctl.sortReverse = !ctl.sortReverse">
+                  <small>Nº<small>
+                  <div class="pull-right">
+                    <i ng-show="ctl.sortType == 'numero' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'numero' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
+              <th>
+                <a href="#" ng-click="ctl.sortType = 'tipoNota'; ctl.sortReverse = !ctl.sortReverse">
+                  <small>Tipo<small>
+                  <div class="pull-right">
+                    <i ng-show="ctl.sortType == 'tipoNota' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'tipoNota' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
+              <th>
+                <a href="#" ng-click="ctl.sortType = 'dataEmissao'; ctl.sortReverse = !ctl.sortReverse">
+                  <small>Data Emissão<small>
+                  <div class="pull-right">
+                    <i ng-show="ctl.sortType == 'dataEmissao' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'dataEmissao' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
+              <th>
+                <a href="#" ng-click="ctl.sortType = 'emitente'; ctl.sortReverse = !ctl.sortReverse">
+                  <small>Emitente<small>
+                  <div class="pull-right">
+                    <i ng-show="ctl.sortType == 'emitente' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'emitente' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
+              <th>
+                <a href="#" ng-click="ctl.sortType='destinatario'; ctl.sortReverse = !ctl.sortReverse">
+                  <small>Destinatário<small>
+                  <div class="pull-right">
+                    <i ng-show="ctl.sortType == 'destinatario' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'destinatario' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
+              <th class="text-right">
+                <a href="#" ng-click="ctl.sortType = 'valorTotal'; ctl.sortReverse = !ctl.sortReverse">
+                  <small>Valor Total<small>
+                  <div class="pull-left">
+                    <i ng-show="ctl.sortType == 'valorTotal' && !ctl.sortReverse"
+                      class="fa fa-sort-amount-asc"></i>
+                    <i ng-show="ctl.sortType == 'valorTotal' && ctl.sortReverse"
+                      class="fa fa-sort-amount-desc"></i>
+                  </div>
+                </a>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="nf in ctl.notas | orderBy:ctl.sortType:ctl.sortReverse | filter:filtrarResult">
+              <td><a href="#" ui-sref="nfedit({id: nf._id})">
+                <i class="fa fa-newspaper-o" aria-hidden="true"></i></a></td>
+              <td><a href="#" ui-sref="nfedit({id: nf._id})">
+                <small>{{ nf.numero }}</small></a></td>
+              <td><small class="text-muted">{{ nf.tipoNota }}</small></td>
+              <td><small class="text-muted">{{ nf.dataEmissao | date:'dd/MM/yyyy HH:mm' }}</small></td>
+              <td><a href="#" ui-sref="contaedit({id: nf.emitente._id})" ng-if="ctl.isFull()"><small>{{ nf.emitente.nome }}</small><br/></a>
+                <small class="text-muted" ng-if="nf.emitente.cnpj" title="CNPJ">
+                  <i class="fa fa-barcode" aria-hidden="true"></i> {{ nf.emitente.cnpj |  brCnpj }}</small></td>
+              <td><a href="#" ui-sref="contaedit({id: nf.destinatario._id})" ng-if="ctl.isFull()"><small>{{ nf.destinatario.nome }}</small><br/></a>
+                <small class="text-muted" ng-if="nf.destinatario.cnpj" title="CNPJ">
+                  <i class="fa fa-barcode" aria-hidden="true"></i> {{ nf.destinatario.cnpj |  brCnpj }}</small>
+                <small class="text-muted" ng-if="nf.destinatario.cpf" title="CPF">
+                  <i class="fa fa-barcode" aria-hidden="true"></i> {{ nf.destinatario.cpf |  brCpf }}</small></td>
+              <td class="text-right">
+                <h5 class="text-info">{{ nf.valorTotal | finance:true:2}}</h5>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

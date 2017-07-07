@@ -5,9 +5,9 @@ import moment from 'moment';
 moment.locale('pt-br');
 export default class ProdutoController extends Controller {
   /*@ngInject*/
-  constructor($window, $scope, toastr, ProdutoService, NfService, usSpinnerService) {
+  constructor($window, $scope, toastr, ProdutoService, usSpinnerService) {
     super($window, $scope, toastr, usSpinnerService);
-    this.NfService = NfService;
+
     this.filterAz = 'A B C D E F G H I J K L M N O P Q R S T U V X Z W Y'.split(' ');
     this.ProdutoService = ProdutoService;
     this.ProdutoService.loadDomain().then(domain => {
@@ -48,16 +48,5 @@ export default class ProdutoController extends Controller {
     .finally(() => {
       this.usSpinnerService.stop('spinner-1');
     });
-  }
-
-  upload() {
-    console.log(this.buffer);
-    const data = new FormData();
-    data.append('file', this.buffer);
-
-    this.NfService.uploadFile(data)
-      .then(() => {
-        console.log('Ok');
-      });
   }
 }
