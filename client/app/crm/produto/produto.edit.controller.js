@@ -46,6 +46,9 @@ export default class ProdutoEditController extends Controller {
       if(!this.produto.subproduto) {
         this.produto.subproduto = [];
       }
+      if(this.produto.codigoFornecedor) {
+        this.produto.codigoFornecedor = this.produto.codigoFornecedor.join(';');
+      }
     };
   }
 
@@ -88,6 +91,9 @@ export default class ProdutoEditController extends Controller {
       return;
     }
 
+    if(this.produto.codigoFornecedor) {
+      this.produto.codigoFornecedor = this.produto.codigoFornecedor.split(';');
+    }
     this.usSpinnerService.spin('spinner-1');
     this.ProdutoService.saveProduto(this.produto)
       .then(() => {

@@ -1,5 +1,6 @@
 'use strict';
 import angular from 'angular';
+import addZero from 'add-zero';
 import Controller from '../../account/controller';
 import moment from 'moment';
 moment.locale('pt-br');
@@ -12,6 +13,14 @@ export default class NfController extends Controller {
     this.NfService.loadNfList()
     .then(notas => {
       this.notas = notas;
+      this.notas.forEach(nf => {
+        if(nf.numero) {
+          nf.numero = addZero(nf.numero, 6);
+        }
+        if(nf.serie) {
+          nf.serie = addZero(nf.serie, 3);
+        }
+      });
     })
     .catch(err => {
       console.log('Ex:', err);
@@ -59,9 +68,17 @@ export default class NfController extends Controller {
   findNfStatus(status) {
     this.status = status;
     this.usSpinnerService.spin('spinner-1');
-    this.NfService.loadNfList()
+    this.NfService.loadNfList({ status: this.status })
     .then(notas => {
       this.notas = notas;
+      this.notas.forEach(nf => {
+        if(nf.numero) {
+          nf.numero = addZero(nf.numero, 6);
+        }
+        if(nf.serie) {
+          nf.serie = addZero(nf.serie, 3);
+        }
+      });
     })
     .catch(err => {
       console.log('Ex:', err);

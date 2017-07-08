@@ -28,7 +28,7 @@
         <thead class="text-muted">
           <tr>
             <th></th>
-            <th><small>Nome</small></th>
+            <th style="width: 50%;"><small>Nome</small></th>
             <th><small>CPF / CNPJ</small></th>
             <th><small>Telefone</small></th>
           </tr>
@@ -38,9 +38,10 @@
             <td>
               <label><input type="radio" name="acc" ng-model="ctl.select" value="{{$index}}"></label>
             </td>
-            <td><a ui-sref="contaedit({id: acc._id})" target="_blank">{{ acc.nome }}</a></td>
-            <td><small>{{ acc.cpf | brCpf }} {{ acc.cnpj | brCnpj }}</small></td>
-            <td><small>{{ acc.telefone | brPhoneNumber}}</small></td>
+            <td><a ui-sref="contaedit({id: acc._id})" target="_blank">
+              <small class="text-muted">{{ acc.nome }}</small></a></td>
+            <td><small class="text-muted">{{ acc.cpf | brCpf }} {{ acc.cnpj | brCnpj }}</small></td>
+            <td><small class="text-muted">{{ acc.telefone | brPhoneNumber}}</small></td>
           </tr>
         </tbody>
       </table>

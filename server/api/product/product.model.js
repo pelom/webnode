@@ -62,7 +62,7 @@ var ProductSchema = new Schema({
 
   unidade: { type: String, enum: medidaList },
   uso: { type: String, enum: usoList },
-
+  codigoFornecedor: [{ type: String, index: true, trim: true }],
   estoque: [ProductItemSchema],
   subproduto: [ProductSubSchema],
   precos: [ProductPriceSchema],

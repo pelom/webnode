@@ -55,7 +55,8 @@ export function ProdutoService(ProdutoResource, Util) {
         subproduto: newProduct.subproduto,
         uso: newProduct.uso,
         unidade: newProduct.unidade,
-        precificacao: newProduct.precificacao
+        precificacao: newProduct.precificacao,
+        codigoFornecedor: newProduct.codigoFornecedor,
       };
 
       if(product.subproduto) {

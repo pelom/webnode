@@ -16,7 +16,7 @@ const mapResultoFields = new Map();
 mapResultoFields.set('vProd', 'valorVenda');
 mapResultoFields.set('vDesc', 'valorDesconto');
 mapResultoFields.set('vNF', 'valorTotal');
-mapResultoFields.set('vFrete', 'valorFrente');
+mapResultoFields.set('vFrete', 'valorFrete');
 mapResultoFields.set('vSeg', 'valorSeguro');
 mapResultoFields.set('vOutro', 'valorOutro');
 mapResultoFields.set('vICMS', 'valorIcms');
@@ -40,6 +40,7 @@ function createNotaFiscal(xQuery) {
 
   let invoice = {
     tipoNota: 'NFe',
+    status: 'Pendente',
     numero: ide.find('nNF').text(),
     dataEmissao: new Date(ide.find('dhEmi').text()),
     serie: ide.find('serie').text(),

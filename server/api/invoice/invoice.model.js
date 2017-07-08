@@ -3,7 +3,7 @@
 mongoose.Promise = require('bluebird');
 import mongoose, { Schema } from 'mongoose';
 
-var statusList = 'Rascunho,Aprovado,Rejeitado'.split(',');
+var statusList = 'Cadastrada,Pendente,Faturada,Cancelada'.split(',');
 var tipoNotaList = 'NFe,NFSe,NFCe,Manual'.split(',');
 
 var InvoiceItemSchema = new Schema({
@@ -14,11 +14,21 @@ var InvoiceItemSchema = new Schema({
   unidade: { type: String, required: true },
   valor: { type: Number, required: true },
   valorTotal: { type: Number, required: true },
+  produto: { type: Schema.Types.ObjectId, ref: 'Product' },
 });
 
 var InvoiceSchema = new Schema({
   titulo: {
     type: String, required: false, maxlength: 100, trim: true },
+  dataVencimento: { type: Date, required: false, default: Date.now },
+
+  emitente: { type: Schema.Types.ObjectId, ref: 'Account' },
+  destinatario: { type: Schema.Types.ObjectId, ref: 'Account' },
+
+  status: { type: String, required: true, enum: statusList, default: 'Cadastrada' },
+  tipoNota: { type: String, required: true, enum: tipoNotaList, default: 'Manual' },
+  xml: Buffer,
+
   numero: {
     type: String, required: false, maxlength: 10, trim: true },
   serie: {
@@ -29,13 +39,7 @@ var InvoiceSchema = new Schema({
     type: String, required: false, maxlength: 5, trim: true },
   descricao: {
     type: String, required: false, maxlength: 1000, trim: false },
-  dataEmissao: { type: Date, required: true },
-
-  emitente: { type: Schema.Types.ObjectId, ref: 'Account' },
-  destinatario: { type: Schema.Types.ObjectId, ref: 'Account' },
-
-  status: { type: String, required: true, enum: statusList, default: 'Rascunho' },
-  tipoNota: { type: String, required: true, enum: tipoNotaList, default: 'Manual' },
+  dataEmissao: { type: Date, required: false },
 
   valorTotal: {
     type: Number, required: true, default: 0 },
@@ -44,7 +48,7 @@ var InvoiceSchema = new Schema({
   valorDesconto: {
     type: Number, required: true, default: 0 },
 
-  valorFrente: {
+  valorFrete: {
     type: Number, required: true, default: 0 },
   valorSeguro: {
     type: Number, required: true, default: 0 },
@@ -64,7 +68,6 @@ var InvoiceSchema = new Schema({
     type: Number, required: true, default: 0, min: 0, max: 100 },
 
   produtos: [InvoiceItemSchema],
-  xml: Buffer,
 
   proprietario: { type: Schema.Types.ObjectId, ref: 'User' },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },

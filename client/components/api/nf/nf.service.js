@@ -3,10 +3,27 @@ import angular from 'angular';
 export function NfService(NfResource, Util) {
   'ngInject';
   let safeCb = Util.safeCb;
+  let cadastradas = 0;
+  let pendentes = 0;
+  let faturadas = 0;
+  let canceladas = 0;
+
   let nfList = [];
   let notaFiscal;
   let modalCtl;
   let produtoService = {
+    getCadastradas() {
+      return cadastradas;
+    },
+    getPendentes() {
+      return pendentes;
+    },
+    getFaturadas() {
+      return faturadas;
+    },
+    getCanceladas() {
+      return canceladas;
+    },
     getModalCtl() {
       return modalCtl;
     },
@@ -33,6 +50,24 @@ export function NfService(NfResource, Util) {
     loadNfList(query, callback) {
       return NfResource.query(query, function(data) {
         nfList = data;
+        let countStatus = nfs => {
+          cadastradas = 0;
+          pendentes = 0;
+          faturadas = 0;
+          canceladas = 0;
+          nfs.forEach(item => {
+            if(item.status === 'Cadastrada') {
+              cadastradas++;
+            } else if(item.status === 'Pendente') {
+              pendentes++;
+            } else if(item.status === 'Faturada') {
+              faturadas++;
+            } else if(item.status === 'Cancelada') {
+              canceladas++;
+            }
+          });
+        };
+        countStatus(nfList);
         return safeCb(callback)(null, data);
       }, function(err) {
         console.log('Ex:', err);
@@ -43,7 +78,27 @@ export function NfService(NfResource, Util) {
       let nf = {
         _id: newNf._id,
         titulo: newNf.titulo,
+        dataVencimento: newNf.dataVencimento,
+        status: newNf.status,
         descricao: newNf.descricao,
+        tipoNota: newNf.tipoNota,
+        emitente: newNf.emitente,
+        destinatario: newNf.destinatario,
+        produtos: newNf.produtos,
+
+        serie: newNf.serie,
+        numero: newNf.numero,
+        dataEmissao: newNf.dataEmissao,
+        valorTotal: newNf.valorTotal,
+        valorVenda: newNf.valorVenda,
+        valorDesconto: newNf.valorDesconto,
+        valorFrete: newNf.valorFrete,
+        valorOutro: newNf.valorOutro,
+        valorSeguro: newNf.valorSeguro,
+        valorIcms: newNf.valorIcms,
+        valorPis: newNf.valorPis,
+        valorIpi: newNf.valorIpi,
+        valorCofins: newNf.valorCofins,
       };
       if(angular.isUndefined(nf._id)) {
         return NfResource.save(nf, function(data) {

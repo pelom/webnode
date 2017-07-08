@@ -44,6 +44,7 @@ function buildWhere(req) {
     var reg = new RegExp(`^${req.query.search}`, 'i');
     where.$or = [
       { nome: { $in: reg } },
+      { codigoFornecedor: reg },
     ];
   }
 
@@ -59,7 +60,8 @@ function buildWhere(req) {
 }
 
 const selectShow = '_id nome codigo descricao categoria marca modelo subcategoria'
-  + ' uso unidade criador modificador createdAt updatedAt subproduto precificacao';
+  + ' uso unidade criador modificador createdAt updatedAt subproduto precificacao'
+  + ' codigoFornecedor';
 
 const populationSubproduto = {
   path: 'subproduto.produto',
@@ -135,7 +137,8 @@ function requestUpdateProduct(req) {
     unidade: req.body.unidade,
     proprietario: req.user._id,
     modificador: req.user._id,
-    precificacao: req.body.precificacao
+    precificacao: req.body.precificacao,
+    codigoFornecedor: req.body.codigoFornecedor,
   };
 }
 export function destroy(req, res) {}

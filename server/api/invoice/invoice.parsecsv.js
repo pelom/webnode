@@ -23,6 +23,7 @@ export function parseCsv(invoiceCsv, callback) {
         let valorTotal = fields[26].replace(/[.]/g, '').replace(/[,]/g, '.');
         let invoice = {
           tipoNota: 'NFSe',
+          status: 'Pendente',
           numero: fields[1],
           chave: fields[3],
           dataEmissao: new Date(ano, mes, dia, h, m, s),

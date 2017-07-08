@@ -16,7 +16,7 @@ export function domain(req, res) {
 }
 
 const selectIndex = '_id nome descricao  telefone cpf cnpj criador modificador proprietario'
-  + 'updatedAt createdAt';
+  + 'updatedAt createdAt endereco';
 
 export function index(req, res) {
   let where = buildWhere(req);
