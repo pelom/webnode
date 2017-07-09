@@ -117,7 +117,7 @@ export default class OportunidadeEditController extends Controller {
     });
   }
 
-  openFindConta() {
+  openFindConta(what) {
     let getParam = () => {
       if(typeof this.opp.conta === 'string') {
         return this.opp.conta;
@@ -126,8 +126,11 @@ export default class OportunidadeEditController extends Controller {
     };
     let modalCtl = openModalView(this.Modal, getParam());
     modalCtl.onSelectAcc = acc => {
-      console.log('onSelectAcc()', acc);
-      this.opp.conta = acc;
+      if(what === 'emit') {
+        this.opp.contaProprietaria = acc;
+      } else if(what === 'dest') {
+        this.opp.conta = acc;
+      }
       modalCtl.dismiss();
     };
     modalCtl.onClose = () => {
@@ -136,9 +139,13 @@ export default class OportunidadeEditController extends Controller {
     this.ContaService.setModalCtl(modalCtl);
   }
 
-  findAcc(search) {
+  findAcc(search, what) {
     if(search && search.length == 0) {
-      this.opp.conta = null;
+      if(what === 'emit') {
+        this.opp.contaProprietaria = null;
+      } else if(what === 'dest') {
+        this.opp.conta = null;
+      }
     } else if(search && search.length < 3) {
       return;
     }
@@ -148,7 +155,11 @@ export default class OportunidadeEditController extends Controller {
     .then(contas => {
       if(contas && contas.length == 1) {
         if(search === contas[0].nome) {
-          this.opp.conta = contas[0];
+          if(what === 'emit') {
+            this.opp.contaProprietaria = contas[0];
+          } else if(what === 'dest') {
+            this.opp.conta = contas[0];
+          }
         }
       }
       return contas;
@@ -160,6 +171,9 @@ export default class OportunidadeEditController extends Controller {
 
   saveOpp(form) {
     if(form.$invalid) {
+      return;
+    }
+    if(this.opp.fase === 'Faturamento' && !this.validFaturamento()) {
       return;
     }
     this.usSpinnerService.spin('spinner-1');
@@ -180,6 +194,34 @@ export default class OportunidadeEditController extends Controller {
       });
   }
 
+  validFaturamento() {
+    let message = '';
+    if(!this.opp.dataFechamento) {
+      message += this.getMessage('Data fechamento é necessária');
+    } else if(this.opp.dataFechamento < new Date()) {
+      message += this.getMessage('Data fechamento deve ser maior que hoje');
+    }
+    if(!this.opp.conta || !this.opp.conta._id) {
+      message += this.getMessage('Conta é necessária');
+    }
+    if(!this.opp.contaProprietaria || !this.opp.contaProprietaria._id) {
+      message += this.getMessage('Conta Proprietária é necessária');
+    }
+    if(!this.opp.orcamento || !this.opp.orcamento._id) {
+      message += this.getMessage('Orçamento é necessário');
+    } else if(this.opp.valor <= 0) {
+      message += this.getMessage('Valor Total inválido');
+    }
+    if(message.length > 0) {
+      this.toastr.error(message, 'Para faturamento', { allowHtml: true });
+      return false;
+    }
+    return true;
+  }
+
+  getMessage(value) {
+    return `<small>${value}</small><br/>`;
+  }
   selectOrcamentoOpp(orca) {
     this.loadOrcamentoId(orca._id);
     this.toastr.info('Alteração de orçamento da oportunidade', `${this.opp.nome}`);
@@ -221,5 +263,20 @@ export default class OportunidadeEditController extends Controller {
       objectId: `${acc._id}`,
       object: 'Account'
     };
+  }
+
+  newOrcamento(form) {
+    if(form.$invalid) {
+      return;
+    }
+    this.usSpinnerService.spin('spinner-1');
+    this.OportunidadeService.saveOportunidade(this.opp)
+      .then(() => {
+        this.$state.go('orcamentoedit', { oppId: this.opp._id });
+      })
+      .catch(this.callbackError(form))
+      .finally(() => {
+        this.usSpinnerService.stop('spinner-1');
+      });
   }
 }

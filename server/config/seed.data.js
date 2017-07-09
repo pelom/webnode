@@ -146,6 +146,7 @@ function criarDados() {
     { nome: 'Catálogo', funcoes: funcaoList, state: 'catalgo', icon: 'fa-book' },
     { nome: 'Orçamentos', funcoes: funcaoList, state: 'orcamentos', icon: 'fa-usd' },
     { nome: 'Oportunidades', funcoes: funcaoList, state: 'oportunidades', icon: 'fa-bolt' },
+    { nome: 'Nota Fiscal', funcoes: funcaoList, state: 'nfs', icon: 'fa-newspaper-o' },
   ];
 
   let profileMap = new Map();

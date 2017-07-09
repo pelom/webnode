@@ -58,12 +58,12 @@
                     <p class="input-group">
 
                       <input type="text" ng-model="ctl.opp.conta" placeholder="Nome da conta"
-                          uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue)"
+                          uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue, 'dest')"
                           typeahead-loading="loadingAcc" typeahead-no-results="noResults" class="form-control">
 
                       <span class="input-group-btn">
                        <button type="button" class="btn btn-default"
-                          ng-click="ctl.openFindConta()">
+                          ng-click="ctl.openFindConta('dest')">
                        <i class="fa fa-search" aria-hidden="true"></i></button>
                        <button type="button" class="btn btn-default" ng-if="ctl.opp.conta._id"
                           ui-sref="contaedit({id: ctl.opp.conta._id})">
@@ -133,14 +133,66 @@
             </div>
 
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col-md-6">
+                <dl>
+                  <dt class="text-muted"><small>Conta Proprietária
+                    <i ng-show="ctl.opp.contaProprietaria._id">*</i></small></dt>
+                  <dd>
+                    <p class="input-group">
 
+                      <input type="text" ng-model="ctl.opp.contaProprietaria" placeholder="Nome da conta pai"
+                          uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue, 'emit')"
+                          style="background-color: #FFF;"
+                          typeahead-loading="loadingAccP" typeahead-no-results="noResultsP" class="form-control">
+
+                      <span class="input-group-btn">
+                       <button type="button" class="btn btn-default"
+                          ng-click="ctl.openFindConta('emit')">
+                       <i class="fa fa-search" aria-hidden="true"></i></button>
+
+                       <button type="button" class="btn btn-default"
+                          ng-if="ctl.opp.contaProprietaria._id"
+                          ui-sref="contaedit({id: ctl.opp.contaProprietaria._id})">
+                       <i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
+                      </span>
+
+                      <div ng-show="loadingAccP">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                      </div>
+                      <div ng-show="noResultsP">
+                        <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Nenhuma conta encontrada
+                      </div>
+                    </p>
+                  </dd>
+                </dl>
               </div>
-
-              <div class="col-sm-6">
+              <div class="col-md-6">
+                <dl>
+                  <dt><small class="text-muted">Orçamento</small></dt>
+                  <dd>
+                    <input type="text" name="orcamento" class="form-control" placeholder="Nome"
+                     ng-model="ctl.opp.orcamento.nome" ng-disabled="true" style="background: #FFF"/>
+                  </dd>
+                </dl>
               </div>
             </div>
-
+            <div class="row">
+              <div class="col-sm-6">
+                <dt><small class="text-muted">Pagamento</small></dt>
+                <dd>
+                  <input type="text" name="orcamento" class="form-control" placeholder="Nome"
+                   ng-model="ctl.opp.orcamento.pagamento" ng-disabled="true" style="background: #FFF"/>
+                </dd>
+              </div>
+              <div class="col-sm-6">
+                <dt><small class="text-muted">Parcela</small></dt>
+                <dd>
+                  <input type="text" name="orcamento" class="form-control" placeholder="Nome"
+                   ng-model="ctl.opp.orcamento.parcela" ng-disabled="true" style="background: #FFF"/>
+                </dd>
+              </div>
+            </div>
+            <br/>
             <div class="row">
               <div class="col-lg-12">
                 <textarea class="form-control" rows="2" placeholder="Descrição"
@@ -245,7 +297,7 @@
             <label>Orçamentos ({{ctl.opp.orcamentos.length}})</label>
             <div class="btn-group pull-right">
               <button type="button" class="btn btn-default btn-sm"
-                ui-sref="orcamentoedit({oppId: ctl.opp._id })" uib-tooltip="Novo Orçamento">
+                ng-click="ctl.newOrcamento(form);" uib-tooltip="Novo Orçamento">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <i ng-if="ctl.isFull()">Novo Orçamento</i></button>
             </div>

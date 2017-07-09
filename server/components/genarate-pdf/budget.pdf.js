@@ -16,76 +16,29 @@ export default function BudgetPdf() {
   return budgetPdf;
 }
 
-function generateBudgetPdf(user, budget, res) {
+function generateBudgetPdf(user, budget, acc, res) {
   console.log('generateBudgetPdf()', budget);
   try {
-    let itensOrc = [];
-    budget.itens.forEach(item => {
-      itensOrc.push({
-        nome: item.produto.nome,
-        medida: item.produto.unidade.split('-')[1].trim(),
-        quantidade: BrM.finance(item.quantidade),
-        desconto: `${(item.desconto * 100).toFixed(1)} %`,
-        valor: `R$ ${BrM.finance(item.valor, 2, ',', '.')}`,
-        valorTotal: `R$ ${BrM.finance(item.valorTotal, 2, ',', '.')}`,
-      });
-      item.valorText = BrM.finance(item.valor);
-      item.valorTotalText = `${BrM.finance(item.valorTotal)}`;
-    });
+    let itensOrc = formatItem(budget);
     let data = moment().local()
       .format('DD/MM/YYYY HH:mm');
 
-    let budgetHtml = new BudgetHtmlTemplate(user, budget);
+    let budgetHtml = new BudgetHtmlTemplate(`${acc.nome}`, budget);
     budgetHtml.data.budget = budget;
     budgetHtml.data.itens = itensOrc;
 
-    budgetHtml.data.valor = `R$ ${BrM.finance(budget.valorVenda, 2, ',', '.')}`;
-    budgetHtml.data.desconto = `${(budget.desconto * 100).toFixed(1)} %`;
-    budgetHtml.data.valorTotal = `R$ ${BrM.finance(budget.valorTotal, 2, ',', '.')}`;
+    setValues(budget, budgetHtml);
+    setPreparado(user, budgetHtml);
+    setContato(budget, budgetHtml);
+    setConta(budget, budgetHtml);
 
-    budgetHtml.data.preparado = `${user.nome} ${user.sobrenome}`;
-    budgetHtml.data.preparadoTelefone = user.celular ? BrM.phone(`${user.celular}`) : BrM.phone(`${user.telefone}`);
-    budgetHtml.data.preparadoEmail = `${user.email}`;
-
-    budgetHtml.data.contato = '';
-    budgetHtml.data.contatoTelefone = '';
-    budgetHtml.data.contatoEmail = '';
-
-    if(budget.contato) {
-      budgetHtml.data.contato = `${budget.contato.nome} ${budget.contato.sobrenome}`;
-      if(budget.contato.celular) {
-        budgetHtml.data.contatoTelefone = BrM.phone(`${budget.contato.celular}`);
-      } else if(budget.contato.telefone) {
-        budgetHtml.data.contatoTelefone = BrM.phone(`${budget.contato.telefone}`);
-      }
-      if(budget.contato.email) {
-        budgetHtml.data.contatoEmail = `${budget.contato.email}`;
-      }
-    }
-
-    budgetHtml.data.conta = '';
-    budgetHtml.data.contaendereco = '';
-    if(budget.conta) {
-      budgetHtml.data.conta = `${budget.conta.nome}`;
-      if(budget.conta.endereco) {
-        budgetHtml.data.contaendereco = `${budget.conta.endereco.address}, ${budget.conta.endereco.number} ${budget.conta.endereco.suburb} ${budget.conta.endereco.zipcode} ${budget.conta.endereco.city} / ${budget.conta.endereco.state}`;
-      }
-    }
-
-    budgetHtml.data.dataValidade = '';
-    if(budget.dataValidade) {
-      budgetHtml.data.dataValidade = formatEventDate(budget.dataValidade, 'DD/MM/YYYY');
-    }
-
+    budgetHtml.data.dataValidade = budget.dataValidade ?
+      formatEventDate(budget.dataValidade, 'DD/MM/YYYY') : '';
     budgetHtml.data.pagamento = budget.pagamento ? budget.pagamento : '';
     budgetHtml.data.parcela = budget.parcela ? budget.parcela : '';
-
     budgetHtml.data.numero = budget.numero ? addZero(budget.numero, 8) : '';
 
-    budgetHtml.data.headerSubtitle = '';
-    if(user.endereco) {
-      budgetHtml.data.headerSubtitle = `${user.endereco.address}, ${user.endereco.number} ${user.endereco.suburb} ${user.endereco.zipcode} ${user.endereco.city} / ${user.endereco.state}`;
-    }
+    setSubHeader(acc, budgetHtml);
 
     let html = budgetHtml.bindDataHtml();
     wkhtmltopdf(html, {
@@ -99,6 +52,81 @@ function generateBudgetPdf(user, budget, res) {
   } catch(err) {
     console.log(err);
   }
+}
+
+function formatItem(budget) {
+  let itensOrc = [];
+  budget.itens.forEach(item => {
+    itensOrc.push({
+      nome: item.produto.nome,
+      medida: item.produto.unidade.split('-')[1].trim(),
+      quantidade: BrM.finance(item.quantidade),
+      desconto: `${(item.desconto * 100).toFixed(1)} %`,
+      valor: `R$ ${BrM.finance(item.valor, 2, ',', '.')}`,
+      valorTotal: `R$ ${BrM.finance(item.valorTotal, 2, ',', '.')}`,
+    });
+    item.valorText = BrM.finance(item.valor);
+    item.valorTotalText = `${BrM.finance(item.valorTotal)}`;
+  });
+  return itensOrc;
+}
+
+function setValues(budget, budgetHtml) {
+  budgetHtml.data.valor = `R$ ${BrM.finance(budget.valorVenda, 2, ',', '.')}`;
+  budgetHtml.data.desconto = `${(budget.desconto * 100).toFixed(1)} %`;
+  budgetHtml.data.valorTotal = `R$ ${BrM.finance(budget.valorTotal, 2, ',', '.')}`;
+}
+
+function setPreparado(user, budgetHtml) {
+  budgetHtml.data.preparado = `${user.nome} ${user.sobrenome}`;
+  budgetHtml.data.preparadoTelefone = user.celular ? BrM.phone(`${user.celular}`)
+    : BrM.phone(`${user.telefone}`);
+  budgetHtml.data.preparadoEmail = `${user.email}`;
+}
+
+function setContato(budget, budgetHtml) {
+  budgetHtml.data.contato = '';
+  budgetHtml.data.contatoTelefone = '';
+  budgetHtml.data.contatoEmail = '';
+
+  if(budget.contato) {
+    budgetHtml.data.contato = `${budget.contato.nome} ${budget.contato.sobrenome}`;
+
+    if(budget.contato.celular) {
+      budgetHtml.data.contatoTelefone = BrM.phone(`${budget.contato.celular}`);
+    } else if(budget.contato.telefone) {
+      budgetHtml.data.contatoTelefone = BrM.phone(`${budget.contato.telefone}`);
+    }
+
+    if(budget.contato.email) {
+      budgetHtml.data.contatoEmail = `${budget.contato.email}`;
+    }
+  }
+}
+
+function setConta(budget, budgetHtml) {
+  budgetHtml.data.conta = '';
+  budgetHtml.data.contaendereco = '';
+  if(budget.conta) {
+    budgetHtml.data.conta = `${budget.conta.nome}`;
+    if(budget.conta.endereco) {
+      budgetHtml.data.contaendereco = `${budget.conta.endereco.address},`
+        + ` ${budget.conta.endereco.number} ${budget.conta.endereco.suburb}`
+        + ` ${budget.conta.endereco.zipcode} ${budget.conta.endereco.city} /`
+        + ` ${budget.conta.endereco.state}`;
+    }
+  }
+}
+
+function setSubHeader(acc, budgetHtml) {
+  budgetHtml.data.headerSubtitle = '';
+  if(!acc.endereco) {
+    return;
+  }
+  budgetHtml.data.headerSubtitle = `${acc.endereco.address},`
+    + ` ${acc.endereco.number} ${acc.endereco.suburb}`
+    + ` ${acc.endereco.zipcode} ${acc.endereco.city} / ${acc.endereco.state} -`
+    + ` ${acc.telefone} - ` + BrM.cnpj(acc.cnpj);
 }
 
 function formatEventDate(data, format) {

@@ -1,6 +1,7 @@
 'use strict';
 import Budget from './budget.model';
-import User from '../user//user.model';
+import Account from '../account/account.model';
+import User from '../user/user.model';
 import ApiService from '../api.service';
 import BudgetPdf from '../../components/genarate-pdf/budget.pdf';
 
@@ -182,14 +183,19 @@ const populationProdutoPdf = {
 
 const populationOportunidadePdf = {
   path: 'oportunidade',
-  select: '_id nome'
+  select: '_id nome contaProprietaria'
+};
+
+const populationContaProprietariaPdf = {
+  path: 'oportunidade.contaProprietaria',
+  select: '_id nome endereco',
 };
 
 export function showPdf(req, res) {
   Budget.findById(req.params.id)
     .select(selectShowPdf)
     .populate([populationContaPdf, populationContatoPdf,
-      populationProdutoPdf, populationOportunidadePdf,
+      populationProdutoPdf, populationContaProprietariaPdf, populationOportunidadePdf,
       api.populationCriador, api.populationModificador])
     .exec()
     .then(budget => {
@@ -198,8 +204,13 @@ export function showPdf(req, res) {
         .exec()
         .then(user => {
           console.log(user);
-          //let user = api.getUserRequest(req);
-          BudgetPdf().generateBudgetPdf(user, budget, res);
+          Account.findById(budget.oportunidade.contaProprietaria)
+            .select('_id nome endereco cnpj telefone')
+            .exec()
+            .then(acc => {
+              //let user = api.getUserRequest(req);
+              BudgetPdf().generateBudgetPdf(user, budget, acc, res);
+            });
         });
     })
   .catch(handleError(res));

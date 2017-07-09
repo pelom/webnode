@@ -80,6 +80,28 @@
                   </dd>
                 </div>
               </div>
+              <div class="row" ng-if="ctl.nf.oportunidade._id">
+                <div class="col-md-6">
+                  <dl>
+                    <dt><small class="text-muted">Oportunidade</small></dt>
+                    <dd>
+                      <p class="input-group">
+
+                        <input type="text" ng-model="ctl.nf.oportunidade.nome"
+                          placeholder="Nome da oportunidade" ng-disabled="true"
+                          style="background-color: #FFF;"
+                          class="form-control">
+
+                        <span class="input-group-btn">
+                         <button type="button" class="btn btn-default" ng-disabled="!ctl.nf.oportunidade._id"
+                            ui-sref="oportunidadeedit({id: ctl.nf.oportunidade._id})">
+                         <i class="fa fa-bolt" aria-hidden="true"></i></button>
+                        </span>
+                      </p>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
             </uib-tab>
 
             <uib-tab>
@@ -156,11 +178,13 @@
                         <input type="text" ng-model="ctl.nf.emitente" placeholder="Nome da conta emitente"
                             uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue, 'emit')"
                             style="background-color: #FFF;" class="form-control"
+                            ng-disabled="!ctl.isEdit()"
                             typeahead-loading="loadingAccEmit" typeahead-no-results="noResultsAccEmit">
 
                         <span class="input-group-btn">
                          <button type="button" class="btn btn-default"
-                            ng-click="ctl.openFindConta('emit')">
+                            ng-click="ctl.openFindConta('emit')"
+                            ng-disabled="!ctl.isEdit()">
                          <i class="fa fa-search" aria-hidden="true"></i></button>
 
                          <button type="button" class="btn btn-default"
@@ -210,11 +234,13 @@
                         <input type="text" ng-model="ctl.nf.destinatario" placeholder="Nome da conta destinatário"
                             uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue, 'dest')"
                             style="background-color: #FFF;" class="form-control"
+                            ng-disabled="!ctl.isEdit()"
                             typeahead-loading="loadingAccDest" typeahead-no-results="noResultsAccDest">
 
                         <span class="input-group-btn">
                          <button type="button" class="btn btn-default"
-                            ng-click="ctl.openFindConta('dest')">
+                            ng-click="ctl.openFindConta('dest')"
+                            ng-disabled="!ctl.isEdit()">
                          <i class="fa fa-search" aria-hidden="true"></i></button>
 
                          <button type="button" class="btn btn-default"

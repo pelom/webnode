@@ -64,11 +64,17 @@ function buildWhere(req) {
 const selectShow = '_id numero serie dataEmissao chave valorTotal tipoNota titulo'
   + ' emitente destinatario criador modificador createdAt updatedAt status dataVencimento'
   + ' descricao produtos valorIcms valorCofins valorIpi valorPis '
-  + ' valorFrete valorOutro valorSeguro valorVenda valorDesconto codigoServico';
+  + ' valorFrete valorOutro valorSeguro valorVenda valorDesconto codigoServico'
+  + ' oportunidade';
+
+const populateOpp = {
+  path: 'oportunidade',
+  select: '_id nome fase dataFechamento'
+};
 
 export function show(req, res) {
   return Invoice.findById(req.params.id, selectShow)
-    .populate([populationEmit, populationDest,
+    .populate([populationEmit, populationDest, populateOpp,
       api.populationCriador, api.populationModificador])
     .exec()
     .then(handleEntityNotFound(res))

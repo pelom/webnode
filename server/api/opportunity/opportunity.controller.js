@@ -67,18 +67,22 @@ function buildWhere(req) {
 
 const selectShow = '_id nome descricao fase valor dataFechamento conta'
   + ' criador modificador proprietario updatedAt createdAt'
-  + ' origem orcamento';
+  + ' origem orcamento contaProprietaria';
 
 const populationConta = {
   path: 'conta',
   select: '_id nome '
 };
-
+const populationContaProprietaria = {
+  path: 'contaProprietaria',
+  select: '_id nome '
+};
 export function show(req, res) {
   return api.findById(req.params.id, {
     model: 'Opportunity',
     select: selectShow,
     populate: [api.populationProprietario, populationConta,
+      populationContaProprietaria,
       api.populationCriador, api.populationModificador],
   }, res);
 }
@@ -108,17 +112,27 @@ function callbackCreateOpportunity(req, res) {
 
 export function update(req, res) {
   let oppJson = requestUpdateOpportinuty(req);
-  console.log(oppJson);
-  if(oppJson.conta && oppJson.conta.length == 0) {
-    oppJson.conta = null;
-  } else if(oppJson.conta && oppJson.conta._id) {
-    oppJson.conta = req.body.conta._id;
-  }
+
+  setValue(oppJson, 'conta');
+  // if(oppJson.conta && oppJson.conta.length == 0) {
+  //   oppJson.conta = null;
+  // } else if(oppJson.conta && oppJson.conta._id) {
+  //   oppJson.conta = req.body.conta._id;
+  // }
 
   if(oppJson.orcamento && oppJson.orcamento._id) {
     oppJson.orcamento = oppJson.orcamento._id;
   }
 
+  if(oppJson.contaProprietaria) {
+    if(oppJson.contaProprietaria.length == 0) {
+      oppJson.contaProprietaria = undefined;
+    } else if(oppJson.contaProprietaria._id) {
+      oppJson.contaProprietaria = req.body.contaProprietaria._id;
+    }
+  } else {
+    oppJson.contaProprietaria = undefined;
+  }
   Opportunity.findByIdAndUpdate(req.params.id, oppJson)
     .then(handleEntityNotFound(res))
     .then(opp => {
@@ -138,7 +152,20 @@ function requestUpdateOpportinuty(req) {
     fase: req.body.fase,
     valor: req.body.valor,
     conta: req.body.conta,
+    contaProprietaria: req.body.contaProprietaria,
     origem: req.body.origem,
     modificador: req.user._id,
   };
+}
+
+function setValue(json, name) {
+  if(json[name]) {
+    if(json[name].length == 0) {
+      json[name] = undefined;
+    } else if(json[name]._id) {
+      json[name] = json[name]._id;
+    }
+  } else {
+    json[name] = undefined;
+  }
 }

@@ -68,13 +68,18 @@ function buildWhere(req) {
 }
 
 const selectShow = '_id nome descricao telefone cpf cnpj criador modificador proprietario'
-  + 'updatedAt createdAt origem endereco setor';
+  + 'updatedAt createdAt origem endereco setor contaPai';
+
+const populationConta = {
+  path: 'contaPai',
+  select: '_id nome cpf cnpj descricao'
+};
 
 export function show(req, res) {
   return api.findById(req.params.id, {
     model: 'Account',
     select: selectShow,
-    populate: [api.populationProprietario,
+    populate: [api.populationProprietario, populationConta,
       api.populationCriador, api.populationModificador],
   }, res);
 }
@@ -127,6 +132,7 @@ function requestUpdateAccount(req) {
     isAtivo: req.body.isAtivo,
     proprietario: req.user._id,
     modificador: req.user._id,
+    contaPai: req.body.contaPai,
   };
 }
 

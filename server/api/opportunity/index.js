@@ -4,6 +4,9 @@ import {Router} from 'express';
 import * as controller from './opportunity.controller';
 import * as auth from '../../auth/auth.service';
 
+import {register} from './opportunity.trigger';
+register();
+
 let router = new Router();
 
 router.get('/', auth.isAuthenticated(), controller.index);

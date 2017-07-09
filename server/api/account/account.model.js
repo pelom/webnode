@@ -20,7 +20,7 @@ var setorList = ('Agricultura,Vestuário,Bancário,Biotecnologia,Produtos Quimic
   + 'Hospitalidade,Seguro,Máquinas,Fabricação,Meios de comunicação,Sem fins lucrativos,'
   + 'Lazer,Varejo,Remessa,Tecnologia,Telecomunicações,Transporte,Serviços,Outros').split(',');
 
-var origemList = 'Website,Indicação Cliente,Ligação,WhatsApp,Outros'.split(',');
+var origemList = 'Fornecedor,Website,Indicação Cliente,Ligação,WhatsApp,Outros'.split(',');
 var AccountSchema = new Schema({
   nome: {
     type: String, required: true, minlength: 3, maxlength: 100, trim: true },
@@ -38,6 +38,7 @@ var AccountSchema = new Schema({
   setor: { type: String, enum: setorList },
   endereco: EnderecoSchema,
   isAtivo: { type: Boolean, required: true, default: true },
+  contaPai: { type: Schema.Types.ObjectId, ref: 'Account' },
   proprietario: { type: Schema.Types.ObjectId, ref: 'User' },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
   modificador: { type: Schema.Types.ObjectId, ref: 'User'}

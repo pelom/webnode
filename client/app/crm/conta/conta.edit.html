@@ -98,8 +98,37 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
+              <dl>
+                <dt class="text-muted"><small>Conta Pai<i ng-show="ctl.conta.contaPai._id">*</i></small></dt>
+                <dd>
+                  <p class="input-group">
 
+                    <input type="text" ng-model="ctl.conta.contaPai" placeholder="Nome da conta pai"
+                        uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue)"
+                        style="background-color: #FFF;"
+                        typeahead-loading="loadingAcc" typeahead-no-results="noResults" class="form-control">
+
+                    <span class="input-group-btn">
+                     <button type="button" class="btn btn-default"
+                        ng-click="ctl.openFindConta()">
+                     <i class="fa fa-search" aria-hidden="true"></i></button>
+
+                     <button type="button" class="btn btn-default"
+                        ng-if="ctl.conta.contaPai._id"
+                        ui-sref="contaedit({id: ctl.conta.contaPai._id})">
+                     <i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
+                    </span>
+
+                    <div ng-show="loadingAcc">
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </div>
+                    <div ng-show="noResults">
+                      <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Nenhuma conta encontrada
+                    </div>
+                  </p>
+                </dd>
+              </dl>
             </div>
           </div>
 

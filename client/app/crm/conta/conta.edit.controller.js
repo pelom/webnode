@@ -2,6 +2,7 @@
 'use strict';
 import angular from 'angular';
 import {openModalView} from '../contato/contato.modal.service';
+import {openModalView as openContaPaiModalView} from './conta.modal.service';
 import Controller from '../../account/controller';
 import moment from 'moment';
 moment.locale('pt-br');
@@ -195,5 +196,46 @@ export default class ContaEditController extends Controller {
       objectId: `${this.conta._id}`,
       object: 'Account'
     };
+  }
+
+  openFindConta() {
+    let getParam = () => {
+      if(typeof this.conta.contaPai === 'string') {
+        return this.conta.contaPai;
+      }
+      return null;
+    };
+    let modalCtl = openContaPaiModalView(this.Modal, getParam());
+    modalCtl.onSelectAcc = acc => {
+      this.conta.contaPai = acc;
+
+      modalCtl.dismiss();
+    };
+    modalCtl.onClose = () => {
+      modalCtl.dismiss();
+    };
+    this.ContaService.setModalCtl(modalCtl);
+  }
+
+  findAcc(search) {
+    if(search && search.length == 0) {
+      this.conta.contaPai = null;
+    } else if(search && search.length < 3) {
+      return;
+    }
+    return this.ContaService.loadContaList({
+      search,
+    })
+    .then(contas => {
+      if(contas && contas.length == 1) {
+        if(search === contas[0].nome) {
+          this.conta.contaPai = contas[0];
+        }
+      }
+      return contas;
+    })
+    .finally(() => {
+      this.usSpinnerService.stop('spinner-1');
+    });
   }
 }

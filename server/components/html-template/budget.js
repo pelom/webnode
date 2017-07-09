@@ -1,11 +1,11 @@
 import HtmlTemplate from './html.template';
 import config from '../../config/environment';
 export default class BudgetHtmlTemplate extends HtmlTemplate {
-  constructor(user, budget) {
+  constructor(title, budget) {
     super();
     this.subject = 'Orçamento';
     this.data = {
-      title: `${user.empresa}`,
+      title,
       message: 'Itens do orçamento',
       copymark: 'ARL 2010-2017',
       budget,

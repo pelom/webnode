@@ -2,6 +2,7 @@
 /*eslint no-invalid-this:0*/
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
+import {schemaEmit} from './opportunity.events';
 
 var origemList = 'Website,Indicação Cliente,Ligação,WhatsApp'.split(',');
 var faseList = 'Qualificação,Orçamento,Negociação,Faturamento,Perdida'.split(',');
@@ -19,12 +20,14 @@ var OpportunitySchema = new Schema({
   fase: { type: String, enum: faseList, default: 'Qualificação' },
   conta: { type: Schema.Types.ObjectId, ref: 'Account' },
   orcamento: { type: Schema.Types.ObjectId, ref: 'Budget' },
-
+  contaProprietaria: { type: Schema.Types.ObjectId, ref: 'Account' },
   proprietario: { type: Schema.Types.ObjectId, ref: 'User' },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
   modificador: { type: Schema.Types.ObjectId, ref: 'User'}
 }, {
   timestamps: true
 });
+
+schemaEmit(OpportunitySchema);
 
 export default mongoose.model('Opportunity', OpportunitySchema);

@@ -56,6 +56,9 @@ export default class NfEditController extends Controller {
       if(this.nf.serie) {
         this.nf.serie = addZero(this.nf.serie, 3);
       }
+      if(this.nf.oportunidade) {
+        this.nf.oportunidade.nome = `${this.nf.oportunidade.nome} - ${this.nf.oportunidade.fase}`
+      }
     };
   }
 

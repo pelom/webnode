@@ -18,11 +18,11 @@
 
             <div class="btn-group pull-right">
               <button type="button" class="btn btn-default btn-sm"
-                ng-click="ctl.relat()" title="Criar PDF">
+                ng-click="ctl.relat()" title="Criar PDF" ng-if="ctl.orcamento._id">
                 <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                   <small ng-if="ctl.isFull()">Criar PDF</small></button>
               <button type="button" class="btn btn-default btn-sm"
-                ng-click="ctl.downloadPdf()" title="Download PDF">
+                ng-click="ctl.downloadPdf()" title="Download PDF" ng-if="ctl.orcamento._id">
                 <i class="fa fa-download" aria-hidden="true"></i>
                 <small ng-if="ctl.isFull()">Download PDF</small></button>
             </div>

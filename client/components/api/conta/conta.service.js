@@ -53,6 +53,7 @@ export function ContaService(ContaResource, Util) {
         origem: newAccount.origem,
         setor: newAccount.setor,
         endereco: newAccount.endereco,
+        contaPai: newAccount.contaPai ? newAccount.contaPai._id : undefined,
       };
       if(angular.isUndefined(account._id)) {
         return ContaResource.save(account, function(data) {
