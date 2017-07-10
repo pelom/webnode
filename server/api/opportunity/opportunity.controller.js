@@ -4,7 +4,7 @@ import ApiService from '../api.service';
 
 let api = ApiService();
 let handleError = api.handleError;
-let respondWithResult = api.respondWithResult;
+//let respondWithResult = api.respondWithResult;
 let handleEntityNotFound = api.handleEntityNotFound;
 let handleValidationError = api.handleValidationError;
 
@@ -54,7 +54,6 @@ function buildWhere(req) {
       { nome: { $in: regexs } },
     ];
   }
-
   if(req.query.conta) {
     where.conta = { $in: req.query.conta };
   }

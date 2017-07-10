@@ -47,7 +47,7 @@ function createNotaFiscal(xQuery) {
     chave: xQuery.find('infNFe').attr('Id'),
     descricao: xQuery.find('infCpl').text(),
   };
-
+  console.log(invoice);
   let tot = xQuery.find('total').find('ICMSTot');
   for(var i = 0; i < tot.length; i++) {
     tot.get(i).children.forEach(field => {
@@ -57,6 +57,7 @@ function createNotaFiscal(xQuery) {
       }
     });
   }
+  console.log(invoice);
   return invoice;
 }
 

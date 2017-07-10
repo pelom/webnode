@@ -9,7 +9,7 @@ import ProductPriceHtmlTemplate from '../html-template/product.price.html';
 import BrM from 'br-masks';
 
 export default function ProductPdf() {
-  wkhtmltopdf.command = '/home/andreleite/Downloads/wkhtmltox/bin/wkhtmltopdf';
+  //wkhtmltopdf.command = '/home/andreleite/Downloads/wkhtmltox/bin/wkhtmltopdf';
   let productPdf = {
     generateProductPricePdf
   };

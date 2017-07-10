@@ -72,9 +72,10 @@ function createAccount(req, json) {
 }
 
 function importInvoiceXml(req, data) {
+  console.log('importInvoiceXml');
   let invoiceJson = parseXml(data.toString());
   invoiceJson.xml = data;
-
+  console.log('Invoice', invoiceJson);
   findAccount(invoiceJson.emitente.cnpj, accEmit => {
     console.log('AccEmit', accEmit);
 
@@ -125,7 +126,7 @@ function saveInvoice(req, invoiceJson) {
       .exec()
       .then(produtos => {
         syncProduct(productCodeMap, produtos);
-
+        console.log('Invoice:', invoice);
         invoice.save().then(invoiceDb => {
           console.log('Nota fiscal importada com sucesso', invoiceDb.numero);
         });

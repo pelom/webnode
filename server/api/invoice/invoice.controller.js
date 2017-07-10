@@ -153,14 +153,30 @@ function requestUpdateInvoice(req) {
 export function destroy(req, res) {}
 
 export function uploadInvoice(req, res) {
-  const busboy = new Busboy({ headers: req.headers });
+  const busboy = new Busboy({ headers: req.headers,
+    limits: { files: 1 }
+  });
 
   busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-    file.on('data', data => {
-      importInvoice(req, data, mimetype);
+    file.fileRead = [];
+    var size = 0;
+
+    file.on('data', function(chunk) {
+      size += chunk.length;
+      if(size > 1024 * 1024 * 2) {
+        file.resume();
+        return res.json({
+          success: false,
+          message: 'Invalid file format'
+        });
+      }
+      file.fileRead.push(chunk);
     });
-    file.on('end', () => {
+
+    file.on('end', function() {
       console.log(`File [${fieldname}] Finished`);
+      let data = Buffer.concat(file.fileRead, size);
+      importInvoice(req, data, mimetype);
     });
   });
   busboy.on('field', (fieldname, val, fieldnameTruncated, valTruncated) => {
