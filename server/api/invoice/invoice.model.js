@@ -6,6 +6,12 @@ import mongoose, { Schema } from 'mongoose';
 var statusList = 'Cadastrada,Pendente,Faturada,Cancelada'.split(',');
 var tipoNotaList = 'NFe,NFSe,NFCe,Manual'.split(',');
 
+var tipoPagList = ('Dinheiro;Cartão Débito;Cartão Crédito;Cheque;Boleto;'
++ 'Transferência TED;Transferência DOC;Depósito').split(';');
+var parcelaList = ('1 - Àvista;2 - Vezes;3 - Vezes;4 - Vezes;5 - Vezes;'
++ '6 - Vezes;7 - Vezes;8 - Vezes').split(';');
+var bandeiraList = 'Master;Visa;Elo;American Express'.split(';');
+
 var InvoiceItemSchema = new Schema({
   codigo: { type: String, required: false },
   nome: { type: String, required: true },
@@ -15,6 +21,21 @@ var InvoiceItemSchema = new Schema({
   valor: { type: Number, required: true },
   valorTotal: { type: Number, required: true },
   produto: { type: Schema.Types.ObjectId, ref: 'Product' },
+});
+
+var InvoicePaymentSchema = new Schema({
+  dataVencimento: { type: Date, required: true, default: Date.now },
+  dataPagamento: { type: Date, required: false },
+  dataCriacao: { type: Date, required: false, default: Date.now },
+  valor: {
+    type: Number, required: true, default: 0 },
+  tipo: { type: String, required: false },
+
+  parcela: { type: Number, required: true },
+  documento: { type: String, required: false },
+  autorizacao: { type: String, required: false },
+  bandeira: { type: String, required: false },
+  criador: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
 var InvoiceSchema = new Schema({
@@ -70,6 +91,11 @@ var InvoiceSchema = new Schema({
   produtos: [InvoiceItemSchema],
 
   oportunidade: { type: Schema.Types.ObjectId, ref: 'Opportunity' },
+  pagamentos: [InvoicePaymentSchema],
+
+  tipoPag: { type: String, required: false, enum: tipoPagList},
+  parcelaPag: { type: String, required: false, enum: parcelaList},
+  bandeiraPag: { type: String, required: false, enum: bandeiraList},
 
   proprietario: { type: Schema.Types.ObjectId, ref: 'User' },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },

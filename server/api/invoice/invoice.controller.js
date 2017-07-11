@@ -15,6 +15,9 @@ export function domain(req, res) {
   res.status(200).json({
     tipoNota: Invoice.schema.path('tipoNota').enumValues,
     status: Invoice.schema.path('status').enumValues,
+    tipoPag: Invoice.schema.path('tipoPag').enumValues,
+    bandeiraPag: Invoice.schema.path('bandeiraPag').enumValues,
+    parcelaPag: Invoice.schema.path('parcelaPag').enumValues,
   });
 }
 
@@ -39,7 +42,7 @@ export function index(req, res) {
       api.populationCriador, api.populationModificador],
     options: { skip: 0, limit: 50,
       sort: {
-        createdAt: -1
+        dataEmissao: -1
       }
     }
   }, res);
@@ -65,7 +68,7 @@ const selectShow = '_id numero serie dataEmissao chave valorTotal tipoNota titul
   + ' emitente destinatario criador modificador createdAt updatedAt status dataVencimento'
   + ' descricao produtos valorIcms valorCofins valorIpi valorPis '
   + ' valorFrete valorOutro valorSeguro valorVenda valorDesconto codigoServico'
-  + ' oportunidade';
+  + ' oportunidade pagamentos';
 
 const populateOpp = {
   path: 'oportunidade',
@@ -144,6 +147,8 @@ function requestUpdateInvoice(req) {
     valorPis: req.body.valorPis,
     valorIpi: req.body.valorIpi,
     valorCofins: req.body.valorCofins,
+
+    pagamentos: req.body.pagamentos,
 
     proprietario: req.user._id,
     modificador: req.user._id,

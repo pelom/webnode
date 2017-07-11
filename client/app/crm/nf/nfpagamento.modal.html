@@ -1,0 +1,131 @@
+<div class="modal-header">
+  <button ng-if="modal.dismissable" type="button" ng-click="$dismiss()" class="close">&times;</button>
+
+  <h5><i class="fa fa-money fa-2x" aria-hidden="true"></i>
+    <strong><span class="modal-title">Pagamentos</span></strong>
+  </h5>
+</div>
+
+<div class="modal-body">
+  <form class="form" novalidate name="form" ng-submit="ctl.setPagamento(form)">
+    <div class="row">
+      <div class="col-xs-6">
+        <dt class="text-muted"><small>Data Pagamento</small></dt>
+        <dd>
+          <p class="input-group">
+            <input type="text" class="form-control" name="dataPagamento"
+              ng-model="ctl.dataPagamento" datepicker-options="ctl.dateOptions"
+              uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
+              is-open="ctl.popup2.opened"
+              ng-required="true" show-button-bar="false"
+              style="background-color: #FFF;"/>
+
+            <span class="input-group-btn">
+             <button type="button" class="btn btn-default"
+              ng-click="ctl.popup2.opened = true;">
+             <i class="fa fa-calendar" aria-hidden="true"></i></button>
+            </span>
+          </p>
+        </dd>
+      </div>
+      <div class="col-xs-6">
+        <dt class="text-muted"><small>Data Vencimento</small></dt>
+        <dd>
+          <p class="input-group">
+            <input type="text" class="form-control" name="dataVencimento"
+              ng-model="ctl.dataVencimento" datepicker-options="ctl.dateOptions"
+              uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
+              is-open="ctl.popup3.opened"
+              ng-required="true" show-button-bar="false"
+              style="background-color: #FFF;"/>
+
+            <span class="input-group-btn">
+             <button type="button" class="btn btn-default"
+              ng-click="ctl.popup3.opened = true;">
+             <i class="fa fa-calendar" aria-hidden="true"></i></button>
+            </span>
+          </p>
+        </dd>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <dl>
+          <dt class="text-muted"><small>Tipo</small></dt>
+          <dd>
+            <select class="form-control" name="tipoPagamento" ng-model="ctl.tipoPagamento"
+               ng-options="item as item for item in ctl.tipos"
+               style="background-color: #FFF;"
+               ng-required="true">
+               <option value="" ng-if="!ctl.tipoPagamento">-- Nenhum --</option>
+            </select>
+          </dd>
+        </dl>
+      </div>
+      <div class="col-xs-6">
+        <dt class="text-muted"><small>Valor Total</small></dt>
+        <dd>
+          <input type="text" class="form-control text-right" ng-disabled="true"
+            style="background-color: #FFF;"
+            ng-model="ctl.valorTotal" ui-money-mask/>
+        </dd>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <dl>
+          <dt class="text-muted"><small>Parcelas</small></dt>
+          <dd>
+            <select class="form-control" name="parcela" ng-model="ctl.parcela"
+               ng-options="item as item for item in ctl.parcelas"
+               style="background-color: #FFF;"
+               ng-required="true" ng-disabled="!ctl.isParcela()">
+               <option value="" ng-if="!ctl.parcela">-- Nenhum --</option>
+            </select>
+          </dd>
+        </dl>
+      </div>
+      <div class="col-xs-6" ng-if="ctl.tipoPagamento !== 'Dinheiro'">
+        <dt class="text-muted"><small>Documento</small></dt>
+        <dd>
+          <input type="text" class="form-control text-right"
+            style="background-color: #FFF;" placeholder="000000"
+            ng-model="ctl.documento"/>
+        </dd>
+      </div>
+    </div>
+    <div class="row" ng-if="ctl.isCartao()">
+      <div class="col-xs-6">
+        <dl>
+          <dt class="text-muted"><small>Bandeira</small></dt>
+          <dd>
+            <select class="form-control" name="bandeira" ng-model="ctl.bandeira"
+               ng-options="item as item for item in ctl.bandeiras"
+               style="background-color: #FFF;"
+               ng-required="true">
+               <option value="" ng-if="!ctl.bandeira">-- Nenhum --</option>
+            </select>
+          </dd>
+        </dl>
+      </div>
+      <div class="col-xs-6">
+        <dt class="text-muted"><small>Autorização</small></dt>
+        <dd>
+          <input type="text" class="form-control text-right"
+            style="background-color: #FFF;" placeholder="000000"
+            ng-model="ctl.autorizacao"/>
+        </dd>
+      </div>
+    </div>
+    <div class="row"><hr/></div>
+    <div class="row">
+      <div class="col-xs-12">
+        <button type="submit" class="btn btn-primary">Concluír</button>
+        <button type="button" class="btn btn-primary" ng-click="ctl.gerar()">Gerar</button>
+        <button type="button" class="btn btn-default"
+          ng-click="ctl.close()">Fechar</button>
+
+      </div>
+    </div>
+  </form>
+</div>

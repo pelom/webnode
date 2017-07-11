@@ -4,6 +4,7 @@ import addZero from 'add-zero';
 import Controller from '../../account/controller';
 import {openModalView as openModalAccView} from '../conta/conta.modal.service';
 import {openModalView as openModalPrtView} from '../produto/produto.modal.service';
+import {openNfPagamentoModalView} from './nf.modal.service';
 
 export default class NfEditController extends Controller {
   /*@ngInject*/
@@ -20,6 +21,9 @@ export default class NfEditController extends Controller {
     this.NfService = NfService;
     this.NfService.loadDomain().then(domain => {
       this.status = domain.status;
+      this.parcelas = domain.parcelaPag;
+      this.bandeiras = domain.bandeiraPag;
+      this.tipos = domain.tipoPag;
       this.tipoNota = domain.tipoNota;
       this.init();
     });
@@ -57,7 +61,7 @@ export default class NfEditController extends Controller {
         this.nf.serie = addZero(this.nf.serie, 3);
       }
       if(this.nf.oportunidade) {
-        this.nf.oportunidade.nome = `${this.nf.oportunidade.nome} - ${this.nf.oportunidade.fase}`
+        this.nf.oportunidade.nome = `${this.nf.oportunidade.nome} - ${this.nf.oportunidade.fase}`;
       }
     };
   }
@@ -212,5 +216,19 @@ export default class NfEditController extends Controller {
       .finally(() => {
         this.usSpinnerService.stop('spinner-1');
       });
+  }
+
+  pagamentos() {
+    let modalCtl = openNfPagamentoModalView(this.Modal, {
+      parcelas: this.parcelas, bandeiras: this.bandeiras, tipos: this.tipos});
+    modalCtl.setPagamento = pagamentos => {
+      console.log('setPagamento()', pagamentos);
+      this.nf.pagamentos = pagamentos;
+      modalCtl.dismiss();
+    };
+    modalCtl.onClose = () => {
+      modalCtl.dismiss();
+    };
+    this.NfService.setModalCtl(modalCtl);
   }
 }

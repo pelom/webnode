@@ -159,10 +159,10 @@
                 <small>{{ nf.numero }}</small></a></td>
               <td><small class="text-muted">{{ nf.tipoNota }}</small></td>
               <td><small class="text-muted">{{ nf.dataEmissao | date:'dd/MM/yyyy HH:mm' }}</small></td>
-              <td><a href="#" ui-sref="contaedit({id: nf.emitente._id})" ng-if="ctl.isFull()"><small>{{ nf.emitente.nome }}</small><br/></a>
+              <td class="text-uppercase"><a href="#" ui-sref="contaedit({id: nf.emitente._id})" ng-if="ctl.isFull()"><small>{{ nf.emitente.nome }}</small><br/></a>
                 <small class="text-muted" ng-if="nf.emitente.cnpj" title="CNPJ">
                   <i class="fa fa-barcode" aria-hidden="true"></i> {{ nf.emitente.cnpj |  brCnpj }}</small></td>
-              <td><a href="#" ui-sref="contaedit({id: nf.destinatario._id})" ng-if="ctl.isFull()"><small>{{ nf.destinatario.nome }}</small><br/></a>
+              <td class="text-uppercase"><a href="#" ui-sref="contaedit({id: nf.destinatario._id})" ng-if="ctl.isFull()"><small>{{ nf.destinatario.nome }}</small><br/></a>
                 <small class="text-muted" ng-if="nf.destinatario.cnpj" title="CNPJ">
                   <i class="fa fa-barcode" aria-hidden="true"></i> {{ nf.destinatario.cnpj |  brCnpj }}</small>
                 <small class="text-muted" ng-if="nf.destinatario.cpf" title="CPF">

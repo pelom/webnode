@@ -12,6 +12,9 @@ export function NfService(NfResource, Util) {
   let notaFiscal;
   let modalCtl;
   let produtoService = {
+    getNotaFiscal() {
+      return notaFiscal;
+    },
     getCadastradas() {
       return cadastradas;
     },
@@ -99,6 +102,8 @@ export function NfService(NfResource, Util) {
         valorPis: newNf.valorPis,
         valorIpi: newNf.valorIpi,
         valorCofins: newNf.valorCofins,
+
+        pagamentos: newNf.pagamentos,
       };
       if(angular.isUndefined(nf._id)) {
         return NfResource.save(nf, function(data) {
