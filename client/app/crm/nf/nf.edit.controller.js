@@ -169,6 +169,7 @@ export default class NfEditController extends Controller {
             nome: produto.nome,
             quantidade: 1,
             unidade: produto.unidade.split(' ')[0],
+            categoria: produto.categoria,
             valor: 0,
             valorTotal: 0,
           });

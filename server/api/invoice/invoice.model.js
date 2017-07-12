@@ -20,6 +20,7 @@ var InvoiceItemSchema = new Schema({
   unidade: { type: String, required: true },
   valor: { type: Number, required: true },
   valorTotal: { type: Number, required: true },
+  categoria: { type: String, required: false },
   produto: { type: Schema.Types.ObjectId, ref: 'Product' },
 });
 

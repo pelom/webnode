@@ -3,7 +3,7 @@ import angular from 'angular';
 import Controller from '../../account/controller';
 import {openModalView} from '../conta/conta.modal.service';
 import addZero from 'add-zero';
-
+import moment from 'moment';
 export default class OportunidadeEditController extends Controller {
   /*@ngInject*/
   constructor($window, $scope, $stateParams, $timeout, $state, toastr, usSpinnerService,
@@ -196,9 +196,12 @@ export default class OportunidadeEditController extends Controller {
 
   validFaturamento() {
     let message = '';
+    console.log(this.opp.dataFechamento);
+    console.log(moment().endOf('day')
+      .toDate());
     if(!this.opp.dataFechamento) {
       message += this.getMessage('Data fechamento é necessária');
-    } else if(this.opp.dataFechamento < new Date()) {
+    } else if(this.opp.dataFechamento < moment().startOf('day').toDate()) {
       message += this.getMessage('Data fechamento deve ser maior que hoje');
     }
     if(!this.opp.conta || !this.opp.conta._id) {

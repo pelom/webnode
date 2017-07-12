@@ -122,7 +122,7 @@ function saveInvoice(req, invoiceJson) {
     let productCodeMap = getProductCodeMap(invoice);
 
     Product.find({ codigoFornecedor: { $in: [...productCodeMap.keys()] }},
-      '_id nome codigoFornecedor')
+      '_id nome codigoFornecedor categoria')
       .exec()
       .then(produtos => {
         syncProduct(productCodeMap, produtos);
@@ -156,6 +156,7 @@ function syncProduct(mapCodigo, produtos) {
       let profNf = mapCodigo.get(cf);
       if(profNf) {
         profNf.produto = item._id;
+        profNf.categoria = item.categoria;
       }
     });
   });

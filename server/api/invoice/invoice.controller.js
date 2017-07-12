@@ -4,6 +4,7 @@ import {importInvoice} from './invoice.import';
 import Invoice from './invoice.model';
 import ApiService from '../api.service';
 import Busboy from 'busboy';
+var mongoose = require('mongoose');
 
 let api = ApiService();
 let handleError = api.handleError;
@@ -34,6 +35,7 @@ const populationDest = {
 };
 
 export function index(req, res) {
+  cashFlow();
   return api.find({
     model: 'Invoice',
     select: selectIndex,
@@ -193,4 +195,120 @@ export function uploadInvoice(req, res) {
     res.end();
   });
   req.pipe(busboy);
+}
+
+function cashFlow() {
+  cashFlowInputOrigin('Faturada');
+  cashFlowInputOrigin('Pendente');
+
+  cashFlowOutputOrigin('Faturada');
+  cashFlowOutputOrigin('Pendente');
+  cashFlowProduct(true);
+  cashFlowProduct(false);
+}
+
+function matStatus(status) {
+  if(status === 'Faturada') {
+    return {
+      pagamentos: { $exists: true },
+      'pagamentos.dataPagamento': { $exists: true }
+    };
+  }
+  return {
+    pagamentos: { $exists: true },
+    'pagamentos.dataPagamento': { $exists: false }
+  };
+}
+
+function cashFlowOutputOrigin(status) {
+  Invoice.aggregate([
+    { $match: { oportunidade: { $exists: false } } },
+    { $unwind: '$destinatario' },
+    { $lookup: {
+      from: 'accounts',
+      localField: 'destinatario',
+      foreignField: '_id',
+      as: 'destinatarioInfo'
+    } },
+    { $unwind: '$pagamentos' },
+    { $match: matStatus(status)
+    },
+    { $group: createGroupTarget() }
+  ]).exec((err, results) => {
+    console.log('cashFlowOutputOrigin()', status);
+    if(err) {
+      console.log(err);
+      return;
+    }
+    console.log(results);
+  });
+}
+
+function createGroupTarget() {
+  return {
+    _id: { $arrayElemAt: ['$destinatarioInfo', 0] },
+    count: { $sum: 1 },
+    valorTotal: { $sum: '$pagamentos.valor' },
+  };
+}
+
+function cashFlowProduct(input) {
+  Invoice.aggregate([
+    { $match: { oportunidade: { $exists: input }, status: 'Faturada' } },
+    { $unwind: '$produtos' },
+    { $unwind: '$pagamentos' },
+    { $match: {
+      pagamentos: { $exists: true },
+      'pagamentos.dataPagamento': { $exists: true } }
+    },
+    { $group: createGroupOutputProduct() }
+  ]).exec((err, results) => {
+    console.log(`cashFlowProduct(${input})`);
+    if(err) {
+      console.log(err);
+      return;
+    }
+    console.log(results);
+  });
+}
+
+function createGroupOutputProduct() {
+  return {
+    _id: '$produtos.nome',
+    count: { $sum: 1 },
+    quantidade: { $sum: '$produtos.quantidade' },
+    valorTotal: { $sum: '$produtos.valorTotal' },
+  };
+}
+
+function cashFlowInputOrigin(status) {
+  Invoice.aggregate([
+    { $match: { oportunidade: { $exists: true } } },
+    { $unwind: '$emitente' },
+    { $lookup: {
+      from: 'accounts',
+      localField: 'emitente',
+      foreignField: '_id',
+      as: 'emitenteInfo'
+    } },
+    { $unwind: '$pagamentos' },
+    { $match: matStatus(status)
+    },
+    { $group: createGroupOrigin() }
+  ]).exec((err, results) => {
+    console.log('cashFlowInputOrigin()', status);
+    if(err) {
+      console.log(err);
+      return;
+    }
+    console.log(results);
+  });
+}
+
+function createGroupOrigin() {
+  return {
+    _id: { $arrayElemAt: ['$emitenteInfo', 0] },
+    count: { $sum: 1 },
+    valorTotal: { $sum: '$pagamentos.valor' },
+  };
 }

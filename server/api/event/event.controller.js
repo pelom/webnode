@@ -3,7 +3,6 @@ import Event from './event.model';
 import User from '../user/user.model';
 import ApiService from '../api.service';
 import EventPdf from '../../components/genarate-pdf/event.pdf';
-
 let api = ApiService();
 let handleError = api.handleError;
 let respondWithResult = api.respondWithResult;
