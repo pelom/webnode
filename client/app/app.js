@@ -38,6 +38,7 @@ import ProdutoService from '../components/api/produto/produto.module';
 import OrcamentoService from '../components/api/orcamento/orcamento.module';
 import OportunidadeService from '../components/api/oportunidade/oportunidade.module';
 import NfService from '../components/api/nf/nf.module';
+import BancoService from '../components/api/banco/banco.module';
 
 import account from './account';
 import admin from './admin';
@@ -68,7 +69,7 @@ angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toas
   googlemaps, endereco, atividade,
   uiRouter, uiBootstrap, uiSelect, uiMask, UsuarioService, AplicacaoService,
   PermissaoService, EventoService, JobService, ContaService, ContatoService, ProdutoService,
-  OrcamentoService, OportunidadeService, NfService,
+  OrcamentoService, OportunidadeService, NfService, BancoService,
   LeadService, _Auth, account, admin, crm, navbar, footer, main, constants, socket, util, Modal,
   changePassword, mongooseError, 'angularSpinner', 'ui.calendar',
   'idf.br-filters', 'ui.utils.masks', 'file-model'

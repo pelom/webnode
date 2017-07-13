@@ -8,8 +8,9 @@ import produto from './produto';
 import orcamento from './orcamento';
 import oportunidade from './oportunidade';
 import nf from './nf';
+import banco from './banco';
 
 export default angular.module('webnodeApp.crm',
 ['webnodeApp.auth', 'ui.router', lead, conta,
-  contato, produto, orcamento, oportunidade, nf])
+  contato, produto, orcamento, oportunidade, nf, banco])
   .config(routes).name;

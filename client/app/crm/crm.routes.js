@@ -108,5 +108,33 @@ export default function routes($stateProvider) {
     controller: 'NfEditController',
     controllerAs: 'ctl',
     authenticate: true
+  })
+  .state('bancos', {
+    url: '/bancos',
+    template: require('./banco/banco.html'),
+    controller: 'BancoController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
+  .state('bancoedit', {
+    url: '/bancos/edit/:id',
+    template: require('./banco/banco.edit.html'),
+    controller: 'BancoEditController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
+  .state('contareceber', {
+    url: '/bancos/contareceber',
+    template: require('./banco/bancocontareceber.html'),
+    controller: 'BancoContaReceberController',
+    controllerAs: 'ctl',
+    authenticate: true
+  })
+  .state('contapagar', {
+    url: '/bancos/contapagar',
+    template: require('./banco/bancocontapagar.html'),
+    controller: 'BancoContaPagarController',
+    controllerAs: 'ctl',
+    authenticate: true
   });
 }

@@ -54,6 +54,7 @@
                     <dd>
                       <select class="form-control" name="status" ng-model="ctl.nf.status"
                          ng-options="item as item for item in ctl.status"
+                         style="background-color: #FFF;"
                          ng-required="true" ng-disabled="!ctl.isEditInfo()">
                          <option value="" ng-if="!ctl.nf.status">-- Nenhum --</option>
                       </select>
@@ -105,7 +106,7 @@
               <hr/>
               <div class="row">
                 <div class="col-lg-12">
-                  <button type="button" class="btn btn-default btn-sm"
+                  <button type="button" class="btn btn-default btn-sm" ng-disabled="!ctl.isEditInfo()"
                     ng-click="ctl.pagamentos()" uib-tooltip="Pagamento">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     <i ng-if="ctl.isFull()">Pagamento</i></button>

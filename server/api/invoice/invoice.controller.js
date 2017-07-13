@@ -4,7 +4,6 @@ import {importInvoice} from './invoice.import';
 import Invoice from './invoice.model';
 import ApiService from '../api.service';
 import Busboy from 'busboy';
-var mongoose = require('mongoose');
 
 let api = ApiService();
 let handleError = api.handleError;
@@ -197,6 +196,94 @@ export function uploadInvoice(req, res) {
   req.pipe(busboy);
 }
 
+export function accountReceivable(req, res) {
+}
+export function accountPayable(req, res) {
+  let firstDay = new Date(req.query.start);
+  let lastDay = new Date(req.query.end);
+  console.log(firstDay);
+  console.log(lastDay);
+
+  Invoice.aggregate([
+    { $match: { oportunidade: { $exists: false }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
+    { $unwind: '$emitente' },
+    { $lookup: {
+      from: 'accounts',
+      localField: 'emitente',
+      foreignField: '_id',
+      as: 'emitenteInfo'
+    } },
+    { $unwind: '$pagamentos' },
+    { $match: {
+      pagamentos: { $exists: true },
+      'pagamentos.dataPagamento': { $exists: false },
+      'pagamentos.dataVencimento': {
+        $gte: firstDay, $lte: lastDay
+      } }
+    },
+    { $group: {
+      _id: '$pagamentos.dataVencimento',
+      titulo: { $push: '$titulo' },
+      numero: { $push: '$numero' },
+      status: { $push: '$status' },
+      dataEmissao: { $push: '$dataEmissao' },
+      emitente: { $push: { $arrayElemAt: ['$emitenteInfo', 0] } },
+      pagamentos: { $push: '$pagamentos' },
+    }}
+  ]).exec((err, results) => {
+    let pagamentos = [];
+    for(var i = 0; i < results.length; i++) {
+      let titulo = results[i].titulo[0];
+      let numero = results[i].numero[0];
+      let status = results[i].status[0];
+      let dataEmissao = results[i].dataEmissao[0];
+
+      let nome = results[i].emitente[0].nome;
+      let _id = results[i].emitente[0]._id;
+      let cnpj = results[i].emitente[0].cnpj;
+      let origem = results[i].emitente[0].origem;
+      let pagamento = results[i].pagamentos[0];
+      pagamentos.push({
+        titulo,
+        numero,
+        status,
+        dataEmissao,
+        emitente: {
+          nome,
+          _id,
+          cnpj,
+          origem,
+        },
+        pagamento,
+      });
+    }
+    console.log(results);
+    console.log(pagamentos);
+    res.status(201).json(pagamentos);
+  });
+
+  // Invoice.find({
+  //   oportunidade: { $exists: false },
+  //   status: { $nin: ['Cadastrada', 'Cancelada']},
+  //   pagamentos: {
+  //     $elemMatch: {
+  //       dataPagamento: { $exists: false },
+  //       dataVencimento: {
+  //         $gte: firstDay, $lte: lastDay
+  //       }
+  //     }
+  //   }
+  // }).select('_id titulo pagamentos emitente')
+  //   .populate([populationEmit])
+  //   .exec()
+  //   .then(handleEntityNotFound(res))
+  //   .then(result => {
+  //     console.log(result);
+  //     return result;
+  //   })
+  //   .then(respondWithResult(res))
+  //   .catch(handleError(res));
+}
 function cashFlow() {
   cashFlowInputOrigin('Faturada');
   cashFlowInputOrigin('Pendente');
@@ -222,7 +309,7 @@ function matStatus(status) {
 
 function cashFlowOutputOrigin(status) {
   Invoice.aggregate([
-    { $match: { oportunidade: { $exists: false } } },
+    { $match: { oportunidade: { $exists: false }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
     { $unwind: '$destinatario' },
     { $lookup: {
       from: 'accounts',
@@ -283,7 +370,7 @@ function createGroupOutputProduct() {
 
 function cashFlowInputOrigin(status) {
   Invoice.aggregate([
-    { $match: { oportunidade: { $exists: true } } },
+    { $match: { oportunidade: { $exists: true }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
     { $unwind: '$emitente' },
     { $lookup: {
       from: 'accounts',

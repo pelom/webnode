@@ -20,6 +20,7 @@ export default function(app, agenda) {
   app.use('/api/budget', require('./api/budget'));
   app.use('/api/opportunity', require('./api/opportunity'));
   app.use('/api/invoice', require('./api/invoice'));
+  app.use('/api/bank', require('./api/bank'));
 
   app.use('/api/job', require('./api/job')(agenda));
 

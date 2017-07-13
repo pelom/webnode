@@ -1,0 +1,144 @@
+<div class="container">
+  <div>
+    <p class="text-primary">
+      <a ui-sref="bancos"><small>Voltar</small></a>
+    </p>
+
+    <span spinner-key="spinner-1" spinner-start-active="true"
+      us-spinner="{ radius: 24, width: 8, length: 16 }"/>
+
+    <form class="form" name="form" novalidate ng-submit="ctl.saveBanco(form)">
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <h4 ng-click="ctl.obj.isCollapsed = !ctl.obj.isCollapsed">
+            <i class="fa fa-university fa-2x" aria-hidden="true"></i>
+            &nbsp;<label>{{ctl.banco.nome }}</label>
+            &nbsp;<small>Agência: {{ctl.banco.agencia}} Conta: {{ ctl.banco.conta }}</small>
+          </h4>
+          <hr/>
+
+          <div class="row" ng-if="!ctl.banco._id">
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Saldo Inícial</small></dt>
+                <dd>
+                  <input type="text" name="nome" class="form-control" placeholder="Saldo inícial"
+                   ng-model="ctl.banco.saldoInicial" ng-required="true" ui-money-mask/>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Nome do banco</small></dt>
+                <dd ng-class="{'has-error': form.nome.$invalid && form.nome.$dirty}">
+                  <input type="text" name="nome" class="form-control" placeholder="Nome"
+                   ng-model="ctl.banco.nome" ng-required="true" ng-minlength="3" ng-maxlength="100"/>
+
+                  <p class="help-block"
+                    ng-show="form.nome.$error.required && form.nome.$dirty">
+                    O nome é necessário</p>
+                  <p class="help-block" ng-show="form.nome.$error.minlength">
+                    São necessários no minimo 3 letras</p>
+                  <p class="help-block" ng-show="form.nome.$error.maxlength">
+                    São permitidos no máximo 100 letras</p>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Código do banco</small></dt>
+                <dd>
+                  <input type="text" name="codigo" class="form-control" placeholder="Código"
+                   ng-model="ctl.banco.codigo"/>
+                </dd>
+              </dl>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Agência do banco</small></dt>
+                <dd>
+                  <input type="text" name="agencia" class="form-control" placeholder="Agência"
+                   ng-model="ctl.banco.agencia"/>
+                </dd>
+              </dl>
+            </div>
+            <div class="col-sm-6">
+              <dl>
+                <dt class="text-muted"><small>Conta do banco</small></dt>
+                <dd>
+                  <input type="text" name="conta" class="form-control" placeholder="Conta"
+                   ng-model="ctl.banco.conta"/>
+                </dd>
+              </dl>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <dl>
+                <dt class="text-muted"><small>Conta <i ng-show="ctl.banco.account._id">*</i></small></dt>
+                <dd ng-class="{'has-error': form.account.$invalid}">
+                  <p class="input-group">
+
+                    <input type="text" ng-model="ctl.banco.account" placeholder="Nome da conta"
+                        uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue)"
+                        name="account"
+                        ng-required="true"
+                        ng-disabled="ctl.orcamento.oportunidade._id" style="background-color: #FFF;"
+                        typeahead-loading="loadingAcc" typeahead-no-results="noResults" class="form-control">
+
+                    <span class="input-group-btn">
+                     <button type="button" class="btn btn-default"
+                        ng-disabled="ctl.orcamento.oportunidade._id"
+                        ng-click="ctl.openFindConta()">
+                     <i class="fa fa-search" aria-hidden="true"></i></button>
+
+                     <button type="button" class="btn btn-default"
+                        ng-if="ctl.banco.account._id"
+                        ui-sref="contaedit({id: ctl.banco.account._id})">
+                     <i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
+                    </span>
+
+                    <div ng-show="loadingAcc">
+                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </div>
+                    <div ng-show="noResults">
+                      <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Nenhuma conta encontrada
+                    </div>
+                  </p>
+                  <p class="help-block"
+                    ng-show="form.account.$error.required">
+                    A Conta é necessário</p>
+                </dd>
+              </dl>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <textarea class="form-control" rows="2" placeholder="Descrição"
+                ng-model="ctl.banco.descricao"></textarea>
+            </div>
+          </div>
+
+          <br/>
+          <div class="row"><hr/></div>
+          <div class="list-group">
+            <button class="btn btn-primary" type="submit"
+              ng-disabled="form.$invalid">Salvar</button>
+            <button type="button" class="btn btn-link"
+              ui-sref="bancos">Voltar</button>
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
