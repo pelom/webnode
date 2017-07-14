@@ -8,6 +8,7 @@ let router = new Router();
 
 router.get('/domain', auth.isAuthenticated(), controller.domain);
 router.get('/accountPayable', auth.isAuthenticated(), controller.accountPayable);
+router.get('/accountReceivable', auth.isAuthenticated(), controller.accountReceivable);
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.create);

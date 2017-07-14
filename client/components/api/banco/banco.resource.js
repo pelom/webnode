@@ -18,6 +18,13 @@ export function BancoResource($resource) {
         id: 'accountPayable'
       }
     },
+    accountReceivable: {
+      method: 'GET',
+      isArray: true,
+      params: {
+        id: 'accountReceivable'
+      }
+    },
     operation: {
       method: 'PUT',
       params: {

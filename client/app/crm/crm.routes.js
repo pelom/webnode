@@ -123,17 +123,10 @@ export default function routes($stateProvider) {
     controllerAs: 'ctl',
     authenticate: true
   })
-  .state('contareceber', {
-    url: '/bancos/contareceber',
-    template: require('./banco/bancocontareceber.html'),
-    controller: 'BancoContaReceberController',
-    controllerAs: 'ctl',
-    authenticate: true
-  })
-  .state('contapagar', {
-    url: '/bancos/contapagar',
-    template: require('./banco/bancocontapagar.html'),
-    controller: 'BancoContaPagarController',
+  .state('pagamentos', {
+    url: '/bancos/pagamentos',
+    template: require('./banco/bancopagamento.html'),
+    controller: 'BancoPagamentoController',
     controllerAs: 'ctl',
     authenticate: true
   });

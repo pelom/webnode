@@ -8,10 +8,10 @@ export default class NfPagamentoModalController {
     this.$state = $state;
     this.NfService = NfService;
     this.usSpinnerService = usSpinnerService;
-    this.int($scope);
+    this.init($scope);
   }
 
-  int($scope) {
+  init($scope) {
     this.format = 'dd/MM/yyyy';
     this.tipos = this.NfService.getModalCtl().params.tipos;
     this.parcelas = this.NfService.getModalCtl().params.parcelas;

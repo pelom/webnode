@@ -1,7 +1,5 @@
 'use strict';
 import Bank from './bank.model';
-import Account from '../account/account.model';
-import User from '../user/user.model';
 import ApiService from '../api.service';
 import Invoice from '../invoice/invoice.model';
 
@@ -54,6 +52,9 @@ export function index(req, res) {
 }
 function buildWhere(req) {
   let where = {};
+  if(req.query.accountBank) {
+    where.account = req.query.accountBank;
+  }
   return where;
 }
 
@@ -147,39 +148,106 @@ export function destroy(req, res) {
 }
 
 export function operation(req, res) {
-  let valor = req.body.valor;
-  let titulo = req.body.titulo;
-  let conta = req.body.conta;
+  let operat = {
+    valor: req.body.valor,
+    titulo: req.body.titulo,
+    conta: req.body.conta,
+    dataPagamento: req.body.dataPagamento,
+    pagamentoId: req.body.pagamentoId,
+    nfId: req.body.nfId,
+  };
+  console.log('operation()', operat);
 
   Bank.findById(req.params.id, 'id nome transactions')
     .populate([populationSaldo])
     .exec()
     .then(bank => {
-      let transaction = bank.transactions[0];
-      console.log('Transaction:', transaction);
-
-      let saldo = transaction.saldoFinal + valor;
-      let trans = {
-        titulo,
-        valor,
-        saldoFinal: saldo,
-        saldoInicial: transaction.saldoFinal,
-        conta: conta ? conta : undefined
-      };
-      Bank.findByIdAndUpdate(req.params.id,
-        { $push: { transactions: { $each: [trans], $sort: { data: -1 } } } },
-        { new: true })
-        .populate([populationSaldo])
-        .then(callbackOperation(res))
-        .catch(handleError(res));
+      let lastTransaction = bank.transactions[0];
+      console.log('Last transaction:', lastTransaction);
+      let trans = createTransation(operat, lastTransaction);
+      saveOperation(req.params.id, operat, trans, res);
     });
 }
 
-function callbackOperation(res) {
+function createTransation(operat, lastTransaction) {
+  let saldo = lastTransaction.saldoFinal + operat.valor;
+  return {
+    titulo: operat.titulo,
+    valor: operat.valor,
+    saldoFinal: saldo,
+    saldoInicial: lastTransaction.saldoFinal,
+    dataPagamento: operat.dataPagamento,
+    conta: operat.conta ? operat.conta : undefined
+  };
+}
+
+function saveOperation(bankId, operat, trans, res) {
+  console.log('bankId:', bankId);
+  console.log('trans:', trans);
+
+  Bank.findByIdAndUpdate(bankId,
+    { $push: { transactions: { $each: [trans], $sort: { data: -1 } } } },
+    { new: true })
+    .populate([populationSaldo])
+    .then(callbackOperation(operat, res))
+    .catch(handleError(res));
+}
+
+function callbackOperation(operat, res) {
   return bank => {
-    res.status(201).json(true);
+    Invoice.findOneAndUpdate({ _id: operat.nfId, 'pagamentos._id': operat.pagamentoId },
+      { $set: { 'pagamentos.$.dataPagamento': operat.dataPagamento } },
+      (err, doc) => {
+        console.log(err, doc);
+        res.status(201).json(true);
+      });
     return bank;
   };
+}
+
+export function accountReceivable(req, res) {
+  let firstDay = new Date(req.query.start);
+  let lastDay = new Date(req.query.end);
+  console.log(firstDay);
+  console.log(lastDay);
+
+  Invoice.aggregate([
+    { $match: { oportunidade: { $exists: true }, status: { $in: ['Faturada'] } } },
+    { $unwind: '$destinatario' },
+    { $lookup: {
+      from: 'accounts',
+      localField: 'destinatario',
+      foreignField: '_id',
+      as: 'destinatarioInfo'
+    } },
+    { $unwind: '$pagamentos' },
+    { $match: {
+      pagamentos: { $exists: true },
+      'pagamentos.dataPagamento': { $exists: false },
+      'pagamentos.dataVencimento': {
+        $gte: firstDay, $lte: lastDay
+      } }
+    },
+    { $group: {
+      _id: '$pagamentos.dataVencimento',
+      nfId: { $push: '$_id' },
+      titulo: { $push: '$titulo' },
+      numero: { $push: '$numero' },
+      status: { $push: '$status' },
+      dataEmissao: { $push: '$dataEmissao' },
+      valorTotal: { $push: '$valorTotal' },
+      accountBank: { $push: '$emitente' },
+      beneficiario: { $push: { $arrayElemAt: ['$destinatarioInfo', 0] } },
+      pagamentos: { $push: '$pagamentos' },
+    }}
+  ]).exec((err, results) => {
+    if(err) {
+      handleError(res)(err);
+      return;
+    }
+    let pagamentos = convertResult(results, 'receivable');
+    res.status(201).json(pagamentos);
+  });
 }
 
 export function accountPayable(req, res) {
@@ -207,11 +275,14 @@ export function accountPayable(req, res) {
     },
     { $group: {
       _id: '$pagamentos.dataVencimento',
+      nfId: { $push: '$_id' },
       titulo: { $push: '$titulo' },
       numero: { $push: '$numero' },
       status: { $push: '$status' },
+      valorTotal: { $push: '$valorTotal' },
       dataEmissao: { $push: '$dataEmissao' },
-      emitente: { $push: { $arrayElemAt: ['$emitenteInfo', 0] } },
+      accountBank: { $push: '$destinatario' },
+      beneficiario: { $push: { $arrayElemAt: ['$emitenteInfo', 0] } },
       pagamentos: { $push: '$pagamentos' },
     }}
   ]).exec((err, results) => {
@@ -219,34 +290,47 @@ export function accountPayable(req, res) {
       handleError(res)(err);
       return;
     }
-    let pagamentos = [];
-    for(var i = 0; i < results.length; i++) {
-      let titulo = results[i].titulo[0];
-      let numero = results[i].numero[0];
-      let status = results[i].status[0];
-      let dataEmissao = results[i].dataEmissao[0];
-
-      let nome = results[i].emitente[0].nome;
-      let _id = results[i].emitente[0]._id;
-      let cnpj = results[i].emitente[0].cnpj;
-      let origem = results[i].emitente[0].origem;
-      let pagamento = results[i].pagamentos[0];
-      pagamentos.push({
-        titulo,
-        numero,
-        status,
-        dataEmissao,
-        emitente: {
-          nome,
-          _id,
-          cnpj,
-          origem,
-        },
-        pagamento,
-      });
-    }
-    console.log(results);
-    console.log(pagamentos);
+    let pagamentos = convertResult(results, 'payable');
     res.status(201).json(pagamentos);
   });
+}
+
+function convertResult(results, tipo) {
+  let pagamentos = [];
+  for(var i = 0; i < results.length; i++) {
+    let nfId = results[i].nfId[0];
+    let titulo = results[i].titulo[0];
+    let numero = results[i].numero[0];
+    let status = results[i].status[0];
+    let dataEmissao = results[i].dataEmissao[0];
+    let valorTotal = results[i].valorTotal[0];
+
+    let accountBank = results[i].accountBank[0];
+    let nome = results[i].beneficiario[0].nome;
+    let _id = results[i].beneficiario[0]._id;
+    let cnpj = results[i].beneficiario[0].cnpj;
+    let cpf = results[i].beneficiario[0].cpf;
+    let origem = results[i].beneficiario[0].origem;
+    let pagamento = results[i].pagamentos[0];
+    pagamentos.push({
+      nfId,
+      tipo,
+      accountBank,
+      titulo,
+      numero,
+      status,
+      valorTotal,
+      dataEmissao,
+      referente: {
+        nome,
+        _id,
+        cpfCnpj: cnpj ? cnpj : cpf,
+        origem,
+      },
+      pagamento,
+    });
+  }
+  console.log(results);
+  console.log(pagamentos);
+  return pagamentos;
 }
