@@ -2,6 +2,8 @@
 import Bank from './bank.model';
 import ApiService from '../api.service';
 import Invoice from '../invoice/invoice.model';
+import moment from 'moment';
+import mongoose from 'mongoose';
 
 let api = ApiService();
 let handleError = api.handleError;
@@ -62,12 +64,50 @@ const selectShow = '_id nome conta agencia account contact'
   + ' descricao codigo criador modificador createdAt updatedAt';
 
 export function show(req, res) {
-  return api.findById(req.params.id, {
-    model: 'Bank',
-    select: selectShow,
-    populate: [populationConta, populationContato, populationSaldo,
-      api.populationCriador, api.populationModificador],
-  }, res);
+  let firstDay = new Date(req.query.start);
+  let lastDay = new Date(req.query.end);
+  console.log(firstDay);
+  console.log(lastDay);
+  Bank.findById(req.params.id)
+    .select(selectShow)
+    .populate([populationConta, api.populationCriador, api.populationModificador])
+    .then(bank => {
+      Bank.aggregate([
+        { $match: { _id: mongoose.Types.ObjectId(req.params.id) } },
+        { $unwind: '$transactions' },
+        { $match: {
+          'transactions.dataPagamento': {
+            $gte: firstDay, $lte: lastDay
+          } }
+        },
+        { $group: {
+          _id: '$transactions.data',
+          transactions: { $push: '$transactions' },
+        }},
+        { $sort: { 'transactions.data': -1 } },
+      ]).exec((err, results) => {
+        console.log(results);
+        if(err) {
+          handleError(res)(err);
+          return;
+        }
+        let transList = [];
+        results.forEach(item => {
+          console.log(item);
+          transList.push(item.transactions[0]);
+        });
+        console.log();
+        let obj = bank.toObject();
+        obj.transactions = transList;
+        res.status(201).json(obj);
+      });
+    });
+  // return api.findById(req.params.id, {
+  //   model: 'Bank',
+  //   select: selectShow,
+  //   populate: [populationConta, populationContato, populationExtrato,
+  //     api.populationCriador, api.populationModificador],
+  // }, res);
 }
 
 export function create(req, res) {
@@ -212,7 +252,7 @@ export function accountReceivable(req, res) {
   console.log(lastDay);
 
   Invoice.aggregate([
-    { $match: { oportunidade: { $exists: true }, status: { $in: ['Faturada'] } } },
+    { $match: { oportunidade: { $exists: true }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
     { $unwind: '$destinatario' },
     { $lookup: {
       from: 'accounts',

@@ -11,121 +11,231 @@
 
       <div class="panel panel-default">
         <div class="panel-body">
-          <h4 ng-click="ctl.obj.isCollapsed = !ctl.obj.isCollapsed">
+          <h4>
             <i class="fa fa-university fa-2x" aria-hidden="true"></i>
             &nbsp;<label>{{ctl.banco.nome }}</label>
             &nbsp;<small>Agência: {{ctl.banco.agencia}} Conta: {{ ctl.banco.conta }}</small>
           </h4>
           <hr/>
 
-          <div class="row" ng-if="!ctl.banco._id">
-            <div class="col-sm-6">
-              <dl>
-                <dt class="text-muted"><small>Saldo Inícial</small></dt>
-                <dd>
-                  <input type="text" name="nome" class="form-control" placeholder="Saldo inícial"
-                   ng-model="ctl.banco.saldoInicial" ng-required="true" ui-money-mask/>
-                </dd>
-              </dl>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-6">
-              <dl>
-                <dt class="text-muted"><small>Nome do banco</small></dt>
-                <dd ng-class="{'has-error': form.nome.$invalid && form.nome.$dirty}">
-                  <input type="text" name="nome" class="form-control" placeholder="Nome"
-                   ng-model="ctl.banco.nome" ng-required="true" ng-minlength="3" ng-maxlength="100"/>
+          <uib-tabset active="activeJustified" justified="true">
+            <uib-tab>
+              <uib-tab-heading><small>Informações</small></uib-tab-heading>
+              <br/>
 
-                  <p class="help-block"
-                    ng-show="form.nome.$error.required && form.nome.$dirty">
-                    O nome é necessário</p>
-                  <p class="help-block" ng-show="form.nome.$error.minlength">
-                    São necessários no minimo 3 letras</p>
-                  <p class="help-block" ng-show="form.nome.$error.maxlength">
-                    São permitidos no máximo 100 letras</p>
-                </dd>
-              </dl>
-            </div>
-            <div class="col-sm-6">
-              <dl>
-                <dt class="text-muted"><small>Código do banco</small></dt>
-                <dd>
-                  <input type="text" name="codigo" class="form-control" placeholder="Código"
-                   ng-model="ctl.banco.codigo"/>
-                </dd>
-              </dl>
-            </div>
-          </div>
+              <div class="row" ng-if="!ctl.banco._id">
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Saldo Inícial</small></dt>
+                    <dd>
+                      <input type="text" name="nome" class="form-control" placeholder="Saldo inícial"
+                       ng-model="ctl.banco.saldoInicial" ng-required="true" ui-money-mask/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Nome do banco</small></dt>
+                    <dd ng-class="{'has-error': form.nome.$invalid && form.nome.$dirty}">
+                      <input type="text" name="nome" class="form-control" placeholder="Nome"
+                       ng-model="ctl.banco.nome" ng-required="true" ng-minlength="3" ng-maxlength="100"/>
 
-          <div class="row">
-            <div class="col-sm-6">
-              <dl>
-                <dt class="text-muted"><small>Agência do banco</small></dt>
-                <dd>
-                  <input type="text" name="agencia" class="form-control" placeholder="Agência"
-                   ng-model="ctl.banco.agencia"/>
-                </dd>
-              </dl>
-            </div>
-            <div class="col-sm-6">
-              <dl>
-                <dt class="text-muted"><small>Conta do banco</small></dt>
-                <dd>
-                  <input type="text" name="conta" class="form-control" placeholder="Conta"
-                   ng-model="ctl.banco.conta"/>
-                </dd>
-              </dl>
-            </div>
-          </div>
+                      <p class="help-block"
+                        ng-show="form.nome.$error.required && form.nome.$dirty">
+                        O nome é necessário</p>
+                      <p class="help-block" ng-show="form.nome.$error.minlength">
+                        São necessários no minimo 3 letras</p>
+                      <p class="help-block" ng-show="form.nome.$error.maxlength">
+                        São permitidos no máximo 100 letras</p>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Código do banco</small></dt>
+                    <dd>
+                      <input type="text" name="codigo" class="form-control" placeholder="Código"
+                       ng-model="ctl.banco.codigo"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
 
-          <div class="row">
-            <div class="col-md-12">
-              <dl>
-                <dt class="text-muted"><small>Conta <i ng-show="ctl.banco.account._id">*</i></small></dt>
-                <dd ng-class="{'has-error': form.account.$invalid}">
+              <div class="row">
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Agência do banco</small></dt>
+                    <dd>
+                      <input type="text" name="agencia" class="form-control" placeholder="Agência"
+                       ng-model="ctl.banco.agencia"/>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-sm-6">
+                  <dl>
+                    <dt class="text-muted"><small>Conta do banco</small></dt>
+                    <dd>
+                      <input type="text" name="conta" class="form-control" placeholder="Conta"
+                       ng-model="ctl.banco.conta"/>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <dl>
+                    <dt class="text-muted"><small>Conta <i ng-show="ctl.banco.account._id">*</i></small></dt>
+                    <dd ng-class="{'has-error': form.account.$invalid}">
+                      <p class="input-group">
+
+                        <input type="text" ng-model="ctl.banco.account" placeholder="Nome da conta"
+                            uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue)"
+                            name="account"
+                            ng-required="true"
+                            ng-disabled="ctl.orcamento.oportunidade._id" style="background-color: #FFF;"
+                            typeahead-loading="loadingAcc" typeahead-no-results="noResults" class="form-control">
+
+                        <span class="input-group-btn">
+                         <button type="button" class="btn btn-default"
+                            ng-disabled="ctl.orcamento.oportunidade._id"
+                            ng-click="ctl.openFindConta()">
+                         <i class="fa fa-search" aria-hidden="true"></i></button>
+
+                         <button type="button" class="btn btn-default"
+                            ng-if="ctl.banco.account._id"
+                            ui-sref="contaedit({id: ctl.banco.account._id})">
+                         <i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
+                        </span>
+
+                        <div ng-show="loadingAcc">
+                          <i class="fa fa-refresh" aria-hidden="true"></i>
+                        </div>
+                        <div ng-show="noResults">
+                          <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Nenhuma conta encontrada
+                        </div>
+                      </p>
+                      <p class="help-block"
+                        ng-show="form.account.$error.required">
+                        A Conta é necessário</p>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <textarea class="form-control" rows="2" placeholder="Descrição"
+                    ng-model="ctl.banco.descricao"></textarea>
+                </div>
+              </div>
+            </uib-tab>
+            <uib-tab>
+              <uib-tab-heading><small>Saldo</small></uib-tab-heading>
+              <br/>
+              <div class="row">
+                <div class="col-sm-3">
                   <p class="input-group">
-
-                    <input type="text" ng-model="ctl.banco.account" placeholder="Nome da conta"
-                        uib-typeahead="acc as acc.nome for acc in ctl.findAcc($viewValue)"
-                        name="account"
-                        ng-required="true"
-                        ng-disabled="ctl.orcamento.oportunidade._id" style="background-color: #FFF;"
-                        typeahead-loading="loadingAcc" typeahead-no-results="noResults" class="form-control">
-
                     <span class="input-group-btn">
                      <button type="button" class="btn btn-default"
-                        ng-disabled="ctl.orcamento.oportunidade._id"
-                        ng-click="ctl.openFindConta()">
-                     <i class="fa fa-search" aria-hidden="true"></i></button>
-
-                     <button type="button" class="btn btn-default"
-                        ng-if="ctl.banco.account._id"
-                        ui-sref="contaedit({id: ctl.banco.account._id})">
-                     <i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
+                     ng-click="ctl.popup1.opened = true;">
+                     <i class="fa fa-calendar" aria-hidden="true"></i></button>
                     </span>
-
-                    <div ng-show="loadingAcc">
-                      <i class="fa fa-refresh" aria-hidden="true"></i>
-                    </div>
-                    <div ng-show="noResults">
-                      <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Nenhuma conta encontrada
-                    </div>
+                    <input type="text" class="form-control" name="dataInicio"
+                      ng-model="ctl.start" ng-disabled="true"
+                      uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
+                      is-open="ctl.popup1.opened" datepicker-options="ctl.dateOptions"
+                      show-button-bar="false" ng-blur="ctl.findData()"/>
                   </p>
-                  <p class="help-block"
-                    ng-show="form.account.$error.required">
-                    A Conta é necessário</p>
-                </dd>
-              </dl>
-            </div>
-          </div>
+                </div>
+                <div class="col-sm-3">
+                  <p class="input-group">
+                    <input type="text" class="form-control" name="dataFim"
+                      ng-model="ctl.end" ng-disabled="true"
+                      uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
+                      is-open="ctl.popup2.opened" datepicker-options="ctl.dateOptions"
+                      show-button-bar="false" ng-blur="ctl.findData()"/>
+                    <span class="input-group-btn">
+                     <button type="button" class="btn btn-default"
+                     ng-click="ctl.popup2.opened = true;">
+                     <i class="fa fa-calendar" aria-hidden="true"></i></button>
+                    </span>
+                  </p>
+                </div>
 
-          <div class="row">
-            <div class="col-md-12">
-              <textarea class="form-control" rows="2" placeholder="Descrição"
-                ng-model="ctl.banco.descricao"></textarea>
-            </div>
-          </div>
+                <div class="col-md-6 col-sm-6 pull-right form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                    <input type="text" class="form-control" placeholder="Filtrar resultados" ng-model="filtrarResult">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-4">
+                  <p class="text-muted text-right">Total créditado</p>
+                  <h5 class="text-right">{{ ctl.totalCredito | currency }}</h5>
+                  <hr/>
+                </div>
+                <div class="col-xs-4">
+                  <p class="text-muted text-right">Total débitado</p>
+                  <h5 class="text-danger text-right">{{ ctl.totalDedito | currency }}</h5>
+                  <hr/>
+                </div>
+                <div class="col-xs-4">
+                  <p class="text-muted text-right">Saldo total</p>
+                  <h5 class="text-primary text-right">{{ ctl.saldoFinal | currency }}</h5>
+                  <hr/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="alert" ng-if="!ctl.banco.transactions.length">
+                    <hr/>
+                    <h4><code>Nenhum resultado encontrado</code></h4>
+                  </div>
+                  <div class="table-responsive" ng-if="ctl.banco.transactions && ctl.banco.transactions.length">
+                    <table class="table table-condensed table-hover">
+                      <thead class="text-muted">
+                        <tr>
+                          <th></th>
+                          <th><small>Data</small></th>
+                          <th><small>Descrição</small></th>
+                          <th><small>Pagamento</small></th>
+                          <th class="text-right"><small>&nbsp;&nbsp;&nbsp;&nbsp;Valor</small></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="tr in ctl.banco.transactions | orderBy:ctl.sortType:ctl.sortReverse | filter:filtrarResult"
+                          ng-class="{ 'text-danger': tr.valor < 0, 'text-muted': tr.valor > 0}">
+                          <td>
+                            <!--small class="text-muted">{{$index+1}}</small-->
+                          </td>
+                          <td><small>{{ tr.data | date:'dd/MM' }}</small></td>
+                          <td><small>{{ tr.titulo }}</small></td>
+                          <td><small>{{ tr.dataPagamento | date:'dd/MM/yyyy HH:mm' }}</small></td>
+                          <td class="text-right">
+                            <small>{{ tr.valor | currency }}</small>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </uib-tab>
+
+            <uib-tab>
+              <uib-tab-heading><small>Gráfico</small></uib-tab-heading>
+              <br/>
+              <h4 class="text-muted text-center">Operações Financeiras</h4>
+              <canvas id="base" class="chart-bar"
+               chart-data="ctl.data" chart-labels="ctl.labels" chart-colors="ctl.colors"
+               chart-dataset-override="ctl.datasetOverride" chart-options="ctl.options" >
+              </canvas>
+            </uib-tab>
+          </uib-tabset>
+
 
           <br/>
           <div class="row"><hr/></div>

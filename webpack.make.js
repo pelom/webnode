@@ -53,6 +53,7 @@ module.exports = function makeWebpackConfig(options) {
         'angular-ui-calendar',
         'angular-toastr',
         'angular-spinner',
+        'angular-chart.js',
         'ui-select',
         'jquery',
         'moment',

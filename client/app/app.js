@@ -15,6 +15,7 @@ import uiMask from 'angular-ui-mask';
 import ngValidationMatch from 'angular-validation-match';
 import 'angular-file-model';
 
+import 'angular-chart.js';
 import toastr from 'angular-toastr';
 import 'angular-spinner';
 import 'fullcalendar/dist/locale-all';
@@ -72,7 +73,7 @@ angular.module('webnodeApp', [ngCookies, ngResource, ngSanitize, ngAnimate, toas
   OrcamentoService, OportunidadeService, NfService, BancoService,
   LeadService, _Auth, account, admin, crm, navbar, footer, main, constants, socket, util, Modal,
   changePassword, mongooseError, 'angularSpinner', 'ui.calendar',
-  'idf.br-filters', 'ui.utils.masks', 'file-model'
+  'idf.br-filters', 'ui.utils.masks', 'file-model', 'chart.js'
 ])
   .config(routeConfig)
   .config(function(uiSelectConfig) {

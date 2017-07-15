@@ -43,12 +43,12 @@ export default class NfPagamentoModalController {
 
   gerar() {
     let pagList = [];
+    let pa = Number(this.parcela.substring(0, 1));
     if(this.parcela === '1 - Àvista') {
       let pag = this.createPagamentoParcela(
-        this.parcela, moment().toDate(), this.dataPagamento, this.valorTotal);
+        pa, moment().toDate(), this.dataPagamento, this.valorTotal);
       pagList.push(pag);
     } else {
-      let pa = Number(this.parcela.substring(0, 1));
       let data = this.dataVencimento ? moment(this.dataVencimento) : moment();
       let valor = this.valorTotal / pa;
       for(var i = 0; i < pa; i++) {
