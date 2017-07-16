@@ -33,6 +33,14 @@ export function NfService(NfResource, Util) {
     setModalCtl(modCtl) {
       modalCtl = modCtl;
     },
+    cashFlowInputOrigin(query, callback) {
+      return NfResource.cashFlowInputOrigin(query, function(data) {
+        return safeCb(callback)(null, data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
+    },
     loadDomain(callback) {
       return NfResource.domain(function(data) {
         return safeCb(callback)(null, data);

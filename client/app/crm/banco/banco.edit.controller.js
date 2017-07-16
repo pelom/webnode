@@ -29,6 +29,17 @@ export default class BancoEditController extends Controller {
     this.colors = ['#337ab7', '#a94442', '#000000'];
     this.labels = [];
     this.options = {
+      title: {
+        display: true,
+        text: 'Operações Financeiras'
+      },
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          fontColor: 'rgb(255, 99, 132)'
+        }
+      }
       //maintainAspectRatio: false,
     };
     this.data = [[], []];

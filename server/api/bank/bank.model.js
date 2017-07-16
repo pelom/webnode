@@ -14,6 +14,7 @@ var TransactionSchema = new Schema({
     type: Number, required: true },
   conta: { type: Schema.Types.ObjectId, ref: 'Account' },
   bank: { type: Schema.Types.ObjectId, ref: 'Bank' },
+  produto: { type: Schema.Types.ObjectId, ref: 'Product' },
   titulo: {
     type: String, required: true, maxlength: 100, trim: true },
 });

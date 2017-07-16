@@ -11,6 +11,13 @@ export function NfResource($resource) {
         id: 'domain'
       }
     },
+    cashFlowInputOrigin: {
+      method: 'GET',
+      isArray: true,
+      params: {
+        id: 'cashFlowInputOrigin',
+      }
+    },
     upload: {
       method: 'POST',
       transformRequest: angular.identity,

@@ -11,7 +11,18 @@
 
     <uib-tabset active="active">
       <uib-tab>
-        <uib-tab-heading><small>Transação</small></uib-tab-heading>
+        <uib-tab-heading><small>Operação</small></uib-tab-heading>
+        <br/>
+        <div class="row">
+          <div class="col-md-12">
+            <dt class="text-muted"><small>Descrição</small></dt>
+            <dd>
+              <input type="text" class="form-control"
+                style="background-color: #FFF;"
+                ng-model="ctl.pag.titulo" ng-required="true"/>
+            </dd>
+          </div>
+        </div>
         <br/>
         <div class="row">
           <div class="col-md-12">
@@ -60,17 +71,6 @@
 
       <uib-tab>
         <uib-tab-heading><small>Título</small></uib-tab-heading>
-        <br/>
-        <div class="row">
-          <div class="col-md-12">
-            <dt class="text-muted"><small>Nome</small></dt>
-            <dd>
-              <input type="text" class="form-control" ng-disabled="true"
-              style="background-color: #FFF;"
-                ng-model="ctl.pag.titulo"/>
-            </dd>
-          </div>
-        </div>
         <br/>
         <div class="row">
           <div class="col-xs-4">

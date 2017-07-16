@@ -37,6 +37,7 @@ var InvoicePaymentSchema = new Schema({
   autorizacao: { type: String, required: false },
   bandeira: { type: String, required: false },
   criador: { type: Schema.Types.ObjectId, ref: 'User' },
+  planoConta: { type: Schema.Types.ObjectId, ref: 'Product' },
 });
 
 var InvoiceSchema = new Schema({

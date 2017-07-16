@@ -206,6 +206,11 @@ export default class NfEditController extends Controller {
     }
     console.log(this.nf);
 
+    if(this.nf.status === 'Faturada' && (!this.nf.pagamentos || this.nf.pagamentos.length == 0)) {
+      this.toastr.warning('É necessário informar um pagamento', 'Faturamento');
+      this.nf.status = 'Pendente';
+      return;
+    }
     this.usSpinnerService.spin('spinner-1');
     this.NfService.saveNf(this.nf)
       .then(() => {

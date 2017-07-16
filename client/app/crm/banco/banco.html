@@ -5,6 +5,19 @@
   </span>
 
   <div class="row">
+    <ul class="nav nav-pills">
+      <li class="active">
+        <a href="#" ng-click="ctl.findBancos('')" uib-tooltip="Bancos">
+          <i class="fa fa-university fa-2x" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()"> Bancos</small>
+          <span class="badge">{{ ctl.bancos.length}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <hr/>
+
+  <div class="row">
     <div class="col-xs-6">
       <a class="btn btn-default" ui-sref="bancoedit()">
         <i class="fa fa-plus" aria-hidden="true"></i> <i ng-if="ctl.isFull()">Novo</i></a>

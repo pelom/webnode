@@ -1,0 +1,98 @@
+<div class="container">
+
+  <span spinner-key="spinner-1" spinner-start-active="true"
+    us-spinner="{radius:24, width:8, length: 16}">
+  </span>
+
+  <div class="row">
+    <ul class="nav nav-pills" ng-class="ctl.isJustified()">
+      <li ng-class="{ active: ctl.isActive('pagar')}">
+        <a href="#" ng-click="ctl.findContaPagar()" uib-tooltip="Contas a pagar">
+          <i class="fa fa-line-chart fa-2x" aria-hidden="true"></i>
+          <small ng-if="ctl.isFull()"> Fluxo de caixa</small>
+          <span class="badge" ng-if="ctl.status === 'pagar'">{{ ctl.pagamentos.length}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <hr/>
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <uib-tabset active="activeJustified" justified="true">
+        <uib-tab>
+          <uib-tab-heading><small>Mês</small></uib-tab-heading>
+          <br/>
+
+          <div class="table-responsive">
+            <table class="table">
+              <colgroup>
+                <col/>
+                <col ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect }" ng-repeat="m in ctl.cashFlow"/>
+              </colgroup>
+              <thead>
+                <tr class="text-warning">
+                  <th>
+                  <input type="checkbox" ng-model="ctl.isPrevisao"> <small>Previsão</small>
+                  </th>
+                  <th class="text-right" ng-repeat="m in ctl.cashFlow"
+                    ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect, 'active' : m.mes !== ctl.nowSelect }">
+                    <small>{{ m.mes }}</small></th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr class="bg-primary">
+                  <td><b>&nbsp; Saldo Inícial</b></td>
+                  <td class="text-right" ng-repeat="m in ctl.cashFlow">
+                    <small><b>{{0 | number:2 }}</b></small></td>
+                </tr>
+                <tr class="active text-muted">
+                  <td><b>[+] Receitas</b></td>
+                  <td class="text-right" ng-repeat="m in ctl.cashFlow">
+                    <small><b>{{0 | number:2 }}</b></small></td>
+                </tr>
+
+                <tr ng-repeat="r in ctl.receitas" ng-show="r.nome !== '' || ctl.isPrevisao">
+                  <td><small class="text-muted">{{ r.nome }}</small></td>
+                  <td class="text-right" ng-repeat="sai in r.saidas track by $index">
+                    <small ng-class="{ 'text-muted': r.nome === '', 'text-primary': r.nome !== ''}">
+                      {{sai | number:2 }}</small></td>
+                </tr>
+
+                <tr class="active text-muted">
+                  <td><b>[-] Despesas</b></td>
+                  <td class="text-right" ng-repeat="m in ctl.cashFlow">
+                    <small><b>{{0 | number:2 }}</b></small></td>
+                </tr>
+
+                <tr ng-repeat="d in ctl.despesas" ng-show="d.nome !== '' || ctl.isPrevisao">
+                  <td><small class="text-muted">{{ d.nome }}</small></td>
+                  <td class="text-right" ng-repeat="sai in d.saidas track by $index">
+                    <small  ng-class="{ 'text-muted': d.nome === '', 'text-primary': d.nome !== ''}">
+                      {{sai | number:2 }}</small></td>
+                </tr>
+
+                <tr class="text-warning">
+                  <th></th>
+                  <th class="text-right" ng-repeat="m in ctl.cashFlow"
+                    ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect, 'active' : m.mes !== ctl.nowSelect }">
+                    <small>{{ m.mes }}</small></th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </uib-tab>
+        <uib-tab>
+          <uib-tab-heading><small>Gráfico {{ctl.status}}</small></uib-tab-heading>
+          <br/>
+
+          <canvas id="base" class="chart-bar"
+           chart-data="ctl.data" chart-labels="ctl.labels" chart-colors="ctl.colors"
+           chart-dataset-override="ctl.datasetOverride" chart-options="ctl.options" >
+        </uib-tab>
+      </uib-tabset>
+    </div>
+  </div>
+</div>

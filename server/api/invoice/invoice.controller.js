@@ -4,7 +4,7 @@ import {importInvoice} from './invoice.import';
 import Invoice from './invoice.model';
 import ApiService from '../api.service';
 import Busboy from 'busboy';
-
+import moment from 'moment';
 let api = ApiService();
 let handleError = api.handleError;
 let respondWithResult = api.respondWithResult;
@@ -34,7 +34,6 @@ const populationDest = {
 };
 
 export function index(req, res) {
-  cashFlow();
   return api.find({
     model: 'Invoice',
     select: selectIndex,
@@ -196,95 +195,7 @@ export function uploadInvoice(req, res) {
   req.pipe(busboy);
 }
 
-export function accountReceivable(req, res) {
-}
-export function accountPayable(req, res) {
-  let firstDay = new Date(req.query.start);
-  let lastDay = new Date(req.query.end);
-  console.log(firstDay);
-  console.log(lastDay);
-
-  Invoice.aggregate([
-    { $match: { oportunidade: { $exists: false }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
-    { $unwind: '$emitente' },
-    { $lookup: {
-      from: 'accounts',
-      localField: 'emitente',
-      foreignField: '_id',
-      as: 'emitenteInfo'
-    } },
-    { $unwind: '$pagamentos' },
-    { $match: {
-      pagamentos: { $exists: true },
-      'pagamentos.dataPagamento': { $exists: false },
-      'pagamentos.dataVencimento': {
-        $gte: firstDay, $lte: lastDay
-      } }
-    },
-    { $group: {
-      _id: '$pagamentos.dataVencimento',
-      titulo: { $push: '$titulo' },
-      numero: { $push: '$numero' },
-      status: { $push: '$status' },
-      dataEmissao: { $push: '$dataEmissao' },
-      emitente: { $push: { $arrayElemAt: ['$emitenteInfo', 0] } },
-      pagamentos: { $push: '$pagamentos' },
-    }}
-  ]).exec((err, results) => {
-    let pagamentos = [];
-    for(var i = 0; i < results.length; i++) {
-      let titulo = results[i].titulo[0];
-      let numero = results[i].numero[0];
-      let status = results[i].status[0];
-      let dataEmissao = results[i].dataEmissao[0];
-
-      let nome = results[i].emitente[0].nome;
-      let _id = results[i].emitente[0]._id;
-      let cnpj = results[i].emitente[0].cnpj;
-      let origem = results[i].emitente[0].origem;
-      let pagamento = results[i].pagamentos[0];
-      pagamentos.push({
-        titulo,
-        numero,
-        status,
-        dataEmissao,
-        emitente: {
-          nome,
-          _id,
-          cnpj,
-          origem,
-        },
-        pagamento,
-      });
-    }
-    console.log(results);
-    console.log(pagamentos);
-    res.status(201).json(pagamentos);
-  });
-
-  // Invoice.find({
-  //   oportunidade: { $exists: false },
-  //   status: { $nin: ['Cadastrada', 'Cancelada']},
-  //   pagamentos: {
-  //     $elemMatch: {
-  //       dataPagamento: { $exists: false },
-  //       dataVencimento: {
-  //         $gte: firstDay, $lte: lastDay
-  //       }
-  //     }
-  //   }
-  // }).select('_id titulo pagamentos emitente')
-  //   .populate([populationEmit])
-  //   .exec()
-  //   .then(handleEntityNotFound(res))
-  //   .then(result => {
-  //     console.log(result);
-  //     return result;
-  //   })
-  //   .then(respondWithResult(res))
-  //   .catch(handleError(res));
-}
-function cashFlow() {
+export function cashFlow(req, res) {
   cashFlowInputOrigin('Faturada');
   cashFlowInputOrigin('Pendente');
 
@@ -294,11 +205,14 @@ function cashFlow() {
   cashFlowProduct(false);
 }
 
-function matStatus(status) {
+function matStatus(status, firstDay, lastDay) {
   if(status === 'Faturada') {
     return {
       pagamentos: { $exists: true },
-      'pagamentos.dataPagamento': { $exists: true }
+      'pagamentos.dataPagamento': { $exists: true },
+      'pagamentos.dataVencimento': {
+        $gte: firstDay, $lte: lastDay
+      }
     };
   }
   return {
@@ -307,7 +221,7 @@ function matStatus(status) {
   };
 }
 
-function cashFlowOutputOrigin(status) {
+function cashFlowOutputOrigin(status, start, end) {
   Invoice.aggregate([
     { $match: { oportunidade: { $exists: false }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
     { $unwind: '$destinatario' },
@@ -318,7 +232,7 @@ function cashFlowOutputOrigin(status) {
       as: 'destinatarioInfo'
     } },
     { $unwind: '$pagamentos' },
-    { $match: matStatus(status)
+    { $match: matStatus(status, start, end)
     },
     { $group: createGroupTarget() }
   ]).exec((err, results) => {
@@ -368,34 +282,58 @@ function createGroupOutputProduct() {
   };
 }
 
-function cashFlowInputOrigin(status) {
+export function cashFlowInputOrigin(req, res) {
+  let firstDay = new Date(req.query.start);
+  let lastDay = new Date(req.query.end);
+  let entrada = Boolean(req.query.type === 'entrada');
+  console.log(firstDay);
+  console.log(lastDay);
+  console.log(entrada);
+  //let status = new Date(req.query.status);
   Invoice.aggregate([
-    { $match: { oportunidade: { $exists: true }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
-    { $unwind: '$emitente' },
-    { $lookup: {
-      from: 'accounts',
-      localField: 'emitente',
-      foreignField: '_id',
-      as: 'emitenteInfo'
-    } },
+    { $match: { oportunidade: { $exists: entrada }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
     { $unwind: '$pagamentos' },
-    { $match: matStatus(status)
+    { $match: {
+      pagamentos: { $exists: true },
+      //'pagamentos.dataPagamento': { $exists: true },
+      'pagamentos.dataVencimento': {
+        $gte: firstDay, $lte: lastDay
+      }
+    }
     },
-    { $group: createGroupOrigin() }
+    { $lookup: {
+      from: 'products',
+      localField: 'pagamentos.planoConta',
+      foreignField: '_id',
+      as: 'planoContaInfo'
+    } },
+    { $group: createGroupOrigin() },
+    //{ $sort: { 'transactions.data': -1 } },
   ]).exec((err, results) => {
-    console.log('cashFlowInputOrigin()', status);
+    console.log('cashFlowInputOrigin()');
     if(err) {
-      console.log(err);
+      handleError(res)(err);
       return;
     }
     console.log(results);
+    res.status(201).json(results);
   });
 }
 
 function createGroupOrigin() {
   return {
-    _id: { $arrayElemAt: ['$emitenteInfo', 0] },
-    count: { $sum: 1 },
-    valorTotal: { $sum: '$pagamentos.valor' },
+    _id: '$planoContaInfo.nome',
+    countPrevisao: { $sum: {
+      $cond: { if: { $eq: ['$pagamentos.dataPagamento', '$exist']}, then: 1, else: 0 }
+    }},
+    countRealizado: { $sum: {
+      $cond: { if: { $ne: ['$pagamentos.dataPagamento', '$exist']}, then: 1, else: 0 }
+    }},
+    realizado: { $sum: {
+      $cond: { if: { $ne: ['$pagamentos.dataPagamento', '$exist']}, then: '$pagamentos.valor', else: 0 }
+    }},
+    previsao: { $sum: {
+      $cond: { if: { $eq: ['$pagamentos.dataPagamento', '$exist']}, then: '$pagamentos.valor', else: 0 }
+    }}
   };
 }

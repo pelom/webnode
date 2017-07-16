@@ -45,6 +45,8 @@ function buildWhere(req) {
     where.$or = [
       { nome: { $in: reg } },
       { codigoFornecedor: reg },
+      { codigo: reg },
+      { categoria: reg },
     ];
   }
 

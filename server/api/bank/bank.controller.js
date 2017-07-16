@@ -192,6 +192,7 @@ export function operation(req, res) {
     valor: req.body.valor,
     titulo: req.body.titulo,
     conta: req.body.conta,
+    produto: req.body.produto,
     dataPagamento: req.body.dataPagamento,
     pagamentoId: req.body.pagamentoId,
     nfId: req.body.nfId,
@@ -324,7 +325,8 @@ export function accountPayable(req, res) {
       accountBank: { $push: '$destinatario' },
       beneficiario: { $push: { $arrayElemAt: ['$emitenteInfo', 0] } },
       pagamentos: { $push: '$pagamentos' },
-    }}
+    }},
+    { $sort: { 'pagamentos.dataVencimento': -1 } },
   ]).exec((err, results) => {
     if(err) {
       handleError(res)(err);

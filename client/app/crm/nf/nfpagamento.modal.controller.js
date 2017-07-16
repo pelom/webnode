@@ -3,12 +3,35 @@ import moment from 'moment';
 
 export default class NfPagamentoModalController {
   /*@ngInject*/
-  constructor($state, $scope, toastr, usSpinnerService, NfService) {
+  constructor($state, $scope, toastr, usSpinnerService, NfService, ProdutoService) {
     this.toastr = toastr;
     this.$state = $state;
     this.NfService = NfService;
     this.usSpinnerService = usSpinnerService;
+
+    this.ProdutoService = ProdutoService;
+    this.despesas = [];
+    this.receitas = [];
+    this.loadPlanAccount('#FLXCX-D', this.despesas);
+    this.loadPlanAccount('#FLXCX-R', this.receitas);
     this.init($scope);
+  }
+
+  loadPlanAccount(codigo, list) {
+    this.ProdutoService.loadProdutoList({ search: codigo}).then(produtos => {
+      console.log(codigo, produtos);
+      if(produtos.length == 0) {
+        return;
+      }
+      this.ProdutoService.loadProduto({id: produtos[0]._id}).then(produto => {
+        console.log(codigo, produto);
+        if(produto) {
+          produto.subproduto.forEach(item => {
+            list.push(item.produto);
+          });
+        }
+      });
+    });
   }
 
   init($scope) {
@@ -18,6 +41,7 @@ export default class NfPagamentoModalController {
     this.bandeiras = this.NfService.getModalCtl().params.bandeiras;
     this.valorTotal = this.NfService.getNotaFiscal().valorTotal;
     this.dataVencimento = this.NfService.getNotaFiscal().dataVencimento;
+    this.oportunidade = this.NfService.getNotaFiscal().oportunidade;
     if(this.dataVencimento) {
       this.dataVencimento = moment().toDate();
     }
@@ -66,6 +90,7 @@ export default class NfPagamentoModalController {
       tipo: this.tipoPagamento,
       dataCriacao: moment().toDate(),
       parcela,
+      planoConta: this.planoConta,
       dataVencimento,
       dataPagamento,
       valor,

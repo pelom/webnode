@@ -129,5 +129,12 @@ export default function routes($stateProvider) {
     controller: 'BancoPagamentoController',
     controllerAs: 'ctl',
     authenticate: true
+  })
+  .state('fluxocaixa', {
+    url: '/bancos/fluxocaixa',
+    template: require('./banco/bancoflucocaixa.html'),
+    controller: 'BancoFluxoCaixaController',
+    controllerAs: 'ctl',
+    authenticate: true
   });
 }

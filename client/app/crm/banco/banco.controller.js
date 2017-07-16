@@ -28,7 +28,7 @@ export default class BancoController extends Controller {
     // });
   }
 
-  findBanco() {
+  findBancos() {
     this.usSpinnerService.spin('spinner-1');
     this.BancoService.loadBancoList()
     .then(bancos => {

@@ -23,6 +23,7 @@ export default class BancoPagamentoModalController {
         this.bancos = bancos;
       });
   }
+
   setPagamento(form) {
     if(form.$invalid) {
       return;

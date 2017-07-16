@@ -8,7 +8,8 @@ import {openBancoPagamentoModalView} from './banco.modal.service';
 
 export default class BancoPagamentoController extends Controller {
   /*@ngInject*/
-  constructor($window, $scope, toastr, BancoService, usSpinnerService, Modal) {
+  constructor($window, $scope, toastr,
+    BancoService, ProdutoService, usSpinnerService, Modal) {
     super($window, $scope, toastr, usSpinnerService);
 
     this.dataInicio = moment().startOf('month')
@@ -24,16 +25,51 @@ export default class BancoPagamentoController extends Controller {
       start: this.dataInicio,
       end: this.dataFim,
     })
-    .then(contas => {
-      this.pagamentos = contas;
-      this.block = false;
-    })
+    .then(this.callbackTitulos())
     .catch(err => {
       console.log('Ex:', err);
     })
     .finally(() => {
       usSpinnerService.stop('spinner-1');
+      this.block = false;
     });
+
+    this.colors = ['#000000', '#a94442', '#337ab7'];
+    this.labels = [];
+    this.options = {
+      title: {
+        display: true,
+        text: `Contas a ${this.status}`
+      },
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          fontColor: 'rgb(255, 99, 132)'
+        }
+      }
+      //maintainAspectRatio: false,
+    };
+    this.data = [[], []];
+    this.datasetOverride = [{
+      label: 'Registros',
+      borderWidth: 1,
+      type: 'bar'
+    },
+    {
+      label: 'Vencidos',
+      borderWidth: 1,
+      //hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+      //hoverBorderColor: 'rgba(255,99,132,1)',
+      type: 'bar'
+    },
+    {
+      label: 'Total',
+      borderWidth: 1,
+      //hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+      //hoverBorderColor: 'rgba(255,99,132,1)',
+      type: 'bar'
+    }];
 
     // $scope.$watch('ctl.dataInicio', () => {
     //   this.findData();
@@ -66,10 +102,7 @@ export default class BancoPagamentoController extends Controller {
       start: this.dataInicio,
       end: this.dataFim,
     })
-    .then(contas => {
-      console.log(contas);
-      this.pagamentos = contas;
-    })
+    .then(this.callbackTitulos())
     .catch(err => {
       console.log('Ex:', err);
     })
@@ -87,10 +120,7 @@ export default class BancoPagamentoController extends Controller {
       start: this.dataInicio,
       end: this.dataFim,
     })
-    .then(contas => {
-      console.log(contas);
-      this.pagamentos = contas;
-    })
+    .then(this.callbackTitulos())
     .catch(err => {
       console.log('Ex:', err);
     })
@@ -100,6 +130,60 @@ export default class BancoPagamentoController extends Controller {
     });
   }
 
+  callbackTitulos() {
+    return titulos => {
+      this.pagamentos = titulos;
+      this.valorVencido = 0;
+      this.valorTotal = 0;
+
+      let mapData = new Map();
+      this.pagamentos.forEach(tit => {
+        console.log(tit.pagamento.dataVencimento);
+        let vencimento = moment(tit.pagamento.dataVencimento).toDate();
+        let now = moment().toDate();
+        if(vencimento < now) {
+          this.valorVencido += tit.pagamento.valor;
+        }
+        this.valorTotal += tit.pagamento.valor;
+
+        let key = moment(tit.pagamento.dataVencimento).format('MMMM YYYY');
+        let value = mapData.get(key);
+        if(!value) {
+          value = [];
+          mapData.set(key, value);
+        }
+        value.push(tit.pagamento);
+      });
+      console.log(mapData);
+
+      let registros = [];
+      let total = [];
+      let vencidos = [];
+      this.labels = [];
+      mapData.forEach((value, key) => {
+        let venc = 0;
+        let tot = 0;
+        value.forEach(tit => {
+          let vencimento = moment(tit.dataVencimento).toDate();
+          let now = moment().toDate();
+          if(vencimento < now) {
+            venc += tit.valor;
+          }
+          tot += tit.valor;
+        });
+        registros.push(value.length);
+        vencidos.push(venc.toFixed(2));
+        total.push(tot.toFixed(2));
+        this.labels.push(key);
+      });
+      this.labels.reverse();
+      this.data = [
+        registros.reverse(),
+        vencidos.reverse(),
+        total.reverse(),
+      ];
+    };
+  }
   isActive(status) {
     return status === this.status;
   }

@@ -27,16 +27,16 @@
   <div class="row">
     <div class="col-xs-3">
       <p class="input-group">
-        <span class="input-group-btn">
-         <button type="button" class="btn btn-default"
-         ng-click="ctl.popup1.opened = true;">
-         <i class="fa fa-calendar" aria-hidden="true"></i></button>
-        </span>
         <input type="text" class="form-control" name="dataInicio"
           ng-model="ctl.dataInicio"
           uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
           is-open="ctl.popup1.opened" datepicker-options="ctl.dateOptions"
           show-button-bar="false" ng-blur="ctl.findData()"/>
+        <span class="input-group-btn">
+         <button type="button" class="btn btn-default"
+         ng-click="ctl.popup1.opened = true;">
+         <i class="fa fa-calendar" aria-hidden="true"></i></button>
+        </span>
       </p>
     </div>
     <div class="col-xs-3">
@@ -64,103 +64,135 @@
 
   <div class="panel panel-default">
     <div class="panel-body">
-      <div class="alert" ng-if="!ctl.pagamentos.length">
-        <hr/>
-        <h4><code>Nenhum resultado encontrado</code></h4>
+      <div class="row">
+        <div class="col-xs-4 text-muted">
+          <p class="text-muted text-right">Total titulos {{ctl.status}}</p>
+          <h5 class="text-primary text-right">{{ ctl.pagamentos.length}}</h5>
+          <hr/>
+        </div>
+        <div class="col-xs-4 text-danger">
+          <p class="text-muted text-right">Valor total vencido {{ctl.status}}</p>
+          <h5 class="text-right">{{ ctl.valorVencido | currency }}</h5>
+          <hr/>
+        </div>
+        <div class="col-xs-4">
+          <p class="text-muted text-right">Valor total {{ctl.status}}</p>
+          <h5 class="text-primary text-right">{{ ctl.valorTotal | currency }}</h5>
+          <hr/>
+        </div>
       </div>
-      <div class="table-responsive" ng-if="ctl.pagamentos.length">
-        <table class="table table-striped table-condensed">
-          <thead class="text-muted">
-            <tr>
-              <th></th>
-              <th>
-                <a href="#" ng-click="ctl.sortType = 'numero'; ctl.sortReverse = !ctl.sortReverse">
-                  <small>Numero<small>
-                  <div class="pull-right">
-                    <i ng-show="ctl.sortType == 'numero' && !ctl.sortReverse"
-                      class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="ctl.sortType == 'numero' && ctl.sortReverse"
-                      class="fa fa-sort-amount-desc"></i>
-                  </div>
-                </a>
-              </th>
-              <th>
-                <a href="#" ng-click="ctl.sortType = 'titulo'; ctl.sortReverse = !ctl.sortReverse">
-                  <small>Titulo<small>
-                  <div class="pull-right">
-                    <i ng-show="ctl.sortType == 'titulo' && !ctl.sortReverse"
-                      class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="ctl.sortType == 'titulo' && ctl.sortReverse"
-                      class="fa fa-sort-amount-desc"></i>
-                  </div>
-                </a>
-              </th>
+      <uib-tabset active="activeJustified" justified="true">
+        <uib-tab>
+          <uib-tab-heading><small>Resultados {{ctl.status}}</small></uib-tab-heading>
+          <br/>
+          <div class="alert" ng-if="!ctl.pagamentos.length">
+            <hr/>
+            <h4><code>Nenhum resultado encontrado</code></h4>
+          </div>
 
-              <th>
-                <a href="#" ng-click="ctl.sortType = 'referente.cpfCnpj'; ctl.sortReverse = !ctl.sortReverse">
-                  <small>Referente<small>
-                  <div class="pull-right">
-                    <i ng-show="ctl.sortType == 'referente.cpfCnpj' && !ctl.sortReverse"
-                      class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="ctl.sortType == 'referente.cpfCnpj' && ctl.sortReverse"
-                      class="fa fa-sort-amount-desc"></i>
-                  </div>
-                </a>
-              </th>
+          <div class="table-responsive" ng-if="ctl.pagamentos.length">
+            <table class="table table-striped table-condensed">
+              <thead class="text-muted">
+                <tr>
+                  <th></th>
+                  <th>
+                    <a href="#" ng-click="ctl.sortType = 'numero'; ctl.sortReverse = !ctl.sortReverse">
+                      <small>Numero<small>
+                      <div class="pull-right">
+                        <i ng-show="ctl.sortType == 'numero' && !ctl.sortReverse"
+                          class="fa fa-sort-amount-asc"></i>
+                        <i ng-show="ctl.sortType == 'numero' && ctl.sortReverse"
+                          class="fa fa-sort-amount-desc"></i>
+                      </div>
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" ng-click="ctl.sortType = 'titulo'; ctl.sortReverse = !ctl.sortReverse">
+                      <small>Titulo<small>
+                      <div class="pull-right">
+                        <i ng-show="ctl.sortType == 'titulo' && !ctl.sortReverse"
+                          class="fa fa-sort-amount-asc"></i>
+                        <i ng-show="ctl.sortType == 'titulo' && ctl.sortReverse"
+                          class="fa fa-sort-amount-desc"></i>
+                      </div>
+                    </a>
+                  </th>
 
-              <th>
-                <a href="#" ng-click="ctl.sortType = 'dataEmissao'; ctl.sortReverse = !ctl.sortReverse">
-                  <small>Emissão<small>
-                  <div class="pull-right">
-                    <i ng-show="ctl.sortType == 'dataEmissao' && !ctl.sortReverse"
-                      class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="ctl.sortType == 'dataEmissao' && ctl.sortReverse"
-                      class="fa fa-sort-amount-desc"></i>
-                  </div>
-                </a>
-              </th>
-              <th>
-                <a href="#" ng-click="ctl.sortType = 'pagamento.dataVencimento'; ctl.sortReverse = !ctl.sortReverse">
-                  <small>Vencimento<small>
-                  <div class="pull-right">
-                    <i ng-show="ctl.sortType == 'pagamento.dataVencimento' && !ctl.sortReverse"
-                      class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="ctl.sortType == 'pagamento.dataVencimento' && ctl.sortReverse"
-                      class="fa fa-sort-amount-desc"></i>
-                  </div>
-                </a>
-              </th>
-              <th class="text-right">
-                <a href="#" ng-click="ctl.sortType = 'pagamento.valor'; ctl.sortReverse = !ctl.sortReverse">
-                  <small>Valor<small>
-                  <div class="pull-right">
-                    <i ng-show="ctl.sortType == 'pagamento.valor' && !ctl.sortReverse"
-                      class="fa fa-sort-amount-asc"></i>
-                    <i ng-show="ctl.sortType == 'pagamento.valor' && ctl.sortReverse"
-                      class="fa fa-sort-amount-desc"></i>
-                  </div>
-                </a>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="ct in ctl.pagamentos | orderBy:ctl.sortType:ctl.sortReverse | filter:filtrarResult">
-              <td><a href="#" ng-click="ctl.openPayment(ct)">
-                <i class="fa" ng-class="{'fa-reply': ctl.status === 'pagar', 'fa-share': ctl.status === 'receber'}" aria-hidden="true"></i></a></td>
-              <td><small class="text-muted">{{ ct.numero }}</small></td>
-              <td><small class="text-muted">{{ ct.titulo }}</small></td>
-              <td><a href="#" ui-sref="contaedit({id: ban.account._id})" uib-tooltip="{{ct.referente.nome}}">
-                <small class="text-muted">{{ ct.referente.cpfCnpj | brCpfCnpj }}</small>
-              </a></td>
-              <td><small class="text-muted">{{ ct.dataEmissao | date:'dd/MM/yyyy' }}</small></td>
-              <td><small class="text-muted">{{ ct.pagamento.dataVencimento | date:'dd/MM/yyyy' }}</small></td>
-              <td class="text-right">
-                <h4 class="text-info">{{ ct.pagamento.valor | currency}}</h4>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                  <th>
+                    <a href="#" ng-click="ctl.sortType = 'referente.cpfCnpj'; ctl.sortReverse = !ctl.sortReverse">
+                      <small>Referente<small>
+                      <div class="pull-right">
+                        <i ng-show="ctl.sortType == 'referente.cpfCnpj' && !ctl.sortReverse"
+                          class="fa fa-sort-amount-asc"></i>
+                        <i ng-show="ctl.sortType == 'referente.cpfCnpj' && ctl.sortReverse"
+                          class="fa fa-sort-amount-desc"></i>
+                      </div>
+                    </a>
+                  </th>
+
+                  <th>
+                    <a href="#" ng-click="ctl.sortType = 'dataEmissao'; ctl.sortReverse = !ctl.sortReverse">
+                      <small>Emissão<small>
+                      <div class="pull-right">
+                        <i ng-show="ctl.sortType == 'dataEmissao' && !ctl.sortReverse"
+                          class="fa fa-sort-amount-asc"></i>
+                        <i ng-show="ctl.sortType == 'dataEmissao' && ctl.sortReverse"
+                          class="fa fa-sort-amount-desc"></i>
+                      </div>
+                    </a>
+                  </th>
+                  <th>
+                    <a href="#" ng-click="ctl.sortType = 'pagamento.dataVencimento'; ctl.sortReverse = !ctl.sortReverse">
+                      <small>Vencimento<small>
+                      <div class="pull-right">
+                        <i ng-show="ctl.sortType == 'pagamento.dataVencimento' && !ctl.sortReverse"
+                          class="fa fa-sort-amount-asc"></i>
+                        <i ng-show="ctl.sortType == 'pagamento.dataVencimento' && ctl.sortReverse"
+                          class="fa fa-sort-amount-desc"></i>
+                      </div>
+                    </a>
+                  </th>
+                  <th class="text-right">
+                    <a href="#" ng-click="ctl.sortType = 'pagamento.valor'; ctl.sortReverse = !ctl.sortReverse">
+                      <small>Valor<small>
+                      <div class="pull-right">
+                        <i ng-show="ctl.sortType == 'pagamento.valor' && !ctl.sortReverse"
+                          class="fa fa-sort-amount-asc"></i>
+                        <i ng-show="ctl.sortType == 'pagamento.valor' && ctl.sortReverse"
+                          class="fa fa-sort-amount-desc"></i>
+                      </div>
+                    </a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="ct in ctl.pagamentos | orderBy:ctl.sortType:ctl.sortReverse | filter:filtrarResult">
+                  <td><a href="#" ng-click="ctl.openPayment(ct)">
+                    <i class="fa" ng-class="{'fa-reply': ctl.status === 'pagar', 'fa-share': ctl.status === 'receber'}" aria-hidden="true"></i></a></td>
+                  <td><small class="text-muted">{{ ct.numero }}</small></td>
+                  <td><small class="text-muted">{{ ct.titulo }}</small></td>
+                  <td><a href="#" ui-sref="contaedit({id: ban.account._id})" uib-tooltip="{{ct.referente.nome}}">
+                    <small class="text-muted">{{ ct.referente.cpfCnpj | brCpfCnpj }}</small>
+                  </a></td>
+                  <td><small class="text-muted">{{ ct.dataEmissao | date:'dd/MM/yyyy' }}</small></td>
+                  <td><small class="text-muted">{{ ct.pagamento.dataVencimento | date:'dd/MM/yyyy' }}</small></td>
+                  <td class="text-right">
+                    <small class="text-info">{{ ct.pagamento.valor | currency}}</small>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </uib-tab>
+        <uib-tab>
+          <uib-tab-heading><small>Gráfico {{ctl.status}}</small></uib-tab-heading>
+          <br/>
+
+          <canvas id="base" class="chart-bar"
+           chart-data="ctl.data" chart-labels="ctl.labels" chart-colors="ctl.colors"
+           chart-dataset-override="ctl.datasetOverride" chart-options="ctl.options" >
+        </uib-tab>
+      </uib-tabset>
     </div>
   </div>
 </div>

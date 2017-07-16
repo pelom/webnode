@@ -9,7 +9,7 @@
 <div class="modal-body">
   <form class="form" novalidate name="form" ng-submit="ctl.setPagamento(form)">
     <div class="row">
-      <div class="col-xs-6">
+      <!--div class="col-xs-6">
         <dt class="text-muted"><small>Data Pagamento</small></dt>
         <dd>
           <p class="input-group">
@@ -27,7 +27,7 @@
             </span>
           </p>
         </dd>
-      </div>
+      </div-->
       <div class="col-xs-6">
         <dt class="text-muted"><small>Data Vencimento</small></dt>
         <dd>
@@ -48,6 +48,33 @@
         </dd>
       </div>
     </div>
+    <div class="row" ng-if="ctl.oportunidade._id">
+      <div class="col-md-12">
+        <dt class="text-muted"><small>Plano de conta</small></dt>
+        <dd>
+          <select class="form-control" name="planoreceita" ng-model="ctl.planoConta"
+             ng-options="item._id as item.nome for item in ctl.receitas"
+             style="background-color: #FFF;"
+             ng-required="true">
+             <option value="" ng-if="!ctl.planoConta">-- Nenhum --</option>
+          </select>
+        </dd>
+      </div>
+    </div>
+    <div class="row" ng-if="!ctl.oportunidade._id">
+      <div class="col-md-12">
+        <dt class="text-muted"><small>Plano de conta</small></dt>
+        <dd>
+          <select class="form-control" name="planodespesa" ng-model="ctl.planoConta"
+             ng-options="item._id as item.nome for item in ctl.despesas"
+             style="background-color: #FFF;"
+             ng-required="true">
+             <option value="" ng-if="!ctl.planoConta">-- Nenhum --</option>
+          </select>
+        </dd>
+      </div>
+    </div>
+      <br/>
     <div class="row">
       <div class="col-xs-6">
         <dl>
@@ -120,8 +147,10 @@
     <div class="row"><hr/></div>
     <div class="row">
       <div class="col-xs-12">
-        <button type="submit" class="btn btn-primary">Concluír</button>
-        <button type="button" class="btn btn-primary" ng-click="ctl.gerar()">Gerar</button>
+        <button type="submit" class="btn btn-primary"
+          ng-disabled="form.$invalid">Concluír</button>
+        <button type="button" class="btn btn-primary"
+          ng-disabled="form.$invalid" ng-click="ctl.gerar()">Gerar</button>
         <button type="button" class="btn btn-default"
           ng-click="ctl.close()">Fechar</button>
 
