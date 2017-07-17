@@ -286,17 +286,15 @@ export function cashFlowInputOrigin(req, res) {
   let firstDay = new Date(req.query.start);
   let lastDay = new Date(req.query.end);
   let entrada = Boolean(req.query.type === 'entrada');
-  console.log(firstDay);
-  console.log(lastDay);
-  console.log(entrada);
-  //let status = new Date(req.query.status);
+  let group = req.query.group;
+  console.log(firstDay, lastDay, entrada, group);
   Invoice.aggregate([
     { $match: { oportunidade: { $exists: entrada }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
     { $unwind: '$pagamentos' },
     { $match: {
       pagamentos: { $exists: true },
       //'pagamentos.dataPagamento': { $exists: true },
-      'pagamentos.dataVencimento': {
+      'pagamentos.dataReferencia': {
         $gte: firstDay, $lte: lastDay
       }
     }
@@ -307,7 +305,7 @@ export function cashFlowInputOrigin(req, res) {
       foreignField: '_id',
       as: 'planoContaInfo'
     } },
-    { $group: createGroupOrigin() },
+    { $group: createGroupOrigin(group) },
     //{ $sort: { 'transactions.data': -1 } },
   ]).exec((err, results) => {
     console.log('cashFlowInputOrigin()');
@@ -320,9 +318,25 @@ export function cashFlowInputOrigin(req, res) {
   });
 }
 
-function createGroupOrigin() {
+function createGroupOrigin(type) {
+  let getGroupId = () => {
+    let group = { nome: '$planoContaInfo.nome', };
+    if(type === 'month') {
+      group.year = { $year: '$pagamentos.dataReferencia' };
+      group.month = { $month: '$pagamentos.dataReferencia' };
+    } else if(type === 'week') {
+      group.week = { $week: '$pagamentos.dataReferencia' };
+    } else if(type === 'day') {
+      group.year = { $year: '$pagamentos.dataReferencia' };
+      group.month = { $month: '$pagamentos.dataReferencia' };
+      group.day = { $dayOfMonth: '$pagamentos.dataReferencia' };
+    }
+    return group;
+  };
+
   return {
-    _id: '$planoContaInfo.nome',
+    _id: getGroupId(),
+    count: { $sum: 1 },
     countPrevisao: { $sum: {
       $cond: { if: { $eq: ['$pagamentos.dataPagamento', '$exist']}, then: 1, else: 0 }
     }},

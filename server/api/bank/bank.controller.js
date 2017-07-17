@@ -218,7 +218,7 @@ function createTransation(operat, lastTransaction) {
     saldoFinal: saldo,
     saldoInicial: lastTransaction.saldoFinal,
     dataPagamento: operat.dataPagamento,
-    conta: operat.conta ? operat.conta : undefined
+    conta: operat.conta ? operat.conta : undefined,
   };
 }
 
@@ -237,7 +237,8 @@ function saveOperation(bankId, operat, trans, res) {
 function callbackOperation(operat, res) {
   return bank => {
     Invoice.findOneAndUpdate({ _id: operat.nfId, 'pagamentos._id': operat.pagamentoId },
-      { $set: { 'pagamentos.$.dataPagamento': operat.dataPagamento } },
+      { $set: { 'pagamentos.$.dataPagamento': operat.dataPagamento,
+        'pagamentos.$.dataReferencia': new Date() } },
       (err, doc) => {
         console.log(err, doc);
         res.status(201).json(true);
@@ -246,6 +247,64 @@ function callbackOperation(operat, res) {
   };
 }
 
+export function cashFlow(req, res) {
+  let firstDay = new Date(req.query.start);
+  let lastDay = new Date(req.query.end);
+  let type = req.query.type;
+  console.log('cashFlow()', firstDay, lastDay);
+
+  let getGroupId = () => {
+    let group = { };
+    if(type === 'month') {
+      group.year = { $year: '$transactions.data' };
+      group.month = { $month: '$transactions.data' };
+    } else if(type === 'week') {
+      group.week = { $week: '$transactions.data' };
+    } else if(type === 'day') {
+      group.year = { $year: '$transactions.data' };
+      group.month = { $month: '$transactions.data' };
+      group.day = { $dayOfMonth: '$transactions.data' };
+    }
+    return group;
+  };
+  Bank.aggregate([
+    //{ $match: { _id: mongoose.Types.ObjectId(req.params.id) } },
+    { $unwind: '$transactions' },
+    { $match: {
+      'transactions.data': {
+        $gte: firstDay, $lte: lastDay
+      } }
+    },
+    { $group: {
+      _id: getGroupId(),
+      //{ $dateToString: { format, date: '$transactions.dataPagamento' } },
+      countDeb: { $sum: {
+        $cond: { if: { $lt: ['$transactions.valor', 0]}, then: 1, else: 0 }
+      }},
+      countCred: { $sum: {
+        $cond: { if: { $gt: ['$transactions.valor', 0]}, then: 1, else: 0 }
+      }},
+      sumDeb: { $sum: {
+        $cond: { if: { $lt: ['$transactions.valor', 0]}, then: '$transactions.valor', else: 0 }
+      }},
+      sumCred: { $sum: {
+        $cond: { if: { $gt: ['$transactions.valor', 0]}, then: '$transactions.valor', else: 0 }
+      }},
+      balance: { $sum: '$transactions.valor' },
+      saldoFinal: { $first: '$transactions' },
+      saldoInicial: { $last: '$transactions' },
+    }},
+    { $sort: { _id: -1 } },
+
+  ]).exec((err, results) => {
+    console.log(results);
+    if(err) {
+      handleError(res)(err);
+      return;
+    }
+    res.status(201).json(results);
+  });
+}
 export function accountReceivable(req, res) {
   let firstDay = new Date(req.query.start);
   let lastDay = new Date(req.query.end);

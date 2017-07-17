@@ -24,6 +24,14 @@ export function BancoService(BancoResource, Util) {
         return safeCb(callback)(err);
       }).$promise;
     },
+    cashFlow(query, callback) {
+      return BancoResource.cashFlow(query, function(data) {
+        return safeCb(callback)(null, data);
+      }, function(err) {
+        console.log('Ex:', err);
+        return safeCb(callback)(err);
+      }).$promise;
+    },
     accountReceivable(query, callback) {
       return BancoResource.accountReceivable(query, data => {
         banco = data;

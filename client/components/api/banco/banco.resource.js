@@ -11,6 +11,13 @@ export function BancoResource($resource) {
         id: 'domain'
       }
     },
+    cashFlow: {
+      method: 'GET',
+      isArray: true,
+      params: {
+        id: 'cashFlow',
+      }
+    },
     accountPayable: {
       method: 'GET',
       isArray: true,

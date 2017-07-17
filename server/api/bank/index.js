@@ -7,6 +7,7 @@ import * as auth from '../../auth/auth.service';
 let router = new Router();
 
 router.get('/domain', auth.isAuthenticated(), controller.domain);
+router.get('/cashFlow', auth.isAuthenticated(), controller.cashFlow);
 router.get('/accountPayable', auth.isAuthenticated(), controller.accountPayable);
 router.get('/accountReceivable', auth.isAuthenticated(), controller.accountReceivable);
 router.get('/', auth.isAuthenticated(), controller.index);

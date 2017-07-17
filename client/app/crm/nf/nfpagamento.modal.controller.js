@@ -86,6 +86,7 @@ export default class NfPagamentoModalController {
     this.NfService.getModalCtl().setPagamento(pagList);
   }
   createPagamentoParcela(parcela, dataVencimento, dataPagamento, valor) {
+    let dataReferencia = dataVencimento;
     return {
       tipo: this.tipoPagamento,
       dataCriacao: moment().toDate(),
@@ -93,6 +94,7 @@ export default class NfPagamentoModalController {
       planoConta: this.planoConta,
       dataVencimento,
       dataPagamento,
+      dataReferencia,
       valor,
       bandeira: this.isCartao() ? this.bandeira : undefined,
       autorizacao: this.isCartao() ? this.autorizacao : undefined,

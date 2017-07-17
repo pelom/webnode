@@ -25,6 +25,7 @@ var InvoiceItemSchema = new Schema({
 });
 
 var InvoicePaymentSchema = new Schema({
+  dataReferencia: { type: Date, required: true, default: Date.now },
   dataVencimento: { type: Date, required: true, default: Date.now },
   dataPagamento: { type: Date, required: false },
   dataCriacao: { type: Date, required: false, default: Date.now },
