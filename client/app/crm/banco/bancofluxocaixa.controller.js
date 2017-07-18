@@ -17,12 +17,26 @@ export default class BancoFluxoCaixaController extends Controller {
     this.NfService = NfService;
     this.ProdutoService = ProdutoService;
 
+    this.typeView = this.typeViewMonth;
+    this.startDate = new Date();
+    this.format = 'dd/MM/yyyy';
+    this.typeViewArray = [
+      { value: 'Mês - 6 meses a partir da data', id: this.typeViewMonth },
+      { value: 'Semanas - 5 semanas a partir da data', id: this.typeViewWeek, },
+      { value: 'Dias - 7 dias a partir da data', id: this.typeViewDay }];
+    this.mapTypeView = new Map();
+    this.mapTypeView.set(this.typeViewMonth,
+      { formatText: 'MMM YYYY', formatKey: 'YYYY-M', typeView: this.typeViewMonth, length: 6 });
+    this.mapTypeView.set(this.typeViewWeek,
+      { formatText: 'DD ddd, MMM', formatKey: 'YYYY-MM-DD', typeView: this.typeViewWeek, length: 5 });
+    this.mapTypeView.set(this.typeViewDay,
+      { formatText: 'DD ddd MMM', formatKey: 'YYYY-M-DD', typeView: this.typeViewDay, length: 7 });
+
     this.init();
 
     this.isPrevisao = false;
 
     this.Modal = Modal;
-    this.format = 'dd/MM/yyyy';
 
     this.colors = ['#000000', '#a94442', '#337ab7'];
     this.labels = [];
@@ -63,16 +77,6 @@ export default class BancoFluxoCaixaController extends Controller {
   }
 
   init() {
-    this.mapTypeView = new Map();
-    this.mapTypeView.set(this.typeViewMonth,
-      { formatText: 'MMMM', formatKey: 'YYYY-M', typeView: this.typeViewMonth, length: 6 });
-    this.mapTypeView.set(this.typeViewWeek,
-      { formatText: 'DD MMMM', formatKey: 'YYYY-MM-DD', typeView: this.typeViewWeek, length: 5 });
-    this.mapTypeView.set(this.typeViewDay,
-      { formatText: 'DD ddd MMM', formatKey: 'YYYY-M-DD', typeView: this.typeViewDay, length: 7 });
-
-    this.typeView = this.typeViewMonth;
-    this.startDate = new Date();
     this.cashFlowView = this.createCashFlowView(this.startDate, this.typeView);
     //this.cashFlowView.forEach(item => console.log(item));
     this.cashFlowViewReceitas(this.cashFlowView);
@@ -86,7 +90,7 @@ export default class BancoFluxoCaixaController extends Controller {
   }
 
   createCashFlowView(monthStart, typeView) {
-    let data = moment(monthStart).add(-1, typeView);
+    let data = moment(monthStart);//.add(-1, typeView);
     let sets = this.mapTypeView.get(typeView);
     let cashFlowViewList = [];
     for(var x = 0; x < sets.length; x++) {
@@ -129,8 +133,8 @@ export default class BancoFluxoCaixaController extends Controller {
 
         planList.forEach(plan => {
           let map = mapItem.get(plan.nome);
-          let itPr = { nome: plan.nome, saidas: [] };
-          let itRe = { nome: '', saidas: [] };
+          let itPr = { nome: plan.nome, saidas: [], isShow: true };
+          let itRe = { nome: '', saidas: [], isShow: false };
 
           this.setResult(cashFlowView, map, itPr, itRe);
           this.despesas.push(itPr);
@@ -161,8 +165,8 @@ export default class BancoFluxoCaixaController extends Controller {
 
         planList.forEach(plan => {
           let map = mapItem.get(plan.nome);
-          let itPr = { nome: plan.nome, saidas: [] };
-          let itRe = { nome: '', saidas: [] };
+          let itPr = { nome: plan.nome, saidas: [], isShow: true };
+          let itRe = { nome: '', saidas: [], isShow: false };
 
           this.setResult(cashFlowView, map, itPr, itRe);
           this.receitas.push(itPr);
@@ -284,5 +288,12 @@ export default class BancoFluxoCaixaController extends Controller {
       }
     });
     return mapItem;
+  }
+
+  showPrevisao(array, line, index) {
+    if(line.nome === '') {
+      return;
+    }
+    array[index + 1].isShow = !array[index + 1].isShow;
   }
 }

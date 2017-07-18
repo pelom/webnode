@@ -5,89 +5,120 @@
   </span>
 
   <div class="row">
-    <ul class="nav nav-pills" ng-class="ctl.isJustified()">
-      <li ng-class="{ active: ctl.isActive('pagar')}">
-        <a href="#" ng-click="ctl.init()" uib-tooltip="Fluxo de caixa">
-          <i class="fa fa-line-chart fa-2x" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()"> Fluxo de caixa</small>
-          <span class="badge" ng-if="ctl.status === 'pagar'">{{ ctl.pagamentos.length}}</span>
-        </a>
-      </li>
-    </ul>
+    <div class="col-xs-4">
+      <ul class="nav nav-pills">
+        <li class="active">
+          <a href="#" ng-click="ctl.init()" uib-tooltip="Fluxo de caixa">
+            <i class="fa fa-line-chart" aria-hidden="true"></i>
+            <small ng-if="ctl.isFull()"> Fluxo de caixa</small>
+            <span class="badge" ng-if="ctl.status === 'pagar'">{{ ctl.pagamentos.length}}</span>
+          </a>
+        </li>
+        <p class="text-right"><small>
+          <input type="checkbox" ng-model="ctl.isPrevisao"> Previsão
+        </small></p>
+      </ul>
+    </div>
+    <div class="col-md-4">
+      <p class="input-group">
+        <input type="text" class="form-control" name="startDate"
+          ng-model="ctl.startDate" datepicker-options="ctl.dateOptions"
+          uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
+          is-open="ctl.popup2.opened" ng-blur="ctl.init()"
+          ng-required="true" show-button-bar="false"
+          style="background-color: #FFF;"/>
+
+        <span class="input-group-btn">
+         <button type="button" class="btn btn-default"
+          ng-click="ctl.popup2.opened = true;">
+         <i class="fa fa-calendar" aria-hidden="true"></i></button>
+        </span>
+      </p>
+    </div>
+    <div class="col-md-4">
+      <select class="form-control" name="status" ng-model="ctl.typeView"
+         ng-options="item.id as item.value for item in ctl.typeViewArray"
+         ng-required="true" ng-blur="ctl.init()">
+      </select>
+    </div>
+
   </div>
   <p></p>
   <div class="panel panel-default">
     <div class="panel-body">
-      <uib-tabset active="activeJustified" justified="true">
+      <div class="table-responsive">
+        <table class="table">
+          <colgroup>
+            <col/>
+            <col ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect }" ng-repeat="m in ctl.cashFlowView"/>
+          </colgroup>
+          <thead>
+            <tr>
+              <th></th>
+              <th class="text-right" ng-repeat="m in ctl.cashFlowView"
+                ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect, 'bg-primary' : m.mes !== ctl.nowSelect }">
+                <small class="text-uppercase">{{ m.mes }}</small></th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <td><i class="fa fa-flag" aria-hidden="true"></i> <small><b>&nbsp; Saldo Inícial</b></small></td>
+              <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
+                <small><b>{{m.saldoInicial.saldoInicial | number:2}}</b></small></td>
+            </tr>
+            <tr class="active text-muted">
+              <td><i class="fa fa-level-up" aria-hidden="true"></i><small> <b>Receitas</b></small></td>
+              <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
+                <small><b>{{m.sumCred | number:2}}</b></small></td>
+            </tr>
+            <tr ng-repeat="r in ctl.receitas track by $index" ng-show="r.isShow"
+              ng-click="ctl.showPrevisao(ctl.receitas, r, $index)">
+              <td><small class="text-muted">{{ r.nome }}</small></td>
+              <td class="text-right" ng-repeat="sai in r.saidas track by $index">
+                <small ng-class="{ 'text-muted': r.nome === '', 'text-primary': r.nome !== ''}">
+                  {{sai | number:2 }}</small></td>
+            </tr>
+
+            <tr class="active text-muted">
+              <td><i class="fa fa-level-down" aria-hidden="true"></i><small> <b>Despesas</b></small></td>
+              <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
+                <small><b>{{m.sumDeb | number:2}}</b></small></td>
+            </tr>
+            <tr ng-repeat="d in ctl.despesas" ng-show="d.isShow"
+              ng-click="ctl.showPrevisao(ctl.despesas, d, $index)">
+              <td><small class="text-muted">{{ d.nome }}</small></td>
+              <td class="text-right" ng-repeat="sai in d.saidas track by $index">
+                <small  ng-class="{ 'text-muted': d.nome === '', 'text-primary': d.nome !== ''}">
+                  {{sai | number:2 }}</small></td>
+            </tr>
+            <tr class="active text-muted">
+              <td><i class="fa fa-calculator" aria-hidden="true"></i><small> <b>Resultados</b></small></td>
+              <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
+                <small><b>{{m.balance | number:2}}</b></small></td>
+            </tr>
+
+            <tr>
+              <td><i class="fa fa-flag-checkered" aria-hidden="true"></i> <small><b>&nbsp; Saldo Final</b></small></td>
+              <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
+                <small><b>{{m.saldoFinal.saldoFinal | number:2}}</b></small></td>
+            </tr>
+            <!--tr class="text-muted">
+              <th></th>
+              <th class="text-right" ng-repeat="m in ctl.cashFlowView"
+                ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect, 'active' : m.mes !== ctl.nowSelect }">
+                <small>{{ m.mes }}</small></th>
+            </tr-->
+          </tbody>
+        </table>
+      </div>
+      <!--uib-tabset active="activeJustified" justified="true">
         <uib-tab>
-          <uib-tab-heading><small>Mês</small></uib-tab-heading>
+          <uib-tab-heading>Fluxo de caixa</uib-tab-heading>
           <br/>
 
-          <div class="table-responsive">
-            <table class="table">
-              <colgroup>
-                <col/>
-                <col ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect }" ng-repeat="m in ctl.cashFlowView"/>
-              </colgroup>
-              <thead>
-                <tr class="text-muted">
-                  <th><input type="checkbox" ng-model="ctl.isPrevisao"> Previsão</th>
-                  <th class="text-right" ng-repeat="m in ctl.cashFlowView"
-                    ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect, 'active' : m.mes !== ctl.nowSelect }">
-                    <small>{{ m.mes }}</small></th>
-                </tr>
-              </thead>
 
-              <tbody>
-
-                <tr class="bg-primary">
-                  <td><small><b>&nbsp; Saldo Inícial</b></small></td>
-                  <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
-                    <small><b>{{m.saldoInicial.saldoInicial | number:2}}</b></small></td>
-                </tr>
-                <tr class="active text-muted">
-                  <td><small><b>[+] Receitas</b></small></td>
-                  <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
-                    <small><b>{{m.sumCred | number:2}}</b></small></td>
-                </tr>
-                <tr ng-repeat="r in ctl.receitas track by $index" ng-show="r.nome !== '' || ctl.isPrevisao">
-                  <td><small class="text-muted">{{ r.nome }}</small></td>
-                  <td class="text-right" ng-repeat="sai in r.saidas track by $index">
-                    <small ng-class="{ 'text-muted': r.nome === '', 'text-primary': r.nome !== ''}">
-                      {{sai | number:2 }}</small></td>
-                </tr>
-
-                <tr class="active text-muted">
-                  <td><small><b>[-] Despesas</b></small></td>
-                  <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
-                    <small><b>{{m.sumDeb | number:2}}</b></small></td>
-                </tr>
-                <tr ng-repeat="d in ctl.despesas" ng-show="d.nome !== '' || ctl.isPrevisao">
-                  <td><small class="text-muted">{{ d.nome }}</small></td>
-                  <td class="text-right" ng-repeat="sai in d.saidas track by $index">
-                    <small  ng-class="{ 'text-muted': d.nome === '', 'text-primary': d.nome !== ''}">
-                      {{sai | number:2 }}</small></td>
-                </tr>
-                <tr class="active text-muted">
-                  <td><small><b>[=] Resultados</b></small></td>
-                  <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
-                    <small><b>{{m.balance | number:2}}</b></small></td>
-                </tr>
-
-                <tr class="bg-primary">
-                  <td><b>&nbsp; Saldo Final</b></td>
-                  <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
-                    <small><b>{{m.saldoFinal.saldoFinal | number:2}}</b></small></td>
-                </tr>
-                <!--tr class="text-muted">
-                  <th></th>
-                  <th class="text-right" ng-repeat="m in ctl.cashFlowView"
-                    ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect, 'active' : m.mes !== ctl.nowSelect }">
-                    <small>{{ m.mes }}</small></th>
-                </tr-->
-              </tbody>
-            </table>
-          </div>
         </uib-tab>
         <uib-tab>
           <uib-tab-heading><small>Gráfico {{ctl.status}}</small></uib-tab-heading>
@@ -97,7 +128,7 @@
            chart-data="ctl.data" chart-labels="ctl.labels" chart-colors="ctl.colors"
            chart-dataset-override="ctl.datasetOverride" chart-options="ctl.options" >
         </uib-tab>
-      </uib-tabset>
+      </uib-tabset-->
     </div>
   </div>
 </div>
