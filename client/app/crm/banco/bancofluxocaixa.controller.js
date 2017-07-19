@@ -79,8 +79,6 @@ export default class BancoFluxoCaixaController extends Controller {
   init() {
     this.cashFlowView = this.createCashFlowView(this.startDate, this.typeView);
     //this.cashFlowView.forEach(item => console.log(item));
-    this.cashFlowViewReceitas(this.cashFlowView);
-    this.cashFlowViewDespesas(this.cashFlowView);
     this.cashFlowViewSaldo(this.cashFlowView);
 
     let format = this.mapTypeView.get(this.typeView).formatText;
@@ -105,6 +103,11 @@ export default class BancoFluxoCaixaController extends Controller {
       });
       data = data.add(1, typeView);
     }
+    cashFlowViewList.push({
+      mes: 'Total', index: sets.length,
+      start: cashFlowViewList[cashFlowViewList.length - 1].start,
+      end: cashFlowViewList[cashFlowViewList.length - 1].end,
+    });
     return cashFlowViewList;
   }
 
@@ -140,6 +143,8 @@ export default class BancoFluxoCaixaController extends Controller {
           this.despesas.push(itPr);
           this.despesas.push(itRe);
         });
+        this.sumLine(this.despesas);
+        this.setPrevisao(cashFlowView, this.despesas, 'previsaoDespesa');
       })
       .finally(() => {
         this.usSpinnerService.stop('spinner-1');
@@ -172,6 +177,20 @@ export default class BancoFluxoCaixaController extends Controller {
           this.receitas.push(itPr);
           this.receitas.push(itRe);
         });
+        this.sumLine(this.receitas);
+        this.setPrevisao(cashFlowView, this.receitas, 'previsaoReceita');
+        // cashFlowView.forEach(flow => {
+        //   let tot = 0;
+        //   this.receitas.forEach(rec => {
+        //     if(rec.nome === '') {
+        //       tot += rec.saidas[flow.index];
+        //     }
+        //   });
+        //   let saldo = this.saldos[flow.index];
+        //   if(saldo) {
+        //     saldo.previsao = tot;
+        //   }
+        // });
       })
       .finally(() => {
         this.usSpinnerService.stop('spinner-1');
@@ -258,16 +277,26 @@ export default class BancoFluxoCaixaController extends Controller {
 
       let map = this.createMapResultSaldo(result);
       console.log(map);
+      let firstInfo;
+      let lastInfo;
       cashFlowView.forEach(flow => {
         console.log(flow);
         let info = map.get(`${flow.key}`);
         console.log('INFO', info);
         if(!info) {
-          this.saldos.push(null);
+          this.saldos.push({});
         } else {
           this.saldos.push(info);
+          if(!firstInfo) {
+            firstInfo = info;
+          }
+          lastInfo = info;
         }
       });
+      this.sumResults(firstInfo, lastInfo);
+
+      this.cashFlowViewReceitas(cashFlowView);
+      this.cashFlowViewDespesas(cashFlowView);
     });
   }
 
@@ -295,5 +324,66 @@ export default class BancoFluxoCaixaController extends Controller {
       return;
     }
     array[index + 1].isShow = !array[index + 1].isShow;
+  }
+
+  sumLine(lines) {
+    lines.forEach(line => {
+      if(line /*&& line.nome !== ''*/) {
+        let tot = 0;
+        line.saidas.forEach(item => {
+          if(item) {
+            tot += item;
+          }
+        });
+        line.saidas[line.saidas.length - 1] = tot;
+      }
+    });
+  }
+
+  sumResults(firstInfo, lastInfo) {
+    let cred = 0;
+    let deb = 0;
+    let bal = 0;
+
+    this.saldos.forEach(info => {
+      if(info && info.sumCred) {
+        cred += info.sumCred;
+      }
+      if(info && info.sumDeb) {
+        deb += info.sumDeb;
+      }
+      if(info && info.balance) {
+        bal += info.balance;
+      }
+    });
+    this.saldos[this.saldos.length - 1] = {
+      sumCred: cred,
+      sumDeb: deb,
+      balance: bal,
+      saldoInicial: firstInfo ? firstInfo.saldoInicial : undefined,
+      saldoFinal: lastInfo ? lastInfo.saldoFinal : undefined,
+    };
+  }
+  setShowPrevisao() {
+    this.receitas.forEach(rec => {
+      rec.isShow = this.isPrevisao;
+    });
+    this.despesas.forEach(rec => {
+      rec.isShow = this.isPrevisao;
+    });
+  }
+  setPrevisao(cashFlowView, array, prop) {
+    cashFlowView.forEach(flow => {
+      let tot = 0;
+      array.forEach(rec => {
+        if(rec.nome === '') {
+          tot += rec.saidas[flow.index];
+        }
+      });
+      let saldo = this.saldos[flow.index];
+      if(saldo) {
+        saldo[prop] = tot;
+      }
+    });
   }
 }

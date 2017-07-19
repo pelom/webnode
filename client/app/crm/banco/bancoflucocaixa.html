@@ -7,7 +7,7 @@
   <div class="row">
     <div class="col-xs-4">
       <ul class="nav nav-pills">
-        <li class="active">
+        <li>
           <a href="#" ng-click="ctl.init()" uib-tooltip="Fluxo de caixa">
             <i class="fa fa-line-chart" aria-hidden="true"></i>
             <small ng-if="ctl.isFull()"> Fluxo de caixa</small>
@@ -15,7 +15,7 @@
           </a>
         </li>
         <p class="text-right"><small>
-          <input type="checkbox" ng-model="ctl.isPrevisao"> Previsão
+          <input type="checkbox" ng-model="ctl.isPrevisao" ng-click="ctl.setShowPrevisao()"> Detalhes
         </small></p>
       </ul>
     </div>
@@ -50,59 +50,71 @@
         <table class="table">
           <colgroup>
             <col/>
-            <col ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect }" ng-repeat="m in ctl.cashFlowView"/>
+            <col ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect, 'bg-info' : m.mes === 'Total' }" ng-repeat="m in ctl.cashFlowView"/>
           </colgroup>
           <thead>
             <tr>
               <th></th>
               <th class="text-right" ng-repeat="m in ctl.cashFlowView"
-                ng-class="{ 'bg-warning' : m.mes === ctl.nowSelect, 'bg-primary' : m.mes !== ctl.nowSelect }">
+                ng-class="{ 'bg-warning text-warning' : m.mes === ctl.nowSelect, 'bg-primary' : m.mes !== ctl.nowSelect }">
                 <small class="text-uppercase">{{ m.mes }}</small></th>
             </tr>
           </thead>
 
           <tbody>
 
-            <tr>
+            <tr class="text-warning">
               <td><i class="fa fa-flag" aria-hidden="true"></i> <small><b>&nbsp; Saldo Inícial</b></small></td>
               <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
-                <small><b>{{m.saldoInicial.saldoInicial | number:2}}</b></small></td>
+                <small ng-if="m.saldoInicial"><b>{{m.saldoInicial.saldoInicial | number:2}}</b></small></td>
             </tr>
             <tr class="active text-muted">
               <td><i class="fa fa-level-up" aria-hidden="true"></i><small> <b>Receitas</b></small></td>
               <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
-                <small><b>{{m.sumCred | number:2}}</b></small></td>
+                <small ng-if="m.sumCred"><b>{{m.sumCred | number:2}}</b></small>
+                <br/><small><i>({{m.previsaoReceita | number:2}})</i></small>
+              </td>
             </tr>
             <tr ng-repeat="r in ctl.receitas track by $index" ng-show="r.isShow"
               ng-click="ctl.showPrevisao(ctl.receitas, r, $index)">
-              <td><small class="text-muted">{{ r.nome }}</small></td>
+              <td><small class="text-muted">&nbsp;&nbsp;&nbsp;&nbsp;<i>{{ r.nome }}</i></small></td>
               <td class="text-right" ng-repeat="sai in r.saidas track by $index">
-                <small ng-class="{ 'text-muted': r.nome === '', 'text-primary': r.nome !== ''}">
+                <small class="text-muted" ng-if="r.nome === ''">
+                  <i>({{sai | number:2 }})</i></small>
+                <small class="text-primary" ng-if="r.nome !== ''">
                   {{sai | number:2 }}</small></td>
             </tr>
 
             <tr class="active text-muted">
               <td><i class="fa fa-level-down" aria-hidden="true"></i><small> <b>Despesas</b></small></td>
               <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
-                <small><b>{{m.sumDeb | number:2}}</b></small></td>
+                <small ng-if="m.sumDeb"><b>{{m.sumDeb | number:2}}</b></small>
+                <br/><small><i>({{-m.previsaoDespesa | number:2}})</i></small>
+              </td>
             </tr>
             <tr ng-repeat="d in ctl.despesas" ng-show="d.isShow"
               ng-click="ctl.showPrevisao(ctl.despesas, d, $index)">
-              <td><small class="text-muted">{{ d.nome }}</small></td>
+              <td><small class="text-muted">&nbsp;&nbsp;&nbsp;&nbsp;<i>{{ d.nome }}</i></small></td>
               <td class="text-right" ng-repeat="sai in d.saidas track by $index">
-                <small  ng-class="{ 'text-muted': d.nome === '', 'text-primary': d.nome !== ''}">
-                  {{sai | number:2 }}</small></td>
+                <small class="text-muted" ng-if="d.nome === ''">
+                  <i>({{-sai | number:2 }})</i></small>
+                <small class="text-primary" ng-if="d.nome !== ''">
+                  {{-sai | number:2 }}</small></td>
             </tr>
             <tr class="active text-muted">
               <td><i class="fa fa-calculator" aria-hidden="true"></i><small> <b>Resultados</b></small></td>
               <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
-                <small><b>{{m.balance | number:2}}</b></small></td>
+                <small ng-if="m.balance"><b>{{m.balance | number:2}}</b></small>
+                <br/><small><i>({{ m.previsaoReceita - m.previsaoDespesa | number:2}})</i></small>
+              </td>
             </tr>
 
-            <tr>
+            <tr class="active">
               <td><i class="fa fa-flag-checkered" aria-hidden="true"></i> <small><b>&nbsp; Saldo Final</b></small></td>
               <td class="text-right" ng-repeat="m in ctl.saldos track by $index">
-                <small><b>{{m.saldoFinal.saldoFinal | number:2}}</b></small></td>
+                <small ng-if="m.saldoFinal"><b>{{m.saldoFinal.saldoFinal | number:2}}</b></small>
+                <br/><small><i>({{ m.saldoFinal.saldoFinal + (m.previsaoReceita - m.previsaoDespesa) | number:2}})</i></small>
+              </td>
             </tr>
             <!--tr class="text-muted">
               <th></th>
