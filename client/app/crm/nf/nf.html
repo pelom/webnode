@@ -55,21 +55,45 @@
               <i class="fa fa-upload margin-correction"></i> <i ng-if="ctl.isFull()">Arquivo</i></a>
             </label>
         </span>
-    </form>
+      </form>
     </div>
-    <!--div class="col-xs-4">
-      <select class="form-control" name="unidade" ng-model="ctl.selectCat"
-         ng-options="item as item for item in ctl.categorias">
-         <option value="">-- Categoria --</option>
-      </select>
-    </div-->
-    <div class="col-xs-5 pull-right form-group">
+    <div class="col-xs-3">
+      <p class="input-group">
+        <input type="text" class="form-control" name="dataInicio"
+          ng-model="ctl.dataInicio"
+          uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
+          is-open="ctl.popup1.opened" datepicker-options="ctl.dateOptions"
+          show-button-bar="false" ng-blur="ctl.findData()"/>
+        <span class="input-group-btn">
+         <button type="button" class="btn btn-default"
+         ng-click="ctl.popup1.opened = true;">
+         <i class="fa fa-calendar" aria-hidden="true"></i></button>
+        </span>
+      </p>
+    </div>
+    <div class="col-xs-3">
+      <p class="input-group">
+        <input type="text" class="form-control" name="dataFim"
+          ng-model="ctl.dataFim"
+          uib-datepicker-popup="{{ctl.format}}" placeholder="__/__/____"
+          is-open="ctl.popup2.opened" datepicker-options="ctl.dateOptions"
+          show-button-bar="false" ng-blur="ctl.findData()"/>
+        <span class="input-group-btn">
+         <button type="button" class="btn btn-default"
+         ng-click="ctl.popup2.opened = true;">
+         <i class="fa fa-calendar" aria-hidden="true"></i></button>
+        </span>
+      </p>
+    </div>
+
+    <!--div class="col-xs-6 pull-right form-group">
       <div class="input-group">
         <div class="input-group-addon"><i class="fa fa-search"></i></div>
         <input type="text" class="form-control" placeholder="Filtrar resultados" ng-model="filtrarResult">
       </div>
-    </div>
+    </div-->
   </div>
+
 
   <div class="panel panel-default">
     <div class="panel-body">

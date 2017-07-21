@@ -61,6 +61,12 @@ function buildWhere(req) {
       { numero: { $in: reg } },
     ];
   }
+
+  if(req.query.start && req.query.end) {
+    let firstDay = new Date(req.query.start);
+    let lastDay = new Date(req.query.end);
+    where.dataEmissao = { $gte: firstDay, $lte: lastDay };
+  }
   return where;
 }
 
@@ -88,6 +94,32 @@ export function show(req, res) {
 export function create(req, res) {
   let invoice = requestInvoiceCreate(req);
   console.log('Invoice:', invoice);
+
+  if(req.body.ocorrencia && req.body.numeroOcorrencia) {
+    for(let i = 1; i < Number(req.body.numeroOcorrencia); i++) {
+      let clone = requestInvoiceCreate(req);
+      if(clone.dataVencimento) {
+        clone.dataVencimento = moment(clone.dataVencimento).add(i, 'month')
+          .toDate();
+      }
+      if(clone.dataEmissao) {
+        clone.dataEmissao = moment(invoice.dataEmissao).add(i, 'month')
+          .toDate();
+      }
+      if(clone.pagamentos && clone.pagamentos.length) {
+        clone.pagamentos[0].dataVencimento = moment(
+          clone.pagamentos[0].dataVencimento).add(i, 'month')
+          .toDate();
+        clone.pagamentos[0].dataReferencia = moment(
+          clone.pagamentos[0].dataReferencia).add(i, 'month')
+          .toDate();
+      }
+      clone.save().then(inv => {
+        console.log('Clone invoice:', inv);
+      });
+    }
+  }
+
   invoice.save()
     .then(callbackCreateInvoice(req, res))
     .catch(handleValidationError(res));

@@ -30,6 +30,9 @@ export function NfService(NfResource, Util) {
     getModalCtl() {
       return modalCtl;
     },
+    setNotaFiscal(nota) {
+      notaFiscal = nota
+    },
     setModalCtl(modCtl) {
       modalCtl = modCtl;
     },
@@ -96,6 +99,8 @@ export function NfService(NfResource, Util) {
         emitente: newNf.emitente,
         destinatario: newNf.destinatario,
         produtos: newNf.produtos,
+        ocorrencia: newNf.ocorrencia,
+        numeroOcorrencia: newNf.numeroOcorrencia,
 
         serie: newNf.serie,
         numero: newNf.numero,

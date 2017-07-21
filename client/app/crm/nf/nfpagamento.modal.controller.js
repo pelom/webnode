@@ -39,9 +39,9 @@ export default class NfPagamentoModalController {
     this.tipos = this.NfService.getModalCtl().params.tipos;
     this.parcelas = this.NfService.getModalCtl().params.parcelas;
     this.bandeiras = this.NfService.getModalCtl().params.bandeiras;
-    this.valorTotal = this.NfService.getNotaFiscal().valorTotal;
-    this.dataVencimento = this.NfService.getNotaFiscal().dataVencimento;
-    this.oportunidade = this.NfService.getNotaFiscal().oportunidade;
+    this.valorTotal = this.NfService.getNotaFiscal() ? this.NfService.getNotaFiscal().valorTotal : 0;
+    this.dataVencimento = this.NfService.getNotaFiscal() ? this.NfService.getNotaFiscal().dataVencimento : new Date();
+    this.oportunidade = this.NfService.getNotaFiscal() ? this.NfService.getNotaFiscal().oportunidade : undefined;
     if(this.dataVencimento) {
       this.dataVencimento = moment().toDate();
     }

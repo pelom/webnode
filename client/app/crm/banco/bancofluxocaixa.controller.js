@@ -179,18 +179,6 @@ export default class BancoFluxoCaixaController extends Controller {
         });
         this.sumLine(this.receitas);
         this.setPrevisao(cashFlowView, this.receitas, 'previsaoReceita');
-        // cashFlowView.forEach(flow => {
-        //   let tot = 0;
-        //   this.receitas.forEach(rec => {
-        //     if(rec.nome === '') {
-        //       tot += rec.saidas[flow.index];
-        //     }
-        //   });
-        //   let saldo = this.saldos[flow.index];
-        //   if(saldo) {
-        //     saldo.previsao = tot;
-        //   }
-        // });
       })
       .finally(() => {
         this.usSpinnerService.stop('spinner-1');
@@ -272,17 +260,17 @@ export default class BancoFluxoCaixaController extends Controller {
       end: dataEnd,
       type: this.typeView,
     }).then(result => {
-      console.log('Start', this.start, ' End', this.end);
-      console.log(result);
+      //console.log('Start', this.start, ' End', this.end);
+      //console.log(result);
 
       let map = this.createMapResultSaldo(result);
-      console.log(map);
+      //console.log(map);
       let firstInfo;
       let lastInfo;
       cashFlowView.forEach(flow => {
-        console.log(flow);
+        //console.log(flow);
         let info = map.get(`${flow.key}`);
-        console.log('INFO', info);
+        //console.log('INFO', info);
         if(!info) {
           this.saldos.push({});
         } else {

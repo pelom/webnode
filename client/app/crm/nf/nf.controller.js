@@ -9,8 +9,16 @@ export default class NfController extends Controller {
   constructor($window, $scope, toastr, NfService, usSpinnerService) {
     super($window, $scope, toastr, usSpinnerService);
 
+    this.dataInicio = moment().startOf('month')
+      .toDate();
+    this.dataFim = moment().endOf('month')
+      .toDate();
+    this.format = 'dd/MM/yyyy';
     this.NfService = NfService;
-    this.NfService.loadNfList()
+    this.NfService.loadNfList({
+      start: this.dataInicio,
+      end: this.dataFim,
+    })
     .then(notas => {
       this.notas = notas;
       this.notas.forEach(nf => {
@@ -68,7 +76,11 @@ export default class NfController extends Controller {
   findNfStatus(status) {
     this.status = status;
     this.usSpinnerService.spin('spinner-1');
-    this.NfService.loadNfList({ status: this.status })
+    this.NfService.loadNfList({
+      status: this.status,
+      start: this.dataInicio,
+      end: this.dataFim,
+    })
     .then(notas => {
       this.notas = notas;
       this.notas.forEach(nf => {

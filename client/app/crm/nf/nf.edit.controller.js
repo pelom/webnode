@@ -25,6 +25,8 @@ export default class NfEditController extends Controller {
       this.bandeiras = domain.bandeiraPag;
       this.tipos = domain.tipoPag;
       this.tipoNota = domain.tipoNota;
+      this.ocorrencias = ['Mês'];
+      this.numeroOcorrencia = '1;2;3;4;5;6;7;8;9;10;11;12'.split(';');
       this.init();
     });
   }
@@ -40,6 +42,7 @@ export default class NfEditController extends Controller {
         });
     } else {
       this.nf = this.createNf();
+      this.NfService.setNotaFiscal(this.nf);
       this.$timeout(() => {
         this.usSpinnerService.stop('spinner-1');
       }, 100);
@@ -54,12 +57,18 @@ export default class NfEditController extends Controller {
       if(this.nf.tipoNota === 'Manual') {
         this.col = false;
       }
-      if(this.nf.numero) {
-        this.nf.numero = addZero(this.nf.numero, 6);
+
+      try {
+        if(this.nf.numero) {
+          this.nf.numero = addZero(this.nf.numero, 6);
+        }
+        if(this.nf.serie) {
+          this.nf.serie = addZero(this.nf.serie, 3);
+        }
+      } catch(err) {
+        console.log(err);
       }
-      if(this.nf.serie) {
-        this.nf.serie = addZero(this.nf.serie, 3);
-      }
+
       if(this.nf.oportunidade) {
         this.nf.oportunidade.nome = `${this.nf.oportunidade.nome} - ${this.nf.oportunidade.fase}`;
       }
@@ -70,6 +79,8 @@ export default class NfEditController extends Controller {
     return {
       status: 'Cadastrada',
       tipoNota: 'Manual',
+      ocorrencia: 'Mes',
+      numeroOcorrencia: '1',
       produtos: [],
       valorTotal: 0,
       valorVenda: 0,

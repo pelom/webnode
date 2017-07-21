@@ -81,6 +81,37 @@
                   </dd>
                 </div>
               </div>
+              <div class="row" ng-if="!ctl.nf._id">
+                <div class="col-md-4">
+                  <dl>
+                    <dt class="text-muted"><small>Ocorrência</small></dt>
+                    <dd>
+                      <select class="form-control" name="ocorrencia" ng-model="ctl.nf.ocorrencia"
+                         ng-options="item as item for item in ctl.ocorrencias"
+                         style="background-color: #FFF;"
+                         ng-required="true" ng-disabled="!ctl.isEditInfo()">
+                         <option value="" ng-if="!ctl.nf.numeroOcorrencia">-- Nenhum --</option>
+                      </select>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-md-4">
+                  <dl>
+                    <dt class="text-muted"><small>Número Ocorrência</small></dt>
+                    <dd>
+                      <select class="form-control" name="numeroOcorrencia" ng-model="ctl.nf.numeroOcorrencia"
+                         ng-options="item as item for item in ctl.numeroOcorrencia"
+                         style="background-color: #FFF;"
+                         ng-required="true" ng-disabled="!ctl.isEditInfo()">
+                         <option value="" ng-if="!ctl.nf.numeroOcorrencia">-- Nenhum --</option>
+                      </select>
+                    </dd>
+                  </dl>
+                </div>
+                <div class="col-md-4">
+
+                </div>
+              </div>
               <div class="row" ng-if="ctl.nf.oportunidade._id">
                 <div class="col-md-6">
                   <dl>
