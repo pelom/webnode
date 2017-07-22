@@ -8,14 +8,14 @@
     <ul class="nav nav-pills" ng-class="ctl.isJustified()">
       <li ng-class="{ active: ctl.isActive('pagar')}">
         <a href="#" ng-click="ctl.findContaPagar()" uib-tooltip="Contas a pagar">
-          <i class="fa fa-reply fa-2x" aria-hidden="true"></i>
+          <i class="fa fa-reply" aria-hidden="true"></i>
           <small ng-if="ctl.isFull()"> Contas a pagar</small>
           <span class="badge" ng-if="ctl.status === 'pagar'">{{ ctl.pagamentos.length}}</span>
         </a>
       </li>
       <li ng-class="{ active: ctl.isActive('receber')}">
         <a href="#" ng-click="ctl.findContaReceber()" uib-tooltip="Contas a receber">
-          <i class="fa fa-share fa-2x" aria-hidden="true"></i>
+          <i class="fa fa-share" aria-hidden="true"></i>
           <small ng-if="ctl.isFull()"> Contas a receber</small>
           <span class="badge" ng-if="ctl.status === 'receber'">{{ ctl.pagamentos.length}}</span>
         </a>
@@ -91,7 +91,7 @@
           </div>
 
           <div class="table-responsive" ng-if="ctl.pagamentos.length">
-            <table class="table table-striped table-condensed">
+            <table class="table table-condensed">
               <thead class="text-muted">
                 <tr>
                   <th></th>
@@ -120,7 +120,7 @@
 
                   <th>
                     <a href="#" ng-click="ctl.sortType = 'referente.cpfCnpj'; ctl.sortReverse = !ctl.sortReverse">
-                      <small>Referente<small>
+                      <small>Origem<small>
                       <div class="pull-right">
                         <i ng-show="ctl.sortType == 'referente.cpfCnpj' && !ctl.sortReverse"
                           class="fa fa-sort-amount-asc"></i>
@@ -166,11 +166,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="ct in ctl.pagamentos | orderBy:ctl.sortType:ctl.sortReverse | filter:filtrarResult">
-                  <td><a href="#" ng-click="ctl.openPayment(ct)">
+                <tr ng-repeat="ct in ctl.pagamentos | orderBy:ctl.sortType:ctl.sortReverse | filter:filtrarResult"
+                   ng-class="{'bg-danger': ct.vencido }">
+                  <td><a href="#" ng-click="ctl.openPayment(ct)" uib-tooltip="Efetuar pagamento">
                     <i class="fa" ng-class="{'fa-reply': ctl.status === 'pagar', 'fa-share': ctl.status === 'receber'}" aria-hidden="true"></i></a></td>
-                  <td><small class="text-muted">{{ ct.numero }}</small></td>
-                  <td><small class="text-muted">{{ ct.titulo }}</small></td>
+                  <td><a ui-sref="nfedit({id: ban.nfId})" uib-tooltip="{{ct.titulo}}">
+                    <small class="text-primary">{{ ct.numero }}</small></a></td>
+                  <td><a ui-sref="nfedit({id: ban.nfId})" uib-tooltip="{{ct.titulo}}">
+                    <small class="text-primary">{{ ct.titulo }}</small></a></td>
                   <td><a href="#" ui-sref="contaedit({id: ban.account._id})" uib-tooltip="{{ct.referente.nome}}">
                     <small class="text-muted">{{ ct.referente.cpfCnpj | brCpfCnpj }}</small>
                   </a></td>

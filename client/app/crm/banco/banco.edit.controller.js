@@ -95,7 +95,7 @@ export default class BancoEditController extends Controller {
       this.banco.transactions.forEach(trans => {
         this.totalDedito += trans.valor < 0 ? trans.valor : 0;
         this.totalCredito += trans.valor > 0 ? trans.valor : 0;
-        let key = moment(trans.dataPagamento).format('DD/MM');
+        let key = moment(trans.data).format('DD/MM');
         let value = mapData.get(key);
         if(!value) {
           value = [];

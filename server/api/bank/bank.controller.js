@@ -102,12 +102,6 @@ export function show(req, res) {
         res.status(201).json(obj);
       });
     });
-  // return api.findById(req.params.id, {
-  //   model: 'Bank',
-  //   select: selectShow,
-  //   populate: [populationConta, populationContato, populationExtrato,
-  //     api.populationCriador, api.populationModificador],
-  // }, res);
 }
 
 export function create(req, res) {
@@ -184,8 +178,7 @@ function requestUpdateBank(req) {
   };
 }
 
-export function destroy(req, res) {
-}
+export function destroy(req, res) { }
 
 export function operation(req, res) {
   let operat = {
@@ -278,18 +271,10 @@ export function cashFlow(req, res) {
     { $group: {
       _id: getGroupId(),
       //{ $dateToString: { format, date: '$transactions.dataPagamento' } },
-      countDeb: { $sum: {
-        $cond: { if: { $lt: ['$transactions.valor', 0]}, then: 1, else: 0 }
-      }},
-      countCred: { $sum: {
-        $cond: { if: { $gt: ['$transactions.valor', 0]}, then: 1, else: 0 }
-      }},
-      sumDeb: { $sum: {
-        $cond: { if: { $lt: ['$transactions.valor', 0]}, then: '$transactions.valor', else: 0 }
-      }},
-      sumCred: { $sum: {
-        $cond: { if: { $gt: ['$transactions.valor', 0]}, then: '$transactions.valor', else: 0 }
-      }},
+      countDeb: { $sum: { $cond: { if: { $lt: ['$transactions.valor', 0]}, then: 1, else: 0 } }},
+      countCred: { $sum: { $cond: { if: { $gt: ['$transactions.valor', 0]}, then: 1, else: 0 } }},
+      sumDeb: { $sum: { $cond: { if: { $lt: ['$transactions.valor', 0]}, then: '$transactions.valor', else: 0 } }},
+      sumCred: { $sum: { $cond: { if: { $gt: ['$transactions.valor', 0]}, then: '$transactions.valor', else: 0 } }},
       balance: { $sum: '$transactions.valor' },
       saldoFinal: { $first: '$transactions' },
       saldoInicial: { $last: '$transactions' },
@@ -314,12 +299,7 @@ export function accountReceivable(req, res) {
   Invoice.aggregate([
     { $match: { oportunidade: { $exists: true }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
     { $unwind: '$destinatario' },
-    { $lookup: {
-      from: 'accounts',
-      localField: 'destinatario',
-      foreignField: '_id',
-      as: 'destinatarioInfo'
-    } },
+    { $lookup: { from: 'accounts', localField: 'destinatario', foreignField: '_id', as: 'destinatarioInfo' } },
     { $unwind: '$pagamentos' },
     { $match: {
       pagamentos: { $exists: true },
@@ -359,12 +339,7 @@ export function accountPayable(req, res) {
   Invoice.aggregate([
     { $match: { oportunidade: { $exists: false }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
     { $unwind: '$emitente' },
-    { $lookup: {
-      from: 'accounts',
-      localField: 'emitente',
-      foreignField: '_id',
-      as: 'emitenteInfo'
-    } },
+    { $lookup: { from: 'accounts', localField: 'emitente', foreignField: '_id', as: 'emitenteInfo' } },
     { $unwind: '$pagamentos' },
     { $match: {
       pagamentos: { $exists: true },
@@ -399,36 +374,24 @@ export function accountPayable(req, res) {
 function convertResult(results, tipo) {
   let pagamentos = [];
   for(var i = 0; i < results.length; i++) {
-    let nfId = results[i].nfId[0];
-    let titulo = results[i].titulo[0];
-    let numero = results[i].numero[0];
-    let status = results[i].status[0];
-    let dataEmissao = results[i].dataEmissao[0];
-    let valorTotal = results[i].valorTotal[0];
-
-    let accountBank = results[i].accountBank[0];
-    let nome = results[i].beneficiario[0].nome;
-    let _id = results[i].beneficiario[0]._id;
     let cnpj = results[i].beneficiario[0].cnpj;
     let cpf = results[i].beneficiario[0].cpf;
-    let origem = results[i].beneficiario[0].origem;
-    let pagamento = results[i].pagamentos[0];
     pagamentos.push({
-      nfId,
+      nfId: results[i].nfId[0],
       tipo,
-      accountBank,
-      titulo,
-      numero,
-      status,
-      valorTotal,
-      dataEmissao,
+      accountBank: results[i].accountBank[0],
+      titulo: results[i].titulo[0],
+      numero: results[i].numero[0],
+      status: results[i].status[0],
+      valorTotal: results[i].valorTotal[0],
+      dataEmissao: results[i].dataEmissao[0],
       referente: {
-        nome,
-        _id,
+        nome: results[i].beneficiario[0].nome,
+        _id: results[i].beneficiario[0]._id,
         cpfCnpj: cnpj ? cnpj : cpf,
-        origem,
+        origem: results[i].beneficiario[0].origem,
       },
-      pagamento,
+      pagamento: results[i].pagamentos[0],
     });
   }
   console.log(results);

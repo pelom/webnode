@@ -9,35 +9,35 @@
       <li ng-class="{ active: ctl.isActive('')}">
         <a href="#" ng-click="ctl.findNfStatus('')" uib-tooltip="Todas">
           <i class="fa fa-newspaper-o" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()"> Notas Fiscais</small>
+          <small ng-if="ctl.isFull()"> Notas Fiscais<br/></small>
           <span class="badge">{{ ctl.notas.length}}</span>
         </a>
       </li>
       <li ng-class="{ active: ctl.isActive('Cadastrada')}">
         <a href="#" ng-click="ctl.findNfStatus('Cadastrada')" uib-tooltip="Cadastrada">
           <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()"> Cadastradas</small>
+          <small ng-if="ctl.isFull()"> Cadastradas<br/></small>
           <span class="badge">{{ ctl.NfService.getCadastradas()}}</span>
         </a>
       </li>
       <li ng-class="{ active: ctl.isActive('Pendente')}">
         <a href="#" ng-click="ctl.findNfStatus('Pendente')" uib-tooltip="Pendente">
           <i class="fa fa-clock-o" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()">Pendentes</small>
+          <small ng-if="ctl.isFull()">Pendentes<br/></small>
           <span class="badge">{{ ctl.NfService.getPendentes()}}</span>
         </a>
       </li>
       <li ng-class="{ active: ctl.isActive('Faturada')}">
         <a href="#" ng-click="ctl.findNfStatus('Faturada')" uib-tooltip="Faturada">
           <i class="fa fa-money" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()">Faturadas</small>
+          <small ng-if="ctl.isFull()">Faturadas<br/></small>
           <span class="badge">{{ ctl.NfService.getFaturadas()}}</span>
         </a>
       </li>
       <li ng-class="{ active: ctl.isActive('Cancelada')}">
         <a href="#" ng-click="ctl.findNfStatus('Cancelada')" uib-tooltip="Cancelada">
           <i class="fa fa-ban" aria-hidden="true"></i>
-          <small ng-if="ctl.isFull()">Canceladas</small>
+          <small ng-if="ctl.isFull()">Canceladas<br/></small>
           <span class="badge">{{ ctl.NfService.getCanceladas()}}</span>
         </a>
       </li>
@@ -86,12 +86,12 @@
       </p>
     </div>
 
-    <!--div class="col-xs-6 pull-right form-group">
+    <div class="col-md-12 form-group">
       <div class="input-group">
         <div class="input-group-addon"><i class="fa fa-search"></i></div>
         <input type="text" class="form-control" placeholder="Filtrar resultados" ng-model="filtrarResult">
       </div>
-    </div-->
+    </div>
   </div>
 
 

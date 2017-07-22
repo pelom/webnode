@@ -228,16 +228,15 @@ export function uploadInvoice(req, res) {
 }
 
 export function cashFlow(req, res) {
-  cashFlowInputOrigin('Faturada');
-  cashFlowInputOrigin('Pendente');
-
-  cashFlowOutputOrigin('Faturada');
-  cashFlowOutputOrigin('Pendente');
+  //cashFlowInputOrigin('Faturada');
+  //cashFlowInputOrigin('Pendente');
+  //cashFlowOutputOrigin('Faturada');
+  //cashFlowOutputOrigin('Pendente');
   cashFlowProduct(true);
   cashFlowProduct(false);
 }
 
-function matStatus(status, firstDay, lastDay) {
+/*function matStatus(status, firstDay, lastDay) {
   if(status === 'Faturada') {
     return {
       pagamentos: { $exists: true },
@@ -251,9 +250,9 @@ function matStatus(status, firstDay, lastDay) {
     pagamentos: { $exists: true },
     'pagamentos.dataPagamento': { $exists: false }
   };
-}
+}*/
 
-function cashFlowOutputOrigin(status, start, end) {
+/*function cashFlowOutputOrigin(status, start, end) {
   Invoice.aggregate([
     { $match: { oportunidade: { $exists: false }, status: { $nin: ['Cadastrada', 'Cancelada'] } } },
     { $unwind: '$destinatario' },
@@ -275,15 +274,15 @@ function cashFlowOutputOrigin(status, start, end) {
     }
     console.log(results);
   });
-}
+}*/
 
-function createGroupTarget() {
+/*function createGroupTarget() {
   return {
     _id: { $arrayElemAt: ['$destinatarioInfo', 0] },
     count: { $sum: 1 },
     valorTotal: { $sum: '$pagamentos.valor' },
   };
-}
+}*/
 
 function cashFlowProduct(input) {
   Invoice.aggregate([

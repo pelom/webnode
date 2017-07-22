@@ -13,6 +13,7 @@ export default class OportunidadeController extends Controller {
     this.OportunidadeService.loadOportunidadeList()
     .then(opps => {
       this.opps = opps;
+      this.formatMoment();
       this.init();
     })
     .catch(err => {
@@ -35,6 +36,7 @@ export default class OportunidadeController extends Controller {
     })
     .then(opps => {
       this.opps = opps;
+      this.formatMoment();
     })
     .catch(err => {
       console.log('Ex:', err);
@@ -61,5 +63,11 @@ export default class OportunidadeController extends Controller {
       return 'fa-arrow-circle-down';
     }
     return '';
+  }
+
+  formatMoment() {
+    this.opps.forEach(item => {
+      item.createdAt = moment(item.createdAt).fromNow();
+    });
   }
 }

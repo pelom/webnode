@@ -3,6 +3,7 @@
 import ApplicationModulo from './application.modulo.model';
 import Application from './application.model';
 import ApiService from '../api.service';
+import {encrypt} from '../utils/crypt';
 
 let api = ApiService();
 let handleError = api.handleError;
@@ -148,6 +149,9 @@ function callbackCreateModuloApp(res, mod) {
 export function updateModulo(req, res) {
   //let appId = req.params.id;
   let moduloJson = requestUpdateModulo(req);
+  if(moduloJson.property.password) {
+    moduloJson.property.password = encrypt(moduloJson.property.password);
+  }
   return ApplicationModulo.findByIdAndUpdate(req.body._id, moduloJson)
     .then(handleEntityNotFound(res))
     .then(callbackUpdateModulo(res))

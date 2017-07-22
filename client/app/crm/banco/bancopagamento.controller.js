@@ -143,6 +143,7 @@ export default class BancoPagamentoController extends Controller {
         let now = moment().toDate();
         if(vencimento < now) {
           this.valorVencido += tit.pagamento.valor;
+          tit.vencido = true;
         }
         this.valorTotal += tit.pagamento.valor;
 
