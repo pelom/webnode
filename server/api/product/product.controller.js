@@ -1,13 +1,53 @@
 'use strict';
 import Product from './product.model';
 import ApiService from '../api.service';
-import ProductPdf from '../../components/genarate-pdf/product.pdf';
+//import ProductPdf from '../../components/genarate-pdf/product.pdf';
 
 let api = ApiService();
 let handleError = api.handleError;
 let respondWithResult = api.respondWithResult;
 let handleEntityNotFound = api.handleEntityNotFound;
 let handleValidationError = api.handleValidationError;
+
+const FLX_CX_R = '#FLXCX-R';
+const FLX_CX_D = '#FLXCX-D';
+
+Product.find({ codigo: FLX_CX_D }, '_id nome').exec()
+  .then(product => {
+    if(product.length == 0) {
+      Product.create(createFlxCx('Fluxo Caixa Despesa',
+        'Fluxo de caixa para organizar as despesas',
+        'Despesa', FLX_CX_D)
+      ).then(productFcr => {
+        console.log('Create productFcr:', productFcr);
+      });
+    }
+    console.log('#FLXCX-D', product.length);
+  });
+
+Product.find({ codigo: FLX_CX_R }, '_id nome').exec()
+  .then(product => {
+    if(product.length == 0) {
+      Product.create(createFlxCx('Fluxo Caixa Receita',
+        'Fluxo de caixa para organizar as receitas',
+        'Receita', FLX_CX_R)
+      ).then(productFcr => {
+        console.log('Create productFcr:', productFcr);
+      });
+    }
+    console.log('#FLXCX-R', product.length);
+  });
+
+function createFlxCx(nome, descricao, modelo, codigo) {
+  return {
+    nome, descricao, modelo, codigo,
+    categoria: 'Plano de conta',
+    uso: '99 - Outras',
+    unidade: 'UN - Unidade',
+    precificacao: false,
+    precos: [], subproduto: [], estoque: [], codigoFornecedor: []
+  };
+}
 
 export function domain(req, res) {
   Product.find().distinct('categoria', function(error, cats) {

@@ -282,7 +282,7 @@ export function cashFlow(req, res) {
     { $sort: { _id: -1 } },
 
   ]).exec((err, results) => {
-    console.log(results);
+    //console.log(results);
     if(err) {
       handleError(res)(err);
       return;

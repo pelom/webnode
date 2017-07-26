@@ -344,7 +344,7 @@ export function cashFlowInputOrigin(req, res) {
       handleError(res)(err);
       return;
     }
-    console.log(results);
+    //console.log(results);
     res.status(201).json(results);
   });
 }
