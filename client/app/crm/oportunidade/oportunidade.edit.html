@@ -166,7 +166,7 @@
                   </dd>
                 </dl>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" ng-if="ctl.opp._id">
                 <dl>
                   <dt><small class="text-muted">Orçamento</small></dt>
                   <dd>
@@ -176,7 +176,7 @@
                 </dl>
               </div>
             </div>
-            <div class="row">
+            <div class="row" ng-if="ctl.opp._id">
               <div class="col-sm-6">
                 <dt><small class="text-muted">Pagamento</small></dt>
                 <dd>

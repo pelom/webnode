@@ -6,7 +6,7 @@ import * as auth from '../../auth/auth.service';
 import {register} from './event.trigger';
 register();
 let router = new Router();
-router.get('/pdf', auth.isAuthenticated(), controller.indexPdf);
+router.get('/pdf', auth.isAuthenticated(), controller.indexPdfHour);
 
 router.get('/domain', auth.isAuthenticated(), controller.domain);
 router.get('/calendar', auth.isAuthenticated(), controller.calendar);

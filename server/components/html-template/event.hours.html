@@ -7,54 +7,63 @@
      style="vertical-align: bottom;45px; height:45px;"/> &nbsp;&nbsp;{{title}}
     <span style="float: right;font-size:12px; color: #777"></span>
    </h1>
+   <p></p>
+   <p style="font-size: 11px;">{{headerSubtitle}}</p>
   <hr/>
   <br></br>
   <div class="line">
     <div style="width: 50%;float: left;">
-      <p><label style="font-weight: bold;">Periódo: </label> 01/02/2017 até 29/02/2017</p>
-    </div>
-    <div style="width: 50%;float: left;">
-      <p><label style="font-weight: bold;">Horas total: </label> {{totalHours}}</p>
-    </div>
-    <div style="width: 50%;float: left;">
-      <p>&nbsp;</p>
-    </div>
-    <div style="width: 50%;float: left;">
-      <p><label style="font-weight: bold;">Escritório:&nbsp;&nbsp;</label> {{hourEscritorio}}</p>
-    </div>
-    <div style="width: 50%;float: left;">
-      <p>&nbsp;</p>
+      <p><label style="font-weight: bold;">Periódo: </label> {{periodo}}</p>
     </div>
     <div style="width: 50%;float: left;">
       <p><label style="font-weight: bold;">Kolekto:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> {{hourKolekto}}</p>
+    </div>
+    <div style="width: 50%;float: left;">
+      <p><label style="font-weight: bold;">&nbsp;</label></p>
+    </div>
+    <div style="width: 50%;float: left;">
+      <p><label style="font-weight: bold;">Escritório:&nbsp;&nbsp;</label> {{hourEscritorio}}</p>
     </div>
   </div>
   <br></br>
   <br></br>
   <br></br>
-  <br></br>
-  <h2>{{message}}</h2>
+  <h2>
+    <label>{{message}}</label>
+    <span style="float: right;"> <small>Total horas:</small> <b>{{totalHours}}</b></span>
+  </h2>
   <hr/>
+  <br/>
 
+  <% _.forEach(events, function(event, index) { %>
   <table cellpadding="4" cellspacing="3" class="body">
     <tr>
-      <th></th>
-      <th>Título</th>
-      <th>Data</th>
-      <th>Local</th>
-      <th>Horas</th>
+      <th><small><%- event.projeto %></small></th>
+      <th style="text-align: right;">
+        <small>Horas:</small>
+        <span style="font-weight: normal;"><%- event.totalHours%></span></th>
     </tr>
-    <% _.forEach(events, function(event, index) { %>
+  </table>
+  <br/>
+  <table cellpadding="4" cellspacing="3" class="body">
+    <tr>
+      <th><small>Data</small></th>
+      <th><small>Local</small></th>
+      <th><small>Título</small></th>
+      <th><small>Horas</small></th>
+    </tr>
+    <% _.forEach(event.tasks, function(tas, index) { %>
       <tr>
-        <td><%- (index+1) %></td>
-        <td>
-          <%- event.title %>
-          <!--a href="{{url}}home?eventId=<%- event._id %>" target="_blank"><%- event.title %></a--></td>
-        <td><%- event.start %></td>
-        <td><%- event.local %></td>
-        <td><%- event.duration %></td>
+        <td style="width: 100px;"><small><%- tas.start %></small></td>
+        <td style="width: 100px;"><small><%- tas.local %></small></td>
+        <td><small><%- tas.title %></small></td>
+        <td style="width: 100px;"><small><%- tas.duration %></small></td>
       </tr>
     <% }); %>
   </table>
+  <br/>
+  <br/>
+  <% }); %>
+
 </body>
 </html>

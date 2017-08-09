@@ -3,6 +3,8 @@ import Event from './event.model';
 import User from '../user/user.model';
 import ApiService from '../api.service';
 import EventPdf from '../../components/genarate-pdf/event.pdf';
+import mongoose from 'mongoose';
+import moment from 'moment';
 let api = ApiService();
 let handleError = api.handleError;
 let respondWithResult = api.respondWithResult;
@@ -111,6 +113,86 @@ export function indexPdf(req, res) {
     .catch(handleError(res));
 }
 
+export function indexPdfHour(req, res) {
+  let firstDay = new Date(req.query.start);
+  let lastDay = new Date(req.query.end);
+  let status = req.query.status || 'Concluído'.split(',');
+  console.log(firstDay, lastDay, status, req.user._id);
+
+  Event.aggregate([
+    { $match: {
+      start: { $gte: firstDay, $lte: lastDay },
+      proprietario: mongoose.Types.ObjectId(req.user._id),
+      status: { $in: status } } },
+      { $unwind: '$tarefas' },
+      { $lookup: { from: 'events', localField: 'tarefas', foreignField: '_id', as: 'tarefasInfo' } },
+    /*{ $match: {
+      pagamentos: { $exists: true },
+      'pagamentos.dataPagamento': { $exists: false },
+      'pagamentos.dataVencimento': {
+        $gte: firstDay, $lte: lastDay
+      } }
+    },*/
+    { $group: {
+      _id: '$title',
+      //start: { $push: '$start' },
+      //tarefas: { $push: '$tarefasInfo' },
+      tarefas: { $push: '$tarefasInfo' }
+    }},
+    //{ $sort: { 'pagamentos.dataVencimento': -1 } },
+  ]).exec((err, results) => {
+    if(err) {
+      handleError(res)(err);
+      return;
+    }
+
+    let array = [];
+    results.forEach(ev => {
+      let tasks = [];
+      let milleHour = 0;
+      ev.tarefas.forEach(evt => {
+        milleHour += moment(evt[0].end).diff(moment(evt[0].start));
+        tasks.push(evt[0]);
+      });
+
+      let durationFmtHour = () => {
+        var d = moment.duration(milleHour);
+        var h = Math.floor(d.asHours());
+        return (h < 10 ? `0${h}` : h)
+          + moment.utc(milleHour).format(':mm:ss');
+      };
+
+      array.push({
+        projeto: ev._id,
+        milles: milleHour,
+        totalHours: durationFmtHour(),
+        tasks,
+      });
+    });
+
+    let user = api.getUserRequest(req);
+    EventPdf().generateEventHour(firstDay, lastDay, user, array, res);
+    //res.status(201).json(array);
+  });
+
+  /*Event.find({
+    start: { $gte: firstDay, $lte: lastDay },
+    proprietario: req.user._id,
+    status: { $in: status }
+  }, selectShow, {
+    skip: 0, limit: 200,
+    sort: {
+      start: 1
+    }
+  })
+    .populate([api.populationProprietario, api.populationCriador, api.populationModificador])
+    .exec()
+    .then(events => {
+      let user = api.getUserRequest(req);
+      EventPdf().generateEventHour(user, events, res);
+    })
+    .catch(handleError(res));*/
+}
 const statusDefaultList = 'Pendente,Em Andamento,Concluído,Cancelado';
 export function index(req, res) {
   return api.find({

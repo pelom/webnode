@@ -143,12 +143,13 @@ function criarDados() {
     { nome: 'Contas', funcoes: funcaoList, state: 'contas', icon: 'fa-folder-open-o' },
 
     { nome: 'Produtos', funcoes: funcaoList, state: 'produtos', icon: 'fa-gift' },
-    { nome: 'Catálogo', funcoes: funcaoList, state: 'catalgo', icon: 'fa-book' },
+    { nome: 'Catálogo', funcoes: funcaoList, state: 'catalogo', icon: 'fa-book' },
     { nome: 'Orçamentos', funcoes: funcaoList, state: 'orcamentos', icon: 'fa-usd' },
     { nome: 'Oportunidades', funcoes: funcaoList, state: 'oportunidades', icon: 'fa-bolt' },
     { nome: 'Nota Fiscal', funcoes: funcaoList, state: 'nfs', icon: 'fa-newspaper-o' },
     { nome: 'Pagamentos', funcoes: funcaoList, state: 'pagamentos', icon: 'fa-exchange' },
     { nome: 'Fluxo de Caixa', funcoes: funcaoList, state: 'fluxocaixa', icon: 'fa-line-chart' },
+    { nome: 'Bancos', funcoes: funcaoList, state: 'bancos', icon: 'fa-university' },
   ];
 
   let profileMap = new Map();

@@ -7,7 +7,7 @@ export const LER = 'Ler';
 export const CRIAR = 'Criar';
 export const MODIFICAR = 'Modificar';
 export const EXCLUIR = 'Excluir';
-export const APPLICATION = 'Webnode';
+export const APPLICATION = 'webnode';
 export const ROLE_ADMIN = 'admin';
 
 export function Permissionwebnode(modulo, funcao) {

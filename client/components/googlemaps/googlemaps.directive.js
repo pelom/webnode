@@ -29,6 +29,7 @@ export default angular.module('webnodeApp.googlemaps', [])
           sublocality_level_1: 'short_name',
           locality: 'long_name',
           administrative_area_level_1: 'short_name',
+          administrative_area_level_2: 'short_name',
           country: 'long_name',
           postal_code: 'short_name'
         };
@@ -36,6 +37,7 @@ export default angular.module('webnodeApp.googlemaps', [])
         mapField.set('route', 'address');
         mapField.set('locality', 'city');
         mapField.set('administrative_area_level_1', 'state');
+        mapField.set('administrative_area_level_2', 'city');
         mapField.set('postal_code', 'zip');
         mapField.set('country', 'country');
         mapField.set('sublocality_level_1', 'suburb');

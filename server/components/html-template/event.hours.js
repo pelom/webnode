@@ -3,9 +3,9 @@ import config from '../../config/environment';
 export default class EventHtmlTemplate extends HtmlTemplate {
   constructor(user, events) {
     super();
-    this.subject = 'Lista de eventos atrasados';
+    this.subject = 'Atividades realizadas';
     this.data = {
-      title: 'Resumo de atividades realizadas',
+      title: 'Atividades realizadas na prestação de serviço',
       message: 'Atividades realizadas',
       copymark: 'PJsin 2008-2017',
       events,

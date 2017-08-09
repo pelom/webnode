@@ -12,7 +12,7 @@ export default class BancoPagamentoController extends Controller {
     BancoService, ProdutoService, usSpinnerService, Modal) {
     super($window, $scope, toastr, usSpinnerService);
 
-    this.dataInicio = moment().startOf('month')
+    this.dataInicio = moment().startOf('year')
       .toDate();
     this.dataFim = moment().endOf('month')
       .toDate();
